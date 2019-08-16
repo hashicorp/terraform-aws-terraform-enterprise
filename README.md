@@ -17,7 +17,7 @@ Please contact your Technical Account Manager for more information, and support 
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| distribution | Type of linux distribution to use. (ubuntu|rhel) | string | n/a | yes |
+| distribution | Type of linux distribution to use. (ubuntu or rhel) | string | n/a | yes |
 | domain | Route53 Domain to manage DNS under | string | n/a | yes |
 | license\_file | path to Replicated license file | string | n/a | yes |
 | primary\_count | The number of additional cluster master nodes to run | string | n/a | yes |
