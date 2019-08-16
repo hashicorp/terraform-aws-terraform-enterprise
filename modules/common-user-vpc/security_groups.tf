@@ -1,0 +1,70 @@
+resource "aws_security_group" "intra_vpc_and_egress" {
+  description = "allow instances to talk to each other, and have unfettered egress"
+  vpc_id      = "${var.vpc_id}"
+
+  ingress {
+    protocol  = "-1"
+    from_port = 0
+    to_port   = 0
+
+    self = true
+  }
+
+  egress {
+    description = "outbound access to the world"
+
+    protocol  = "-1"
+    from_port = 0
+    to_port   = 0
+
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# Allow whitelisted ranges to access our services.
+# For example, an HTTP proxy.
+resource "aws_security_group_rule" "white_list" {
+  count             = "${length(var.whitelist) > 0 ? 1 : 0}"
+  type              = "ingress"
+  protocol          = "-1"
+  from_port         = 0
+  to_port           = 0
+  cidr_blocks       = ["${var.whitelist}"]
+  security_group_id = "${aws_security_group.intra_vpc_and_egress.id}"
+}
+
+resource "aws_security_group" "allow_ptfe" {
+  name        = "ptfe ingress ${random_string.install_id.result}"
+  description = "allow access to ptfe and replicated console"
+  vpc_id      = "${var.vpc_id}"
+
+  ingress {
+    description = "ssh, because debugging"
+
+    protocol  = "tcp"
+    from_port = 22
+    to_port   = 22
+
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "https to ptfe application"
+
+    protocol  = "tcp"
+    from_port = 443
+    to_port   = 443
+
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "https to replicated console"
+
+    protocol  = "tcp"
+    from_port = 8800
+    to_port   = 8800
+
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}

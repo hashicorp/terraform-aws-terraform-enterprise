@@ -1,0 +1,48 @@
+{
+    "hostname": {
+        "value": "${hostname}"
+    },
+    "installation_type": {
+        "value": "production"
+    },
+    "production_type": {
+        "value": "external"
+    },
+    "pg_user": {
+        "value": "${pg_user}"
+    },
+    "pg_password": {
+        "value": "${pg_password}"
+    },
+    "pg_netloc": {
+        "value": "${pg_netloc}"
+    },
+    "pg_dbname": {
+        "value": "${pg_dbname}"
+    },
+    "pg_extra_params": {
+        "value": "${pg_extra_params}"
+    },
+    "aws_access_key_id": {
+        "value": "${aws_access_key_id}"
+    },
+    "aws_secret_access_key": {
+        "value": "${aws_secret_access_key}"
+    },
+    "s3_bucket": {
+        "value": "${s3_bucket_name}"
+    },
+    "s3_region": {
+        "value": "${s3_bucket_region}"
+    },
+    "enc_password": {
+        "value": "${enc_password}"
+    },
+    "iact_subnet_list": {
+        "value": "${iact_subnet_list}"
+    },
+    "iact_subnet_time_limit": {
+        "value": "${iact_subnet_time_limit}"
+    }
+}
+
