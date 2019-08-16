@@ -14,38 +14,16 @@ module "tfe-ha" {
   distribution    = "ubuntu"
 }
 
-output "ssh_private_key" {
-  value = "${module.tfe-ha.ssh_private_key}"
-}
-
-output "replicated_console_password" {
-  value = "${module.tfe-ha.replicated_console_password}"
-}
-
-output "replicated_console_url" {
-  value = "${module.tfe-ha.replicated_console_url}"
-}
-
-output "ptfe_endpoint" {
-  value = "${module.ptfe-ha.ptfe_endpoint}"
-}
-
-output "ptfe_health_check" {
-  value = "${module.ptfe-ha.ptfe_health_check"
-}
-
-output "primary_public_ip" {
-  value = "${module.ptfe-ha.primary_public_ip}"
-}
-
-output "lb_endpoint" {
-  value = "${module.tfe-ha.lb_endpoint}"
-}
-
-output "iam_role" {
-  value = "${module.tfe-ha.iam_role}"
-}
-
-output "install_id" {
-  value = "${module.tfe-ha.install_id}"
+output "tfe-ha" {
+  value = {
+    ssh_private_key = "${module.tfe-ha.ssh_private_key}"
+    replicated_console_password = "${module.tfe-ha.replicated_console_password}"
+    replicated_console_url = "${module.tfe-ha.replicated_console_url}"
+    ptfe_endpoint = "${module.ptfe-ha.ptfe_endpoint}"
+    ptfe_health_check = "${module.ptfe-ha.ptfe_health_check}"
+    primary_public_ip = "${module.ptfe-ha.primary_public_ip}"
+    lb_endpoint = "${module.tfe-ha.lb_endpoint}"
+    iam_role = "${module.tfe-ha.iam_role}"
+    install_id = "${module.tfe-ha.install_id}"
+  }
 }
