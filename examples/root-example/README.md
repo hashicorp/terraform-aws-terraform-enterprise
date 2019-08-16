@@ -1,4 +1,4 @@
-#Terraform Enterprise HA (Beta) Example
+# Terraform Enterprise HA (Beta) Example
 
 This example assumes you have already set up your gcp project with the required prereqs:
 
