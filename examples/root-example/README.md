@@ -49,7 +49,7 @@ terraform apply
 
 The replicated console url will output along with the password. 
 
-![output](output_example.png)
+![output](../../assets/output.jpg)
 
 You can log into that dashboard at that url and wait for the application to be ready. This can take up to 30 minutes! Once complete use the `Open` link to set up the admin user and initial organization. 
 
