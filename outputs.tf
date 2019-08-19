@@ -12,19 +12,19 @@ output "ssh_private_key" {
   value = "${module.common.ssh_priv_key_file}"
 }
 
-output "replicated_console_password" {
+output "installer_dashboard_password" {
   value = "${random_pet.console_password.id}"
 }
 
-output "replicated_console_url" {
+output "installer_dashboard_url" {
   value = "https://${module.lb.endpoint}:8800"
 }
 
-output "ptfe_endpoint" {
+output "tfe_endpoint" {
   value = "https://${module.lb.endpoint}"
 }
 
-output "ptfe_health_check" {
+output "tfe_health_check" {
   value = "https://${module.lb.endpoint}/_health_check"
 }
 
