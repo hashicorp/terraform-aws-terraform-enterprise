@@ -34,7 +34,7 @@ variable "primary_count" {
 
 variable "distribution" {
   type        = "string"
-  description = "Type of linux distribution to use. (ubuntu|rhel)"
+  description = "Type of linux distribution to use. (ubuntu or rhel)"
 }
 
 ### =================================================================== OPTIONAL

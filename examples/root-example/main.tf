@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 module "tfe-ha" {
-  source = "github.com/hashicorp/terraform-aws-tfe-ha"
+  source = "hashicorp/tfe-ha/aws"
 
   version = "0.1.0"
   vpc_id          = "vpc-123456789abcd1234"
