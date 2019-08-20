@@ -7,11 +7,6 @@ locals {
 
 ### =================================================================== REQUIRED
 
-variable "distribution" {
-  type        = "string"
-  description = "Type of linux distribution to use. (ubuntu or rhel)"
-}
-
 variable "domain" {
   type        = "string"
   description = "Route53 Domain to manage DNS under"
@@ -20,16 +15,6 @@ variable "domain" {
 variable "license_file" {
   type        = "string"
   description = "path to license file"
-}
-
-variable "primary_count" {
-  type        = "string"
-  description = "The number of additional cluster master nodes to run"
-}
-
-variable "secondary_count" {
-  type        = "string"
-  description = "The number of secondary cluster nodes to run"
 }
 
 variable "vpc_id" {
@@ -67,6 +52,12 @@ variable "cidr" {
   type        = "string"
   description = "cidr block for vpc"
   default     = "10.0.0.0/16"
+}
+
+variable "distribution" {
+  type        = "string"
+  description = "Type of linux distribution to use. (ubuntu or rhel)"
+  default     = "ubuntu"
 }
 
 variable "encryption_password" {
@@ -111,6 +102,12 @@ variable "installer_url" {
   default     = "https://install.terraform.io/installer/ptfe.zip"
 }
 
+variable "primary_count" {
+  type        = "string"
+  description = "The number of additional cluster master nodes to run"
+  default     = 3
+}
+
 variable "primary_instance_type" {
   type        = "string"
   description = "ec2 instance type"
@@ -121,6 +118,12 @@ variable "region" {
   type        = "string"
   description = "aws region where resources will be created"
   default     = "us-west-2"
+}
+
+variable "secondary_count" {
+  type        = "string"
+  description = "The number of secondary cluster nodes to run"
+  default     = 5
 }
 
 variable "secondary_instance_type" {
