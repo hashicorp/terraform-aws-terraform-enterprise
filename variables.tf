@@ -154,8 +154,8 @@ variable "iact_subnet_time_limit" {
 
 variable "install_type" {
   type        = "string"
-  description = "Installation type. options are (poc or production)"
-  default     = "poc"
+  description = "Installation type. options are (demo, airgap, es, or es_airgap)"
+  default     = "demo"
 }
 
 ### ================================ External Services Support
