@@ -38,7 +38,7 @@ variable "distribution" {
 }
 
 ### =================================================================== OPTIONAL
-variable "ptfe_url" {
+variable "installer_url" {
   type        = "string"
   description = "URL to the cluster setup tool"
   default     = "https://install.terraform.io/installer/ptfe.zip"
@@ -152,7 +152,7 @@ variable "iact_subnet_time_limit" {
   default     = ""
 }
 
-variable "install_mode" {
+variable "install_type" {
   type        = "string"
   description = "Installation type. options are (poc or production)"
   default     = "poc"
