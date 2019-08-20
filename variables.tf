@@ -19,7 +19,7 @@ variable "domain" {
 
 variable "license_file" {
   type        = "string"
-  description = "path to Replicated license file"
+  description = "path to TFE license file"
 }
 
 variable "secondary_count" {
@@ -228,7 +228,7 @@ variable "http_proxy_url" {
 
 variable "whitelist" {
   type        = "list"
-  description = "List of CIDRs we allow to access the PTFE infrastructure"
+  description = "List of CIDRs we allow to access the TFE infrastructure"
   default     = []
 }
 
@@ -266,7 +266,7 @@ data "aws_ami" "rhel" {
   }
 }
 
-## random password for the replicated console
+## random password for the installer dashboard 
 resource "random_pet" "console_password" {
   length = 3
 }
