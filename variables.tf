@@ -19,7 +19,7 @@ variable "domain" {
 
 variable "license_file" {
   type        = "string"
-  description = "path to Replicated license file"
+  description = "path to license file"
 }
 
 variable "secondary_count" {
@@ -40,7 +40,7 @@ variable "distribution" {
 ### =================================================================== OPTIONAL
 variable "ptfe_url" {
   type        = "string"
-  description = "URL to the PTFE tool"
+  description = "URL to the cluster setup tool"
   default     = "https://install.terraform.io/installer/ptfe.zip"
 }
 
@@ -52,7 +52,7 @@ variable "airgap_package_url" {
 
 variable "airgap_installer_url" {
   type        = "string"
-  description = "URL to replicated's airgap installer package"
+  description = "URL to airgap installer package"
   default     = "https://install.terraform.io/installer/replicated-v5.tar.gz"
 }
 
@@ -154,8 +154,8 @@ variable "iact_subnet_time_limit" {
 
 variable "install_mode" {
   type        = "string"
-  description = "Installation mode"
-  default     = "demo"
+  description = "Installation type. options are (poc or production)"
+  default     = "poc"
 }
 
 ### ================================ External Services Support
@@ -266,7 +266,7 @@ data "aws_ami" "rhel" {
   }
 }
 
-## random password for the replicated console
+## random password for the installer dashboard
 resource "random_pet" "console_password" {
   length = 3
 }
