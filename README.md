@@ -8,7 +8,7 @@ This module installs Terraform Enterprise HA BETA onto 1 or more aws instances i
 
 ## Architecture
 
-![basic diagram](https://github.com/hashicorp/terraform-aws-tfe-ha/blob/master/assets/aws_diagram.jpg?raw=true)
+![basic diagram](https://github.com/hashicorp/terraform-aws-terraform-enterprise/blob/master/assets/aws_diagram.jpg?raw=true)
 _example architecture_
 
 Please contact your Technical Account Manager for more information, and support for any issues you have.
