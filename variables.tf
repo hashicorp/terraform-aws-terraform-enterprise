@@ -270,6 +270,7 @@ data "aws_ami" "rhel" {
   }
 }
 
+
 ## random password for the installer dashboard
 resource "random_pet" "console_password" {
   length = 3

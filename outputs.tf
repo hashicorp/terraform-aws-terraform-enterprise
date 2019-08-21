@@ -22,15 +22,10 @@ output "installer_dashboard_url" {
   value = "https://${module.lb.endpoint}:8800"
 }
 
-output "lb_endpoint" {
-  value = "${module.lb.endpoint}"
-}
-
 ## this allows the user to do `ssh -F ssh-config default`
 resource "local_file" "ssh_config" {
   filename = "${path.module}/work/ssh-config"
   content  = "${data.template_file.ssh_config.rendered}"
-}
 
 output "primary_public_ip" {
   value = "${element(aws_instance.primary.*.public_ip, 0)}"
