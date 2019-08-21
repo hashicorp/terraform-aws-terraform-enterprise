@@ -26,6 +26,7 @@ output "installer_dashboard_url" {
 resource "local_file" "ssh_config" {
   filename = "${path.module}/work/ssh-config"
   content  = "${data.template_file.ssh_config.rendered}"
+}
 
 output "primary_public_ip" {
   value = "${element(aws_instance.primary.*.public_ip, 0)}"

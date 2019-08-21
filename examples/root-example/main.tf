@@ -19,7 +19,6 @@ output "tfe-ha" {
     install_id                   = "${module.tfe-ha.install_id}"
     installer_dashboard_password = "${module.tfe-ha.installer_dashboard_password}"
     installer_dashboard_url      = "${module.tfe-ha.installer_dashboard_url}"
-    lb_endpoint                  = "${module.tfe-ha.lb_endpoint}"
     primary_public_ip            = "${module.tfe-ha.primary_public_ip}"
     ssh_private_key              = "${module.tfe-ha.ssh_private_key}"
   }
