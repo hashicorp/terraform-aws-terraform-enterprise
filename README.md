@@ -1,6 +1,6 @@
 # Terraform Enterprise: High Availability for AWS (BETA)
 
-![Terraform Logo](https://github.com/hashicorp/terraform-aws-tfe-ha/blob/master/assets/TerraformLogo.png?raw=true)
+![Terraform Logo](https://github.com/hashicorp/terraform-aws-terraform-enterprise/blob/master/assets/TerraformLogo.png?raw=true)
 
 ## Description
 
