@@ -1,6 +1,6 @@
-# Terraform-AWS-TFE-HA (BETA)
+# Terraform Enterprise: High Availability for AWS (BETA)
 
-![Terraform Logo](assets/TerraformLogo.png)
+![Terraform Logo](https://github.com/hashicorp/terraform-aws-terraform-enterprise/blob/master/assets/TerraformLogo.png?raw=true)
 
 ## Description
 
@@ -8,7 +8,7 @@ This module installs Terraform Enterprise HA BETA onto 1 or more aws instances i
 
 ## Architecture
 
-![basic diagram](assets/aws_diagram.jpg)
+![basic diagram](https://github.com/hashicorp/terraform-aws-terraform-enterprise/blob/v0.0.1-beta/assets/aws_diagram.jpg?raw=true)
 _example architecture_
 
 Please contact your Technical Account Manager for more information, and support for any issues you have.
