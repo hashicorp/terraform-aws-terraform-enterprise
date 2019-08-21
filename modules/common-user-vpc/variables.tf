@@ -19,9 +19,9 @@ variable "subnet_tags" {
   default     = {}
 }
 
-variable "whitelist" {
+variable "allow_list" {
   type        = "list"
-  description = "list of CIDRs we allow to access the PTFE infrastructure"
+  description = "list of CIDRs we allow to access the infrastructure"
   default     = []
 }
 

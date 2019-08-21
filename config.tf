@@ -1,6 +1,6 @@
 # Settings for automated PTFE installation
 data "template_file" "repl_ptfe_config" {
-  template = "${local.rptfeconf[var.install_mode]}"
+  template = "${local.rptfeconf[var.install_type]}"
 
   vars {
     hostname               = "${module.lb.endpoint}"
@@ -22,7 +22,7 @@ data "template_file" "repl_ptfe_config" {
 
 # Settings for automated replicated installation.
 data "template_file" "repl_config" {
-  template = "${local.replconf[var.install_mode]}"
+  template = "${local.replconf[var.install_type]}"
 
   vars = {
     console_password = "${random_pet.console_password.id}"
@@ -51,7 +51,7 @@ data "template_file" "cloud_config" {
     role_id              = "${count.index}"
     health_url           = "http://${aws_elb.cluster_api.dns_name}:${local.assistant_port}/healthz"
     proxy_url            = "${var.http_proxy_url}"
-    ptfe_url             = "${var.ptfe_url}"
+    installer_url        = "${var.installer_url}"
 
     import_key     = "${var.import_key}"
     startup_script = "${base64encode(var.startup_script)}"
@@ -83,7 +83,7 @@ data "template_file" "cloud_config_secondary" {
     cluster_api_endpoint = "${aws_elb.cluster_api.dns_name}:6443"
     health_url           = "http://${aws_elb.cluster_api.dns_name}:${local.assistant_port}/healthz"
     proxy_url            = "${var.http_proxy_url}"
-    ptfe_url             = "${var.ptfe_url}"
+    installer_url        = "${var.installer_url}"
     role                 = "secondary"
 
     import_key = "${var.import_key}"

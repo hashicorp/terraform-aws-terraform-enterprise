@@ -23,13 +23,13 @@ resource "aws_security_group" "intra_vpc_and_egress" {
 
 # Allow whitelisted ranges to access our services.
 # For example, an HTTP proxy.
-resource "aws_security_group_rule" "white_list" {
-  count             = "${length(var.whitelist) > 0 ? 1 : 0}"
+resource "aws_security_group_rule" "allow_list" {
+  count             = "${length(var.allow_list) > 0 ? 1 : 0}"
   type              = "ingress"
   protocol          = "-1"
   from_port         = 0
   to_port           = 0
-  cidr_blocks       = ["${var.whitelist}"]
+  cidr_blocks       = ["${var.allow_list}"]
   security_group_id = "${aws_security_group.intra_vpc_and_egress.id}"
 }
 

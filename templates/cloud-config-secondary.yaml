@@ -12,7 +12,7 @@ write_files:
 - path: /etc/ptfe/ptfe_url
   owner: root:root
   permissions: "0644"
-  content: "${ptfe_url}"
+  content: "${installer_url}"
 
 - path: /etc/ptfe/bootstrap-token
   owner: root:root
