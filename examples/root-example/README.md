@@ -37,7 +37,7 @@ You'll need to update the following settings to your set up:
 	* primary_count: Number of primaries to create
 	* distribution: OS Distribution to use - ubuntu or rhel
 
- This example is set to spin up 3 primaries and 3 secondaries.   
+ This example is set to spin up 3 primaries and 3 secondaries.
 
 ## Run Terraform
 ```
@@ -47,7 +47,7 @@ terraform apply
 
 ## Wait for the application to load
 
-The installer dashboard url will output along with the password. 
+The installer dashboard url will output along with the password.
 
 ```
 Apply complete! Resources: 33 added, 0 changed, 0 destroyed.
@@ -67,4 +67,4 @@ tfe-beta = {
 }
 ```
 
-You can log into that dashboard at that url and wait for the application to be ready. This can take up to 30 minutes! Once complete use the `Open` link to set up the admin user and initial organization. 
+You can log into that dashboard at that url and wait for the application to be ready. This can take up to 30 minutes! Once complete use the `Open` link to set up the admin user and initial organization.
