@@ -10,7 +10,7 @@ This example assumes you have already set up your gcp project with the required 
 
 With this code you can either create a single instance, or a build a cluster:
 
-![basic architecture diagram](../../assets/aws_diagram.jpg)
+![basic architecture diagram](https://github.com/hashicorp/terraform-aws-terraform-enterprise/blob/v0.0.1-beta/assets/aws_diagram.jpg?raw=true)
 
 ## Change to the example directory
 
@@ -68,5 +68,3 @@ tfe-beta = {
 ```
 
 You can log into that dashboard at that url and wait for the application to be ready. This can take up to 30 minutes! Once complete use the `Open` link to set up the admin user and initial organization. 
-
-![application started](app_started.png)
