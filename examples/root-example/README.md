@@ -1,6 +1,6 @@
 # Terraform Enterprise HA (Beta) Example
 
-This example assumes you have already set up your gcp project with the required prereqs:
+This example assumes you have already set up your aws project with the required prereqs:
 
 	* VPC
 	* Subnets (both public and private) spread across multiple AZs
