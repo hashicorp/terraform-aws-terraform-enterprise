@@ -4,7 +4,7 @@
 
 ## Description
 
-This module installs Terraform Enterprise HA BETA onto 1 or more aws instances in DEMO mode. All data is stored on the instance(s) and is not preserved. 
+This module installs Terraform Enterprise HA BETA onto 1 or more aws instances in DEMO mode. All data is stored on the instance(s) and is not preserved.
 
 ## Architecture
 
@@ -60,14 +60,14 @@ Please contact your Technical Account Manager for more information, and support 
 
 | Name | Description |
 |------|-------------|
-| iam\_role |  |
-| install\_id |  |
-| lb\_endpoint |  |
-| primary\_public\_ip |  |
-| ptfe\_endpoint |  |
-| ptfe\_health\_check |  |
-| replicated\_console\_password |  |
-| replicated\_console\_url |  |
-| ssh\_config\_file |  |
-| ssh\_private\_key |  |
+| iam\_role | The name of the IAM role being used |
+| install\_id | The installation ID for TFE |
+| lb\_endpoint | The load-balancer endpoint URI |
+| primary\_public\_ip | The public IP address of the primary VMs |
+| ptfe\_endpoint | The accessible PTFE URI |
+| ptfe\_health\_check | The PTFE URI used for the health check |
+| replicated\_console\_password | The Replicated console password |
+| replicated\_console\_url | The Replicated Console URL |
+| ssh\_config\_file | The path to the SSH configuration file |
+| ssh\_private\_key | The SSH private key |
 
