@@ -4,7 +4,7 @@ provider "aws" {
 
 module "tfe-beta" {
   source  = "hashicorp/terraform-enterprise/aws"
-  version = "0.0.1-beta"
+  version = "0.0.2-beta"
 
   vpc_id       = "vpc-123456789abcd1234"
   domain       = "example.com"
