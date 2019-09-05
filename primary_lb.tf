@@ -1,5 +1,5 @@
 resource "aws_elb" "cluster_api" {
-  name_prefix = "ptfe"
+  name_prefix = "${var.prefix}"
   subnets     = ["${module.common.private_subnets}"]
   internal    = true
 

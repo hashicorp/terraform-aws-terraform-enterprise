@@ -27,7 +27,7 @@ resource "aws_instance" "primary" {
   }
 
   tags {
-    Name           = "ptfe-${module.common.install_id}:primary"
+    Name           = "${var.prefix}-${module.common.install_id}:primary"
     InstallationId = "${module.common.install_id}"
   }
 }
