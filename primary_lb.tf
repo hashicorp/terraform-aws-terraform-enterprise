@@ -30,4 +30,8 @@ resource "aws_elb" "cluster_api" {
     interval            = 10
     timeout             = 5
   }
+
+  tags = {
+    Name = "${var.prefix}"
+  }
 }
