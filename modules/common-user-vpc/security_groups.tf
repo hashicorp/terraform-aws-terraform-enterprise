@@ -19,6 +19,10 @@ resource "aws_security_group" "intra_vpc_and_egress" {
 
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name = "${var.prefix}"
+  }
 }
 
 # Allow whitelisted ranges to access our services.

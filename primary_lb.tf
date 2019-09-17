@@ -1,5 +1,5 @@
 resource "aws_elb" "cluster_api" {
-  name_prefix = "ptfe"
+  name_prefix = "${var.prefix}"
   subnets     = ["${module.common.private_subnets}"]
   internal    = true
 
@@ -29,5 +29,9 @@ resource "aws_elb" "cluster_api" {
     target              = "HTTPS:6443/healthz"
     interval            = 10
     timeout             = 5
+  }
+
+  tags = {
+    Name = "${var.prefix}"
   }
 }

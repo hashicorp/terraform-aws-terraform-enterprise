@@ -28,7 +28,7 @@ resource "aws_autoscaling_group" "secondary" {
   # Interpolating the LC name into the ASG name here causes any changes that
   # would replace the LC (like, most commonly, an AMI ID update) to _also_
   # replace the ASG.
-  name = "ptfe-lc-${aws_launch_configuration.secondary.name}"
+  name = "${var.prefix}-lc-${aws_launch_configuration.secondary.name}"
 
   launch_configuration = "${aws_launch_configuration.secondary.name}"
   desired_capacity     = "${var.secondary_count}"
@@ -39,7 +39,7 @@ resource "aws_autoscaling_group" "secondary" {
 
   tag {
     key                 = "Name"
-    value               = "ptfe-${module.common.install_id}:secondary"
+    value               = "${var.prefix}-${module.common.install_id}:secondary"
     propagate_at_launch = true
   }
 

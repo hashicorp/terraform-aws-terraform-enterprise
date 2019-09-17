@@ -5,6 +5,11 @@ variable "vpc_id" {
   description = "AWS VPC id to install into"
 }
 
+variable "prefix" {
+  type        = "string"
+  description = "Prefix for resource names"
+}
+
 ### =================================================================== OPTIONAL
 
 variable "cidr" {

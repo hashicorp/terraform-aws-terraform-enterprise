@@ -24,6 +24,12 @@ variable "vpc_id" {
 
 ### =================================================================== OPTIONAL
 
+variable "prefix" {
+  type        = "string"
+  description = "Name prefix for resource names and tags"
+  default     = "tfe"
+}
+
 variable "airgap_installer_url" {
   type        = "string"
   description = "URL to airgap installer package"
