@@ -24,7 +24,7 @@ variable "vpc_id" {
 
 ### =================================================================== OPTIONAL
 
-variable "previx" {
+variable "prefix" {
   type        = "string"
   description = "Name prefix for resource names and tags"
   default     = "tfe"
