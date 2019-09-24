@@ -2,7 +2,7 @@
 ## which has some problems with their label module (recursively included).
 
 locals {
-  ssh_public_key_path = "${path.module}/work"
+  ssh_public_key_path = "${path.root}/work"
   key_name            = "${var.prefix}-${random_string.install_id.result}"
 
   public_key_filename  = "${local.ssh_public_key_path}/${local.key_name}.pub"
