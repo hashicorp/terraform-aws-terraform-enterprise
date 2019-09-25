@@ -1,5 +1,5 @@
 resource "aws_instance" "primary" {
-  count         = "${var.primary_count}"
+  count         = "${var.install_type == "ipm" ? 3 : var.primary_count}"
   ami           = "${var.ami != "" ? var.ami : local.distro_ami}"
   instance_type = "${var.primary_instance_type}"
 
