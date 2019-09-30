@@ -88,6 +88,8 @@ data "template_file" "cloud_config_secondary" {
     installer_url        = "${var.installer_url}"
     role                 = "secondary"
 
+    ca_cert_url = "${var.ca_cert_url}"
+
     import_key = "${var.import_key}"
   }
 }
