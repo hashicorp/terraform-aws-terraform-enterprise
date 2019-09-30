@@ -23,6 +23,7 @@ Please contact your Technical Account Manager for more information, and support 
 | primary\_count | The number of additional cluster master nodes to run | string | n/a | yes |
 | secondary\_count | The number of secondary cluster nodes to run | string | n/a | yes |
 | vpc\_id | AWS VPC id to install into | string | n/a | yes |
+| ca_cert_url | URL to CA certificate file used for the internal `ptfe-proxy` used for outgoing connections| string | `"none"` | no |
 | airgap\_installer\_url | URL to replicated's airgap installer package | string | `"https://install.terraform.io/installer/replicated-v5.tar.gz"` | no |
 | airgap\_package\_url | signed URL to download the package | string | `""` | no |
 | ami | AMI to launch instance with; defaults to latest Ubuntu Xenial | string | `""` | no |

@@ -53,6 +53,8 @@ data "template_file" "cloud_config" {
     proxy_url            = "${var.http_proxy_url}"
     installer_url        = "${var.installer_url}"
 
+    ca_cert_url = "${var.ca_cert_url}"
+
     import_key     = "${var.import_key}"
     startup_script = "${base64encode(var.startup_script)}"
 
@@ -85,6 +87,8 @@ data "template_file" "cloud_config_secondary" {
     proxy_url            = "${var.http_proxy_url}"
     installer_url        = "${var.installer_url}"
     role                 = "secondary"
+
+    ca_cert_url = "${var.ca_cert_url}"
 
     import_key = "${var.import_key}"
   }

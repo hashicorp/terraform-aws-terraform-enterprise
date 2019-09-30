@@ -42,6 +42,12 @@ variable "airgap_package_url" {
   default     = ""
 }
 
+variable "ca_cert_url" {
+  type        = "string"
+  description = "URL to CA certificate file used for the internal `ptfe-proxy` used for outgoing connections"
+  default     = "none"
+}
+
 variable "ami" {
   type        = "string"
   description = "AMI to launch instance with; defaults to latest Ubuntu Xenial"
@@ -275,7 +281,6 @@ data "aws_ami" "rhel" {
     values = ["hvm"]
   }
 }
-
 
 ## random password for the installer dashboard
 resource "random_pet" "console_password" {
