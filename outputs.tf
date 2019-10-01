@@ -24,7 +24,7 @@ output "installer_dashboard_url" {
 
 ## this allows the user to do `ssh -F ssh-config default`
 resource "local_file" "ssh_config" {
-  filename = "${path.module}/work/ssh-config"
+  filename = "${path.root}/work/ssh-config"
   content  = "${data.template_file.ssh_config.rendered}"
 }
 
