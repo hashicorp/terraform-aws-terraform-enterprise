@@ -3,7 +3,7 @@ module "lb" {
 
   vpc_id     = "${module.common.vpc_id}"
   install_id = "${module.common.install_id}"
-  
+
   prefix = "${var.prefix}"
   domain = "${var.domain}"
 
