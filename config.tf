@@ -52,6 +52,8 @@ data "template_file" "cloud_config" {
     health_url           = "http://${aws_elb.cluster_api.dns_name}:${local.assistant_port}/healthz"
     proxy_url            = "${var.http_proxy_url}"
     installer_url        = "${var.installer_url}"
+    weave_cidr           = "${var.weave_cidr}"
+    repl_cidr            = "${var.repl_cidr}"
 
     ca_cert_url = "${var.ca_cert_url}"
 
