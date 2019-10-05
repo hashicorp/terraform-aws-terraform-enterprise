@@ -47,6 +47,7 @@ Please contact your Technical Account Manager for more information, and support 
 | primary\_instance\_type | ec2 instance type | string | `"m4.xlarge"` | no |
 | ptfe\_url | URL to the PTFE tool | string | `"https://install.terraform.io/installer/ptfe.zip"` | no |
 | region | aws region where resources will be created | string | `"us-west-2"` | no |
+| repl\_cidr | Specify a non-standard CIDR range for the replicated services. The default is `10.96.0.0/12` | string | `""` | no |
 | s3\_bucket | S3 bucket to store objects into | string | `""` | no |
 | s3\_region | Region of the S3 bucket | string | `""` | no |
 | secondary\_instance\_type | ec2 instance type (Defaults to `primary_instance_type` if not set.) | string | `""` | no |
@@ -55,6 +56,7 @@ Please contact your Technical Account Manager for more information, and support 
 | subnet\_tags | tags to use to match subnets to use | map | `{}` | no |
 | update\_route53 | whether or not to automatically update route53 records for the cluster | string | `"true"` | no |
 | volume\_size | size of the root volume in gb | string | `"100"` | no |
+| weave\_cidr | Specify a non-standard CIDR range for weave. The default is `172.18.0.0/16` | string | `""` | no |
 | whitelist | List of CIDRs we allow to access the PTFE infrastructure | list | `[]` | no |
 
 ## Outputs

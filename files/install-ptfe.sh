@@ -46,6 +46,8 @@ export role
 
 airgap_url_path="/etc/ptfe/airgap-package-url"
 airgap_installer_url_path="/etc/ptfe/airgap-installer-url"
+weave_cidr="/etc/ptfe/weave_cidr"
+repl_cidr="/etc/ptfe/repl_cidr"
 
 # ------------------------------------------------------------------------------
 # Custom CA certificate download and configuration block
@@ -132,6 +134,18 @@ if [ "x${role}x" == "xmainx" ]; then
         ptfe_install_args+=(
             --airgap-installer /var/lib/ptfe/replicated.tar.gz
         )
+    fi
+
+    if test -e "$weave_cidr"; then
+      ptfe_install_args+=(
+          "--weaveCIDR=$(cat /etc/ptfe/weave_cidr)"
+      )
+    fi
+
+    if test -e "$repl_cidr"; then
+      ptfe_install_args+=(
+          "--replCIDR=$(cat /etc/ptfe/repl_cidr)"
+      )
     fi
 fi
 

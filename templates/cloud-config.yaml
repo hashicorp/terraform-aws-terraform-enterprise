@@ -102,6 +102,20 @@ write_files:
   permissions: "0644"
   content: ${airgap_installer_url}
 %{ endif }
+
+%{ if weave_cidr != "" }
+- path: /etc/ptfe/weave-cidr
+  owner: root:root
+  permissions: "0644"
+  content: ${weave_cidr}
+%{ endif }
+
+%{ if repl_cidr != "" }
+- path: /etc/ptfe/repl-cidr
+  owner: root:root
+  permissions: "0644"
+  content: ${repl_cidr}
+%{ endif }
 %{ endif }
 %{ if distro == "ubuntu" }
 - path: /etc/apt/apt.conf.d/00_aaa_proxy.conf
