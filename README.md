@@ -56,7 +56,7 @@ Please contact your Technical Account Manager for more information, and support 
 | subnet\_tags | tags to use to match subnets to use | map | `{}` | no |
 | update\_route53 | whether or not to automatically update route53 records for the cluster | string | `"true"` | no |
 | volume\_size | size of the root volume in gb | string | `"100"` | no |
-| weave\_cidr | Specify a non-standard CIDR range for weave. The default is `172.18.0.0/16` | string | `""` | no |
+| weave\_cidr | Specify a non-standard CIDR range for weave. The default is `10.32.0.0/12` | string | `""` | no |
 | whitelist | List of CIDRs we allow to access the PTFE infrastructure | list | `[]` | no |
 
 ## Outputs
