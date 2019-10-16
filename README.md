@@ -26,6 +26,7 @@ Please contact your Technical Account Manager for more information, and support 
 | ca_cert_url | URL to CA certificate file used for the internal `ptfe-proxy` used for outgoing connections| string | `"none"` | no |
 | airgap\_installer\_url | URL to replicated's airgap installer package | string | `"https://install.terraform.io/installer/replicated-v5.tar.gz"` | no |
 | airgap\_package\_url | signed URL to download the package | string | `""` | no |
+| allow_list | List of CIDRs we allow to access the PTFE infrastructure | list | `[]` | no |
 | ami | AMI to launch instance with; defaults to latest Ubuntu Xenial | string | `""` | no |
 | aws\_access\_key\_id | AWS access key id to connect to s3 with | string | `""` | no |
 | aws\_secret\_access\_key | AWS secret access key to connect to s3 with | string | `""` | no |
@@ -57,7 +58,6 @@ Please contact your Technical Account Manager for more information, and support 
 | update\_route53 | whether or not to automatically update route53 records for the cluster | string | `"true"` | no |
 | volume\_size | size of the root volume in gb | string | `"100"` | no |
 | weave\_cidr | Specify a non-standard CIDR range for weave. The default is `10.32.0.0/12` | string | `""` | no |
-| whitelist | List of CIDRs we allow to access the PTFE infrastructure | list | `[]` | no |
 
 ## Outputs
 
