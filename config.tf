@@ -55,7 +55,7 @@ data "template_file" "cloud_config" {
     weave_cidr           = "${var.weave_cidr}"
     repl_cidr            = "${var.repl_cidr}"
 
-    ca_cert_url = "${var.ca_cert_url}"
+    ca_bundle_url = "${var.ca_bundle_url}"
 
     import_key     = "${var.import_key}"
     startup_script = "${base64encode(var.startup_script)}"
@@ -90,7 +90,7 @@ data "template_file" "cloud_config_secondary" {
     installer_url        = "${var.installer_url}"
     role                 = "secondary"
 
-    ca_cert_url = "${var.ca_cert_url}"
+    ca_bundle_url = "${var.ca_bundle_url}"
 
     import_key = "${var.import_key}"
   }
