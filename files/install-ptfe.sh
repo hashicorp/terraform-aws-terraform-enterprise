@@ -56,7 +56,7 @@ if [[ -n $(< /etc/ptfe/custom-ca-cert-url) && \
       $(< /etc/ptfe/custom-ca-cert-url) != none ]]; then
   custom_ca_cert_url=$(cat /etc/ptfe/custom-ca-cert-url)
   custom_ca_cert_file_name=$(echo "${custom_ca_cert_url}" | awk -F '/' '{ print $NF }')
-  ca_tmp_dir="/tmp/ptfe/customer-certs"
+  ca_tmp_dir="/tmp/ptfe-customer-certs"
   replicated_conf_file="replicated-ptfe.conf"
   local_messages_file="local_messages.log"
   # Setting up a tmp directory to do this `jq` transform to leave artifacts if anything goes "boom",
@@ -65,7 +65,7 @@ if [[ -n $(< /etc/ptfe/custom-ca-cert-url) && \
   mkdir -p "${ca_tmp_dir}"
   pushd "${ca_tmp_dir}"
   touch ${local_messages_file}
-  if wget --trust-server-files "${custom_ca_cert_url}" >> ./wget_output.log 2>&1;
+  if wget --trust-server-names "${custom_ca_cert_url}" >> ./wget_output.log 2>&1;
   then
     if [ -f "${ca_tmp_dir}/${custom_ca_cert_file_name}" ];
     then
