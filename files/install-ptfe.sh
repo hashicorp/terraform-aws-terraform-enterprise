@@ -54,8 +54,8 @@ repl_cidr="/etc/ptfe/repl-cidr"
 # ------------------------------------------------------------------------------
 if [[ -n $(< /etc/ptfe/custom-ca-cert-url) && \
       $(< /etc/ptfe/custom-ca-cert-url) != none ]]; then
-  custom_ca_cert_url=$(cat /etc/ptfe/custom-ca-cert-url)
-  custom_ca_cert_file_name=$(echo "${custom_ca_cert_url}" | awk -F '/' '{ print $NF }')
+  custom_ca_bundle_url=$(cat /etc/ptfe/custom-ca-cert-url)
+  custom_ca_cert_file_name=$(echo "${custom_ca_bundle_url}" | awk -F '/' '{ print $NF }')
   ca_tmp_dir="/tmp/ptfe-customer-certs"
   replicated_conf_file="replicated-ptfe.conf"
   local_messages_file="local_messages.log"
@@ -65,7 +65,7 @@ if [[ -n $(< /etc/ptfe/custom-ca-cert-url) && \
   mkdir -p "${ca_tmp_dir}"
   pushd "${ca_tmp_dir}"
   touch ${local_messages_file}
-  if wget --trust-server-names "${custom_ca_cert_url}" >> ./wget_output.log 2>&1;
+  if wget --trust-server-names "${custom_ca_bundle_url}" >> ./wget_output.log 2>&1;
   then
     if [ -f "${ca_tmp_dir}/${custom_ca_cert_file_name}" ];
     then
@@ -87,12 +87,12 @@ if [[ -n $(< /etc/ptfe/custom-ca-cert-url) && \
         echo "" | tee -a "${local_messages_file}"
       fi
     else
-      echo "The filename ${custom_ca_cert_file_name} was not what ${custom_ca_cert_url} downloaded." | tee -a "${local_messages_file}"
+      echo "The filename ${custom_ca_cert_file_name} was not what ${custom_ca_bundle_url} downloaded." | tee -a "${local_messages_file}"
       echo "Inspect the ${ca_tmp_dir} directory to verify the file that was downloaded." | tee -a "${local_messages_file}"
       echo "" | tee -a "${local_messages_file}"
     fi
   else
-    echo "There was an error downloading the file ${custom_ca_cert_file_name} from ${custom_ca_cert_url}." | tee -a "${local_messages_file}"
+    echo "There was an error downloading the file ${custom_ca_cert_file_name} from ${custom_ca_bundle_url}." | tee -a "${local_messages_file}"
     echo "See the ${ca_tmp_dir}/wget_output.log file." | tee -a "${local_messages_file}"
     echo "" | tee -a "${local_messages_file}"
   fi
