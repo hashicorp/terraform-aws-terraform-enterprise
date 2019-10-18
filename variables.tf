@@ -42,9 +42,9 @@ variable "airgap_package_url" {
   default     = ""
 }
 
-variable "ca_cert_url" {
+variable "ca_bundle_url" {
   type        = "string"
-  description = "URL to CA certificate file used for the internal `ptfe-proxy` used for outgoing connections"
+  description = "URL to Custom CA bundle used for outgoing connections"
   default     = "none"
 }
 
