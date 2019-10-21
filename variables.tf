@@ -116,7 +116,7 @@ variable "installer_url" {
 
 variable "primary_count" {
   type        = "string"
-  description = "The number of primary cluster master nodes to run, should be 3 or 5."
+  description = "The number of primary cluster master nodes to run, only 3 support now."
   default     = 3
 }
 
