@@ -1,7 +1,7 @@
 locals {
   demo_or_es   = "${var.postgresql_address != "" ? "external_services" : "demo"}"
   ag_or_ol     = "${var.airgap_package_url != "" ? "airgap" : "online" }"
-  install_type = "${demo_or_es}-${ag_or_ol}"
+  install_type = "${local.demo_or_es}-${local.ag_or_ol}"
 }
 
 # Settings for automated PTFE installation
