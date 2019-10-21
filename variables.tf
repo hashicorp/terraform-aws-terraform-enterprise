@@ -102,12 +102,6 @@ variable "import_key" {
   default     = ""
 }
 
-variable "install_type" {
-  type        = "string"
-  description = "Installation type. options are (demo, airgap, es, or es_airgap)"
-  default     = "demo"
-}
-
 variable "installer_url" {
   type        = "string"
   description = "URL to the cluster setup tool"
@@ -197,12 +191,6 @@ variable "aws_access_key_id" {
 variable "aws_secret_access_key" {
   type        = "string"
   description = "AWS secret access key to connect to s3 with"
-  default     = ""
-}
-
-variable "external_services" {
-  type        = "string"
-  description = "object store provider for external services. Allowed values: aws"
   default     = ""
 }
 

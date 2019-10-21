@@ -1,6 +1,12 @@
+locals {
+  demo_or_es   = "${var.postgresql_address != "" ? "external_services" : "demo"}"
+  ag_or_ol     = "${var.airgap_package_url != "" ? "airgap" : "online" }"
+  install_type = "${demo_or_es}-${ag_or_ol}"
+}
+
 # Settings for automated PTFE installation
 data "template_file" "repl_ptfe_config" {
-  template = "${local.rptfeconf[var.install_type]}"
+  template = "${local.rptfeconf[local.install_type]}"
 
   vars {
     hostname               = "${module.lb.endpoint}"
@@ -22,7 +28,7 @@ data "template_file" "repl_ptfe_config" {
 
 # Settings for automated replicated installation.
 data "template_file" "repl_config" {
-  template = "${local.replconf[var.install_type]}"
+  template = "${local.replconf[local.install_type]}"
 
   vars = {
     console_password = "${random_pet.console_password.id}"
