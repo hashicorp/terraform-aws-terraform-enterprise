@@ -1,8 +1,9 @@
 resource "aws_instance" "primary" {
-  # The number of primaries must be hard coded to 3 when Internal Production Mode
-  # is selected. Currently, that mode does not support scaling. In other modes, the 
-  # cluster can be scaled according the primary_count variable.
-  count = "${var.install_type == "ipm" ? 3 : var.primary_count}"
+  # The number of primaries must be hard coded to 3 always for now.
+  # In the future we'll allow for different variables of primary, but it
+  # make sense to constrain the domain of problem related to primary counts
+  # for now.
+  count = 3
 
   ami           = "${var.ami != "" ? var.ami : local.distro_ami}"
   instance_type = "${var.primary_instance_type}"

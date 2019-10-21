@@ -1,5 +1,6 @@
 resource "aws_elb" "cluster_api" {
-  name_prefix = "${var.prefix}"
+  # Lowered to be sure it's compliant with https://github.com/kubernetes/apimachinery/blob/461753078381c979582f217a28eb759ebee5295d/pkg/util/validation/validation.go#L132
+  name_prefix = "${lower(var.prefix)}"
   subnets     = ["${module.common.private_subnets}"]
   internal    = true
 
