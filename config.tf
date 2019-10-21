@@ -1,9 +1,7 @@
 locals {
-  app_data_mode   = "${var.postgresql_address != "" ? "external_services" : "demo"}"
-  
-  or something to say what it is better.
-  app_network_type     = "${var.airgap_package_url != "" ? "airgap" : "online" }"
-  install_type = "${local.demo_or_es}-${local.ag_or_ol}"
+  app_data_mode    = "${var.postgresql_address != "" ? "external_services" : "demo"}"
+  app_network_type = "${var.airgap_package_url != "" ? "airgap" : "online" }"
+  install_type     = "${local.app_data_mode}-${local.app_network_type}"
 }
 
 # Settings for automated PTFE installation
