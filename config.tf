@@ -61,7 +61,7 @@ data "template_file" "cloud_config" {
     weave_cidr           = "${var.weave_cidr}"
     repl_cidr            = "${var.repl_cidr}"
 
-    network_type = "${var.app_network_type}"
+    network_type = "${local.app_network_type}"
 
     ca_bundle_url = "${var.ca_bundle_url}"
 
@@ -97,7 +97,7 @@ data "template_file" "cloud_config_secondary" {
     proxy_url            = "${var.http_proxy_url}"
     installer_url        = "${var.installer_url}"
     role                 = "secondary"
-    network_type         = "${var.app_network_type}"
+    network_type         = "${local.app_network_type}"
 
     ca_bundle_url = "${var.ca_bundle_url}"
 
