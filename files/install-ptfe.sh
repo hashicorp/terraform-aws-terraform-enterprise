@@ -107,6 +107,14 @@ ptfe_install_args=(
     --health-url "$(cat /etc/ptfe/health-url)"
 )
 
+network_type="$(cat /etc/ptfe/network-type)"
+
+if [ "x${network_type}x" == "xairgapx" ]; then
+    ptfe_install_args+=(
+        "--airgap"
+    )
+fi
+
 if [ "x${role}x" == "xmainx" ]; then
     verb="setup"
     export verb
