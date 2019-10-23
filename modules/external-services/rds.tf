@@ -44,7 +44,7 @@ resource "aws_db_subnet_group" "tfe" {
 }
 
 resource "aws_rds_cluster" "tfe" {
-  cluster_identifier_prefix = "${var.prefix}tfe"
+  cluster_identifier_prefix = "${var.prefix}tfe-${var.install_id}"
   engine                    = "aurora-postgresql"
   database_name             = "${var.database_name}"
   master_username           = "${var.database_username}"
@@ -53,6 +53,7 @@ resource "aws_rds_cluster" "tfe" {
   backup_retention_period   = 5
   preferred_backup_window   = "07:00-09:00"
   vpc_security_group_ids    = ["${aws_security_group.db_access.id}"]
+  final_snapshot_identifier = "${var.prefix}tfe-${var.install_id}-final"
 }
 
 resource "aws_rds_cluster_instance" "tfe1" {
