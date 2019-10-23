@@ -35,8 +35,8 @@ resource "random_string" "database_password" {
 }
 
 resource "aws_db_subnet_group" "tfe" {
-  name       = "${var.prefix}tfe"
-  subnet_ids = ["${data.aws_subnet.selected.*.id}"]
+  name_prefix = "${var.prefix}tfe-${var.install_id}"
+  subnet_ids  = ["${data.aws_subnet.selected.*.id}"]
 
   tags = {
     Name = "tfe subnet group"
