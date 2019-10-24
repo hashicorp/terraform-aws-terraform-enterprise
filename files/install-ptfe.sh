@@ -49,56 +49,7 @@ airgap_installer_url_path="/etc/ptfe/airgap-installer-url"
 weave_cidr="/etc/ptfe/weave-cidr"
 repl_cidr="/etc/ptfe/repl-cidr"
 
-# ------------------------------------------------------------------------------
-# Custom CA certificate download and configuration block
-# ------------------------------------------------------------------------------
-if [[ -n $(< /etc/ptfe/custom-ca-cert-url) && \
-      $(< /etc/ptfe/custom-ca-cert-url) != none ]]; then
-  custom_ca_bundle_url=$(cat /etc/ptfe/custom-ca-cert-url)
-  custom_ca_cert_file_name=$(echo "${custom_ca_bundle_url}" | awk -F '/' '{ print $NF }')
-  ca_tmp_dir="/tmp/ptfe-customer-certs"
-  replicated_conf_file="replicated-ptfe.conf"
-  local_messages_file="local_messages.log"
-  # Setting up a tmp directory to do this `jq` transform to leave artifacts if anything goes "boom",
-  # since we're trusting user input to be both a working URL and a valid certificate.
-  # These artifacts will live in /tmp/ptfe/customer-certs/{local_messages.log,wget_output.log} files.
-  mkdir -p "${ca_tmp_dir}"
-  pushd "${ca_tmp_dir}"
-  touch ${local_messages_file}
-  if wget --trust-server-names "${custom_ca_bundle_url}" >> ./wget_output.log 2>&1;
-  then
-    if [ -f "${ca_tmp_dir}/${custom_ca_cert_file_name}" ];
-    then
-      if openssl x509 -in "${custom_ca_cert_file_name}" -text -noout;
-      then
-        mv "${custom_ca_cert_file_name}" cust-ca-certificates.crt
-        cp /etc/${replicated_conf_file} ./${replicated_conf_file}.original
-        jq ". + { ca_certs: { value: \"$(cat cust-ca-certificates.crt)\" } }" -- ${replicated_conf_file}.original > ${replicated_conf_file}.updated
-        if jq -e . > /dev/null 2>&1 -- ${replicated_conf_file}.updated;
-        then
-          cp ./${replicated_conf_file}.updated /etc/${replicated_conf_file}
-        else
-          echo "The updated ${replicated_conf_file} file is not valid JSON." | tee -a "${local_messages_file}"
-          echo "Review ${ca_tmp_dir}/${replicated_conf_file}.original and ${ca_tmp_dir}/${replicated_conf_file}.updated." | tee -a "${local_messages_file}"
-          echo "" | tee -a "${local_messages_file}"
-        fi
-      else
-        echo "The certificate file wasn't able to validated via openssl" | tee -a "${local_messages_file}"
-        echo "" | tee -a "${local_messages_file}"
-      fi
-    else
-      echo "The filename ${custom_ca_cert_file_name} was not what ${custom_ca_bundle_url} downloaded." | tee -a "${local_messages_file}"
-      echo "Inspect the ${ca_tmp_dir} directory to verify the file that was downloaded." | tee -a "${local_messages_file}"
-      echo "" | tee -a "${local_messages_file}"
-    fi
-  else
-    echo "There was an error downloading the file ${custom_ca_cert_file_name} from ${custom_ca_bundle_url}." | tee -a "${local_messages_file}"
-    echo "See the ${ca_tmp_dir}/wget_output.log file." | tee -a "${local_messages_file}"
-    echo "" | tee -a "${local_messages_file}"
-  fi
 
-  popd
-fi
 
 ptfe_install_args=(
     -DD
@@ -146,6 +97,57 @@ if [ "x${role}x" == "xmainx" ]; then
       ptfe_install_args+=(
           "--service-cidr=$(cat /etc/ptfe/repl-cidr)"
       )
+    fi
+
+    # ------------------------------------------------------------------------------
+    # Custom CA certificate download and configuration block
+    # ------------------------------------------------------------------------------
+    if [[ -n $(< /etc/ptfe/custom-ca-cert-url) && \
+          $(< /etc/ptfe/custom-ca-cert-url) != none ]]; then
+      custom_ca_bundle_url=$(cat /etc/ptfe/custom-ca-cert-url)
+      custom_ca_cert_file_name=$(echo "${custom_ca_bundle_url}" | awk -F '/' '{ print $NF }')
+      ca_tmp_dir="/tmp/ptfe-customer-certs"
+      replicated_conf_file="replicated-ptfe.conf"
+      local_messages_file="local_messages.log"
+      # Setting up a tmp directory to do this `jq` transform to leave artifacts if anything goes "boom",
+      # since we're trusting user input to be both a working URL and a valid certificate.
+      # These artifacts will live in /tmp/ptfe/customer-certs/{local_messages.log,wget_output.log} files.
+      mkdir -p "${ca_tmp_dir}"
+      pushd "${ca_tmp_dir}"
+      touch ${local_messages_file}
+      if wget --trust-server-names "${custom_ca_bundle_url}" >> ./wget_output.log 2>&1;
+      then
+        if [ -f "${ca_tmp_dir}/${custom_ca_cert_file_name}" ];
+        then
+          if openssl x509 -in "${custom_ca_cert_file_name}" -text -noout;
+          then
+            mv "${custom_ca_cert_file_name}" cust-ca-certificates.crt
+            cp /etc/${replicated_conf_file} ./${replicated_conf_file}.original
+            jq ". + { ca_certs: { value: \"$(cat cust-ca-certificates.crt)\" } }" -- ${replicated_conf_file}.original > ${replicated_conf_file}.updated
+            if jq -e . > /dev/null 2>&1 -- ${replicated_conf_file}.updated;
+            then
+              cp ./${replicated_conf_file}.updated /etc/${replicated_conf_file}
+            else
+              echo "The updated ${replicated_conf_file} file is not valid JSON." | tee -a "${local_messages_file}"
+              echo "Review ${ca_tmp_dir}/${replicated_conf_file}.original and ${ca_tmp_dir}/${replicated_conf_file}.updated." | tee -a "${local_messages_file}"
+              echo "" | tee -a "${local_messages_file}"
+            fi
+          else
+            echo "The certificate file wasn't able to validated via openssl" | tee -a "${local_messages_file}"
+            echo "" | tee -a "${local_messages_file}"
+          fi
+        else
+          echo "The filename ${custom_ca_cert_file_name} was not what ${custom_ca_bundle_url} downloaded." | tee -a "${local_messages_file}"
+          echo "Inspect the ${ca_tmp_dir} directory to verify the file that was downloaded." | tee -a "${local_messages_file}"
+          echo "" | tee -a "${local_messages_file}"
+        fi
+      else
+        echo "There was an error downloading the file ${custom_ca_cert_file_name} from ${custom_ca_bundle_url}." | tee -a "${local_messages_file}"
+        echo "See the ${ca_tmp_dir}/wget_output.log file." | tee -a "${local_messages_file}"
+        echo "" | tee -a "${local_messages_file}"
+      fi
+
+      popd
     fi
 fi
 
