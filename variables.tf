@@ -33,7 +33,7 @@ variable "prefix" {
 variable "airgap_installer_url" {
   type        = "string"
   description = "URL to airgap installer package"
-  default     = "https://install.terraform.io/installer/replicated-v5.tar.gz"
+  default     = "https://s3.amazonaws.com/replicated-airgap-work/replicated__docker__kubernetes.tar.gz"
 }
 
 variable "airgap_package_url" {

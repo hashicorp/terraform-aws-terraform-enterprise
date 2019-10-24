@@ -127,13 +127,10 @@ if [ "x${role}x" == "xmainx" ]; then
     if test -e "$airgap_url_path"; then
         mkdir -p /var/lib/ptfe
         pushd /var/lib/ptfe
-        curl -sfSL -o /var/lib/ptfe/ptfe.airgap "$(< "$airgap_url_path")"
-        curl -sfSL -o /var/lib/ptfe/replicated.tar.gz "$(< "$airgap_installer_url_path")"
+        airgap_url="$(< "$airgap_url_path")"
+        echo "Downloading airgap package from $airgap_url"
+        ptfe util download "$airgap_url" /var/lib/ptfe/ptfe.airgap
         popd
-
-        ptfe_install_args+=(
-            --airgap-installer /var/lib/ptfe/replicated.tar.gz
-        )
     fi
 
     if test -e "$weave_cidr"; then
@@ -169,6 +166,18 @@ if [ "x${role}x" == "xsecondaryx" ]; then
     export verb
 fi
 
+if test -e "$airgap_installer_url_path"; then
+    mkdir -p /var/lib/ptfe
+    pushd /var/lib/ptfe
+    airgap_installer_url="$(< "$airgap_installer_url_path")"
+    echo "Downloading airgap installer from $airgap_installer_url"
+    ptfe util download "$airgap_installer_url" /var/lib/ptfe/replicated.tar.gz
+    popd
+
+    ptfe_install_args+=(
+        --airgap-installer /var/lib/ptfe/replicated.tar.gz
+    )
+fi
 
 echo "Running 'ptfe install $verb ${ptfe_install_args[@]}'"
 ptfe install $verb "${ptfe_install_args[@]}"
