@@ -100,7 +100,7 @@ if [ "x${role}x" == "xmainx" ]; then
     # Custom CA certificate download and configuration block
     # ------------------------------------------------------------------------------
     if [[ -n $(< /etc/ptfe/custom-ca-cert-url) && \
-          $(< /etc/ptfe/custom-ca-cert-url)  none ]]; then
+          $(< /etc/ptfe/custom-ca-cert-url) != none ]]; then
       custom_ca_bundle_url=$(cat /etc/ptfe/custom-ca-cert-url)
       custom_ca_cert_file_name=$(echo "${custom_ca_bundle_url}" | awk -F '/' '{ print $NF }')
       ca_tmp_dir="/tmp/ptfe-customer-certs"
