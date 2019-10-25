@@ -29,6 +29,13 @@ write_files:
   permissions: "0400"
   content: "${health_url}"
 
+%{ if airgap_installer_url != "" }
+- path: /etc/ptfe/airgap-installer-url
+  owner: root:root
+  permissions: "0644"
+  content: ${airgap_installer_url}
+%{ endif }
+
 - path: /var/lib/cloud/scripts/per-once/install-ptfe.sh
   owner: root:root
   permissions: "0555"
