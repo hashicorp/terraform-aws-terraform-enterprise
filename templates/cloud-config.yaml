@@ -71,6 +71,14 @@ write_files:
     export http_proxy="${proxy_url}"
     export https_proxy="${proxy_url}"
     export no_proxy=10.0.0.0/8,127.0.0.1,169.254.169.254
+
+%{ if airgap_installer_url != "" }
+- path: /etc/ptfe/airgap-installer-url
+  owner: root:root
+  permissions: "0644"
+  content: ${airgap_installer_url}
+%{ endif }
+
 %{ if role == "main" }
 - path: /etc/replicated.rli
   owner: root:root
@@ -96,11 +104,6 @@ write_files:
   owner: root:root
   permissions: "0644"
   content: ${airgap_package_url}
-
-- path: /etc/ptfe/airgap-installer-url
-  owner: root:root
-  permissions: "0644"
-  content: ${airgap_installer_url}
 %{ endif }
 
 %{ if weave_cidr != "" }
@@ -117,6 +120,7 @@ write_files:
   content: ${repl_cidr}
 %{ endif }
 %{ endif }
+
 %{ if distro == "ubuntu" }
 - path: /etc/apt/apt.conf.d/00_aaa_proxy.conf
   owner: root:root

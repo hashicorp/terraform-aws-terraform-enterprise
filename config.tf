@@ -96,6 +96,8 @@ data "template_file" "cloud_config_secondary" {
     installer_url        = "${var.installer_url}"
     role                 = "secondary"
 
+    airgap_installer_url = "${var.airgap_installer_url}"
+
     ca_bundle_url = "${var.ca_bundle_url}"
 
     import_key = "${var.import_key}"
