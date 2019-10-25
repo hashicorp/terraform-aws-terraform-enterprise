@@ -103,12 +103,12 @@ if [ "x${role}x" == "xmainx" ]; then
     # Custom CA certificate download and configuration block
     # ------------------------------------------------------------------------------
     if [[ -n $(< /etc/ptfe/custom-ca-cert-url) && \
-          $(< /etc/ptfe/custom-ca-cert-url) != none ]]; then
+          $(< /etc/ptfe/custom-ca-cert-url)  none ]]; then
       custom_ca_bundle_url=$(cat /etc/ptfe/custom-ca-cert-url)
       custom_ca_cert_file_name=$(echo "${custom_ca_bundle_url}" | awk -F '/' '{ print $NF }')
       ca_tmp_dir="/tmp/ptfe-customer-certs"
       replicated_conf_file="replicated-ptfe.conf"
-      local_messages_file="local_messages.log"
+      local_messages_file="/var/log/tfe-custom-cert-install.log"
       # Setting up a tmp directory to do this `jq` transform to leave artifacts if anything goes "boom",
       # since we're trusting user input to be both a working URL and a valid certificate.
       # These artifacts will live in /tmp/ptfe/customer-certs/{local_messages.log,wget_output.log} files.
