@@ -51,12 +51,27 @@ repl_cidr="/etc/ptfe/repl-cidr"
 
 
 
+
+health_url="$(cat /etc/ptfe/health-url)"
+
 ptfe_install_args=(
     -DD
     "--bootstrap-token=$(cat /etc/ptfe/bootstrap-token)" \
     "--cluster-api-endpoint=$(cat /etc/ptfe/cluster-api-endpoint)" \
-    --health-url "$(cat /etc/ptfe/health-url)"
+    --health-url "$health_url"
+    --assistant-host "$(cat /etc/ptfe/assistant-host)"
+    --assistant-token "$(cat /etc/ptfe/assistant-token)"
 )
+
+role_id=0
+
+if test -e /etc/ptfe/role-id; then
+    role_id="$(cat /etc/ptfe/role-id)"
+    ptfe_install_args+=(
+        --role-id "$role_id"
+    )
+fi
+
 
 if [ "x${role}x" == "xmainx" ]; then
     verb="setup"
@@ -146,12 +161,16 @@ if [ "x${role}x" == "xmainx" ]; then
 
       popd
     fi
+else
+    # We do this before continuing so that the airgap_installer_url can reference
+    # the internal load balancer and retrieve files from the primary
+    echo "Waiting for cluster to start before continuing..."
+    ptfe install join --role-id "$role_id" --health-url "$health_url" --wait-for-cluster
 fi
 
 if [ "x${role}x" != "xsecondaryx" ]; then
     ptfe_install_args+=(
         --primary-pki-url "$(cat /etc/ptfe/primary-pki-url)"
-        --role-id "$(cat /etc/ptfe/role-id)"
     )
 fi
 

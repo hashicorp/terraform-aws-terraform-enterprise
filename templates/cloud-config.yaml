@@ -43,6 +43,16 @@ write_files:
   permissions: "0400"
   content: "${health_url}"
 
+- path: /etc/ptfe/assistant-host
+  owner: root:root
+  permissions: "0400"
+  content: "${assistant_host}"
+
+- path: /etc/ptfe/assistant-token
+  owner: root:root
+  permissions: "0400"
+  content: "${assistant_token}"
+
 - path: /etc/ptfe/role-id
   owner: root:root
   permissions: "0444"
