@@ -146,7 +146,7 @@ variable "ssh_user" {
 
 variable "startup_script" {
   type        = "string"
-  description = "shell to run when primary instance boots"
+  description = "shell script to run when primary instance boots the first time"
   default     = ""
 }
 
