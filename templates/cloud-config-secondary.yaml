@@ -29,6 +29,16 @@ write_files:
   permissions: "0400"
   content: "${health_url}"
 
+- path: /etc/ptfe/assistant-host
+  owner: root:root
+  permissions: "0400"
+  content: "${assistant_host}"
+
+- path: /etc/ptfe/assistant-token
+  owner: root:root
+  permissions: "0400"
+  content: "${assistant_token}"
+
 %{ if airgap_installer_url != "" }
 - path: /etc/ptfe/airgap-installer-url
   owner: root:root

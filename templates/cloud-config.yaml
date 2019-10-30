@@ -43,10 +43,28 @@ write_files:
   permissions: "0400"
   content: "${health_url}"
 
+- path: /etc/ptfe/assistant-host
+  owner: root:root
+  permissions: "0400"
+  content: "${assistant_host}"
+
+- path: /etc/ptfe/assistant-token
+  owner: root:root
+  permissions: "0400"
+  content: "${assistant_token}"
+
 - path: /etc/ptfe/role-id
   owner: root:root
   permissions: "0444"
   content: "${role_id}"
+
+%{ if startup_script != "" }
+- path: /var/lib/cloud/scripts/per-once/000-user-startup-script.sh
+  owner: root:root
+  permissions: "0555"
+  encoding: b64
+  content: ${startup_script}
+%{ endif }
 
 - path: /var/lib/cloud/scripts/per-once/install-ptfe.sh
   owner: root:root

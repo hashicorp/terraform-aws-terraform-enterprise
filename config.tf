@@ -36,6 +36,10 @@ data "template_file" "repl_config" {
   }
 }
 
+locals {
+  internal_airgap_url = "http://${aws_elb.cluster_api.dns_name}:${local.assistant_port}/setup-files/replicated.tar.gz?token=${random_string.setup_token.result}"
+}
+
 data "template_file" "cloud_config" {
   count    = "${var.primary_count}"
   template = "${file("${path.module}/templates/cloud-config.yaml")}"
@@ -48,7 +52,7 @@ data "template_file" "cloud_config" {
 
     # Needed for Airgap installations
     airgap_package_url   = "${var.airgap_package_url}"
-    airgap_installer_url = "${var.airgap_installer_url}"
+    airgap_installer_url = "${var.airgap_package_url == "" ? "" : count.index == 0 ? var.airgap_installer_url : local.internal_airgap_url}"
 
     bootstrap_token      = "${random_string.bootstrap_token_id.result}.${random_string.bootstrap_token_suffix.result}"
     cluster_api_endpoint = "${aws_elb.cluster_api.dns_name}:6443"
@@ -56,6 +60,8 @@ data "template_file" "cloud_config" {
     primary_pki_url      = "http://${aws_elb.cluster_api.dns_name}:${local.assistant_port}/api/v1/pki-download?token=${random_string.setup_token.result}"
     role_id              = "${count.index}"
     health_url           = "http://${aws_elb.cluster_api.dns_name}:${local.assistant_port}/healthz"
+    assistant_host       = "http://${aws_elb.cluster_api.dns_name}:${local.assistant_port}"
+    assistant_token      = "${random_string.setup_token.result}"
     proxy_url            = "${var.http_proxy_url}"
     installer_url        = "${var.installer_url}"
     weave_cidr           = "${var.weave_cidr}"
@@ -92,11 +98,13 @@ data "template_file" "cloud_config_secondary" {
     bootstrap_token      = "${random_string.bootstrap_token_id.result}.${random_string.bootstrap_token_suffix.result}"
     cluster_api_endpoint = "${aws_elb.cluster_api.dns_name}:6443"
     health_url           = "http://${aws_elb.cluster_api.dns_name}:${local.assistant_port}/healthz"
+    assistant_host       = "http://${aws_elb.cluster_api.dns_name}:${local.assistant_port}"
+    assistant_token      = "${random_string.setup_token.result}"
     proxy_url            = "${var.http_proxy_url}"
     installer_url        = "${var.installer_url}"
     role                 = "secondary"
 
-    airgap_installer_url = "${var.airgap_installer_url}"
+    airgap_installer_url = "${var.airgap_package_url == "" ? "" : local.internal_airgap_url}"
 
     ca_bundle_url = "${var.ca_bundle_url}"
 
