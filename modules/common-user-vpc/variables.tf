@@ -12,12 +12,6 @@ variable "prefix" {
 
 ### =================================================================== OPTIONAL
 
-variable "cidr" {
-  type        = "string"
-  description = "cidr block for vpc"
-  default     = "10.0.0.0/16"
-}
-
 variable "subnet_tags" {
   type        = "map"
   description = "tags to use to match subnets to use"
