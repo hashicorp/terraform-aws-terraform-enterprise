@@ -105,7 +105,7 @@ variable "import_key" {
 variable "installer_url" {
   type        = "string"
   description = "URL to the cluster setup tool"
-  default     = "https://install.terraform.io/installer/ptfe.zip"
+  default     = "https://install.terraform.io/installer/ptfe-0.1.zip"
 }
 
 variable "primary_count" {
