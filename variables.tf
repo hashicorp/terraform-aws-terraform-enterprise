@@ -60,12 +60,6 @@ variable "cert_domain" {
   default     = ""
 }
 
-variable "cidr" {
-  type        = "string"
-  description = "cidr block for vpc"
-  default     = "10.0.0.0/16"
-}
-
 variable "distribution" {
   type        = "string"
   description = "Type of linux distribution to use. (ubuntu or rhel)"
@@ -118,12 +112,6 @@ variable "primary_instance_type" {
   type        = "string"
   description = "ec2 instance type"
   default     = "m4.xlarge"
-}
-
-variable "region" {
-  type        = "string"
-  description = "aws region where resources will be created"
-  default     = "us-west-2"
 }
 
 variable "secondary_count" {
