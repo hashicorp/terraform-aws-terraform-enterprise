@@ -1,12 +1,12 @@
-# Terraform Enterprise: High Availability for AWS (BETA)
+# Terraform Enterprise: Clustering for AWS
 
 ![Terraform Logo](https://github.com/hashicorp/terraform-aws-terraform-enterprise/blob/master/assets/TerraformLogo.png?raw=true)
 
 ## Description
 
-This module installs Terraform Enterprise HA BETA onto 3 or more aws instances.
+This module installs Terraform Enterprise: Clustering onto three or more AWS instances.
 
-The Replicated license used must have been activated for Terraform Enterprise HA before this module can be used.
+The Replicated license used must have been activated for Terraform Enterprise: Clustering before this module can be used.
 
 ## Architecture
 
