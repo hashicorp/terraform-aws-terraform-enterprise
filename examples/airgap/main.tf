@@ -15,7 +15,7 @@ provider "aws" {
 
 module "external" {
   source  = "hashicorp/terraform-enterprise/aws/modules/external-services"
-  version = ">= 0.0.5-beta"
+  version = "0.1.0"
 
   vpc_id     = "${local.vpc_id}"
   install_id = "${module.terraform-enterprise.install_id}"
@@ -25,30 +25,28 @@ module "external" {
   }
 }
 
-resource "aws_iam_role_policy" "setup-bucket" {
-  role = "${module.terraform-enterprise.iam_role}"
-  name = "${local.setup_bucket}-${module.terraform-enterprise.install_id}"
+data "aws_iam_policy_document" "setup-bucket" {
+  statement {
+    resources = [
+      "arn:aws:s3:::${local.setup_bucket}",
+      "arn:aws:s3:::${local.setup_bucket}/*",
+    ]
 
-  policy = <<__policy
-{
-    "Version": "2012-10-17",
-    "Statement": [{
-        "Resource": [
-            "arn:aws:s3:::${local.setup_bucket}",
-            "arn:aws:s3:::${local.setup_bucket}/*"
-        ],
-        "Effect": "Allow",
-        "Action": [
-            "s3:*"
-        ]
-    }]
+    actions = [
+      "s3:*",
+    ]
+  }
 }
-__policy
+
+resource "aws_iam_role_policy" "setup-bucket" {
+  role   = "${module.terraform-enterprise.iam_role}"
+  name   = "${local.setup_bucket}-${module.terraform-enterprise.install_id}"
+  policy = "${data.aws_iam_policy_document.setup-bucket.json}"
 }
 
 module "terraform-enterprise" {
   source  = "hashicorp/terraform-enterprise/aws"
-  version = ">= 0.0.5-beta"
+  version = "0.1.0"
 
   vpc_id = "${local.vpc_id}"
   domain = "${local.domain}"
