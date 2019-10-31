@@ -1,4 +1,4 @@
-# Terraform Enterprise HA (Beta) Example
+# Terraform Enterprise Clustering Example
 
 This example assumes you have already set up your aws project with the required prereqs:
 
@@ -10,7 +10,7 @@ This example assumes you have already set up your aws project with the required 
 
 With this code you can either create a single instance, or a build a cluster:
 
-![basic architecture diagram](https://github.com/hashicorp/terraform-aws-terraform-enterprise/blob/v0.0.1-beta/assets/aws_diagram.jpg?raw=true)
+![basic architecture diagram](https://github.com/hashicorp/terraform-aws-terraform-enterprise/blob/master/assets/aws_diagram.jpg?raw=true)
 
 ## Change to the example directory
 
@@ -54,7 +54,7 @@ Apply complete! Resources: 33 added, 0 changed, 0 destroyed.
 
 Outputs:
 
-tfe-beta = {
+tfe-cluster = {
   application_endpoint = https://tfe-hvg9o7lo.example.com
   application_health_check = https://tfe-hvg9o7lo.example.com/_health_check
   iam_role = tfe-hvg9o7lo
@@ -62,8 +62,8 @@ tfe-beta = {
   installer_dashboard_url = https://tfe-hvg9o7lo.example.com:8800
   installer_dashboard_password = manually-grand-gator
   primary_public_ip = 12.34.56.78
-  ssh_config_file = /Users/jsmith/Documents/tfe-beta/.terraform/modules/c8066b63fe35e7cb30635ab501caa438/hashicorp-terraform-aws-terraform-enterprise-4dc067c/work/ssh-config
-  ssh_private_key = /Users/jsmith/Documents/tfe-beta/.terraform/modules/a1d4d4cc38b069facc8774038e3ad299/work/tfe-hvg9o7lo.priv
+  ssh_config_file = /Users/jsmith/Documents/tfe-cluster/.terraform/modules/c8066b63fe35e7cb30635ab501caa438/hashicorp-terraform-aws-terraform-enterprise-4dc067c/work/ssh-config
+  ssh_private_key = /Users/jsmith/Documents/tfe-cluster/.terraform/modules/a1d4d4cc38b069facc8774038e3ad299/work/tfe-hvg9o7lo.priv
 }
 ```
 
