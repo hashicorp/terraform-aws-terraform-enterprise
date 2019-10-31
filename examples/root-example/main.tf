@@ -4,7 +4,7 @@ provider "aws" {
 
 module "tfe-cluster" {
   source  = "hashicorp/terraform-enterprise/aws"
-  version = "0.0.4"
+  version = "0.1.0"
 
   vpc_id       = "vpc-123456789abcd1234"
   domain       = "example.com"
