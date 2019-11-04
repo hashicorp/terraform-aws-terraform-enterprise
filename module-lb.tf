@@ -15,5 +15,5 @@ module "lb" {
   update_route53 = "${var.update_route53}"
 
   cert_domain = "${var.cert_domain}"
-  cert_arn = "${var.cert_arn}"
+  cert_arn    = "${var.cert_arn}"
 }
