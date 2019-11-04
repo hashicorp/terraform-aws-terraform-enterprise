@@ -54,6 +54,12 @@ variable "ami" {
   default     = ""
 }
 
+variable "cert_arn" {
+  type        = "string"
+  description = "Amazon Resource Name (ARN) for Certificate in the ACM you'd like to use (default uses domain or cert_domain to look it up)"
+  default     = ""
+}
+
 variable "cert_domain" {
   type        = "string"
   description = "domain to search for ACM certificate with (default is *.domain)"
