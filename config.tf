@@ -50,6 +50,8 @@ data "template_file" "cloud_config" {
     license_b64     = "${base64encode(file("${var.license_file}"))}"
     install_ptfe_sh = "${base64encode(file("${path.module}/files/install-ptfe.sh"))}"
 
+    release_sequence      = "${var.release_sequence}"
+
     # Needed for Airgap installations
     airgap_package_url   = "${var.airgap_package_url}"
     airgap_installer_url = "${var.airgap_package_url == "" ? "" : count.index == 0 ? var.airgap_installer_url : local.internal_airgap_url}"

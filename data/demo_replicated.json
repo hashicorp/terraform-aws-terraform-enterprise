@@ -6,4 +6,7 @@
     "ImportSettingsFrom":           "/etc/replicated-ptfe.conf",
     "LicenseFileLocation":          "/etc/replicated.rli",
     "HttpProxy":                    "${proxy_url}"
+    %{ if release_sequence != "" }
+    ,"ReleaseSequence":             ${release_sequence}
+    %{ endif }
 }
