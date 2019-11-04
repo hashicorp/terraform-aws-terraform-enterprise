@@ -161,6 +161,7 @@ variable "weave_cidr" {
   description = "Specify a non-standard CIDR range for weave. The default is 10.32.0.0/12"
   default     = ""
 }
+
 variable "release_sequence" {
   type        = "string"
   description = "Replicated release sequence number to install - this locks the install to a specific release"

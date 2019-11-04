@@ -33,6 +33,7 @@ data "template_file" "repl_config" {
   vars = {
     console_password = "${random_pet.console_password.id}"
     proxy_url        = "${var.http_proxy_url}"
+    release_sequence = "${var.release_sequence}"
   }
 }
 
@@ -49,8 +50,6 @@ data "template_file" "cloud_config" {
 
     license_b64     = "${base64encode(file("${var.license_file}"))}"
     install_ptfe_sh = "${base64encode(file("${path.module}/files/install-ptfe.sh"))}"
-
-    release_sequence      = "${var.release_sequence}"
 
     # Needed for Airgap installations
     airgap_package_url   = "${var.airgap_package_url}"
