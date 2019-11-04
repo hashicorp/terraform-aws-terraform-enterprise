@@ -102,6 +102,12 @@ variable "installer_url" {
   default     = "https://install.terraform.io/installer/ptfe-0.1.zip"
 }
 
+variable "release_sequence" {
+  type        = "string"
+  description = "Replicated release sequence number to install - this locks the install to a specific release"
+  default     = ""
+}
+
 variable "primary_count" {
   type        = "string"
   description = "The number of primary cluster master nodes to run, only 3 support now."
