@@ -102,12 +102,6 @@ variable "installer_url" {
   default     = "https://install.terraform.io/installer/ptfe-0.1.zip"
 }
 
-variable "release_sequence" {
-  type        = "string"
-  description = "Replicated release sequence number to install - this locks the install to a specific release"
-  default     = ""
-}
-
 variable "primary_count" {
   type        = "string"
   description = "The number of primary cluster master nodes to run, only 3 support now."
@@ -165,6 +159,11 @@ variable "volume_size" {
 variable "weave_cidr" {
   type        = "string"
   description = "Specify a non-standard CIDR range for weave. The default is 10.32.0.0/12"
+  default     = ""
+}
+variable "release_sequence" {
+  type        = "string"
+  description = "Replicated release sequence number to install - this locks the install to a specific release"
   default     = ""
 }
 

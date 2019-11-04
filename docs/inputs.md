@@ -31,6 +31,7 @@
 | prefix | Name prefix for resource names and tags | string | `"tfe"` | no |
 | primary\_count | The number of primary cluster master nodes to run, only 3 support now. | string | `"3"` | no |
 | primary\_instance\_type | ec2 instance type | string | `"m4.xlarge"` | no |
+| release_sequence | Replicated release sequence | string | `""` | no |
 | repl\_cidr | Specify a non-standard CIDR range for the replicated services. The default is 10.96.0.0/12 | string | `""` | no |
 | s3\_bucket | S3 bucket to store objects into | string | `""` | no |
 | s3\_region | Region of the S3 bucket | string | `""` | no |
