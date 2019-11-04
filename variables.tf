@@ -162,6 +162,12 @@ variable "weave_cidr" {
   default     = ""
 }
 
+variable "release_sequence" {
+  type        = "string"
+  description = "Replicated release sequence number to install - this locks the install to a specific release"
+  default     = ""
+}
+
 variable "repl_cidr" {
   type        = "string"
   description = "Specify a non-standard CIDR range for the replicated services. The default is 10.96.0.0/12"

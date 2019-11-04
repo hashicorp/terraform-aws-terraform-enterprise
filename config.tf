@@ -33,6 +33,7 @@ data "template_file" "repl_config" {
   vars = {
     console_password = "${random_pet.console_password.id}"
     proxy_url        = "${var.http_proxy_url}"
+    release_sequence = "${var.release_sequence}"
   }
 }
 
