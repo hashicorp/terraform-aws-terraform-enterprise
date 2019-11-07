@@ -8,6 +8,8 @@ resource "aws_elb" "cluster_api" {
 
   security_groups = ["${module.common.intra_vpc_and_egress_sg_id}"]
 
+  idle_timeout = 3600 # for kubectl commands
+
   listener {
     instance_protocol = "TCP"
     instance_port     = 6443
