@@ -53,6 +53,16 @@ resource "aws_security_group" "allow_ptfe" {
   }
 
   ingress {
+    description = "http to ptfe application"
+
+    protocol  = "tcp"
+    from_port = 80
+    to_port   = 80
+
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
     description = "https to ptfe application"
 
     protocol  = "tcp"

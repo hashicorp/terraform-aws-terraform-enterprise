@@ -40,6 +40,14 @@ resource "aws_security_group" "lb_public" {
   }
 
   ingress {
+    description = "http to ptfe application"
+    protocol    = "tcp"
+    from_port   = 80
+    to_port     = 80
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
     description = "https to ptfe application"
     protocol    = "tcp"
     from_port   = 443
