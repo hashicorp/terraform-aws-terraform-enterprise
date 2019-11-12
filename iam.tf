@@ -15,9 +15,11 @@ resource "aws_iam_role" "ptfe" {
   ]
 }
 EOF
+
 }
 
 resource "aws_iam_instance_profile" "ptfe" {
   name = "${var.prefix}-${module.common.install_id}"
-  role = "${aws_iam_role.ptfe.name}"
+  role = aws_iam_role.ptfe.name
 }
+
