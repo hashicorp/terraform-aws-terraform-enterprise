@@ -1,25 +1,25 @@
 ### =================================================================== REQUIRED
 
 variable "vpc_id" {
-  type        = "string"
+  type        = string
   description = "AWS VPC id to install into"
 }
 
 variable "prefix" {
-  type        = "string"
+  type        = string
   description = "Prefix for resource names"
 }
 
 ### =================================================================== OPTIONAL
 
 variable "subnet_tags" {
-  type        = "map"
+  type        = map(string)
   description = "tags to use to match subnets to use"
   default     = {}
 }
 
 variable "allow_list" {
-  type        = "list"
+  type        = list(string)
   description = "list of CIDRs we allow to access the infrastructure"
   default     = []
 }

@@ -1,6 +1,6 @@
 resource "aws_security_group" "intra_vpc_and_egress" {
   description = "allow instances to talk to each other, and have unfettered egress"
-  vpc_id      = "${var.vpc_id}"
+  vpc_id      = var.vpc_id
 
   # NOTE: you cannot (should not) mix in-line ingress/egress rules with the
   # aws_security_group_rule resource
@@ -40,19 +40,19 @@ resource "aws_security_group_rule" "intra_vpc_and_egress_egress_rule" {
 # Allow whitelisted ranges to access our services.
 # For example, an HTTP proxy.
 resource "aws_security_group_rule" "allow_list" {
-  count             = "${length(var.allow_list) > 0 ? 1 : 0}"
+  count             = length(var.allow_list) > 0 ? 1 : 0
   type              = "ingress"
   protocol          = "-1"
   from_port         = 0
   to_port           = 0
-  cidr_blocks       = ["${var.allow_list}"]
-  security_group_id = "${aws_security_group.intra_vpc_and_egress.id}"
+  cidr_blocks       = var.allow_list
+  security_group_id = aws_security_group.intra_vpc_and_egress.id
 }
 
 resource "aws_security_group" "allow_ptfe" {
   name        = "ptfe ingress ${random_string.install_id.result}"
   description = "allow access to ptfe and replicated console"
-  vpc_id      = "${var.vpc_id}"
+  vpc_id      = var.vpc_id
 
   ingress {
     description = "ssh, because debugging"

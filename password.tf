@@ -5,5 +5,6 @@ resource "random_string" "default_enc_password" {
 }
 
 locals {
-  encryption_password = "${var.encryption_password != "" ? var.encryption_password : random_string.default_enc_password.result}"
+  encryption_password = var.encryption_password != "" ? var.encryption_password : random_string.default_enc_password.result
 }
+
