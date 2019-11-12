@@ -27,19 +27,19 @@ output "ssh_key_name" {
 }
 
 output "private_subnets" {
-  value = matchkeys(data.aws_subnet.selected.*.id, data.aws_subnet.selected.*.map_public_ip_on_launch, list("false"))
+  value = matchkeys(values(data.aws_subnet.selected)[*].id, values(data.aws_subnet.selected)[*].map_public_ip_on_launch, list("false"))
 }
 
 output "public_subnets" {
-  value = matchkeys(data.aws_subnet.selected.*.id, data.aws_subnet.selected.*.map_public_ip_on_launch, list("true"))
+  value = matchkeys(values(data.aws_subnet.selected)[*].id, values(data.aws_subnet.selected)[*].map_public_ip_on_launch, list("true"))
 }
 
 output "private_subnets_cidr_blocks" {
-  value = matchkeys(data.aws_subnet.selected.*.cidr_block, data.aws_subnet.selected.*.map_public_ip_on_launch, list("false"))
+  value = matchkeys(values(data.aws_subnet.selected)[*].cidr_block, values(data.aws_subnet.selected)[*].map_public_ip_on_launch, list("false"))
 }
 
 output "public_subnets_cidr_blocks" {
-  value = matchkeys(data.aws_subnet.selected.*.cidr_block, data.aws_subnet.selected.*.map_public_ip_on_launch, list("true"))
+  value = matchkeys(values(data.aws_subnet.selected)[*].cidr_block, values(data.aws_subnet.selected)[*].map_public_ip_on_launch, list("true"))
 }
 
 output "intra_vpc_and_egress_sg_id" {
