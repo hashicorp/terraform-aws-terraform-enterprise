@@ -66,7 +66,7 @@ variable "prefix" {
 
 ## issued certificate that the lb will be configured to use
 data "aws_acm_certificate" "lb" {
-  domain      = "${var.cert_domain != "" ? var.cert_domain : "*.${var.domain}"}"
+  domain      = var.cert_domain != "" ? var.cert_domain : "*.${var.domain}"
   statuses    = ["ISSUED"]
   most_recent = true
 }
@@ -78,7 +78,7 @@ data "aws_route53_zone" "zone" {
 }
 
 locals {
-  hostname = "${var.hostname != "" ? var.hostname : "ptfe-${var.install_id}"}"
+  hostname = var.hostname != "" ? var.hostname : "ptfe-${var.install_id}"
 
   ## https://${local.endpoint}/…
   endpoint = "${local.hostname}.${var.domain}"

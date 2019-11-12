@@ -54,27 +54,27 @@ resource "aws_lb_listener" "http" {
 }
 
 resource "aws_lb_listener" "https" {
-  load_balancer_arn = "${aws_lb.ptfe.arn}"
+  load_balancer_arn = aws_lb.ptfe.arn
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = "${var.cert_arn != "" ? var.cert_arn : data.aws_acm_certificate.lb.arn}"
+  certificate_arn   = var.cert_arn != "" ? var.cert_arn : data.aws_acm_certificate.lb.arn
 
   default_action {
     type             = "forward"
-    target_group_arn = "${aws_lb_target_group.https.arn}"
+    target_group_arn = aws_lb_target_group.https.arn
   }
 }
 
 resource "aws_lb_listener" "admin" {
-  load_balancer_arn = "${aws_lb.ptfe.arn}"
+  load_balancer_arn = aws_lb.ptfe.arn
   port              = "8800"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = "${var.cert_arn != "" ? var.cert_arn : data.aws_acm_certificate.lb.arn}"
+  certificate_arn   = var.cert_arn != "" ? var.cert_arn : data.aws_acm_certificate.lb.arn
 
   default_action {
     type             = "forward"
-    target_group_arn = "${aws_lb_target_group.admin.arn}"
+    target_group_arn = aws_lb_target_group.admin.arn
   }
 }

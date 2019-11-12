@@ -14,18 +14,18 @@ resource "tls_private_key" "default" {
 }
 
 resource "aws_key_pair" "generated" {
-  key_name   = "${local.key_name}"
-  public_key = "${tls_private_key.default.public_key_openssh}"
+  key_name   = local.key_name
+  public_key = tls_private_key.default.public_key_openssh
 }
 
 resource "local_file" "private_key_pem" {
-  content  = "${tls_private_key.default.private_key_pem}"
-  filename = "${local.private_key_filename}"
+  content  = tls_private_key.default.private_key_pem
+  filename = local.private_key_filename
 }
 
 resource "null_resource" "chmod" {
   triggers = {
-    key_data = "${local_file.private_key_pem.content}"
+    key_data = local_file.private_key_pem.content
   }
 
   provisioner "local-exec" {
