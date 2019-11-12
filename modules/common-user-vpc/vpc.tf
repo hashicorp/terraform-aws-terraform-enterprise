@@ -10,5 +10,5 @@ data "aws_subnet_ids" "selected" {
 data "aws_subnet" "selected" {
   # https://github.com/terraform-providers/terraform-provider-aws/issues/7522
   for_each = data.aws_subnet_ids.selected.ids
-  id = each.value
+  id       = each.value
 }
