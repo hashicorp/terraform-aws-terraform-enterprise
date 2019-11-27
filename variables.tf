@@ -14,7 +14,7 @@ variable "domain" {
 
 variable "private_zone" {
   type        = "string"
-  description = "this is used to if route53 zone is private or not"
+  description = "this is used to if route53 zone is private or not (Set to true if route53 zone is private)"
   default = false
 }
 
