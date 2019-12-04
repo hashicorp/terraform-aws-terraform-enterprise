@@ -1,7 +1,7 @@
 locals {
   assistant_port                   = 23010
-  distro_ami                       = "${var.distribution== "ubuntu" ? data.aws_ami.ubuntu.id  : data.aws_ami.rhel.id}"
-  default_ssh_user                 = "${var.distribution== "ubuntu" ? "ubuntu" : "ec2-user"}"
+  distro_ami                       = "${var.distribution == "ubuntu" ? data.aws_ami.ubuntu.id : data.aws_ami.rhel.id}"
+  default_ssh_user                 = "${var.distribution == "ubuntu" ? "ubuntu" : "ec2-user"}"
   rendered_secondary_instance_type = "${var.secondary_instance_type != "" ? var.secondary_instance_type : var.primary_instance_type}"
 }
 

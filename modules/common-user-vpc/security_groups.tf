@@ -2,27 +2,38 @@ resource "aws_security_group" "intra_vpc_and_egress" {
   description = "allow instances to talk to each other, and have unfettered egress"
   vpc_id      = "${var.vpc_id}"
 
-  ingress {
-    protocol  = "-1"
-    from_port = 0
-    to_port   = 0
-
-    self = true
-  }
-
-  egress {
-    description = "outbound access to the world"
-
-    protocol  = "-1"
-    from_port = 0
-    to_port   = 0
-
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  # NOTE: you cannot (should not) mix in-line ingress/egress rules with the
+  # aws_security_group_rule resource
+  # https://www.terraform.io/docs/providers/aws/r/security_group_rule.html
 
   tags = {
     Name = "${var.prefix}"
   }
+}
+
+resource "aws_security_group_rule" "intra_vpc_and_egress_ingress_rule" {
+  security_group_id = aws_security_group.intra_vpc_and_egress.id
+
+  type = "ingress"
+
+  protocol  = "-1"
+  from_port = 0
+  to_port   = 0
+  self      = true
+}
+
+resource "aws_security_group_rule" "intra_vpc_and_egress_egress_rule" {
+  security_group_id = aws_security_group.intra_vpc_and_egress.id
+
+  type        = "egress"
+  description = "outbound access to the world"
+
+  protocol  = "-1"
+  from_port = 0
+  to_port   = 0
+  cidr_blocks = [
+    "0.0.0.0/0",
+  ]
 }
 
 # Allow whitelisted ranges to access our services.

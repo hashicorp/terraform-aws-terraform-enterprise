@@ -1,6 +1,6 @@
 locals {
   app_data_mode    = "${var.postgresql_address != "" ? "external_services" : "demo"}"
-  app_network_type = "${var.airgap_package_url != "" ? "airgap" : "online" }"
+  app_network_type = "${var.airgap_package_url != "" ? "airgap" : "online"}"
   install_type     = "${local.app_data_mode}-${local.app_network_type}"
 }
 
