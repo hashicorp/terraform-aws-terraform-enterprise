@@ -7,7 +7,7 @@ resource "aws_security_group" "lb_to_instance" {
     protocol    = "tcp"
     from_port   = 22
     to_port     = 22
-    cidr_blocks = ["${var.public_subnets_cidr_blocks}", "${var.private_subnets_cidr_blocks}"]
+    cidr_blocks = concat(var.public_subnets_cidr_blocks, var.private_subnets_cidr_blocks)
   }
 
   ingress {
@@ -15,7 +15,7 @@ resource "aws_security_group" "lb_to_instance" {
     protocol    = "tcp"
     from_port   = 443
     to_port     = 443
-    cidr_blocks = ["${var.public_subnets_cidr_blocks}", "${var.private_subnets_cidr_blocks}"]
+    cidr_blocks = concat(var.public_subnets_cidr_blocks, var.private_subnets_cidr_blocks)
   }
 
   ingress {
@@ -23,7 +23,7 @@ resource "aws_security_group" "lb_to_instance" {
     protocol    = "tcp"
     from_port   = 8800
     to_port     = 8800
-    cidr_blocks = ["${var.public_subnets_cidr_blocks}", "${var.private_subnets_cidr_blocks}"]
+    cidr_blocks = concat(var.public_subnets_cidr_blocks, var.private_subnets_cidr_blocks)
   }
 }
 
@@ -68,7 +68,7 @@ resource "aws_security_group" "lb_public" {
     protocol    = "-1"
     from_port   = 0
     to_port     = 0
-    cidr_blocks = ["${var.private_subnets_cidr_blocks}"]
+    cidr_blocks = var.private_subnets_cidr_blocks
   }
 
   egress {
@@ -76,6 +76,6 @@ resource "aws_security_group" "lb_public" {
     protocol    = "-1"
     from_port   = 0
     to_port     = 0
-    cidr_blocks = ["${var.public_subnets_cidr_blocks}"]
+    cidr_blocks = var.public_subnets_cidr_blocks
   }
 }

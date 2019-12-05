@@ -1,16 +1,16 @@
 resource "aws_lb" "ptfe" {
-  subnets            = ["${var.public_subnets}"]
+  subnets            = var.public_subnets
   load_balancer_type = "application"
 
-  security_groups = [
-    "${aws_security_group.lb_public.id}",
-    "${aws_security_group.lb_to_instance.id}",
-  ]
+  security_groups = concat(
+    aws_security_group.lb_public.id,
+    aws_security_group.lb_to_instance.id
+  )
 
   idle_timeout = 3600 ## for ssh
 
   tags = {
-    Name = "${var.prefix}"
+    Name = var.prefix
   }
 }
 
