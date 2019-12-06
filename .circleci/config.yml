@@ -15,7 +15,7 @@ jobs:
       - checkout
       - run:
           name: Check terraform formatting
-          command: terraform fmt -check=true -write=false
+          command: terraform fmt -check=true -write=false -diff
   validation_check:
     working_directory: ~
     docker:
