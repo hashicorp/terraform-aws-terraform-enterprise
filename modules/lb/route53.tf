@@ -1,6 +1,7 @@
 resource "aws_route53_record" "ptfe_lb" {
-  count   = var.update_route53 ? 1 : 0
-  zone_id = data.aws_route53_zone.zone[count.index].id
+  count = var.update_route53 ? 1 : 0
+
+  zone_id = data.aws_route53_zone.zone[count.index].zone_id
   name    = local.endpoint
   type    = "A"
 

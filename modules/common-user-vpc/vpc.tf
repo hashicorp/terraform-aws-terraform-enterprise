@@ -8,6 +8,7 @@ data "aws_subnet_ids" "selected" {
 }
 
 data "aws_subnet" "selected" {
-  count = length(data.aws_subnet_ids.selected.ids)
-  id    = tolist(data.aws_subnet_ids.selected.ids)[count.index]
+  # https://github.com/terraform-providers/terraform-provider-aws/issues/7522
+  for_each = data.aws_subnet_ids.selected.ids
+  id       = each.value
 }

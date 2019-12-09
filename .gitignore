@@ -1,1 +1,4 @@
 work/
+
+# Local .terraform directories
+**/.terraform/*
