@@ -26,14 +26,26 @@ module "external" {
 }
 
 data "aws_iam_policy_document" "setup-bucket" {
+  # TFE Admin settings > Object Storage > S3 Configuration's 'Test Authentication' test calls ListBuckets
   statement {
+    actions = [
+      "s3:GetBucketLocation",
+      "s3:ListAllMyBuckets",
+    ]
+
+    resources = [
+      "*",
+    ]
+  }
+
+  statement {
+    actions = [
+      "s3:*",
+    ]
+
     resources = [
       "arn:aws:s3:::${local.setup_bucket}",
       "arn:aws:s3:::${local.setup_bucket}/*",
-    ]
-
-    actions = [
-      "s3:*",
     ]
   }
 }
