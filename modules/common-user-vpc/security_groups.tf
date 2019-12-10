@@ -12,7 +12,7 @@ resource "aws_security_group" "intra_vpc_and_egress" {
 }
 
 resource "aws_security_group_rule" "intra_vpc_and_egress_ingress_rule" {
-  security_group_id = aws_security_group.intra_vpc_and_egress.id
+  security_group_id = "${aws_security_group.intra_vpc_and_egress.id}"
 
   type = "ingress"
 
@@ -23,7 +23,7 @@ resource "aws_security_group_rule" "intra_vpc_and_egress_ingress_rule" {
 }
 
 resource "aws_security_group_rule" "intra_vpc_and_egress_egress_rule" {
-  security_group_id = aws_security_group.intra_vpc_and_egress.id
+  security_group_id = "${aws_security_group.intra_vpc_and_egress.id}"
 
   type        = "egress"
   description = "outbound access to the world"
@@ -31,6 +31,7 @@ resource "aws_security_group_rule" "intra_vpc_and_egress_egress_rule" {
   protocol  = "-1"
   from_port = 0
   to_port   = 0
+
   cidr_blocks = [
     "0.0.0.0/0",
   ]
