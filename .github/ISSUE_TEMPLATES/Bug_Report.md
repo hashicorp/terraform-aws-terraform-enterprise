@@ -20,7 +20,7 @@ about: If something isn't working as expected 🤔.
 
 ### Important Factoids
 
-<!--- Are there anything atypical about your accounts that we should know? For example: Running in EC2 Classic? --->
+<!--- Is there anything atypical about your accounts that we should know? For example: Running in EC2 Classic? --->
 
 ### References
 
