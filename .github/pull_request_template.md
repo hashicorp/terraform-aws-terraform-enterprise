@@ -1,7 +1,3 @@
-<!--- See what makes a good Pull Request at : https://github.com/terraform-providers/terraform-provider-aws/blob/master/.github/CONTRIBUTING.md#pull-requests --->
-
-<!--- Please keep this note for the community --->
-
 ## Background
 
 Please include a one or two sentence description of what you're changing and why.
