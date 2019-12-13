@@ -20,10 +20,6 @@ resource "aws_security_group_rule" "intra_vpc_and_egress_ingress_rule" {
   from_port = 0
   to_port   = 0
   self      = true
-
-  tags = {
-    Name = var.prefix
-  }
 }
 
 # Allow whitelisted ranges to access our services.
