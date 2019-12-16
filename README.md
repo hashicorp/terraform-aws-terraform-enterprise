@@ -8,6 +8,8 @@ This module installs Terraform Enterprise: Clustering onto three or more AWS ins
 
 The Replicated license used must have been activated for Terraform Enterprise: Clustering before this module can be used.
 
+*Note: This module is for Terraform 0.12+.* If you require a version this module for Terraform 0.11.x you can find an archived unsupported version in the `v0.1` branch of this project.
+
 ## Architecture
 
 ![basic diagram](https://github.com/hashicorp/terraform-aws-terraform-enterprise/blob/master/assets/aws_diagram.jpg?raw=true)

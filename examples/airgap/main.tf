@@ -10,18 +10,18 @@ locals {
 }
 
 provider "aws" {
-  region = "${local.region}"
+  region = local.region
 }
 
 module "external" {
   source  = "hashicorp/terraform-enterprise/aws/modules/external-services"
   version = "0.1.0"
 
-  vpc_id     = "${local.vpc_id}"
-  install_id = "${module.terraform-enterprise.install_id}"
+  vpc_id     = local.vpc_id
+  install_id = module.terraform-enterprise.install_id
 
   rds_subnet_tags = {
-    "Usage" = "${local.tag}"
+    "Usage" = local.tag
   }
 }
 
@@ -51,26 +51,26 @@ data "aws_iam_policy_document" "setup-bucket" {
 }
 
 resource "aws_iam_role_policy" "setup-bucket" {
-  role   = "${module.terraform-enterprise.iam_role}"
+  role   = module.terraform-enterprise.iam_role
   name   = "${local.setup_bucket}-${module.terraform-enterprise.install_id}"
-  policy = "${data.aws_iam_policy_document.setup-bucket.json}"
+  policy = data.aws_iam_policy_document.setup-bucket.json
 }
 
 module "terraform-enterprise" {
   source  = "hashicorp/terraform-enterprise/aws"
   version = "0.1.0"
 
-  vpc_id = "${local.vpc_id}"
-  domain = "${local.domain}"
+  vpc_id = local.vpc_id
+  domain = local.domain
 
   subnet_tags = {
-    "Usage" = "${local.tag}"
+    "Usage" = local.tag
   }
 
-  license_file    = "${local.license_file}"
+  license_file    = local.license_file
   primary_count   = 3
   secondary_count = 5
-  hostname        = "${local.hostname}"
+  hostname        = local.hostname
   distribution    = "ubuntu"
 
   # The data at ptfe.zip at the normal location has been uploaded to a private bucket to be used
@@ -82,27 +82,27 @@ module "terraform-enterprise" {
   # The airgap package is located within a bucket that the instances can access.
   airgap_package_url = "s3://${local.setup_bucket}/tfe-setup/${local.airgap_package}?region=${local.region}"
 
-  postgresql_user         = "${module.external.database_username}"
-  postgresql_password     = "${module.external.database_password}"
-  postgresql_address      = "${module.external.database_endpoint}"
-  postgresql_database     = "${module.external.database_name}"
+  postgresql_user         = module.external.database_username
+  postgresql_password     = module.external.database_password
+  postgresql_address      = module.external.database_endpoint
+  postgresql_database     = module.external.database_name
   postgresql_extra_params = "sslmode=disable"
 
-  s3_bucket = "${module.external.s3_bucket}"
-  s3_region = "${local.region}"
+  s3_bucket = module.external.s3_bucket
+  s3_region = local.region
 
-  aws_access_key_id     = "${module.external.iam_access_key}"
-  aws_secret_access_key = "${module.external.iam_secret_key}"
+  aws_access_key_id     = module.external.iam_access_key
+  aws_secret_access_key = module.external.iam_secret_key
 }
 
 output "primary_public_ip" {
-  value = "${module.terraform-enterprise.primary_public_ip}"
+  value = module.terraform-enterprise.primary_public_ip
 }
 
 output "installer_dashboard_password" {
-  value = "${module.terraform-enterprise.installer_dashboard_password}"
+  value = module.terraform-enterprise.installer_dashboard_password
 }
 
 output "endpoint" {
-  value = "${module.terraform-enterprise.application_endpoint}"
+  value = module.terraform-enterprise.application_endpoint
 }

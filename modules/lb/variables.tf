@@ -66,19 +66,19 @@ variable "prefix" {
 
 ## issued certificate that the lb will be configured to use
 data "aws_acm_certificate" "lb" {
-  domain      = "${var.cert_domain != "" ? var.cert_domain : "*.${var.domain}"}"
+  domain      = var.cert_domain != "" ? var.cert_domain : "*.${var.domain}"
   statuses    = ["ISSUED"]
   most_recent = true
 }
 
 ## existing route53 zone where we'll create an alias to the lb
 data "aws_route53_zone" "zone" {
-  count = "${var.update_route53 ? 1 : 0}"
-  name  = "${var.domain}"
+  count = var.update_route53 ? 1 : 0
+  name  = var.domain
 }
 
 locals {
-  hostname = "${var.hostname != "" ? var.hostname : "ptfe-${var.install_id}"}"
+  hostname = var.hostname != "" ? var.hostname : "ptfe-${var.install_id}"
 
   ## https://${local.endpoint}/…
   endpoint = "${local.hostname}.${var.domain}"
