@@ -7,7 +7,7 @@ resource "aws_elb" "cluster_api" {
 
   cross_zone_load_balancing = true
 
-  security_groups = [module.common.intra_vpc_and_egress_sg_id]
+  security_groups = [module.common.intra_vpc_ingress_and_egress_sg_id]
 
   idle_timeout = 3600 # for kubectl commands
 

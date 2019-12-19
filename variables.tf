@@ -242,11 +242,18 @@ variable "s3_region" {
   default     = ""
 }
 
-variable "allow_list" {
+variable "ingress_allow_list" {
   type        = list(string)
-  description = "List of CIDRs we allow to access the infrastructure"
+  description = "List of CIDR blocks we allow to access the infrastructure"
   default     = []
 }
+
+variable "egress_allow_list" {
+  type        = list(string)
+  description = "List of CIDR blocks we allow the infrastructyre to access"
+  default     = ["0.0.0.0/0"]
+}
+
 
 ### ======================================================================= MISC
 

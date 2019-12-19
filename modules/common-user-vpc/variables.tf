@@ -18,11 +18,18 @@ variable "subnet_tags" {
   default     = {}
 }
 
-variable "allow_list" {
+variable "ingress_allow_list" {
   type        = "list"
-  description = "list of CIDRs we allow to access the infrastructure"
+  description = "list of CIDR blocks we allow to access the infrastructure"
   default     = []
 }
+
+variable "egress_allow_list" {
+  type        = "list"
+  description = "List of CIDR blocks we allow the infrastructure to access"
+  default     = ["0.0.0.0/0"]
+}
+
 
 ### ======================================================================= MISC
 

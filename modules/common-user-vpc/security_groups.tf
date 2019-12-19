@@ -1,37 +1,35 @@
-resource "aws_security_group" "intra_vpc_and_egress" {
-  description = "allow instances to talk to each other, and have unfettered egress"
+resource "aws_security_group" "intra_vpc_ingress_and_egress" {
+  description = "allow instances to talk to each other, and set up trusted ingress and egress"
   vpc_id      = var.vpc_id
+  name        = "${var.prefix}-intra-cluster-and-trusted-blocks"
 
-  # NOTE: you cannot (should not) mix in-line ingress/egress rules with the
-  # aws_security_group_rule resource
-  # https://www.terraform.io/docs/providers/aws/r/security_group_rule.html
+  ingress {
+    protocol  = "-1"
+    from_port = 0
+    to_port   = 0
+    self      = true
+  }
+
+  egress {
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = var.egress_allow_list
+  }
+
+  dynamic "ingress" {
+    for_each = var.ingress_allow_list
+    content {
+      protocol    = "-1"
+      from_port   = 0
+      to_port     = 0
+      cidr_blocks = ingress.value
+    }
+  }
 
   tags = {
     Name = "${var.prefix}"
   }
-}
-
-resource "aws_security_group_rule" "intra_vpc_and_egress_ingress_rule" {
-  security_group_id = "${aws_security_group.intra_vpc_and_egress.id}"
-
-  type = "ingress"
-
-  protocol  = "-1"
-  from_port = 0
-  to_port   = 0
-  self      = true
-}
-
-# Allow whitelisted ranges to access our services.
-# For example, an HTTP proxy.
-resource "aws_security_group_rule" "allow_list" {
-  count             = length(var.allow_list) > 0 ? 1 : 0
-  type              = "ingress"
-  protocol          = "-1"
-  from_port         = 0
-  to_port           = 0
-  cidr_blocks       = var.allow_list
-  security_group_id = aws_security_group.intra_vpc_and_egress.id
 }
 
 resource "aws_security_group" "allow_ptfe" {
