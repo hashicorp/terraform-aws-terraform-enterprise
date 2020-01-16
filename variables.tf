@@ -258,7 +258,7 @@ variable "egress_allow_list" {
 ### ======================================================================= MISC
 
 data "aws_ami" "ubuntu" {
-  owners = ["099720109477"] # Canonical
+  owners = ["099720109477", "513442679011"] # Canonical, Canonical (GovCloud)
 
   most_recent = true
 
@@ -274,7 +274,7 @@ data "aws_ami" "ubuntu" {
 }
 
 data "aws_ami" "rhel" {
-  owners = ["309956199498"] # RedHat
+  owners = ["309956199498", "219670896067"] # RedHat, RedHat (GovCloud)
 
   most_recent = true
 
