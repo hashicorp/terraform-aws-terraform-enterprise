@@ -1,7 +1,7 @@
 resource "aws_security_group" "intra_vpc_ingress_and_egress" {
   description = "allow instances to talk to each other, and set up trusted ingress and egress"
   vpc_id      = var.vpc_id
-  name        = "${var.prefix}-intra-cluster-and-trusted-blocks"
+  name        = "${var.prefix}-${random_string.install_id.result}-intra-cluster-and-trusted-blocks"
 
   ingress {
     protocol  = "-1"
