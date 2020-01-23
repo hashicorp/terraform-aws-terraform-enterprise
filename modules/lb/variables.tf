@@ -15,6 +15,11 @@ variable "public_subnets" {
   description = "list of public subnets"
 }
 
+variable "private_subnets" {
+  type        = "list"
+  description = "list of private subnets"
+}
+
 variable "public_subnets_cidr_blocks" {
   type        = "list"
   description = "list of CIDRs for the public subnets"
@@ -29,6 +34,12 @@ variable "private_subnets_cidr_blocks" {
 variable "domain" {
   type        = "string"
   description = "this is used to find an existing issued wildcard cert and route53 zone"
+}
+
+variable "private_zone" {
+  type        = "string"
+  description = "set to true if your route53 zone is private"
+  default     = false
 }
 
 variable "hostname" {
@@ -75,6 +86,7 @@ data "aws_acm_certificate" "lb" {
 data "aws_route53_zone" "zone" {
   count = var.update_route53 ? 1 : 0
   name  = var.domain
+  private_zone = var.private_zone
 }
 
 locals {

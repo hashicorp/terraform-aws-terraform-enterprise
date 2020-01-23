@@ -6,8 +6,10 @@ module "lb" {
 
   prefix = var.prefix
   domain = var.domain
+  private_zone = var.private_zone
 
   public_subnets              = module.common.public_subnets
+  private_subnets             = module.common.private_subnets
   public_subnets_cidr_blocks  = module.common.public_subnets_cidr_blocks
   private_subnets_cidr_blocks = module.common.private_subnets_cidr_blocks
 
