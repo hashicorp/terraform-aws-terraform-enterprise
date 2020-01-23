@@ -30,9 +30,10 @@ data "template_file" "repl_config" {
   template = local.replconf[local.install_type]
 
   vars = {
-    console_password = random_pet.console_password.id
-    proxy_url        = var.http_proxy_url
-    release_sequence = var.release_sequence
+    console_password    = random_pet.console_password.id
+    proxy_url           = var.http_proxy_url
+    additional_no_proxy = var.additional_no_proxy
+    release_sequence    = var.release_sequence
   }
 }
 
@@ -60,6 +61,7 @@ data "template_file" "cloud_config" {
     assistant_host       = "http://${aws_elb.cluster_api.dns_name}:${local.assistant_port}"
     assistant_token      = random_string.setup_token.result
     proxy_url            = var.http_proxy_url
+    additional_no_proxy  = var.additional_no_proxy
     installer_url        = var.installer_url
     weave_cidr           = var.weave_cidr
     repl_cidr            = var.repl_cidr
@@ -95,6 +97,7 @@ data "template_file" "cloud_config_secondary" {
     assistant_host       = "http://${aws_elb.cluster_api.dns_name}:${local.assistant_port}"
     assistant_token      = random_string.setup_token.result
     proxy_url            = var.http_proxy_url
+    additional_no_proxy  = var.additional_no_proxy
     installer_url        = var.installer_url
     role                 = "secondary"
     airgap_installer_url = var.airgap_package_url == "" ? "" : local.internal_airgap_url

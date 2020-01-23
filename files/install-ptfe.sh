@@ -6,13 +6,14 @@ set -e -u -o pipefail
 if [ -s /etc/ptfe/proxy-url ]; then
   http_proxy=$(cat /etc/ptfe/proxy-url)
   https_proxy=$(cat /etc/ptfe/proxy-url)
+  additional_no_proxy=$(cat /etc/ptfe/additional-no-proxy)
   export http_proxy
   export https_proxy
   export no_proxy=10.0.0.0/8,127.0.0.1,169.254.169.254
   if [[ $(< /etc/ptfe/repl-cidr) != "" ]]; then
       repl_cidr=$(cat /etc/ptfe/repl-cidr)
       export repl_cidr
-      export no_proxy=$no_proxy,$repl_cidr
+      export no_proxy=$no_proxy,$repl_cidr,$additional_no_proxy
   fi
 fi
 
@@ -77,6 +78,12 @@ if test -e /etc/ptfe/role-id; then
     )
 fi
 
+if [ -s /etc/ptfe/proxy-url ]; then
+    ptfe_install_args+=(
+        "--additional-no-proxy=$no_proxy"
+        "--http-proxy=$http_proxy"
+    )
+fi
 
 if [ "x${role}x" == "xmainx" ]; then
     verb="setup"
@@ -87,11 +94,6 @@ if [ "x${role}x" == "xmainx" ]; then
         --cluster
         "--auth-token=@/etc/ptfe/setup-token"
     )
-    if [ -s /etc/ptfe/proxy-url ]; then
-        ptfe_install_args+=(
-            "--additional-no-proxy=$no_proxy"
-        )
-    fi
     # If we are airgapping, then set the arguments needed for Replicated.
     # We also setup the replicated.conf.tmpl to include the path to the downloaded
     # airgap file.

@@ -200,6 +200,12 @@ variable "http_proxy_url" {
   default     = ""
 }
 
+variable "additional_no_proxy" {
+  type        = string
+  description = "Comma delimitted list of addresses (no spaces) to not use the proxy for"
+  default     = ""
+}
+
 variable "postgresql_address" {
   type        = string
   description = "address to connect to external postgresql database at"

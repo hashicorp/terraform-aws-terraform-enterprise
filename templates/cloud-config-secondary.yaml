@@ -57,6 +57,11 @@ write_files:
   permissions: "0400"
   content: "${proxy_url}"
 
+- path: /etc/ptfe/additional-no-proxy
+  owner: root:root
+  permissions: "0400"
+  content: "${additional_no_proxy}"
+
 - path: /etc/ptfe/custom-ca-cert-url
   owner: root:root
   permissions: "0400"
