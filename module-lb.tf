@@ -4,8 +4,8 @@ module "lb" {
   vpc_id     = module.common.vpc_id
   install_id = module.common.install_id
 
-  prefix = var.prefix
-  domain = var.domain
+  prefix       = var.prefix
+  domain       = var.domain
   private_zone = var.private_zone
 
   public_subnets              = module.common.public_subnets
