@@ -13,7 +13,7 @@ data "aws_subnet_ids" "rds" {
 
 data "aws_subnet" "selected" {
   count = length(data.aws_subnet_ids.rds.ids)
-  id    = data.aws_subnet_ids.rds.ids[count.index]
+  id    = element(tolist(data.aws_subnet_ids.rds.ids), count.index)
 }
 
 resource "aws_security_group" "db_access" {
@@ -25,7 +25,7 @@ resource "aws_security_group" "db_access" {
     from_port = local.postgres_port
     to_port   = local.postgres_port
 
-    cidr_blocks = [data.aws_subnet.selected.*.cidr_block]
+    cidr_blocks = data.aws_subnet.selected.*.cidr_block
   }
 }
 
@@ -36,7 +36,7 @@ resource "random_string" "database_password" {
 
 resource "aws_db_subnet_group" "tfe" {
   name_prefix = "${var.prefix}tfe-${var.install_id}"
-  subnet_ids  = [data.aws_subnet.selected.*.id]
+  subnet_ids  = data.aws_subnet.selected.*.id
 
   tags = {
     Name = "tfe subnet group"
