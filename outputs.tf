@@ -36,6 +36,9 @@ output "ssh_config_file" {
   value = local_file.ssh_config.filename
 }
 
+### Some small outputs to allow simpler testing of things like proxies
+### as we need these bits to spin up an additional instance along side the cluster
+### In the future we should probably be outputting resources.
 output "ssh_key_name" {
   value = module.common.ssh_key_name
 }
