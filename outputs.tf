@@ -36,6 +36,10 @@ output "ssh_config_file" {
   value = local_file.ssh_config.filename
 }
 
+output "ssh_private_key" {
+  value = module.common.ssh_priv_key_file
+}
+
 ### Some small outputs to allow simpler testing of things like proxies
 ### as we need these bits to spin up an additional instance along side the cluster
 ### In the future we should probably be outputting resources.
@@ -45,10 +49,6 @@ output "ssh_key_name" {
 
 output "public_subnets" {
   value = module.common.public_subnets
-}
-
-output "ssh_private_key" {
-  value = module.common.ssh_priv_key_file
 }
 
 output "intra_vpc_ingress_and_egress_sg_id" {
