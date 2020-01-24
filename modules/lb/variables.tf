@@ -11,17 +11,17 @@ variable "install_id" {
 }
 
 variable "public_subnets" {
-  type        = list
+  type        = list(string)
   description = "list of public subnets"
 }
 
 variable "public_subnets_cidr_blocks" {
-  type        = list
+  type        = list(string)
   description = "list of CIDRs for the public subnets"
 }
 
 variable "private_subnets_cidr_blocks" {
-  type        = list
+  type        = list(string)
   description = "list of CIDRs for the private subnets"
 }
 
