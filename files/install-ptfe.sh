@@ -13,7 +13,13 @@ if [ -s /etc/ptfe/proxy-url ]; then
   if [[ $(< /etc/ptfe/repl-cidr) != "" ]]; then
       repl_cidr=$(cat /etc/ptfe/repl-cidr)
       export repl_cidr
-      export no_proxy=$no_proxy,$repl_cidr,$additional_no_proxy
+      export no_proxy=$no_proxy,$repl_cidr
+  fi
+
+  if [[ $(< /etc/ptfe/additional-no-proxy) != "" ]]; then
+      additional_no_proxy=$(cat /etc/ptfe/additional-no-proxy)
+      export additional_no_proxy
+      export no_proxy=$no_proxy,$additional_no_proxy
   fi
 fi
 

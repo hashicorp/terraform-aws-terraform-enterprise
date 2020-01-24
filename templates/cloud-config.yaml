@@ -95,7 +95,27 @@ write_files:
     export https_proxy="${proxy_url}"
     export no_proxy=10.0.0.0/8,127.0.0.1,169.254.169.254,${additional_no_proxy}
 
+%{ if additional_no_proxy != "" }
+- path: /etc/profile.d/proxy.sh
+  owner: root:root
+  permissions: "0755"
+  content: |
+    export http_proxy="${proxy_url}"
+    export https_proxy="${proxy_url}"
+    export no_proxy=10.0.0.0/8,127.0.0.1,169.254.169.254,${additional_no_proxy}
+%{ endif }
+
 %{ if repl_cidr != "" }
+- path: /etc/profile.d/proxy.sh
+  owner: root:root
+  permissions: "0755"
+  content: |
+    export http_proxy="${proxy_url}"
+    export https_proxy="${proxy_url}"
+  export no_proxy=10.0.0.0/8,127.0.0.1,169.254.169.254,${repl_cidr}
+%{ endif }
+
+%{ if repl_cidr != "" && additional_no_proxy != "" }
 - path: /etc/profile.d/proxy.sh
   owner: root:root
   permissions: "0755"
