@@ -32,6 +32,10 @@ output "primary_public_ip" {
   value = element(aws_instance.primary.*.public_ip, 0)
 }
 
+output "load_balancer_dns_name" {
+	value = module.lb.lb_endpoint
+}
+
 output "ssh_config_file" {
   value = local_file.ssh_config.filename
 }
