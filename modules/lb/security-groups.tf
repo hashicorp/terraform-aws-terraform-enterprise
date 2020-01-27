@@ -36,14 +36,6 @@ resource "aws_security_group" "lb_public" {
   vpc_id      = var.vpc_id
 
   ingress {
-    description = "ssh, because debugging"
-    protocol    = "tcp"
-    from_port   = 22
-    to_port     = 22
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
     description = "http to ptfe application"
     protocol    = "tcp"
     from_port   = 80

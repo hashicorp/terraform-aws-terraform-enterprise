@@ -46,10 +46,6 @@ output "intra_vpc_ingress_and_egress_sg_id" {
   value = aws_security_group.intra_vpc_ingress_and_egress.id
 }
 
-output "allow_ptfe_sg_id" {
-  value = aws_security_group.allow_ptfe.id
-}
-
 output "collect_diag_file" {
   value = "${path.module}/../common/files/collect-diag.sh" ## I am lazy
 }

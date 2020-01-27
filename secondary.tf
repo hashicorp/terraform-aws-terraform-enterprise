@@ -9,7 +9,6 @@ resource "aws_launch_configuration" "secondary" {
   security_groups = [
     module.lb.sg_lb_to_instance,
     module.common.intra_vpc_ingress_and_egress_sg_id,
-    module.common.allow_ptfe_sg_id,
   ]
 
   iam_instance_profile = aws_iam_instance_profile.ptfe.name
