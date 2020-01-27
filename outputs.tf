@@ -33,7 +33,7 @@ output "primary_public_ip" {
 }
 
 output "load_balancer_dns_name" {
-	value = module.lb.lb_endpoint
+  value = module.lb.lb_endpoint
 }
 
 output "ssh_config_file" {
