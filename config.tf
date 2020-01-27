@@ -53,6 +53,7 @@ data "template_file" "cloud_config" {
     airgap_package_url   = var.airgap_package_url
     airgap_installer_url = var.airgap_package_url == "" ? "" : count.index == 0 ? var.airgap_installer_url : local.internal_airgap_url
     bootstrap_token      = "${random_string.bootstrap_token_id.result}.${random_string.bootstrap_token_suffix.result}"
+    cluster_api_lb       = aws_elb.cluster_api.dns_name
     cluster_api_endpoint = "${aws_elb.cluster_api.dns_name}:6443"
     setup_token          = random_string.setup_token.result
     primary_pki_url      = "http://${aws_elb.cluster_api.dns_name}:${local.assistant_port}/api/v1/pki-download?token=${random_string.setup_token.result}"
