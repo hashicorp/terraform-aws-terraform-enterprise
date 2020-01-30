@@ -5,6 +5,7 @@
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
 | domain | Route53 Domain to manage DNS under | string | n/a | yes |
+| private\_zone | set to true if your route53 zone is private | string | false | no |
 | license\_file | path to license file | string | n/a | yes |
 | vpc\_id | AWS VPC id to install into | string | n/a | yes |
 | airgap\_installer\_url | URL to airgap installer package | string | `"https://s3.amazonaws.com/replicated-airgap-work/replicated__docker__kubernetes.tar.gz"` | no |

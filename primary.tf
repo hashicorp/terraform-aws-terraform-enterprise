@@ -8,7 +8,7 @@ resource "aws_instance" "primary" {
   ami           = var.ami != "" ? var.ami : local.distro_ami
   instance_type = var.primary_instance_type
 
-  subnet_id = element(module.common.public_subnets, count.index)
+  subnet_id = element(var.private_zone ? module.common.private_subnets : module.common.public_subnets, count.index)
 
   vpc_security_group_ids = [
     module.lb.sg_lb_to_instance,

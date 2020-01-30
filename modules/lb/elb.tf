@@ -1,6 +1,7 @@
 resource "aws_lb" "ptfe" {
-  subnets            = var.public_subnets
+  subnets            = var.private_zone ? var.private_subnets : var.public_subnets
   load_balancer_type = "application"
+  internal           = var.private_zone
 
   security_groups = [
     aws_security_group.lb_public.id,
