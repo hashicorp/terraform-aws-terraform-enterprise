@@ -12,6 +12,12 @@ variable "domain" {
   description = "Route53 Domain to manage DNS under"
 }
 
+variable "private_zone" {
+  type        = "string"
+  description = "set to true if your route53 zone is private"
+  default     = false
+}
+
 variable "license_file" {
   type        = string
   description = "path to license file"
