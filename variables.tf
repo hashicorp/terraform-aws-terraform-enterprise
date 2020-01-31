@@ -249,13 +249,13 @@ variable "s3_region" {
 }
 
 variable "ingress_allow_list" {
-  type        = list(string)
+  type        = set(string)
   description = "List of CIDR blocks we allow to access the infrastructure"
   default     = []
 }
 
 variable "egress_allow_list" {
-  type        = list(string)
+  type        = set(string)
   description = "List of CIDR blocks we allow the infrastructyre to access"
   default     = ["0.0.0.0/0"]
 }
