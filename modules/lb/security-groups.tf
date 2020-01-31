@@ -1,5 +1,5 @@
 locals {
-  publ_priv_subnet_cidr_blocks = concat(var.public_subnets_cidr_blocks, var.private_subnets_cidr_blocks)
+  publ_priv_subnet_cidr_blocks = setunion(var.public_subnets_cidr_blocks, var.private_subnets_cidr_blocks)
 }
 
 resource "aws_security_group" "lb_to_instance" {
