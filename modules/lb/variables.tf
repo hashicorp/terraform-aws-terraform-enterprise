@@ -11,22 +11,22 @@ variable "install_id" {
 }
 
 variable "public_subnets" {
-  type        = list(string)
+  type        = set(string)
   description = "list of public subnets"
 }
 
 variable "private_subnets" {
-  type        = "list"
+  type        = set(string)
   description = "list of private subnets"
 }
 
 variable "public_subnets_cidr_blocks" {
-  type        = list(string)
+  type        = set(string)
   description = "list of CIDRs for the public subnets"
 }
 
 variable "private_subnets_cidr_blocks" {
-  type        = list(string)
+  type        = set(string)
   description = "list of CIDRs for the private subnets"
 }
 
@@ -37,7 +37,7 @@ variable "domain" {
 }
 
 variable "private_zone" {
-  type        = "string"
+  type        = string
   description = "set to true if your route53 zone is private"
   default     = false
 }
