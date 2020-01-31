@@ -13,7 +13,7 @@ variable "domain" {
 }
 
 variable "private_zone" {
-  type        = "string"
+  type        = string
   description = "set to true if your route53 zone is private"
   default     = false
 }
