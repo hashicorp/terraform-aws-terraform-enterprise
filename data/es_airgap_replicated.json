@@ -7,6 +7,6 @@
     "LicenseFileLocation":          "/etc/replicated.rli",
     "LicenseBootstrapAirgapPackagePath" : "/var/lib/ptfe/ptfe.airgap"
     %{ if release_sequence != "" }
-    ,"ReleaseSequence":             ${release_sequence}
+    ,"ReleaseSequence":             "${release_sequence}"
     %{ endif }
 }

@@ -8,6 +8,6 @@
   "LicenseBootstrapAirgapPackagePath" : "/var/lib/ptfe/ptfe.airgap",
   "HttpProxy"                         : "${proxy_url}"
   %{ if release_sequence != "" }
-  ,"ReleaseSequence":             ${release_sequence}
+  ,"ReleaseSequence":             "${release_sequence}"
   %{ endif }
 }
