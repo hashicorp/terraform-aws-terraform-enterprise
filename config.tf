@@ -30,9 +30,10 @@ data "template_file" "repl_config" {
   template = local.replconf[local.install_type]
 
   vars = {
-    console_password = random_pet.console_password.id
-    proxy_url        = var.http_proxy_url
-    release_sequence = var.release_sequence
+    console_password    = random_pet.console_password.id
+    proxy_url           = var.http_proxy_url
+    additional_no_proxy = var.additional_no_proxy
+    release_sequence    = var.release_sequence
   }
 }
 
@@ -52,6 +53,7 @@ data "template_file" "cloud_config" {
     airgap_package_url   = var.airgap_package_url
     airgap_installer_url = var.airgap_package_url == "" ? "" : count.index == 0 ? var.airgap_installer_url : local.internal_airgap_url
     bootstrap_token      = "${random_string.bootstrap_token_id.result}.${random_string.bootstrap_token_suffix.result}"
+    cluster_api_lb       = aws_elb.cluster_api.dns_name
     cluster_api_endpoint = "${aws_elb.cluster_api.dns_name}:6443"
     setup_token          = random_string.setup_token.result
     primary_pki_url      = "http://${aws_elb.cluster_api.dns_name}:${local.assistant_port}/api/v1/pki-download?token=${random_string.setup_token.result}"
@@ -60,6 +62,7 @@ data "template_file" "cloud_config" {
     assistant_host       = "http://${aws_elb.cluster_api.dns_name}:${local.assistant_port}"
     assistant_token      = random_string.setup_token.result
     proxy_url            = var.http_proxy_url
+    additional_no_proxy  = var.additional_no_proxy
     installer_url        = var.installer_url
     weave_cidr           = var.weave_cidr
     repl_cidr            = var.repl_cidr
@@ -95,6 +98,7 @@ data "template_file" "cloud_config_secondary" {
     assistant_host       = "http://${aws_elb.cluster_api.dns_name}:${local.assistant_port}"
     assistant_token      = random_string.setup_token.result
     proxy_url            = var.http_proxy_url
+    additional_no_proxy  = var.additional_no_proxy
     installer_url        = var.installer_url
     role                 = "secondary"
     airgap_installer_url = var.airgap_package_url == "" ? "" : local.internal_airgap_url

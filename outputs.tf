@@ -44,3 +44,21 @@ output "ssh_private_key" {
   value = module.common.ssh_priv_key_file
 }
 
+### Some small outputs to allow simpler testing of things like proxies
+### as we need these bits to spin up an additional instance along side the cluster
+### In the future we should probably be outputting resources.
+output "ssh_key_name" {
+  value = module.common.ssh_key_name
+}
+
+output "public_subnets" {
+  value = module.common.public_subnets
+}
+
+output "intra_vpc_ingress_and_egress_sg_id" {
+  value = module.common.intra_vpc_ingress_and_egress_sg_id
+}
+
+output "allow_ptfe_sg_id" {
+  value = module.common.allow_ptfe_sg_id
+}
