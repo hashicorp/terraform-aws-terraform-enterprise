@@ -33,7 +33,7 @@ if [ -f /etc/redhat-release ]; then
   setenforce 0
   mkdir -p /lib/tc
   mount --bind /usr/lib64/tc/ /lib/tc/
-  sed -i -e 's/^SELINUX=enforcing/SELINUX=permissive/' /etc/sysconfig/selinux
+  sed -i --follow-symlinks -e 's/^SELINUX=enforcing/SELINUX=permissive/' /etc/sysconfig/selinux
   sed -i -e '/rhui-REGION-rhel-server-extras/,/^$/s/enabled=0/enabled=1/g'  /etc/yum.repos.d/redhat-rhui.repo
   yum -y install docker wget jq chrony ipvsadm unzip
   systemctl enable docker
