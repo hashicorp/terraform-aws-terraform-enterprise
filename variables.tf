@@ -189,7 +189,7 @@ variable "repl_cidr" {
 ### ================================ External Services Support
 
 variable "aws_instance_profile" {
-  type        = string
+  type        = bool
   description = "When set, use credentials from the AWS instance profile"
   default     = false
 }
