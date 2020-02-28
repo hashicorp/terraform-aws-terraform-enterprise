@@ -23,6 +23,9 @@
     "pg_extra_params": {
         "value": "${pg_extra_params}"
     },
+    "aws_instance_profile": {
+        "value": "${aws_instance_profile}"
+    },
     "aws_access_key_id": {
         "value": "${aws_access_key_id}"
     },

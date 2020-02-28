@@ -188,6 +188,12 @@ variable "repl_cidr" {
 
 ### ================================ External Services Support
 
+variable "aws_instance_profile" {
+  type        = string
+  description = "When set, use credentials from the AWS instance profile"
+  default     = false
+}
+
 variable "aws_access_key_id" {
   type        = string
   description = "AWS access key id to connect to s3 with"

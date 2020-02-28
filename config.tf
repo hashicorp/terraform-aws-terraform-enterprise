@@ -18,6 +18,7 @@ data "template_file" "repl_ptfe_config" {
     pg_netloc              = var.postgresql_address
     pg_dbname              = var.postgresql_database
     pg_extra_params        = var.postgresql_extra_params
+    aws_instance_profile   = var.aws_instance_profile ? "1" : "0"
     aws_access_key_id      = var.aws_access_key_id
     aws_secret_access_key  = var.aws_secret_access_key
     s3_bucket_name         = var.s3_bucket
