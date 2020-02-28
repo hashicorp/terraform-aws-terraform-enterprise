@@ -61,6 +61,6 @@ resource "aws_rds_cluster_instance" "tfe1" {
   cluster_identifier   = aws_rds_cluster.tfe.id
   identifier_prefix    = "${var.prefix}tfe1"
   engine               = "aurora-postgresql"
-  instance_class       = "db.r5.large"
+  instance_class       = var.rds_instance_class
   db_subnet_group_name = aws_db_subnet_group.tfe.name
 }
