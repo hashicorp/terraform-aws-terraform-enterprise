@@ -18,6 +18,12 @@ variable "prefix" {
   default     = ""
 }
 
+variable "rds_instance_class" {
+  type        = string
+  description = "instance class of the database"
+  default     = "db.r5.large"
+}
+
 variable "rds_subnet_tags" {
   type        = map
   description = "tags to use to match subnets to use"

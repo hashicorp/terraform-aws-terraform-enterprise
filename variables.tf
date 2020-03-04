@@ -13,7 +13,7 @@ variable "domain" {
 }
 
 variable "private_zone" {
-  type        = "string"
+  type        = string
   description = "set to true if your route53 zone is private"
   default     = false
 }
@@ -188,6 +188,12 @@ variable "repl_cidr" {
 
 ### ================================ External Services Support
 
+variable "aws_instance_profile" {
+  type        = bool
+  description = "When set, use credentials from the AWS instance profile"
+  default     = false
+}
+
 variable "aws_access_key_id" {
   type        = string
   description = "AWS access key id to connect to s3 with"
@@ -203,6 +209,12 @@ variable "aws_secret_access_key" {
 variable "http_proxy_url" {
   type        = string
   description = "HTTP(S) Proxy URL"
+  default     = ""
+}
+
+variable "additional_no_proxy" {
+  type        = string
+  description = "Comma delimitted list of addresses (no spaces) to not use the proxy for"
   default     = ""
 }
 
@@ -249,13 +261,13 @@ variable "s3_region" {
 }
 
 variable "ingress_allow_list" {
-  type        = list(string)
+  type        = set(string)
   description = "List of CIDR blocks we allow to access the infrastructure"
   default     = []
 }
 
 variable "egress_allow_list" {
-  type        = list(string)
+  type        = set(string)
   description = "List of CIDR blocks we allow the infrastructyre to access"
   default     = ["0.0.0.0/0"]
 }

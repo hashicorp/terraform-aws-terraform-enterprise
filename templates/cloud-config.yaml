@@ -77,6 +77,11 @@ write_files:
   permissions: "0400"
   content: "${proxy_url}"
 
+- path: /etc/ptfe/additional-no-proxy
+  owner: root:root
+  permissions: "0400"
+  content: "${additional_no_proxy}"
+
 - path: /etc/ptfe/custom-ca-cert-url
   owner: root:root
   permissions: "0400"
@@ -88,17 +93,14 @@ write_files:
   content: |
     export http_proxy="${proxy_url}"
     export https_proxy="${proxy_url}"
-    export no_proxy=10.0.0.0/8,127.0.0.1,169.254.169.254
-
-%{ if repl_cidr != "" }
-- path: /etc/profile.d/proxy.sh
-  owner: root:root
-  permissions: "0755"
-  content: |
-    export http_proxy="${proxy_url}"
-    export https_proxy="${proxy_url}"
-    export no_proxy=10.0.0.0/8,127.0.0.1,169.254.169.254,${repl_cidr}
+    export no_proxy=10.0.0.0/8,127.0.0.1,169.254.169.254,${cluster_api_lb}
+%{ if additional_no_proxy != "" }
+    export no_proxy=$no_proxy,${additional_no_proxy}
 %{ endif }
+%{ if repl_cidr != "" }
+    export no_proxy=$no_proxy,${repl_cidr}
+%{ endif }
+
 
 %{ if airgap_installer_url != "" }
 - path: /etc/ptfe/airgap-installer-url
