@@ -33,7 +33,6 @@
 | postgresql\_password | password to connect to external postgresql database as | `string` | `""` | no |
 | postgresql\_user | user to connect to external postgresql database as | `string` | `""` | no |
 | prefix | Name prefix for resource names and tags | `string` | `"tfe"` | no |
-| primary\_count | The number of primary cluster master nodes to run, only 3 support now. | `string` | `3` | no |
 | primary\_instance\_type | ec2 instance type | `string` | `"m4.xlarge"` | no |
 | private\_zone | set to true if your route53 zone is private | `string` | `false` | no |
 | release\_sequence | Replicated release sequence number to install - this locks the install to a specific release | `string` | `""` | no |

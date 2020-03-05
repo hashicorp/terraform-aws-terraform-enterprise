@@ -2,6 +2,7 @@ locals {
   assistant_port                   = 23010
   distro_ami                       = var.distribution == "ubuntu" ? data.aws_ami.ubuntu.id : data.aws_ami.rhel.id
   default_ssh_user                 = var.distribution == "ubuntu" ? "ubuntu" : "ec2-user"
+  primary_count                   = 3  # The number of primary cluster master nodes to run, only 3 support now.
   rendered_secondary_instance_type = var.secondary_instance_type != "" ? var.secondary_instance_type : var.primary_instance_type
 }
 
@@ -112,12 +113,6 @@ variable "installer_url" {
   type        = string
   description = "URL to the cluster setup tool"
   default     = "https://install.terraform.io/installer/ptfe-0.1.zip"
-}
-
-variable "primary_count" {
-  type        = string
-  description = "The number of primary cluster master nodes to run, only 3 support now."
-  default     = 3
 }
 
 variable "primary_instance_type" {

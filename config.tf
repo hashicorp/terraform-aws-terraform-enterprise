@@ -43,7 +43,7 @@ locals {
 }
 
 data "template_file" "cloud_config" {
-  count    = var.primary_count
+  count    = local.primary_count
   template = file("${path.module}/templates/cloud-config.yaml")
 
   vars = {
@@ -78,7 +78,7 @@ data "template_file" "cloud_config" {
 }
 
 data "template_cloudinit_config" "config" {
-  count         = var.primary_count
+  count         = local.primary_count
   gzip          = true
   base64_encode = true
 
