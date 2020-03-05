@@ -21,10 +21,10 @@ resource "aws_elb" "cluster_api" {
 
   listener {
     instance_protocol = "HTTP"
-    instance_port     = 23010
+    instance_port     = local.assistant_port
 
     lb_protocol = "HTTP"
-    lb_port     = 23010
+    lb_port     = local.assistant_port
   }
 
   health_check {
