@@ -71,6 +71,12 @@ variable "prefix" {
   description = "Prefix for resources"
 }
 
+variable "tags" {
+  type        = map(string)
+  description = "Map of tags to add to load balancer"
+  default     = {}
+}
+
 ### =================================================================== OPTIONAL
 
 ### ======================================================================= MISC
@@ -84,8 +90,8 @@ data "aws_acm_certificate" "lb" {
 
 ## existing route53 zone where we'll create an alias to the lb
 data "aws_route53_zone" "zone" {
-  count = var.update_route53 ? 1 : 0
-  name  = var.domain
+  count        = var.update_route53 ? 1 : 0
+  name         = var.domain
   private_zone = var.private_zone
 }
 

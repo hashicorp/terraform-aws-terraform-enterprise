@@ -272,6 +272,12 @@ variable "egress_allow_list" {
   default     = ["0.0.0.0/0"]
 }
 
+variable "tags" {
+  type        = map(string)
+  description = "Map of tags to add to all resources"
+  default     = {}
+}
+
 
 ### ======================================================================= MISC
 

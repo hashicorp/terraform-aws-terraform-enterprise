@@ -45,4 +45,5 @@
 | update\_route53 | whether or not to automatically update route53 records for the cluster | string | `"true"` | no |
 | volume\_size | size of the root volume in gb | string | `"100"` | no |
 | weave\_cidr | Specify a non-standard CIDR range for weave. The default is 10.32.0.0/12 | string | `""` | no |
+| tags | Map of tags to add to all resources | map | {} | no |
 

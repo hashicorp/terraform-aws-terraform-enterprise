@@ -30,10 +30,13 @@ resource "aws_instance" "primary" {
     volume_size = var.volume_size
   }
 
-  tags = {
-    Name           = "${var.prefix}-${module.common.install_id}:primary"
-    InstallationId = module.common.install_id
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name           = "${var.prefix}-${module.common.install_id}:primary"
+      InstallationId = module.common.install_id
+    },
+  )
 }
 
 resource "aws_elb_attachment" "ptfe_app-primary" {

@@ -18,5 +18,7 @@ module "lb" {
 
   cert_domain = var.cert_domain
   cert_arn    = var.cert_arn
+
+  tags = var.tags
 }
 

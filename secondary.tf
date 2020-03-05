@@ -1,3 +1,14 @@
+locals {
+  asg_tags = [
+    for item in keys(var.tags) :
+    map(
+      "key", item,
+      "value", element(values(var.tags), index(keys(var.tags), item)),
+      "propagate_at_launch", "true"
+    )
+  ]
+}
+
 resource "aws_launch_configuration" "secondary" {
   image_id      = var.ami != "" ? var.ami : local.distro_ami
   instance_type = local.rendered_secondary_instance_type
@@ -33,22 +44,25 @@ resource "aws_autoscaling_group" "secondary" {
   vpc_zone_identifier  = module.common.private_subnets
   target_group_arns    = [module.lb.https_group]
 
-  tag {
-    key                 = "Name"
-    value               = "${var.prefix}-${module.common.install_id}:secondary"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "Hostname"
-    value               = module.lb.endpoint
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "InstallationId"
-    value               = module.common.install_id
-    propagate_at_launch = true
-  }
+  tags = concat(
+    [
+      {
+        key                 = "Name"
+        value               = "${var.prefix}-${module.common.install_id}:secondary"
+        propagate_at_launch = true
+      },
+      {
+        key                 = "Hostname"
+        value               = module.lb.endpoint
+        propagate_at_launch = true
+      },
+      {
+        key                 = "InstallationId"
+        value               = module.common.install_id
+        propagate_at_launch = true
+      },
+    ],
+    local.asg_tags
+  )
 }
 
