@@ -27,9 +27,12 @@ resource "aws_security_group" "intra_vpc_ingress_and_egress" {
     }
   }
 
-  tags = {
-    Name = "${var.prefix}"
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.prefix}"
+    },
+  )
 }
 
 resource "aws_security_group" "allow_ptfe" {
@@ -76,4 +79,6 @@ resource "aws_security_group" "allow_ptfe" {
 
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = var.tags
 }

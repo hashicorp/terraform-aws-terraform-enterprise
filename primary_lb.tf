@@ -35,8 +35,11 @@ resource "aws_elb" "cluster_api" {
     timeout             = 5
   }
 
-  tags = {
-    Name = var.prefix
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name = var.prefix
+    },
+  )
 }
 

@@ -4,5 +4,6 @@ module "common" {
   subnet_tags        = var.subnet_tags
   ingress_allow_list = var.ingress_allow_list
   prefix             = var.prefix
+  tags               = var.tags
 }
 

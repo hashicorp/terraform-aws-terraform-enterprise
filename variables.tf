@@ -186,6 +186,13 @@ variable "repl_cidr" {
   default     = ""
 }
 
+variable "tags" {
+  type        = map(string)
+  description = "Map of tags to add to all resources"
+  default     = {}
+}
+
+
 ### ================================ External Services Support
 
 variable "aws_instance_profile" {

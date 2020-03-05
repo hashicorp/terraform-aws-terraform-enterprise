@@ -10,9 +10,12 @@ resource "aws_lb" "ptfe" {
 
   idle_timeout = 3600 ## for ssh
 
-  tags = {
-    Name = var.prefix
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name = var.prefix
+    },
+  )
 }
 
 resource "aws_lb_target_group" "https" {
