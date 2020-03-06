@@ -14,8 +14,8 @@ provider "aws" {
 }
 
 module "external" {
-  source  = "hashicorp/terraform-enterprise/aws/modules/external-services"
-  version = "0.1.0"
+  source  = "hashicorp/terraform-enterprise/aws//modules/external-services"
+  version = "0.1.2"
 
   vpc_id     = local.vpc_id
   install_id = module.terraform-enterprise.install_id
