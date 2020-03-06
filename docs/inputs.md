@@ -33,7 +33,6 @@
 | postgresql\_password | password to connect to external postgresql database as | `string` | `""` | no |
 | postgresql\_user | user to connect to external postgresql database as | `string` | `""` | no |
 | prefix | Name prefix for resource names and tags | `string` | `"tfe"` | no |
-| primary\_count | The number of primary cluster master nodes to run, only 3 support now. | `string` | `3` | no |
 | primary\_instance\_type | ec2 instance type | `string` | `"m4.xlarge"` | no |
 | private\_zone | set to true if your route53 zone is private | `string` | `false` | no |
 | release\_sequence | Replicated release sequence number to install - this locks the install to a specific release | `string` | `""` | no |
@@ -45,6 +44,7 @@
 | ssh\_user | the user to connect to the instance as | `string` | `""` | no |
 | startup\_script | shell script to run when primary instance boots the first time | `string` | `""` | no |
 | subnet\_tags | tags to use to match subnets to use | `map(string)` | `{}` | no |
+| tags | Map of tags to add to all resources | `map(string)` | `{}` | no |
 | update\_route53 | whether or not to automatically update route53 records for the cluster | `string` | `true` | no |
 | volume\_size | size of the root volume in gb | `string` | `"100"` | no |
 | weave\_cidr | Specify a non-standard CIDR range for weave. The default is 10.32.0.0/12 | `string` | `""` | no |
