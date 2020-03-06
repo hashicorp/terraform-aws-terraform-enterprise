@@ -68,7 +68,6 @@ module "terraform-enterprise" {
   }
 
   license_file    = local.license_file
-  primary_count   = 3
   secondary_count = 5
   hostname        = local.hostname
   distribution    = "ubuntu"

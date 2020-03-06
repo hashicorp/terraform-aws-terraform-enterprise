@@ -34,7 +34,6 @@ You'll need to update the following settings to your set up:
 	* domain: The domain setup in Route53
 	* license_file: License file provided by your TAM or SE
 	* secondary_count: Number of worker instances to create
-	* primary_count: Number of primaries to create
 	* distribution: OS Distribution to use - ubuntu or rhel
 
  This example is set to spin up 3 primaries and 3 secondaries.
