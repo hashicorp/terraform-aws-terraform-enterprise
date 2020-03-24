@@ -23,6 +23,7 @@ data "template_file" "repl_ptfe_config" {
     aws_secret_access_key  = var.aws_secret_access_key
     s3_bucket_name         = var.s3_bucket
     s3_bucket_region       = var.s3_region
+    additional_no_proxy    = var.additional_no_proxy
   }
 }
 

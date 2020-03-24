@@ -46,5 +46,8 @@
     },
     "iact_subnet_time_limit": {
         "value": "${iact_subnet_time_limit}"
+    },
+    "extra_no_proxy": {
+        "value": "${additional_no_proxy}"
     }
 }
