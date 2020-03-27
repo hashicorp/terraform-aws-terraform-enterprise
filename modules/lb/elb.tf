@@ -35,7 +35,7 @@ resource "aws_lb_target_group" "admin" {
   vpc_id   = var.vpc_id
 
   health_check {
-    path     = "/"
+    path     = "/ping"
     protocol = "HTTPS"
     matcher  = "200-399"
   }
