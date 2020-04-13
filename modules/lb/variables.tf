@@ -83,6 +83,7 @@ variable "tags" {
 
 ## issued certificate that the lb will be configured to use
 data "aws_acm_certificate" "lb" {
+  count       = var.cert_domain == "" ? 0 : 1
   domain      = var.cert_domain != "" ? var.cert_domain : "*.${var.domain}"
   statuses    = ["ISSUED"]
   most_recent = true
