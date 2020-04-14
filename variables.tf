@@ -190,6 +190,26 @@ variable "network_public_subnet_cidrs" {
   type        = list(string)
   description = "(Optional) List of public subnet CIDR ranges to create in VPC."
   default     = ["10.0.0.0/20", "10.0.16.0/20"]
+
+variable "enable_ssm_access" {
+  type        = bool
+  description = "Add an IAM policy to EC2 instances that allows AWS Session Manager access."
+  default     = false
+}
+
+variable "arn_format" {
+  type        = string
+  description = "ARN format to be used by IAM policies. May be changed to support deployment in GovCloud/China regions."
+  default     = "arn:aws"
+}
+
+
+### ================================ External Services Support
+
+variable "aws_instance_profile" {
+  type        = bool
+  description = "When set, use credentials from the AWS instance profile"
+  default     = false
 }
 
 variable "admin_dashboard_ingress_ranges" {
