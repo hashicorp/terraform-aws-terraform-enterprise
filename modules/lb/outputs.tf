@@ -10,6 +10,10 @@ output "lb_endpoint" {
   value = aws_lb.ptfe.dns_name
 }
 
+output "lb_zone_id" {
+  value = aws_lb.ptfe.zone_id
+}
+
 output "endpoint" {
   value = local.endpoint
 }

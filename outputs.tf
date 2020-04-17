@@ -36,6 +36,10 @@ output "load_balancer_dns_name" {
   value = module.lb.lb_endpoint
 }
 
+output "load_balancer_zone_id" {
+  value = module.lb.lb_zone_id
+}
+
 output "ssh_config_file" {
   value = local_file.ssh_config.filename
 }
