@@ -8,3 +8,4 @@ Host default
     IdentityFile ${keyfile_path}
     IdentitiesOnly yes
     LogLevel FATAL
+    ForwardAgent yes
