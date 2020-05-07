@@ -62,6 +62,18 @@ write_files:
   permissions: "0400"
   content: "${additional_no_proxy}"
 
+- path: /etc/ptfe/post-install.sh
+  owner: root:root
+  permissions: "0500"
+  encoding: b64
+  content: "${base64encode(postinstall_script)}"
+
+- path: /etc/ptfe/pre-install.sh
+  owner: root:root
+  permissions: "0500"
+  encoding: b64
+  content: "${base64encode(preinstall_script)}"
+
 - path: /etc/ptfe/custom-ca-cert-url
   owner: root:root
   permissions: "0400"

@@ -75,6 +75,8 @@ data "template_file" "cloud_config" {
     distro               = var.distribution
     rptfeconf            = base64encode(data.template_file.repl_ptfe_config.rendered)
     replconf             = base64encode(data.template_file.repl_config.rendered)
+    postinstall_script   = var.postinstall_script
+    preinstall_script    = var.preinstall_script
   }
 }
 
@@ -106,6 +108,8 @@ data "template_file" "cloud_config_secondary" {
     airgap_installer_url = var.airgap_package_url == "" ? "" : local.internal_airgap_url
     ca_bundle_url        = var.ca_bundle_url
     import_key           = var.import_key
+    postinstall_script   = var.postinstall_script
+    preinstall_script    = var.preinstall_script
   }
 }
 
@@ -128,4 +132,3 @@ data "template_file" "ssh_config" {
     keyfile_path = module.common.ssh_priv_key_file
   }
 }
-

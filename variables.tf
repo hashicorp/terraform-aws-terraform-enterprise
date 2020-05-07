@@ -187,6 +187,17 @@ variable "tags" {
   default     = {}
 }
 
+variable "postinstall_script" {
+  default     = "echo 'A post-install script was not provided.'"
+  description = "A custom shell script which will be invoked after TFE is installed."
+  type        = string
+}
+
+variable "preinstall_script" {
+  default     = "echo 'A pre-install script was not provided.'"
+  description = "A custom shell script which will be invoked before TFE is installed."
+  type        = string
+}
 
 ### ================================ External Services Support
 
@@ -331,4 +342,3 @@ resource "random_string" "setup_token" {
   upper   = false
   special = false
 }
-

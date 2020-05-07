@@ -32,7 +32,9 @@
 | postgresql\_extra\_params | additional connection string parameters (must be url query params) | `string` | `""` | no |
 | postgresql\_password | password to connect to external postgresql database as | `string` | `""` | no |
 | postgresql\_user | user to connect to external postgresql database as | `string` | `""` | no |
+| postinstall\_script | A custom shell script which will be invoked after TFE is installed. | `string` | `"echo 'A post-install script was not provided.'"` | no |
 | prefix | Name prefix for resource names and tags | `string` | `"tfe"` | no |
+| preinstall\_script | A custom shell script which will be invoked before TFE is installed. | `string` | `"echo 'A pre-install script was not provided.'"` | no |
 | primary\_instance\_type | ec2 instance type | `string` | `"m4.xlarge"` | no |
 | private\_zone | set to true if your route53 zone is private | `string` | `false` | no |
 | release\_sequence | Replicated release sequence number to install - this locks the install to a specific release | `string` | `""` | no |
