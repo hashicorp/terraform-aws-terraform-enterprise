@@ -70,7 +70,6 @@ data "template_file" "cloud_config" {
     repl_cidr            = var.repl_cidr
     ca_bundle_url        = var.ca_bundle_url
     import_key           = var.import_key
-    startup_script       = base64encode(var.startup_script)
     role                 = count.index == 0 ? "main" : "primary"
     distro               = var.distribution
     rptfeconf            = base64encode(data.template_file.repl_ptfe_config.rendered)

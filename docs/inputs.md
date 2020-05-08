@@ -32,9 +32,9 @@
 | postgresql\_extra\_params | additional connection string parameters (must be url query params) | `string` | `""` | no |
 | postgresql\_password | password to connect to external postgresql database as | `string` | `""` | no |
 | postgresql\_user | user to connect to external postgresql database as | `string` | `""` | no |
-| postinstall\_script | A custom shell script which will be invoked after TFE is installed. | `string` | `"echo 'A post-install script was not provided.'"` | no |
+| postinstall\_script | A custom shell script which will be invoked after TFE is installed. The value must start with a shebang line in order to be executed. | `string` | `"#!/bin/bash\n\necho 'A post-install script was not provided.'\n"` | no |
 | prefix | Name prefix for resource names and tags | `string` | `"tfe"` | no |
-| preinstall\_script | A custom shell script which will be invoked before TFE is installed. | `string` | `"echo 'A pre-install script was not provided.'"` | no |
+| preinstall\_script | A custom shell script which will be invoked before TFE is installed. The value must start with a shebang line in order to be executed. | `string` | `"#!/bin/bash\n\necho 'A pre-install script was not provided.'\n"` | no |
 | primary\_instance\_type | ec2 instance type | `string` | `"m4.xlarge"` | no |
 | private\_zone | set to true if your route53 zone is private | `string` | `false` | no |
 | release\_sequence | Replicated release sequence number to install - this locks the install to a specific release | `string` | `""` | no |
@@ -44,7 +44,6 @@
 | secondary\_count | The number of secondary cluster nodes to run | `string` | `5` | no |
 | secondary\_instance\_type | ec2 instance type (Defaults to `primary_instance_type` if not set.) | `string` | `""` | no |
 | ssh\_user | the user to connect to the instance as | `string` | `""` | no |
-| startup\_script | shell script to run when primary instance boots the first time | `string` | `""` | no |
 | subnet\_tags | tags to use to match subnets to use | `map(string)` | `{}` | no |
 | tags | Map of tags to add to all resources | `map(string)` | `{}` | no |
 | update\_route53 | whether or not to automatically update route53 records for the cluster | `string` | `true` | no |
