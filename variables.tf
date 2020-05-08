@@ -139,12 +139,6 @@ variable "ssh_user" {
   default     = ""
 }
 
-variable "startup_script" {
-  type        = string
-  description = "shell script to run when primary instance boots the first time"
-  default     = ""
-}
-
 variable "subnet_tags" {
   type        = map(string)
   description = "tags to use to match subnets to use"
@@ -187,6 +181,17 @@ variable "tags" {
   default     = {}
 }
 
+variable "postinstall_script" {
+  default     = ""
+  description = "A custom shell script which will be invoked after TFE is installed. The value must start with a shebang line in order to be executed. If no value is provided, a default script will be used."
+  type        = string
+}
+
+variable "preinstall_script" {
+  default     = ""
+  description = "A custom shell script which will be invoked before TFE is installed. The value must start with a shebang line in order to be executed. If no value is provided, a default script will be used."
+  type        = string
+}
 
 ### ================================ External Services Support
 
@@ -331,4 +336,3 @@ resource "random_string" "setup_token" {
   upper   = false
   special = false
 }
-
