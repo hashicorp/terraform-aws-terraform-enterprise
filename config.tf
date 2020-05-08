@@ -2,6 +2,12 @@ locals {
   app_data_mode    = var.postgresql_address != "" ? "external_services" : "demo"
   app_network_type = var.airgap_package_url != "" ? "airgap" : "online"
   install_type     = "${local.app_data_mode}-${local.app_network_type}"
+  postinstall_script = var.postinstall_script == "" ? (
+    file("${path.module}/files/post-install-default.sh")
+  ) : var.postinstall_script
+  preinstall_script = var.preinstall_script == "" ? (
+    file("${path.module}/files/pre-install-default.sh")
+  ) : var.preinstall_script
 }
 
 # Settings for automated PTFE installation
@@ -74,8 +80,8 @@ data "template_file" "cloud_config" {
     distro               = var.distribution
     rptfeconf            = base64encode(data.template_file.repl_ptfe_config.rendered)
     replconf             = base64encode(data.template_file.repl_config.rendered)
-    postinstall_script   = var.postinstall_script
-    preinstall_script    = var.preinstall_script
+    postinstall_script   = local.postinstall_script
+    preinstall_script    = local.preinstall_script
   }
 }
 
@@ -107,8 +113,8 @@ data "template_file" "cloud_config_secondary" {
     airgap_installer_url = var.airgap_package_url == "" ? "" : local.internal_airgap_url
     ca_bundle_url        = var.ca_bundle_url
     import_key           = var.import_key
-    postinstall_script   = var.postinstall_script
-    preinstall_script    = var.preinstall_script
+    postinstall_script   = local.postinstall_script
+    preinstall_script    = local.preinstall_script
   }
 }
 

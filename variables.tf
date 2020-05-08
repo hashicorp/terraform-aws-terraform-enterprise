@@ -182,22 +182,14 @@ variable "tags" {
 }
 
 variable "postinstall_script" {
-  default     = <<-EOD
-  #!/bin/bash
-
-  echo 'A post-install script was not provided.'
-  EOD
-  description = "A custom shell script which will be invoked after TFE is installed. The value must start with a shebang line in order to be executed."
+  default     = ""
+  description = "A custom shell script which will be invoked after TFE is installed. The value must start with a shebang line in order to be executed. If no value is provided, a default script will be used."
   type        = string
 }
 
 variable "preinstall_script" {
-  default     = <<-EOD
-  #!/bin/bash
-
-  echo 'A pre-install script was not provided.'
-  EOD
-  description = "A custom shell script which will be invoked before TFE is installed. The value must start with a shebang line in order to be executed."
+  default     = ""
+  description = "A custom shell script which will be invoked before TFE is installed. The value must start with a shebang line in order to be executed. If no value is provided, a default script will be used."
   type        = string
 }
 
