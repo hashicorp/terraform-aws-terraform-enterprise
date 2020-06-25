@@ -56,12 +56,14 @@ cat "$CONF" >> /tmp/chrony.conf
 cp /tmp/chrony.conf "$CONF"
 systemctl restart $SERVICE
 
-pushd /tmp
-  wget -O ptfe.zip "$(cat /etc/ptfe/ptfe_url)"
-  unzip ptfe.zip
-  cp ptfe /usr/bin
-  chmod a+x /usr/bin/ptfe
-popd
+if [ ! -f /usr/bin/ptfe ]; then
+  pushd /tmp
+    wget -O ptfe.zip "$(cat /etc/ptfe/ptfe_url)"
+    unzip ptfe.zip
+    cp ptfe /usr/bin
+    chmod a+x /usr/bin/ptfe
+  popd
+fi
 
 role="$(cat /etc/ptfe/role)"
 export role
