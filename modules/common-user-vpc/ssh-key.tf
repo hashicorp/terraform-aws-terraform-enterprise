@@ -19,8 +19,9 @@ resource "aws_key_pair" "generated" {
 }
 
 resource "local_file" "private_key_pem" {
-  content  = tls_private_key.default.private_key_pem
-  filename = local.private_key_filename
+  content         = tls_private_key.default.private_key_pem
+  filename        = local.private_key_filename
+  file_permission = "0600"
 }
 
 resource "null_resource" "chmod" {
