@@ -44,18 +44,26 @@ else
   SERVICE=chrony
 fi
 
+# Some distributions (RHEL) are missing jq in some versions
+if ! command -v jq; then
+  curl -sfSL -o /usr/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
+  chmod +x /usr/bin/jq
+fi
+
 echo "Enabling NTP support..."
 echo "server 169.254.169.123 prefer iburst" > /tmp/chrony.conf
 cat "$CONF" >> /tmp/chrony.conf
 cp /tmp/chrony.conf "$CONF"
 systemctl restart $SERVICE
 
-pushd /tmp
-  wget -O ptfe.zip "$(cat /etc/ptfe/ptfe_url)"
-  unzip ptfe.zip
-  cp ptfe /usr/bin
-  chmod a+x /usr/bin/ptfe
-popd
+if [ ! -f /usr/bin/ptfe ]; then
+  pushd /tmp
+    wget -O ptfe.zip "$(cat /etc/ptfe/ptfe_url)"
+    unzip ptfe.zip
+    cp ptfe /usr/bin
+    chmod a+x /usr/bin/ptfe
+  popd
+fi
 
 role="$(cat /etc/ptfe/role)"
 export role
