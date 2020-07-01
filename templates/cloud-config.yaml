@@ -62,7 +62,7 @@ write_files:
 - path: /var/lib/cloud/scripts/per-once/000-user-startup-script.sh
   owner: root:root
   permissions: "0555"
-  encoding: b64
+  encoding: gz+b64
   content: ${startup_script}
 %{ endif }
 
@@ -119,14 +119,14 @@ write_files:
 - path: /etc/replicated-ptfe.conf
   owner: root:root
   permissions: "0644"
-  encoding: b64
+  encoding: gz+b64
   content: ${rptfeconf}
 
 ## https://help.replicated.com/docs/kb/developer-resources/automate-install/
 - path: /etc/replicated.conf
   owner: root:root
   permissions: "0644"
-  encoding: b64
+  encoding: gz+b64
   content: ${replconf}
 
 %{ if airgap_package_url != "" }
