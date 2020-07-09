@@ -49,7 +49,7 @@ write_files:
 - path: /var/lib/cloud/scripts/per-once/install-ptfe.sh
   owner: root:root
   permissions: "0555"
-  encoding: b64
+  encoding: gz+b64
   content: ${install_ptfe_sh}
 
 - path: /etc/ptfe/proxy-url

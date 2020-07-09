@@ -50,7 +50,7 @@ data "template_file" "cloud_config" {
   vars = {
     hostname        = module.lb.endpoint
     license_b64     = filebase64(var.license_file)
-    install_ptfe_sh = filebase64("${path.module}/files/install-ptfe.sh")
+    install_ptfe_sh = base64gzip(file("${path.module}/files/install-ptfe.sh"))
     # Needed for Airgap installations
     airgap_package_url   = var.airgap_package_url
     airgap_installer_url = var.airgap_package_url == "" ? "" : count.index == 0 ? var.airgap_installer_url : local.internal_airgap_url
@@ -70,11 +70,11 @@ data "template_file" "cloud_config" {
     repl_cidr            = var.repl_cidr
     ca_bundle_url        = var.ca_bundle_url
     import_key           = var.import_key
-    startup_script       = base64encode(var.startup_script)
+    startup_script       = base64gzip(var.startup_script)
     role                 = count.index == 0 ? "main" : "primary"
     distro               = var.distribution
-    rptfeconf            = base64encode(data.template_file.repl_ptfe_config.rendered)
-    replconf             = base64encode(data.template_file.repl_config.rendered)
+    rptfeconf            = base64gzip(data.template_file.repl_ptfe_config.rendered)
+    replconf             = base64gzip(data.template_file.repl_config.rendered)
   }
 }
 
@@ -93,7 +93,7 @@ data "template_file" "cloud_config_secondary" {
   template = file("${path.module}/templates/cloud-config-secondary.yaml")
 
   vars = {
-    install_ptfe_sh      = filebase64("${path.module}/files/install-ptfe.sh")
+    install_ptfe_sh      = base64gzip(file("${path.module}/files/install-ptfe.sh"))
     bootstrap_token      = "${random_string.bootstrap_token_id.result}.${random_string.bootstrap_token_suffix.result}"
     cluster_api_endpoint = "${aws_elb.cluster_api.dns_name}:6443"
     health_url           = "http://${aws_elb.cluster_api.dns_name}:${local.assistant_port}/healthz"
