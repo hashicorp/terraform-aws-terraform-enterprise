@@ -1,6 +1,12 @@
-# Terraform Enterprise: Clustering for AWS
+# Terraform Enterprise: Clustering for AWS (Deprecated)
 
 ![Terraform Logo](https://github.com/hashicorp/terraform-aws-terraform-enterprise/blob/master/assets/TerraformLogo.png?raw=true)
+
+![Status: Deprecated](https://img.shields.io/badge/Status-Deprecated-red)
+
+## Deprecation
+
+This module is a legacy install and is still available for customers who have already installed Terraform Enterprise: Clustering. New users should use this guide to install Terraform Enterprise: [terraform.io/docs/enterprise/install](https://www.terraform.io/docs/enterprise/install/index.html) or contact your Technical Account Manager for more details.
 
 ## Description
 
