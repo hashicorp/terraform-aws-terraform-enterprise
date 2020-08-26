@@ -41,3 +41,9 @@ variable "database_username" {
   description = "username of the initial user"
   default     = "tfe"
 }
+
+variable "demo" {
+  type        = bool
+  description = "Defines whether these resources are deployed as a demo"
+  default     = false
+}
