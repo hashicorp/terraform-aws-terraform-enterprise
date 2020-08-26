@@ -11,4 +11,4 @@
 | prefix | string to prefix all resources with | `string` | `""` | no |
 | rds\_instance\_class | instance class of the database | `string` | `"db.r5.large"` | no |
 | rds\_subnet\_tags | tags to use to match subnets to use | `map` | `{}` | no |
-
+| demo | Defines whether these resources are deployed as a demo | `bool` | `false` | no |

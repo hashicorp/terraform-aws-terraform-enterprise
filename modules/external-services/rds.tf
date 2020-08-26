@@ -54,6 +54,7 @@ resource "aws_rds_cluster" "tfe" {
   preferred_backup_window   = "07:00-09:00"
   vpc_security_group_ids    = [aws_security_group.db_access.id]
   final_snapshot_identifier = "${var.prefix}tfe-${var.install_id}-final"
+  skip_final_snapshot       = var.demo == true
 }
 
 resource "aws_rds_cluster_instance" "tfe1" {
