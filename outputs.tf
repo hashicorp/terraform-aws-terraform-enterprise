@@ -1,68 +1,67 @@
-output "application_endpoint" {
-  value = "https://${module.lb.endpoint}"
+# Bastion
+output "bastion_public_dns" {
+  value = module.bastion.bastion_public_dns
 }
 
-output "application_health_check" {
-  value = "https://${module.lb.endpoint}/_health_check"
+output "bastion_public_ip" {
+  value = module.bastion.bastion_public_ip
 }
 
-output "iam_role" {
-  value = aws_iam_role.ptfe.name
+# KMS
+output "kms_key_arn" {
+  value = aws_kms_key.tfe_key.arn
 }
 
-output "install_id" {
-  value = module.common.install_id
+output "kms_key_id" {
+  value = aws_kms_key.tfe_key.key_id
 }
 
-output "installer_dashboard_password" {
-  value = random_pet.console_password.id
+# Network
+output "network_id" {
+  value = module.networking.network_id
 }
 
-output "installer_dashboard_url" {
-  value = "https://${module.lb.endpoint}:8800"
+output "private_subnet_ids" {
+  value = module.networking.network_private_subnets
 }
 
-## this allows the user to do `ssh -F ssh-config default`
-resource "local_file" "ssh_config" {
-  filename = "${path.root}/work/ssh-config"
-  content  = data.template_file.ssh_config.rendered
+output "public_subnet_ids" {
+  value = module.networking.network_public_subnets
 }
 
-output "primary_public_ip" {
-  value = element(aws_instance.primary.*.public_ip, 0)
+output "network_private_subnet_cidrs" {
+  value = module.networking.network_private_subnet_cidrs
 }
 
-output "load_balancer_dns_name" {
-  value = module.lb.lb_endpoint
+# Security Groups
+output "tfe_instance_sg" {
+  value = module.vm.tfe_instance_sg
 }
 
-output "load_balancer_zone_id" {
-  value = module.lb.lb_zone_id
+# Secrets Manager
+output "secretsmanager_secret_arn" {
+  value = module.secrets_manager.secretsmanager_secret_arn
 }
 
-output "ssh_config_file" {
-  value = local_file.ssh_config.filename
+# S3
+output "bootstrap_bucket_name" {
+  value = module.object_storage.s3_bucket_bootstrap
 }
 
-output "ssh_private_key" {
-  value = module.common.ssh_priv_key_file
+output "bootstrap_bucket_arn" {
+  value = module.object_storage.s3_bucket_bootstrap_arn
 }
 
-### Some small outputs to allow simpler testing of things like proxies
-### as we need these bits to spin up an additional instance along side the cluster
-### In the future we should probably be outputting resources.
-output "ssh_key_name" {
-  value = module.common.ssh_key_name
+# Load balancer
+output "load_balancer_address" {
+  value = module.load_balancer.load_balancer_address
 }
 
-output "public_subnets" {
-  value = module.common.public_subnets
+output "dns_configuration_notice" {
+  value = "If you are using external DNS, please make sure to create a DNS record using the load_balancer_address output that has been provided"
 }
 
-output "intra_vpc_ingress_and_egress_sg_id" {
-  value = module.common.intra_vpc_ingress_and_egress_sg_id
-}
-
-output "allow_ptfe_sg_id" {
-  value = module.common.allow_ptfe_sg_id
+output "login_url" {
+  value       = "https://${local.fqdn}/admin/account/new?token=${module.user_data.user_token.value}"
+  description = "Login URL to setup the TFE instance once it is initialized"
 }
