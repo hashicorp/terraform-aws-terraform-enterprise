@@ -1,4 +1,16 @@
-# Local .terraform directories
+#  Local .terraform directories
+/.terraform/
 **/.terraform/*
 
-work/
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# .tfvars files
+*.tfvars
+
+# Terraform lock file
+.terraform.lock.hcl
+
+.DS_Store
+*.bk

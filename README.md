@@ -1,40 +1,126 @@
-# Terraform Enterprise: Clustering for AWS (Deprecated)
+# Terraform Enterprise AWS Module
 
-![Terraform Logo](https://github.com/hashicorp/terraform-aws-terraform-enterprise/blob/master/assets/TerraformLogo.png?raw=true)
+This is a Terraform module for provisioning a Terraform Enterprise Cluster on AWS. Terraform Enterprise is our self-hosted distribution of Terraform Cloud. It offers enterprises a private instance of the Terraform Cloud application, with no resource limits and with additional enterprise-grade architectural features like audit logging and SAML single sign-on.
 
-![Status: Deprecated](https://img.shields.io/badge/Status-Deprecated-red)
+## About This Module
 
-## Deprecation
+This module will install Terraform Enterprise on AWS according to the [HashiCorp Reference Architecture](https://www.terraform.io/docs/enterprise/before-installing/reference-architecture/aws.html). This module is intended to be used by practitioners seeking a Terraform Enterprise installation which requires minimal configuration in the AWS cloud.
 
-This module is a legacy install and is still available for customers who have already installed Terraform Enterprise: Clustering. New users should use this guide to install Terraform Enterprise: [terraform.io/docs/enterprise/install](https://www.terraform.io/docs/enterprise/install/index.html) or contact your Technical Account Manager for more details.
+As the goal for this main module is to provide a drop-in solution for installing Terraform Enterprise via the Golden Path, it leverages AWS native solutions such as Route 53 and a vanilla AWS-supplied base AMI. We have provided guidance and limited examples for other use cases.
 
-## Description
+## Pre-requisites
 
-This module installs Terraform Enterprise: Clustering onto three or more AWS instances.
+This module is intended to run in an AWS account with minimal preparation, however it does have the following pre-requisites:
 
-The Replicated license used must have been activated for Terraform Enterprise: Clustering before this module can be used.
+### Terraform version >= 0.13
 
-*Note: This module is for Terraform 0.12+.* If you require a version this module for Terraform 0.11.x you can find an archived unsupported version in the `v0.1` branch of this project.
+This module requires Terraform version `0.13` or greater to be installed on the running machine.
 
-## Architecture
+### Credentials / Permissions
 
-![basic diagram](https://github.com/hashicorp/terraform-aws-terraform-enterprise/blob/master/assets/aws_diagram.jpg?raw=true)
-_example architecture_
+#### AWS Services Used
 
-Please contact your Technical Account Manager for more information, and support for any issues you have.
+* AWS Identity & Access Management (IAM)
+* AWS Key Management System (KMS)
+* Amazon RDS (Postgres)
+* Amazon EC2
+* Amazon Elastic Loadbalancing (ALB)
+* Amazon Certificate Manager (ACM)
+* Amazon Route53
+* Amazon Elasticache (Redis)
+* Amazon VPC
+* Amazon S3
+* [OPTIONAL] Amazon Secrets Manager
+
+### Public Hosted Zone
+
+If you are managing DNS via AWS Route53 the hosted zone entry is created automatically as part of your domain management.
+
+If you're managing DNS outside of Route53, please see the documentation on [creating a hosted zone for a subdomain](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-routing-traffic-for-subdomains.html), which you will need to do for the subdomain you are planning to use for your Terraform Enterprise installation. To create this hosted zone with Terraform, use [the `aws_route53_zone` resource](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_zone).
+
+### ACM Certificate
+
+Certificate validation can take up two hours, causing timeouts during module apply if the cert is generated as one of the resources contained in the module. For that reason, once the hosted zone has been created, the certificate must be created or imported into ACM. To create or import manually, see the [AWS ACM certificate documentation](https://docs.aws.amazon.com/acm/latest/userguide/gs.html). To create or manage certificates with Terraform, we recommend the [official ACM module in the Terraform Registry](https://registry.terraform.io/modules/terraform-aws-modules/acm/aws/latest).
+
+**Note:** This module has been tested in the following AWS regions:
+- `us-east-1`
+- `eu-west-1`
+- `eu-west-2`
+
+## How to Use This Module
+
+- Ensure account meets module pre-requisites from above.
+
+- Create a Terraform configuration that pulls in this module and specifies values
+  of the required variables:
+
+```hcl
+provider "aws" {
+  region = "<your AWS region>"
+}
+
+module "tfe_node" {
+  source                 = "<filepath to cloned module directory>"
+  friendly_name_prefix   = "<prefix for tagging/naming AWS resources>"
+  domain_name            = "<domain for creating the Terraform Enterprise subdomain on. >"
+  tfe_license_filepath   = "<filepath to your .rli file>"
+  acm_certificate_arn    = "<ARN for ACM cert to be used with load balancer>"
+}
+```
+
+- *OPTIONAL*: This module can be deployed with a custom AMI rather than the default base given (Ubuntu 20.04 LTS), and has been verified to be functional with Ubuntu 20.04 LTS and RHEL 7.x based images. To deploy using a custom image, use the following configuration instead:
+
+```hcl
+provider "aws" {
+  region = "<your AWS region>"
+}
+
+module "tfe_node" {
+  source               = "<filepath to cloned module directory>"
+  ami_id               = "<the ID of your preferred AMI>"
+  friendly_name_prefix = "<prefix for tagging/naming AWS resources>"
+  domain_name          = "<domain for creating the Terraform Enterprise subdomain on. >"
+  tfe_license_filepath = "<filepath to your .rli file>"
+  acm_certificate_arn    = "<ARN for ACM cert to be used with load balancer>"
+}
+```
+
+- Run `terraform init` and `terraform apply`
+
+* Note: When using SSH to connect from the bastion host to the TFE instances, specify the SSH private key with the following command:
+
+```shell
+$ ssh -i ~/.ssh/tfe <tfe instance>
+```
+
+## Module Manifest
+
+This module will create all infrastructure resources required to install Terraform Enterprise in a standalone or active-active configuration (depending on how many nodes you specify) on AWS in the designated region according to the Reference Architecture. The default base AMI used is Ubuntu 20.04 LTS but you may specify a RHEL 7.x AMI ID by using the `ami_id` variable.
+
+The resources created are:
+
+* VPC with public and private subnets and bastion host
+* PostgreSQL instance
+* Redis cache
+* S3 bucket for installation bootstrapping
+* Auto-scaling group behind Application Load Balancer (ALB)
+* Secrets Manager Secret used for deploys
+* KMS key
+* IAM Instance Role and IAM Policy to allow instances to retrieve bootstrap secrets
+* Route53 A Record for Load Balancer on TFE domain
+* Supporting security groups and rules for application functionality
 
 ## Examples
 
-Please see the [examples directory](https://github.com/hashicorp/terraform-aws-terraform-enterprise/tree/master/examples/) for more extensive examples.
+We have included documentation and reference examples for additional common installation scenarios for TFE, as well as examples for supporting resources that lack official modules.
 
-## Inputs
+* [Example: Deploying behind a proxy](./examples/behind-proxy)
+* [Example: Deploying into an existing private network](./examples/existing-private-network)
+* [Example: Deploying while managing DNS outside of AWS](./examples/external-dns)
+* [Example: Deploying the Startup Persona](./examples/personas-startup)
+* [Example: Deploying the Retailer Persona](./examples/personas-retailer)
+* [Example: Deploying the Bank Persona](./examples/personas-bank)
 
-Please see the [inputs documentation](https://registry.terraform.io/modules/hashicorp/terraform-enterprise/aws/?tab=inputs)
+## License
 
-Repository versions of the inputs documentation can be found in [docs/inputs.md](docs/inputs.md)
-
-## Outputs
-
-Please see the [outputs documentation](https://registry.terraform.io/modules/hashicorp/terraform-enterprise/aws/?tab=outputs)
-
-Repository versions of the outputs documentation can be found in [docs/outputs.md](docs/outputs.md)
+This code is released under the Mozilla Public License 2.0. Please see [LICENSE](https://github.com/hashicorp/terraform-aws-consul-oss/blob/master/LICENSE) for more details.
