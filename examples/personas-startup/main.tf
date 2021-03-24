@@ -36,7 +36,7 @@ module "startup_deployment" {
   bastion_keypair = var.existing_aws_keypair
 
   # Allow traffic from public load-balancer.
-  load_balancing_scheme = false
+  load_balancing_scheme = "PUBLIC"
 
   # Disable Redis encryption, TLS, and password.
   redis_encryption_in_transit = false

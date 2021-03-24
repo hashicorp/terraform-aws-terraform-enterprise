@@ -45,7 +45,7 @@ acm_certificate_arn  = "<EXISTING_ACM_CERTIFICATE_ARM>"
 bastion_keypair = "rruiz-testing"
 
 # Creates a public load balancer
-load_balancing_scheme = false
+load_balancing_scheme = "PUBLIC"
 ```
 
 With the configuration created, run `terraform init` and `terraform apply` to provision the example infrastructure.
