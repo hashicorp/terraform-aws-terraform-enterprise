@@ -7,9 +7,14 @@ variable "certificate_arn" {}
 variable "fqdn" {}
 
 variable "load_balancing_scheme" {
-  type        = bool
-  description = "(Optional) Boolean indicating whether the load balancer is internal or external. Defaults to internal."
-  default     = true
+  default     = "PRIVATE"
+  description = "Load Balancing Scheme. Supported values are: \"PRIVATE\"; \"PUBLIC\"."
+  type        = string
+
+  validation {
+    condition     = contains(["PRIVATE", "PUBLIC"], var.load_balancer)
+    error_message = "The load_balancer value must be one of: \"PRIVATE\"; \"PUBLIC\"."
+  }
 }
 
 variable "ssl_policy" {}

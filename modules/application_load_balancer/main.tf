@@ -54,9 +54,9 @@ resource "aws_security_group_rule" "tfe_outbound_allow_all" {
   security_group_id = aws_security_group.tfe_outbound_allow.id
 }
 
-resource "aws_lb" "tfe_alb" {
+resource "aws_lb" "tfe_lb" {
   name               = "${var.friendly_name_prefix}-tfe-web-alb"
-  internal           = var.load_balancing_scheme
+  internal           = (var.load_balancing_scheme == "PRIVATE")
   load_balancer_type = "application"
   subnets            = var.network_public_subnets
 
@@ -69,7 +69,7 @@ resource "aws_lb" "tfe_alb" {
 }
 
 resource "aws_lb_listener" "tfe_listener_80" {
-  load_balancer_arn = aws_lb.tfe_alb.arn
+  load_balancer_arn = aws_lb.tfe_lb.arn
   port              = 80
   protocol          = "HTTP"
 
@@ -85,7 +85,7 @@ resource "aws_lb_listener" "tfe_listener_80" {
 }
 
 resource "aws_lb_listener" "tfe_listener_443" {
-  load_balancer_arn = aws_lb.tfe_alb.arn
+  load_balancer_arn = aws_lb.tfe_lb.arn
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = var.ssl_policy
@@ -114,7 +114,7 @@ resource "aws_lb_target_group" "tfe_tg_443" {
 
 resource "aws_lb_listener" "tfe_listener_8800" {
   count             = var.active_active ? 0 : 1
-  load_balancer_arn = aws_lb.tfe_alb.arn
+  load_balancer_arn = aws_lb.tfe_lb.arn
   port              = 8800
   protocol          = "HTTPS"
   ssl_policy        = var.ssl_policy
@@ -154,8 +154,8 @@ resource "aws_route53_record" "tfe" {
   type    = "A"
 
   alias {
-    name                   = aws_lb.tfe_alb.dns_name
-    zone_id                = aws_lb.tfe_alb.zone_id
+    name                   = aws_lb.tfe_lb.dns_name
+    zone_id                = aws_lb.tfe_lb.zone_id
     evaluate_target_health = true
   }
 }
