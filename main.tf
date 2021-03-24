@@ -214,6 +214,7 @@ module "load_balancer" {
   load_balancing_scheme          = var.load_balancing_scheme
   network_id                     = local.network_id
   network_public_subnets         = local.network_public_subnets
+  network_private_subnets        = local.network_private_subnets
   ssl_policy                     = var.ssl_policy
 
   common_tags = var.common_tags
@@ -230,7 +231,7 @@ module "private_tcp_load_balancer" {
   friendly_name_prefix           = var.friendly_name_prefix
   fqdn                           = local.fqdn
   network_id                     = local.network_id
-  network_public_subnets         = local.network_public_subnets
+  network_private_subnets        = local.network_private_subnets
   ssl_policy                     = var.ssl_policy
 
   common_tags = var.common_tags

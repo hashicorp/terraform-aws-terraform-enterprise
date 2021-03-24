@@ -10,7 +10,7 @@ variable "ssl_policy" {}
 
 variable "network_id" {}
 
-variable "network_public_subnets" {}
+variable "network_private_subnets" {}
 
 variable "active_active" {
   type        = bool

@@ -58,7 +58,7 @@ resource "aws_lb" "tfe_lb" {
   name               = "${var.friendly_name_prefix}-tfe-web-alb"
   internal           = (var.load_balancing_scheme == "PRIVATE")
   load_balancer_type = "application"
-  subnets            = var.network_public_subnets
+  subnets            = var.load_balancing_scheme == "PRIVATE" ? var.network_private_subnets : var.network_public_subnets
 
   security_groups = [
     aws_security_group.tfe_lb_allow.id,
