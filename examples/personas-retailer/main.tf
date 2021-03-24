@@ -56,7 +56,7 @@ module "retailer_deployment" {
 
   ami_id = data.aws_ami.rhel.id
 
-  load_balancing_scheme = true
+  load_balancing_scheme = "PRIVATE"
 
   redis_encryption_in_transit = true
   redis_require_password      = true
