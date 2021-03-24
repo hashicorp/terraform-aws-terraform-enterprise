@@ -241,9 +241,9 @@ module "vm" {
   active_active                       = local.active_active
   aws_iam_instance_profile            = module.service_accounts.aws_iam_instance_profile
   ami_id                              = local.ami_id
-  aws_lb                              = var.load_balancer == "PRIVATE_TCP" ? null : module.load_balancer[0].aws_lb_security_group
-  aws_lb_target_group_tfe_tg_443_arn  = var.load_balancer == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_443_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_443_arn
-  aws_lb_target_group_tfe_tg_8800_arn = var.load_balancer == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn
+  aws_lb                              = var.load_balancing_scheme == "PRIVATE_TCP" ? null : module.load_balancer[0].aws_lb_security_group
+  aws_lb_target_group_tfe_tg_443_arn  = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_443_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_443_arn
+  aws_lb_target_group_tfe_tg_8800_arn = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn
   bastion_key                         = local.bastion_key_public
   bastion_sg                          = local.bastion_sg
   default_ami_id                      = local.default_ami_id

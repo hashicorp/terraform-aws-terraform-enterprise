@@ -1,5 +1,5 @@
 output "aws_lb_security_group" {
-  value = var.load_balancer_type == "application" ? aws_security_group.tfe_lb_allow.id : null
+  value = aws_security_group.tfe_lb_allow.id
 }
 
 output "aws_lb_target_group_tfe_tg_443_arn" {

@@ -1,6 +1,6 @@
 resource "aws_lb" "tfe_lb" {
   name               = "${var.friendly_name_prefix}-tfe-nlb"
-  internal           = var.load_balancing_scheme
+  internal           = true
   load_balancer_type = "network"
   subnets            = var.network_public_subnets
 
