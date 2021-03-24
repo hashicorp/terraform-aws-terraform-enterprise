@@ -73,6 +73,8 @@ module "bank_deployment" {
 
   ami_id = data.aws_ami.rhel.id
 
+  load_balancer = "PRIVATE_TCP"
+
   redis_require_password      = true
   redis_encryption_in_transit = true
   redis_encryption_at_rest    = true
