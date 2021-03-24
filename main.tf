@@ -109,10 +109,11 @@ module "networking" {
 }
 
 locals {
-  bastion_host_subnet     = var.deploy_vpc ? module.networking.bastion_host_subnet : var.bastion_host_subnet
-  network_id              = var.deploy_vpc ? module.networking.network_id : var.network_id
-  network_private_subnets = var.deploy_vpc ? module.networking.network_private_subnets : var.network_private_subnets
-  network_public_subnets  = var.deploy_vpc ? module.networking.network_public_subnets : var.network_public_subnets
+  bastion_host_subnet          = var.deploy_vpc ? module.networking.bastion_host_subnet : var.bastion_host_subnet
+  network_id                   = var.deploy_vpc ? module.networking.network_id : var.network_id
+  network_private_subnets      = var.deploy_vpc ? module.networking.network_private_subnets : var.network_private_subnets
+  network_public_subnets       = var.deploy_vpc ? module.networking.network_public_subnets : var.network_public_subnets
+  network_private_subnet_cidrs = var.deploy_vpc ? module.networking.network_private_subnet_cidrs : var.network_private_subnet_cidrs
 }
 
 module "redis" {
@@ -251,6 +252,7 @@ module "vm" {
   instance_type                       = var.instance_type
   network_id                          = local.network_id
   network_subnets_private             = local.network_private_subnets
+  network_private_subnet_cidrs        = local.network_private_subnet_cidrs
   node_count                          = var.node_count
   userdata_script                     = module.user_data.tfe_userdata_base64_encoded
 }
