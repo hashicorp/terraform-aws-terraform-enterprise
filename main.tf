@@ -57,11 +57,10 @@ resource "aws_kms_alias" "key_alias" {
 }
 
 locals {
-  active_active                       = var.node_count >= 2
-  ami_id                              = local.default_ami_id ? data.aws_ami.ubuntu.id : var.ami_id
-  aws_lb_target_group_tfe_tg_8800_arn = local.active_active ? "" : module.load_balancer.aws_lb_target_group_tfe_tg_8800_arn
-  default_ami_id                      = var.ami_id == ""
-  fqdn                                = "${var.tfe_subdomain}.${var.domain_name}"
+  active_active  = var.node_count >= 2
+  ami_id         = local.default_ami_id ? data.aws_ami.ubuntu.id : var.ami_id
+  default_ami_id = var.ami_id == ""
+  fqdn           = "${var.tfe_subdomain}.${var.domain_name}"
 }
 
 module "object_storage" {
@@ -202,7 +201,8 @@ module "user_data" {
 }
 
 module "load_balancer" {
-  source = "./modules/load_balancer"
+  count  = var.load_balancing_scheme != "PRIVATE_TCP" ? 1 : 0
+  source = "./modules/application_load_balancer"
 
   active_active                  = local.active_active
   admin_dashboard_ingress_ranges = var.admin_dashboard_ingress_ranges
@@ -218,15 +218,32 @@ module "load_balancer" {
   common_tags = var.common_tags
 }
 
+module "private_tcp_load_balancer" {
+  count  = var.load_balancing_scheme == "PRIVATE_TCP" ? 1 : 0
+  source = "./modules/network_load_balancer"
+
+  active_active                  = local.active_active
+  admin_dashboard_ingress_ranges = var.admin_dashboard_ingress_ranges
+  certificate_arn                = var.acm_certificate_arn
+  domain_name                    = var.domain_name
+  friendly_name_prefix           = var.friendly_name_prefix
+  fqdn                           = local.fqdn
+  network_id                     = local.network_id
+  network_public_subnets         = local.network_public_subnets
+  ssl_policy                     = var.ssl_policy
+
+  common_tags = var.common_tags
+}
+
 module "vm" {
   source = "./modules/vm"
 
   active_active                       = local.active_active
   aws_iam_instance_profile            = module.service_accounts.aws_iam_instance_profile
   ami_id                              = local.ami_id
-  aws_lb                              = module.load_balancer.aws_lb_security_group
-  aws_lb_target_group_tfe_tg_443_arn  = module.load_balancer.aws_lb_target_group_tfe_tg_443_arn
-  aws_lb_target_group_tfe_tg_8800_arn = module.load_balancer.aws_lb_target_group_tfe_tg_8800_arn
+  aws_lb                              = var.load_balancer == "PRIVATE_TCP" ? null : module.load_balancer[0].aws_lb_security_group
+  aws_lb_target_group_tfe_tg_443_arn  = var.load_balancer == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_443_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_443_arn
+  aws_lb_target_group_tfe_tg_8800_arn = var.load_balancer == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn
   bastion_key                         = local.bastion_key_public
   bastion_sg                          = local.bastion_sg
   default_ami_id                      = local.default_ami_id
