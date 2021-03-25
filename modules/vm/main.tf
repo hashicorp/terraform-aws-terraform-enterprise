@@ -15,6 +15,7 @@ resource "aws_security_group_rule" "tfe_ui" {
   to_port                  = 443
   protocol                 = "tcp"
   source_security_group_id = var.aws_lb
+  cidr_blocks              = var.aws_lb == null ? var.network_private_subnet_cidrs : null
 }
 
 resource "aws_security_group_rule" "tfe_inbound" {
@@ -52,6 +53,7 @@ resource "aws_security_group_rule" "tfe_dashboard" {
   to_port                  = 8800
   protocol                 = "tcp"
   source_security_group_id = var.aws_lb
+  cidr_blocks              = var.aws_lb == null ? var.network_private_subnet_cidrs : null
 }
 
 resource "aws_launch_configuration" "tfe" {

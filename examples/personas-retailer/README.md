@@ -48,6 +48,8 @@ ami_id = "<A_SUPPORTED_RHEL_AMI_ID>"
 
 proxy_ip = "<IP_FOR_PROXY_AND_PORT>"
 
+load_balancing_scheme = "PRIVATE"
+
 # Configure Redis security
 redis_encryption_in_transit = true
 redis_require_password      = true

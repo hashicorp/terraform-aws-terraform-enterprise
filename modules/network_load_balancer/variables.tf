@@ -6,17 +6,11 @@ variable "certificate_arn" {}
 
 variable "fqdn" {}
 
-variable "load_balancing_scheme" {
-  type        = bool
-  description = "(Optional) Boolean indicating whether the load balancer is internal or external. Defaults to internal."
-  default     = true
-}
-
 variable "ssl_policy" {}
 
 variable "network_id" {}
 
-variable "network_public_subnets" {}
+variable "network_private_subnets" {}
 
 variable "active_active" {
   type        = bool

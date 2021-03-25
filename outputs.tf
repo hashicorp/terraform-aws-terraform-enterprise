@@ -54,7 +54,7 @@ output "bootstrap_bucket_arn" {
 
 # Load balancer
 output "load_balancer_address" {
-  value = module.load_balancer.load_balancer_address
+  value = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].load_balancer_address : module.load_balancer[0].load_balancer_address
 }
 
 output "dns_configuration_notice" {
