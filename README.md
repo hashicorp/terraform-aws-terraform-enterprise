@@ -1,5 +1,11 @@
 # Terraform Enterprise AWS Module
 
+**IMPORTANT**: You are viewing a **beta version** of the official
+module to install Terraform Enterprise. This new version is
+**incompatible with earlier versions**, and it is not currently meant
+for production use. Please contact your Customer Success Manager for
+details before using.
+
 This is a Terraform module for provisioning a Terraform Enterprise Cluster on AWS. Terraform Enterprise is our self-hosted distribution of Terraform Cloud. It offers enterprises a private instance of the Terraform Cloud application, with no resource limits and with additional enterprise-grade architectural features like audit logging and SAML single sign-on.
 
 ## About This Module
