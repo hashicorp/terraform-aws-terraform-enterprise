@@ -50,7 +50,7 @@ proxy_cert_bundle_filepath = "<FILE_PATH_TO_PEM>"
 proxy_cert_bundle_name     = "<NAME_OF_CERT_BUNDLE>"
 proxy_ip                   = "<IP_FOR_PROXY_AND_PORT>"
 
-load_balancer = "PRIVATE_TCP"
+load_balancing_scheme = "PRIVATE_TCP"
 
 # Configure Redis security
 redis_require_password      = true
