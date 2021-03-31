@@ -37,15 +37,24 @@ not be used. Therefore when deploying, the existing VPC must have:
     values of the required variables:
 
 ```hcl
-domain_name          = "<DOMAIN_NAME>"
-license_path         = "<PATH_TO_LOCAL_LICENSE>"
-acm_certificate_arn  = "<EXISTING_ACM_CERTIFICATE_ARM>"
+provider "aws" {
+  region = "<your AWS region>"
+}
 
-# Leverages an AWS Key Pair for the accessing the Bastion instance
-bastion_keypair = "rruiz-testing"
+module "aws_startup_persona" {
+  source = "git@github.com:hashicorp/terraform-aws-terraform-enterprise"
 
-# Creates a public load balancer
-load_balancing_scheme = "PUBLIC"
+  domain_name          = "<DOMAIN_NAME>"
+  license_path         = "<PATH_TO_LOCAL_LICENSE>"
+  acm_certificate_arn  = "<EXISTING_ACM_CERTIFICATE_ARM>"
+
+  # Leverages an AWS Key Pair for the accessing the Bastion instance
+  bastion_keypair = "<KEYPAIR_NAME>"
+  
+  # Creates a public load balancer
+  load_balancing_scheme = "PUBLIC"
+}
+
 ```
 
 With the configuration created, run `terraform init` and `terraform apply` to provision the example infrastructure.

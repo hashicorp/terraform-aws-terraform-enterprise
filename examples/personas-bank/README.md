@@ -37,25 +37,33 @@ not be used. Therefore when deploying, the existing VPC must have:
     values of the required variables:
 
 ```hcl
-domain_name          = "<DOMAIN_NAME>"
-license_path         = "<PATH_TO_LOCAL_LICENSE>"
-acm_certificate_arn  = "<EXISTING_ACM_CERTIFICATE_ARM>"
+provider "aws" {
+  region = "<your AWS region>"
+}
 
-# Leverages an AWS Key Pair for accessing the Bastion instance
-bastion_keypair = "<AWS_KEYPAIR_NAME>"
+module "aws_bank_persona" {
+  source = "git@github.com:hashicorp/terraform-aws-terraform-enterprise"
 
-ami_id = "<A_SUPPORTED_RHEL_AMI_ID>"
+  domain_name          = "<DOMAIN_NAME>"
+  license_path         = "<PATH_TO_LOCAL_LICENSE>"
+  acm_certificate_arn  = "<EXISTING_ACM_CERTIFICATE_ARM>"
 
-proxy_cert_bundle_filepath = "<FILE_PATH_TO_PEM>"
-proxy_cert_bundle_name     = "<NAME_OF_CERT_BUNDLE>"
-proxy_ip                   = "<IP_FOR_PROXY_AND_PORT>"
+  # Leverages an AWS Key Pair for accessing the Bastion instance
+  bastion_keypair = "<AWS_KEYPAIR_NAME>"
 
-load_balancing_scheme = "PRIVATE_TCP"
+  ami_id = "<A_SUPPORTED_RHEL_AMI_ID>"
 
-# Configure Redis security
-redis_require_password      = true
-redis_encryption_in_transit = true
-redis_encryption_at_rest    = true
+  proxy_cert_bundle_filepath = "<FILE_PATH_TO_PEM>"
+  proxy_cert_bundle_name     = "<NAME_OF_CERT_BUNDLE>"
+  proxy_ip                   = "<IP_FOR_PROXY_AND_PORT>"
+
+  load_balancing_scheme = "PRIVATE_TCP"
+
+  # Configure Redis security
+  redis_require_password      = true
+  redis_encryption_in_transit = true
+  redis_encryption_at_rest    = true
+}
 ```
 
 With the configuration created, run `terraform init` and `terraform apply` to provision the example infrastructure.
