@@ -37,23 +37,31 @@ not be used. Therefore when deploying, the existing VPC must have:
     values of the required variables:
 
 ```hcl
-domain_name          = "<DOMAIN_NAME>"
-license_path         = "<PATH_TO_LOCAL_LICENSE>"
-acm_certificate_arn  = "<EXISTING_ACM_CERTIFICATE_ARM>"
+provider "aws" {
+  region = "<your AWS region>"
+}
 
-# Leverages an AWS Key Pair for the accessing the Bastion instance
-bastion_keypair = "<AWS_KEYPAIR_NAME>"
+module "aws_retailer_persona" {
+  source = "git@github.com:hashicorp/terraform-aws-terraform-enterprise"
 
-ami_id = "<A_SUPPORTED_RHEL_AMI_ID>"
+  domain_name          = "<DOMAIN_NAME>"
+  license_path         = "<PATH_TO_LOCAL_LICENSE>"
+  acm_certificate_arn  = "<EXISTING_ACM_CERTIFICATE_ARM>"
 
-proxy_ip = "<IP_FOR_PROXY_AND_PORT>"
+  # Leverages an AWS Key Pair for the accessing the Bastion instance
+  bastion_keypair = "<AWS_KEYPAIR_NAME>"
 
-load_balancing_scheme = "PRIVATE"
+  ami_id = "<A_SUPPORTED_RHEL_AMI_ID>"
 
-# Configure Redis security
-redis_encryption_in_transit = true
-redis_require_password      = true
-redis_encryption_at_rest    = false
+  proxy_ip = "<IP_FOR_PROXY_AND_PORT>"
+
+  load_balancing_scheme = "PRIVATE"
+
+  # Configure Redis security
+  redis_encryption_in_transit = true
+  redis_require_password      = true
+  redis_encryption_at_rest    = false
+}
 ```
 
 With the configuration created, run `terraform init` and `terraform apply` to provision the example infrastructure.
