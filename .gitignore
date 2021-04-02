@@ -12,5 +12,8 @@
 # Terraform lock file
 .terraform.lock.hcl
 
+# Terraform Backend file
+backend.hcl
+
 .DS_Store
 *.bk
