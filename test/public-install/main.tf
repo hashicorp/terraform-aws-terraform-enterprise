@@ -5,8 +5,8 @@ resource "random_string" "friendly_name" {
   special = false
 }
 
-module "startup_deployment" {
-  source = "git@github.com:hashicorp/terraform-aws-terraform-enterprise"
+module "public_install" {
+  source = "../../"
 
   tfe_license_filepath = var.license_path
   tfe_license_name     = "replicated_license.rli"
