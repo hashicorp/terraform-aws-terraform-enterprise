@@ -1,11 +1,9 @@
-# EXAMPLE: Deploying Terraform Enterprise Persona as Startup
+# TEST: Public Installation Terraform Enterprise
 
-## About this example
+## About this test
 
-This example functions as a reference for how to use this module to install
-Terraform Enterprise as a Startup Persona.
-
-Traits of the Startup persona include:
+This test for Terraform Enterprise as a Public Installation creates a TFE
+installation with the following traits.
 
 - Active/Active mode
 - a small VM machine type (m5.xlarge)
@@ -15,46 +13,15 @@ Traits of the Startup persona include:
 - no Redis authentication
 - no Redis encryption in transit
 
-## Module pre-requisites
+## Pre-requisites
 
-As with the main version of this module, this example assumes the following
-resources already exist:
+This test assumes the following resources exist.
 
 * Valid DNS Zone managed in Route53
 * Valid AWS ACM certificate
 
-When deploying in an existing VPC the `bastion` and `networking` submodules will
-not be used. Therefore when deploying, the existing VPC must have:
+## How this test is used
 
-* Public and private subnets
-* NAT gateway and appropriate rules
-* Routing table and appropriate rules
-
-## How to use this module
-
-* Ensure account meets module pre-requisites from above.
-* Create a Terraform configuration that pulls in this module and specifies
-    values of the required variables:
-
-```hcl
-provider "aws" {
-  region = "<your AWS region>"
-}
-
-module "aws_startup_persona" {
-  source = "git@github.com:hashicorp/terraform-aws-terraform-enterprise"
-
-  domain_name          = "<DOMAIN_NAME>"
-  license_path         = "<PATH_TO_LOCAL_LICENSE>"
-  acm_certificate_arn  = "<EXISTING_ACM_CERTIFICATE_ARM>"
-
-  # Leverages an AWS Key Pair for the accessing the Bastion instance
-  bastion_keypair = "<KEYPAIR_NAME>"
-  
-  # Creates a public load balancer
-  load_balancing_scheme = "PUBLIC"
-}
-
-```
-
-With the configuration created, run `terraform init` and `terraform apply` to provision the example infrastructure.
+This test is leveraged by this repository's continuous integration setup which
+leverages workspaces in a Terraform Cloud workspaces as a remote backend so that
+Terraform state is preserved.
