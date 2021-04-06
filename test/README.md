@@ -3,7 +3,7 @@
 The directories in here are considered Terraform Test Modules (TTM). These TTM
 directories are used in our continuous integration process using GitHub Actions.
 
-These tests also leverage an external Terraform Enterprise workspace to allow
+These tests also leverage Terraform Cloud workspaces to allow
 maintainers to run and audit contributions to this repository.
 
 ## Tools and commands
