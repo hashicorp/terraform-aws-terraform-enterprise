@@ -1,6 +1,9 @@
 name: Automatic CI for TFE Modules
 
-on: push
+on:
+  pull_request:
+    branches:
+      - main
 
 defaults:
   run:
