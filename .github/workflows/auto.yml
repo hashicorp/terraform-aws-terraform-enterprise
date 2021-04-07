@@ -3,7 +3,7 @@ name: Automatic CI for TFE Modules
 on:
   pull_request:
     branches:
-      - main
+      - master
 
 defaults:
   run:
