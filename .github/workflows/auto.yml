@@ -1,0 +1,40 @@
+name: Automatic CI for TFE Modules
+
+on: push
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  terraform_format:
+
+    name: Run terraform fmt
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 0.14.7
+
+    - name: Format Public Install
+      run: terraform fmt -check -- ${{ github.workspace }}/tests/public-install
+
+  terraform_lint:
+
+    name: Run terraform-lint
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Terraform Lint
+      uses: terraform-linters/setup-tflint@v1
+
+    - name: Lint Public Install
+      with:
+        tflint_version: v0.26.0
+      run: tflint --config .tflint.hcl ${{ github.workspace }}/tests/public-install
