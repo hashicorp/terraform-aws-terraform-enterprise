@@ -62,11 +62,11 @@ jobs:
             ${{ github.workspace }}/${m}
         done
 
-      - name: Lint examples directory in a loop
-        run: |
-          for m in $(ls -1d examples/*/)
-          do
-            tflint \
-              --config ${{ github.workspace }}/.tflint.hcl \
-              ${{ github.workspace }}/${m}
-          done
+    - name: Lint examples directory in a loop
+      run: |
+        for m in $(ls -1d examples/*/)
+        do
+          tflint \
+            --config ${{ github.workspace }}/.tflint.hcl \
+            ${{ github.workspace }}/${m}
+        done
