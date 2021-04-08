@@ -1,0 +1,72 @@
+name: Automatic CI for TFE Modules
+
+on:
+  pull_request:
+    branches:
+      - master
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  terraform_format:
+
+    name: Run terraform fmt
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 0.14.7
+
+    - name: Format Public Install
+      run: |
+        terraform fmt -check -diff -recursive ${{ github.workspace }}
+
+  terraform_lint:
+
+    name: Run terraform-lint
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Terraform Lint
+      uses: terraform-linters/setup-tflint@v1
+      with:
+        tflint_version: v0.26.0
+
+    - name: Lint root module
+      run: |
+        tflint --config ${{ github.workspace }}/.tflint.hcl ${{ github.workspace }}
+
+    - name: Lint modules directory in a loop
+      run: |
+        for m in $(ls -1d modules/*/)
+        do
+          tflint \
+            --config ${{ github.workspace }}/.tflint.hcl \
+            ${{ github.workspace }}/${m}
+        done
+
+    - name: Lint tests directory in a loop
+      run: |
+        for m in $(ls -1d tests/*/)
+        do
+          tflint \
+            --config ${{ github.workspace }}/.tflint.hcl \
+            ${{ github.workspace }}/${m}
+        done
+
+    - name: Lint examples directory in a loop
+      run: |
+        for m in $(ls -1d examples/*/)
+        do
+          tflint \
+            --config ${{ github.workspace }}/.tflint.hcl \
+            ${{ github.workspace }}/${m}
+        done
