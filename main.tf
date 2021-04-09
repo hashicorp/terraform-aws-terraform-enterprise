@@ -202,15 +202,14 @@ module "private_tcp_load_balancer" {
   count  = var.load_balancing_scheme == "PRIVATE_TCP" ? 1 : 0
   source = "./modules/network_load_balancer"
 
-  active_active                  = local.active_active
-  admin_dashboard_ingress_ranges = var.admin_dashboard_ingress_ranges
-  certificate_arn                = var.acm_certificate_arn
-  domain_name                    = var.domain_name
-  friendly_name_prefix           = var.friendly_name_prefix
-  fqdn                           = local.fqdn
-  network_id                     = local.network_id
-  network_private_subnets        = local.network_private_subnets
-  ssl_policy                     = var.ssl_policy
+  active_active           = local.active_active
+  certificate_arn         = var.acm_certificate_arn
+  domain_name             = var.domain_name
+  friendly_name_prefix    = var.friendly_name_prefix
+  fqdn                    = local.fqdn
+  network_id              = local.network_id
+  network_private_subnets = local.network_private_subnets
+  ssl_policy              = var.ssl_policy
 
   common_tags = var.common_tags
 }
