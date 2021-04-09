@@ -23,7 +23,7 @@ jobs:
       with:
         terraform_version: 0.14.7
 
-    - name: Format Public Install
+    - name: Format all .tf files recursively
       run: |
         terraform fmt -check -diff -recursive ${{ github.workspace }}
 
