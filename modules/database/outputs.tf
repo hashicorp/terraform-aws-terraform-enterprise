@@ -1,7 +1,7 @@
 output "db_endpoint" {
   value = aws_db_instance.postgresql.endpoint
 
-  description = "The connection endpoint of the PostgreSQL RDS instance, in address:port format."
+  description = "The connection endpoint of the PostgreSQL RDS instance in address:port format."
 }
 
 output "db_name" {
