@@ -161,7 +161,6 @@ module "user_data" {
   aws_bucket_data               = module.object_storage.s3_bucket_data
   aws_region                    = data.aws_region.current.name
   fqdn                          = local.fqdn
-  friendly_name_prefix          = var.friendly_name_prefix
   generated_bastion_key_private = local.bastion_key_private
   kms_key_arn                   = aws_kms_key.tfe_key.arn
   pg_dbname                     = module.database.db_name
