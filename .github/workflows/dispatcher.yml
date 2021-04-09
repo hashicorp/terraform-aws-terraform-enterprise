@@ -7,14 +7,15 @@ on:
 
 jobs:
   slash_command_dispatch:
+    name: Slash Command Dispatcher
     runs-on: ubuntu-latest
     steps:
       - name: Slash Command Dispatch
         uses: peter-evans/slash-command-dispatch@v2
         with:
           token: ${{ secrets.PAT }}
-        commands: |
-          test
-        permission: maintain
-        issue-type: pull_request
-        event-type-suffix: -command
+          commands: |
+            test
+          permission: maintain
+          issue-type: pull_request
+          event-type-suffix: -command
