@@ -1,7 +1,3 @@
-data "aws_region" "current" {}
-
-data "aws_caller_identity" "current" {}
-
 resource "aws_s3_bucket" "tfe_bootstrap_bucket" {
   bucket = "${var.friendly_name_prefix}-tfe-bootstrap"
   acl    = "private"
