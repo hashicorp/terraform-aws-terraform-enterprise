@@ -59,7 +59,7 @@ variable "friendly_name_prefix" {
 
 variable "instance_type" {
   default     = "m5.xlarge"
-  description = "The type of EC2 instances to create."
+  description = "The instance type of EC2 instance(s) to create."
   type        = string
 }
 
