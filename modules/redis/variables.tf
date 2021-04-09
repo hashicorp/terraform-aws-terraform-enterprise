@@ -9,13 +9,36 @@ variable "common_tags" {
   default     = {}
 }
 
-variable "kms_key_arn" {}
+variable "kms_key_arn" {
+  description = <<-EOD
+  The Amazon Resource Name of the KMS key which will be used by the Redis Elasticache replication group to encrypt data 
+  at rest.
+  EOD
+  type        = string
+}
 
-variable "tfe_instance_sg" {}
+variable "tfe_instance_sg" {
+  description = <<-EOD
+  The identity of the security group attached to the TFE EC2 instance(s) which will be authorized to communicate with 
+  the Redis Elasticache replication group.
+  EOD
+  type        = string
+}
 
-variable "network_id" {}
+variable "network_id" {
+  description = <<-EOD
+  The identity of the VPC in which the security group attached to the Redis Elasticache replication group will be 
+  deployed.
+  EOD
+  type        = string
+}
 
-variable "network_subnets_private" {}
+variable "network_subnets_private" {
+  description = <<-EOD
+  A list of the identities of the private subnetworks in which the Redis Elasticache replication group will be deployed.
+  EOD
+  type        = list(string)
+}
 
 variable "friendly_name_prefix" {
   type        = string
