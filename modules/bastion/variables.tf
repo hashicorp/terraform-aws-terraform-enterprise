@@ -4,11 +4,25 @@ variable "common_tags" {
   default     = {}
 }
 
-variable "kms_key_id" {}
+variable "kms_key_id" {
+  description = <<-EOD
+  The Amazon Resource Name of the KMS key which will be used to encrypt the root block device of the bastion EC2 
+  instance.
+  EOD
+  type        = string
+}
 
-variable "userdata_script" {}
+variable "userdata_script" {
+  description = "A user data script to be executed when the bastion EC2 instance is launched."
+  type        = string
+}
 
-variable "network_id" {}
+variable "network_id" {
+  description = <<-EOD
+  The identity of the VPC in which the security group attached to the bastion EC2 instance will be deployed.
+  EOD
+  type        = string
+}
 
 variable "ami_id" {
   type        = string
@@ -16,7 +30,10 @@ variable "ami_id" {
   description = "AMI ID to use for TFE instances and bastion host"
 }
 
-variable "bastion_host_subnet" {}
+variable "bastion_host_subnet" {
+  description = "The identity of the subnetwork in which the bastion EC2 instance will be deployed."
+  type        = string
+}
 
 variable "friendly_name_prefix" {
   type        = string
