@@ -25,5 +25,5 @@ output "generated_bastion_key_public" {
 output "generated_bastion_key_private" {
   value = var.deploy_bastion == true ? tls_private_key.tfe_bastion.private_key_pem : null
 
-  description = "The private data of the SSH key pair associated with the bastion EC2 instance, in PEM format."
+  description = "The PEM formatted private data of the SSH key pair associated with the bastion EC2 instance."
 }
