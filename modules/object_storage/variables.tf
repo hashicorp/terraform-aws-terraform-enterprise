@@ -4,7 +4,10 @@ variable "common_tags" {
   default     = {}
 }
 
-variable "kms_key_arn" {}
+variable "kms_key_arn" {
+  description = "The Amazon Resource Name of the KMS key with which S3 storage bucket objects will be encrypted."
+  type        = string
+}
 
 variable "tfe_license_name" {
   type        = string
@@ -22,5 +25,14 @@ variable "friendly_name_prefix" {
   description = "(Required) Friendly name prefix used for tagging and naming AWS resources."
 }
 
-variable "proxy_cert_bundle_filepath" {}
-variable "proxy_cert_bundle_name" {}
+variable "proxy_cert_bundle_filepath" {
+  description = "The pathname of the certificate bundle file for the HTTP proxy."
+  type        = string
+}
+
+variable "proxy_cert_bundle_name" {
+  description = <<-EOD
+  The name to assign to the S3 storage bucket object which will contain the certificate bundle file for the HTTP proxy.
+  EOD
+  type        = string
+}
