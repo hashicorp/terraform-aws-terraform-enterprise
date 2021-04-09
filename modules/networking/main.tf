@@ -147,14 +147,14 @@ resource "aws_route" "route_private" {
   nat_gateway_id         = element(aws_nat_gateway.ngw.*.id, count.index)
 }
 
-resource "aws_route_table_association" "rtbassoc-public" {
+resource "aws_route_table_association" "rtbassoc_public" {
   count = var.deploy_vpc == true ? length(var.network_public_subnet_cidrs) : 0
 
   subnet_id      = element(aws_subnet.public.*.id, count.index)
   route_table_id = aws_route_table.rtb_public[0].id
 }
 
-resource "aws_route_table_association" "rtbassoc-private" {
+resource "aws_route_table_association" "rtbassoc_private" {
   count = var.deploy_vpc == true ? length(var.network_private_subnet_cidrs) : 0
 
   subnet_id      = element(aws_subnet.private.*.id, count.index)
