@@ -1,4 +1,7 @@
-variable "friendly_name_prefix" {}
+variable "friendly_name_prefix" {
+  description = "The friendly name prefix which will be used for tagging and naming the Secrets Manager secret."
+  type        = string
+}
 
 variable "common_tags" {
   type        = map(string)
