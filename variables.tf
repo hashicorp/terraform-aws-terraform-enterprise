@@ -65,7 +65,7 @@ variable "instance_type" {
 
 variable "network_id" {
   default     = ""
-  description = "Network ID for existing network to deploy in."
+  description = "The identity of the VPC in which resources will be deployed."
   type        = string
 }
 
