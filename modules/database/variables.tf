@@ -1,4 +1,9 @@
-variable "network_id" {}
+variable "network_id" {
+  description = <<-EOD
+  The identity of the VPC in which the security group attached to the PostgreSQL RDS instance will be deployed.
+  EOD
+  type        = string
+}
 
 variable "db_size" {
   type        = string
@@ -12,9 +17,19 @@ variable "engine_version" {
   description = "PostgreSQL version."
 }
 
-variable "network_subnets_private" {}
+variable "network_subnets_private" {
+  description = <<-EOD
+  A list of the identities of the private subnetworks in which the PostgreSQL RDS instance will be deployed.
+  EOD
+  type        = list(string)
+}
 
-variable "tfe_instance_sg" {}
+variable "tfe_instance_sg" {
+  description = <<-EOD
+  The identity of the security group attached to the TFE EC2 instance(s), which will be authorized for communication with the PostgreSQL RDS instance.
+  EOD
+  type        = string
+}
 
 variable "friendly_name_prefix" {
   type        = string
