@@ -17,5 +17,5 @@ jobs:
           commands: |
             test
           permission: maintain
-          issue-type: pull_request
+          issue-type: pull-request
           event-type-suffix: -command
