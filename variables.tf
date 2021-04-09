@@ -58,24 +58,33 @@ variable "friendly_name_prefix" {
 }
 
 variable "instance_type" {
-  default = "m5.xlarge"
+  default     = "m5.xlarge"
+  description = "The instance type of EC2 instance(s) to create."
+  type        = string
 }
 
 variable "network_id" {
   default     = ""
-  description = "Network ID for existing network to deploy in."
+  description = "The identity of the VPC in which resources will be deployed."
+  type        = string
 }
 
 variable "bastion_host_subnet" {
-  default = ""
+  default     = ""
+  description = "The identity of the subnetwork in which the bastion EC2 instance will be deployed."
+  type        = string
 }
 
 variable "network_private_subnets" {
-  default = []
+  default     = []
+  description = "A list of the identities of the private subnetworks in which resources will be deployed."
+  type        = list(string)
 }
 
 variable "network_public_subnets" {
-  default = []
+  default     = []
+  description = "A list of the identities of the public subnetworks in which resources will be deployed."
+  type        = list(string)
 }
 
 variable "node_count" {
@@ -102,25 +111,14 @@ variable "tfe_subdomain" {
 }
 
 variable "tfe_license_name" {
-  type    = string
-  default = "ptfe-license.rli"
+  type        = string
+  default     = "ptfe-license.rli"
+  description = "The name to use when copying the TFE license file to the EC2 instance."
 }
 
 variable "tfe_license_filepath" {
-  type = string
-}
-
-# S3 Object Storage
-variable "deploy_bootstrap_bucket" {
-  type        = bool
-  description = "(Optional) Boolean indicating whether to deploy an S3 bootstrap bucket in the primary region (true) or not (false)."
-  default     = true
-}
-
-variable "bootstrap_bucket_name" {
+  description = "The pathname of the TFE license file on the system running Terraform."
   type        = string
-  description = "(Optional) Name of S3 bootstrap bucket in primary region. Only specify if deploy_bootstrap_bucket is true."
-  default     = "tfe-bootstrap-bucket"
 }
 
 # KMS
@@ -141,18 +139,6 @@ variable "deploy_secretsmanager" {
   type        = bool
   description = "(Optional) Boolean indicating whether to deploy AWS Secrets Manager secret (true) or not (false)."
   default     = false
-}
-
-variable "secretsmanager_secret_name" {
-  type        = string
-  description = "(Optional) Name of AWS Secrets Manager secret metadata. Only specify if deploy_secretsmanager is true (this value will be auto-generated if left unspecified and deploy_secretsmanager is true)."
-  default     = null
-}
-
-variable "secretsmanager_secrets" {
-  type        = map(string)
-  description = "(Optional) Map of key/value pairs of TFE install secrets. Only specify if deploy_secretsmanager is true."
-  default     = null
 }
 
 # Load Balancer
@@ -220,12 +206,6 @@ variable "bastion_ingress_cidr_allow" {
 variable "bastion_key_private" {
   type        = string
   description = "(Optional) Private key for existing bastion host. Only specify if deploy_bastion is false."
-  default     = ""
-}
-
-variable "bastion_key_public" {
-  type        = string
-  description = "(Optional) Public key for existing bastion host. Only specify if deploy_bastion is false."
   default     = ""
 }
 
