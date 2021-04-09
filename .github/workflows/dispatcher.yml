@@ -7,6 +7,7 @@ on:
 
 jobs:
   slash_command_dispatch:
+    name: Slash Command Dispatcher
     runs-on: ubuntu-latest
     steps:
       - name: Slash Command Dispatch
