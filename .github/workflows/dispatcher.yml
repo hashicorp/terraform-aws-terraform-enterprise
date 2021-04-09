@@ -14,7 +14,7 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
         commands: |
-          init
+          test
         permission: maintain
         issue-type: pull_request
         event-type-suffix: -command
