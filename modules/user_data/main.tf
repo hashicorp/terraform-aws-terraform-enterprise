@@ -188,15 +188,13 @@ locals {
   tfe_user_data = templatefile(
     "${path.module}/templates/tfe_ec2.sh.tpl",
     {
-      s3_bucket_bootstrap  = var.aws_bucket_bootstrap
-      region               = var.aws_region
-      tfe_license          = var.tfe_license
-      replicated           = base64encode(local.repl_configs)
-      settings             = base64encode(local.tfe_configs)
-      active_active        = var.active_active
-      proxy_ip             = var.proxy_ip
-      proxy_cert           = var.proxy_cert_bundle_name
-      friendly_name_prefix = var.friendly_name_prefix
+      s3_bucket_bootstrap = var.aws_bucket_bootstrap
+      tfe_license         = var.tfe_license
+      replicated          = base64encode(local.repl_configs)
+      settings            = base64encode(local.tfe_configs)
+      active_active       = var.active_active
+      proxy_ip            = var.proxy_ip
+      proxy_cert          = var.proxy_cert_bundle_name
       no_proxy = join(
         ",",
         concat(
