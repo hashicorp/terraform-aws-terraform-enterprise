@@ -19,6 +19,6 @@ jobs:
           body: |
             > Command | Description
             > --- | ---
-            > /test | Run the Terraform test suite on the module's tests/ directory
+            > /test | Run the Terraform test workflow on the modules in the tests/ directory
             > /help | Shows this help message
           reaction-type: hooray
