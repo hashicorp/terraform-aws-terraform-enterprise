@@ -59,6 +59,6 @@ jobs:
 
             </details>
 
-            :link: [Action Run Page][1]
+            :link: [Action Summary Page][1]
 
             [1]: ${{ steps.vars.outputs.run-url }}
