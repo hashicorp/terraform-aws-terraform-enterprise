@@ -41,8 +41,8 @@ jobs:
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
+            :computer: @hc-team-tfe
 
-            ---
             ### Terraform Test Report :newspaper:
 
             #### Terraform Initialization :gear: `${{ steps.init.outcome }}`
