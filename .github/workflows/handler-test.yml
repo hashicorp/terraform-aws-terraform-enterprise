@@ -1,0 +1,65 @@
+name: Pull Request Test Handler
+
+on:
+  repository_dispatch:
+    type:
+      - test-command
+
+jobs:
+  public_install:
+    name: Run tf-test on Public Install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create URL to the run output
+        id: vars
+        run: echo ::set-output name=run-url::https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          cli_config_credentials_hostname: 'app.terraform.io'
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          terraform_version: 0.14.8
+          terraform_wrapper: true
+
+      # Run Terraform commands between these comments vvv
+
+      - name: Terraform Init
+        id: init
+        working-directory: ./tests/public-install
+        run: terraform init -input=false -no-color
+
+      # Run Terraform commands between these comments ^^^
+
+      - name: Update comment
+        uses: peter-evans/create-or-update-comment@v1
+        # Add stdout and stderr to the environment variables to be used in the
+        # message from the TFE bot.
+        env:
+          INIT_STDOUT: "terraform\n${{ steps.init.outputs.stdout }}"
+          INIT_STDERR: "terraform\n${{ steps.init.outputs.stderr }}"
+        with:
+          token: ${{ secrets.PAT }}
+          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+          issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
+          body: |
+            #### Terraform Test Report 📰
+
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+
+            <details>
+            <summary>
+            <b>Terraform Initialization Output</b> ⚙️
+            </summary>
+
+            \`\`\`${process.env.INIT_STDOUT}\`\`\`
+            \`\`\`${process.env.INIT_STDERR}\`\`\`
+
+            </details>
+
+            [Action Run Page][1]
+
+            [1]: ${{ steps.vars.outputs.run-url }}
