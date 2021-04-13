@@ -10,6 +10,10 @@ jobs:
     name: Run tf-test on Public Install
     runs-on: ubuntu-latest
     steps:
+      - name: Create URL to the run output
+        id: vars
+        run: echo ::set-output name=run-url::https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
+
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -21,75 +25,41 @@ jobs:
           terraform_version: 0.14.8
           terraform_wrapper: true
 
+      # Run Terraform commands between these comments
+
       - name: Terraform Init
         id: init
         working-directory: ./tests/public-install
         run: terraform init -input=false -no-color
 
-      - name: Create URL to the run output
-        id: vars
-        run: echo ::set-output name=run-url::https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
+      # Run Terraform commands between these comments
 
-      - name: Create successful comment
-        if: ${{ steps.init.outputs.exitcode == 0 }}
+      - name: Update comment
         uses: peter-evans/create-or-update-comment@v1
+        # Add stdout and stderr to the environment variables to be used in the
+        # message from the TFE bot.
         env:
-          INIT: "terraform\n${{ steps.init.outcome }}"
+          INIT_STDOUT: "terraform\n${{ steps.init.outputs.stdout }}"
+          INIT_STDERR: "terraform\n${{ steps.init.outputs.stderr }}"
         with:
           token: ${{ secrets.PAT }}
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
           body: |
             #### Terraform Test Report 📰
+
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+
             <details>
             <summary>
             <b>Terraform Initialization Output</b> ⚙️
             </summary>
 
-            \`\`\`${process.env.INIT}\`\`\`
+            \`\`\`${process.env.INIT_STDOUT}\`\`\`
+            \`\`\`${process.env.INIT_STDERR}\`\`\`
 
             </details>
-            [terraform init output][1]
+
+            [Action Run Page][1]
 
             [1]: ${{ steps.vars.outputs.run-url }}
-
-      - name: Add hooray reaction
-        if: ${{ steps.init.outputs.exitcode == 0 }}
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          token: ${{ secrets.PAT }}
-          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
-          comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
-          reaction-type: hooray
-
-      - name: Create error comment
-        if: ${{ steps.init.outputs.exitcode != 0 }}
-        uses: peter-evans/create-or-update-comment@v1
-        env:
-          INIT: "terraform\n${{ steps.init.outcome }}"
-        with:
-          token: ${{ secrets.PAT }}
-          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
-          issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
-          body: |
-            #### Terraform Test Failed ❌
-            <details>
-            <summary>
-            <b>Terraform Initialization Output</b> ⚙️
-            </summary>
-
-            \`\`\`${process.env.INIT}\`\`\`
-
-            </details>
-            [terraform init output][1]
-
-            [1]: ${{ steps.vars.outputs.run-url }}
-
-      - name: Add minus-1 reaction
-        if: ${{ steps.init.outputs.exitcode != 0 }}
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          token: ${{ secrets.PAT }}
-          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
-          comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
-          reaction-type: thumbsdown
