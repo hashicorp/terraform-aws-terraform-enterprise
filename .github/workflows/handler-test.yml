@@ -41,7 +41,9 @@ jobs:
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
-            #### Terraform Test Report :newspaper:
+
+            ---
+            ### Terraform Test Report :newspaper:
 
             #### Terraform Initialization :gear: `${{ steps.init.outcome }}`
 
@@ -50,12 +52,13 @@ jobs:
                 <b>Terraform Initialization Output</b> :gear:
               </summary>
 
-            ```${{ steps.init.outputs.stdout }}```
-
-            ```${{ steps.init.outputs.stderr }}```
+            ```
+            ${{ steps.init.outputs.stdout }}
+            ${{ steps.init.outputs.stderr }}
+            ```
 
             </details>
 
-            :link: [Action Run Page][1]
+            :link: [Action Summary Page][1]
 
             [1]: ${{ steps.vars.outputs.run-url }}
