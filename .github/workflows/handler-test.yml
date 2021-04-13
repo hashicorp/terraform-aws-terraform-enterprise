@@ -6,8 +6,8 @@ on:
       - test-command
 
 jobs:
-  tf_test:
-    name: Run tf-test
+  public_install:
+    name: Run tf-test on Public Install
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
