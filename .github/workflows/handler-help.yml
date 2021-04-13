@@ -1,0 +1,24 @@
+name: Pull Request Help Handler
+
+on:
+  repository_dispatch:
+    types:
+      - help-command
+
+jobs:
+  help:
+    name: Run help
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update comment
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          token: ${{ secrets.PAT }}
+          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+          comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
+          body: |
+            > Command | Description
+            > --- | ---
+            > /test | Run the Terraform test workflow on the modules in the tests/ directory
+            > /help | Shows this help message
+          reaction-type: hooray
