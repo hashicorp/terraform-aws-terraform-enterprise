@@ -25,14 +25,14 @@ jobs:
           terraform_version: 0.14.8
           terraform_wrapper: true
 
-      # Run Terraform commands between these comments
+      # Run Terraform commands between these comments vvv
 
       - name: Terraform Init
         id: init
         working-directory: ./tests/public-install
         run: terraform init -input=false -no-color
 
-      # Run Terraform commands between these comments
+      # Run Terraform commands between these comments ^^^
 
       - name: Update comment
         uses: peter-evans/create-or-update-comment@v1
