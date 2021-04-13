@@ -41,7 +41,9 @@ jobs:
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
-            #### Terraform Test Report :newspaper:
+
+            ---
+            ### Terraform Test Report :newspaper:
 
             #### Terraform Initialization :gear: `${{ steps.init.outcome }}`
 
