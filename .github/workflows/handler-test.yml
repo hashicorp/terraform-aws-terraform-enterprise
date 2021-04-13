@@ -36,30 +36,26 @@ jobs:
 
       - name: Update comment
         uses: peter-evans/create-or-update-comment@v1
-        # Add stdout and stderr to the environment variables to be used in the
-        # message from the TFE bot.
-        env:
-          INIT_STDOUT: "terraform\n${{ steps.init.outputs.stdout }}"
-          INIT_STDERR: "terraform\n${{ steps.init.outputs.stderr }}"
         with:
           token: ${{ secrets.PAT }}
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
-          issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
+          comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
-            #### Terraform Test Report 📰
+            #### Terraform Test Report :newspaper:
 
-            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Initialization :gear: `${{ steps.init.outcome }}`
 
             <details>
-            <summary>
-            <b>Terraform Initialization Output</b> ⚙️
-            </summary>
+              <summary>
+                <b>Terraform Initialization Output</b> :gear:
+              </summary>
 
-            \`\`\`${process.env.INIT_STDOUT}\`\`\`
-            \`\`\`${process.env.INIT_STDERR}\`\`\`
+            ```${{ steps.init.outputs.stdout }}```
+
+            ```${{ steps.init.outputs.stderr }}```
 
             </details>
 
-            [Action Run Page][1]
+            :link: [Action Run Page][1]
 
             [1]: ${{ steps.vars.outputs.run-url }}
