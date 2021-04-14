@@ -36,6 +36,11 @@ jobs:
         working-directory: ./tests/public-install
         run: terraform init -input=false -no-color
 
+      - name: Terraform Validate
+        id: validate
+        working-directory: ./tests/public-install
+        run: terraform validate -no-color
+
       # Run Terraform commands between these comments ^^^
 
       - name: Update comment
@@ -60,6 +65,20 @@ jobs:
             ```
             ${{ steps.init.outputs.stdout }}
             ${{ steps.init.outputs.stderr }}
+            ```
+
+            </details>
+
+            #### Terraform Validation :mag: `${{ steps.validate.outcome }}`
+
+            <details>
+              <summary>
+                <b>Terraform Validation Output</b> :mag:
+              </summary>
+
+            ```
+            ${{ steps.validate.outputs.stdout }}
+            ${{ steps.validate.outputs.stderr }}
             ```
 
             </details>
