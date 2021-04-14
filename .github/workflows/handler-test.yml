@@ -14,8 +14,12 @@ jobs:
         id: vars
         run: echo ::set-output name=run-url::https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
 
+      # Checkout the branch of the pull request under test
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          repository: ${{ github.event.client_payload.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.client_payload.pull_request.head.sha }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
