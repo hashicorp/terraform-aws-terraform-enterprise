@@ -39,6 +39,7 @@ jobs:
       # Run Terraform commands between these comments ^^^
 
       - name: Update comment
+        if: ${{ always() }}
         uses: peter-evans/create-or-update-comment@v1
         with:
           token: ${{ secrets.PAT }}
