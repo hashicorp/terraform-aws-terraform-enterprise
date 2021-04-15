@@ -39,6 +39,8 @@ jobs:
       - name: Terraform Validate
         id: validate
         working-directory: ./tests/public-install
+        env:
+          AWS_DEFAULT_REGION: us-west-2
         run: terraform validate -no-color
 
       # Run Terraform commands between these comments ^^^
