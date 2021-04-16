@@ -2,7 +2,7 @@ name: Pull Request Test Handler
 
 on:
   repository_dispatch:
-    type:
+    types:
       - test-command
 
 jobs:
