@@ -43,6 +43,13 @@ jobs:
           AWS_DEFAULT_REGION: us-west-2
         run: terraform validate -no-color
 
+      - name: Terraform Apply
+        id: apply
+        working-directory: ./tests/public-install
+        env:
+          AWS_DEFAULT_REGION: us-east-2
+        run: terraform apply -input=false -no-color
+
       # Run Terraform commands between these comments ^^^
 
       - name: Update comment
@@ -81,6 +88,20 @@ jobs:
             ```
             ${{ steps.validate.outputs.stdout }}
             ${{ steps.validate.outputs.stderr }}
+            ```
+
+            </details>
+
+            #### Terraform Apply :book: `${{ steps.init.outcome }}`
+
+            <details>
+              <summary>
+                <b>Terraform Apply Output</b> :book:
+              </summary>
+
+            ```
+            ${{ steps.apply.outputs.stdout }}
+            ${{ steps.apply.outputs.stderr }}
             ```
 
             </details>
