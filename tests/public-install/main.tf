@@ -8,7 +8,7 @@ resource "random_string" "friendly_name" {
 module "public_install" {
   source = "../../"
 
-  tfe_license_filepath      = null
+  tfe_license_filepath      = ""
   external_bootstrap_bucket = var.external_bootstrap_bucket
   tfe_license_name          = "terraform-aws-terraform-enterprise-public-install.rli"
 

@@ -6,6 +6,7 @@ variable "domain_name" {
 variable "external_bootstrap_bucket" {
   type        = string
   description = "The name of the S3 bucket for bootstrap artifacts."
+  default     = null
 }
 
 variable "acm_certificate_arn" {
