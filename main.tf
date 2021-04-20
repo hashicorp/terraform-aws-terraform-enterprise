@@ -47,6 +47,7 @@ module "object_storage" {
   friendly_name_prefix       = var.friendly_name_prefix
   kms_key_arn                = aws_kms_key.tfe_key.arn
   tfe_license_filepath       = var.tfe_license_filepath
+  external_bootstrap_bucket  = var.external_bootstrap_bucket
   tfe_license_name           = var.tfe_license_name
   proxy_cert_bundle_filepath = var.proxy_cert_bundle_filepath
   proxy_cert_bundle_name     = var.proxy_cert_bundle_name
