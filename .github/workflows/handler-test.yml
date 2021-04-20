@@ -46,7 +46,7 @@ jobs:
       - name: Terraform Apply
         id: apply
         working-directory: ./tests/public-install
-        run: terraform apply -input=false -no-color
+        run: terraform apply -auto-approve -input=false -no-color
 
       - name: Terraform Destroy
         id: destroy
