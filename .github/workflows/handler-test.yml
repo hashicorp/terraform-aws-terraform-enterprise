@@ -95,7 +95,7 @@ jobs:
 
             </details>
 
-            #### Terraform Apply :book: `${{ steps.init.outcome }}`
+            #### Terraform Apply :book: `${{ steps.apply.outcome }}`
 
             <details>
               <summary>
