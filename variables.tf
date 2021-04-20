@@ -121,6 +121,11 @@ variable "tfe_license_filepath" {
   type        = string
 }
 
+variable "external_bootstrap_bucket" {
+  type        = string
+  description = "The name of the S3 bucket for Replicated licenses."
+}
+
 # KMS
 variable "kms_key_alias" {
   type        = string

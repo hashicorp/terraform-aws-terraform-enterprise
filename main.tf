@@ -157,7 +157,7 @@ module "user_data" {
   source = "./modules/user_data"
 
   active_active                 = local.active_active
-  aws_bucket_bootstrap          = module.object_storage.s3_bucket_bootstrap
+  aws_bucket_bootstrap          = var.external_bootstrap_bucket != null ? var.external_bootstrap_bucket : module.object_storage.s3_bucket_bootstrap
   aws_bucket_data               = module.object_storage.s3_bucket_data
   aws_region                    = data.aws_region.current.name
   fqdn                          = local.fqdn

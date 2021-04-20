@@ -8,8 +8,9 @@ resource "random_string" "friendly_name" {
 module "public_install" {
   source = "../../"
 
-  tfe_license_filepath = var.license_path
-  tfe_license_name     = "replicated_license.rli"
+  tfe_license_filepath      = null
+  external_bootstrap_bucket = var.tfe_bootstrap_bucket
+  tfe_license_name          = "terraform-aws-terraform-enterprise-public-install.rli"
 
   tfe_subdomain        = "test-public-install"
   domain_name          = var.domain_name

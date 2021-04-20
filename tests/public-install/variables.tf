@@ -3,9 +3,9 @@ variable "domain_name" {
   description = "Domain for creating the Terraform Enterprise subdomain on."
 }
 
-variable "license_path" {
+variable "external_bootstrap_bucket" {
   type        = string
-  description = "File path to Replicated license file"
+  description = "The name of the S3 bucket for bootstrap artifacts."
 }
 
 variable "acm_certificate_arn" {
