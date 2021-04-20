@@ -109,7 +109,7 @@ jobs:
 
             </details>
 
-            #### Terraform Destroy :fire: `${{ steps.init.outcome }}`
+            #### Terraform Destroy :fire: `${{ steps.destroy.outcome }}`
 
             <details>
               <summary>
