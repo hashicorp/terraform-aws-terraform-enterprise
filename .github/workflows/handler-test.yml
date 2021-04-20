@@ -51,7 +51,7 @@ jobs:
       - name: Terraform Destroy
         id: destroy
         working-directory: ./tests/public-install
-        run: terraform destroy -force -input=false -no-color
+        run: terraform destroy -auto-approve -input=false -no-color
 
       # Run Terraform commands between these comments ^^^
 
