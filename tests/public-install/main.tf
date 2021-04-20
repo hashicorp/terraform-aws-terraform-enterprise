@@ -6,7 +6,7 @@ resource "random_string" "friendly_name" {
 }
 
 module "public_install" {
-  source = "../../"
+  source = "git::https://github.com/hashicorp/terraform-aws-terraform-enterprise?ref=rogeruiz/f-planapply-terraform"
 
   tfe_license_filepath      = ""
   external_bootstrap_bucket = var.external_bootstrap_bucket
