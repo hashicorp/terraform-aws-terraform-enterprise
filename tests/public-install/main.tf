@@ -37,8 +37,9 @@ module "public_install" {
   redis_require_password      = false
 
   common_tags = {
-    Terraform   = "true"
-    Environment = "dev"
+    Terraform   = "cloud"
+    Environment = "tfe_modules_test"
     Test        = "Public Install"
+    Repository  = "hashicorp/terraform-aws-terraform-enterprise"
   }
 }
