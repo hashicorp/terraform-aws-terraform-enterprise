@@ -22,6 +22,12 @@ module "public_install" {
   deploy_secretsmanager = false
   deploy_bastion        = false
 
+  deploy_vpc                   = false
+  network_id                   = var.network_id
+  network_public_subnets       = var.network_public_subnets
+  network_private_subnets      = var.network_private_subnets
+  network_private_subnet_cidrs = var.network_private_subnet_cidrs
+
   # Allow traffic from public load-balancer.
   load_balancing_scheme = "PUBLIC"
 
