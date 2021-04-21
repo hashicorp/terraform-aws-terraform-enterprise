@@ -1,3 +1,8 @@
+variable "aws_role_arn" {
+  type        = string
+  description = "The AWS Role ARN to assume for this module."
+}
+
 variable "domain_name" {
   type        = string
   description = "Domain for creating the Terraform Enterprise subdomain on."
