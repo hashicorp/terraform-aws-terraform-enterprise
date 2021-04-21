@@ -37,6 +37,12 @@ variable "aws_iam_instance_profile" {
   type        = string
 }
 
+variable "deploy_bastion" {
+  type        = bool
+  description = "(Optional) Boolean indicating whether to deploy a Bastion instance (true) or not (false). Only specify true if deploy_vpc is true."
+  default     = true
+}
+
 variable "bastion_sg" {
   description = "The identity of the security group attached to the bastion EC2 instance."
   type        = string
