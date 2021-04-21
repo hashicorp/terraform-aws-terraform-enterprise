@@ -36,5 +36,5 @@ variable "network_private_subnets" {
 
 variable "network_private_subnet_cidrs" {
   type        = list(string)
-  description = "(Optional) List of private subnet CIDR ranges to create in VPC."
+  description = "List of private subnet CIDR ranges."
 }
