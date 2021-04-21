@@ -22,7 +22,7 @@ module "public_install" {
   domain_name          = var.domain_name
   friendly_name_prefix = random_string.friendly_name.id
 
-  node_count = 2
+  node_count = 3
 
   acm_certificate_arn = var.acm_certificate_arn
 
