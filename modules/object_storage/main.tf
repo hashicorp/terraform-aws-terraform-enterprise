@@ -21,6 +21,7 @@ resource "aws_s3_bucket" "tfe_bootstrap_bucket" {
 }
 
 resource "aws_s3_bucket_object" "tfe_license" {
+  count  = var.external_bootstrap_bucket == null ? 1 : 0
   bucket = aws_s3_bucket.tfe_bootstrap_bucket.id
   key    = var.tfe_license_name
   source = var.tfe_license_filepath
@@ -29,7 +30,7 @@ resource "aws_s3_bucket_object" "tfe_license" {
 }
 
 resource "aws_s3_bucket_object" "proxy_cert_bundle" {
-  count  = var.proxy_cert_bundle_name != "" ? 1 : 0
+  count  = (var.proxy_cert_bundle_name != "" && var.external_bootstrap_bucket == null) ? 1 : 0
   bucket = aws_s3_bucket.tfe_bootstrap_bucket.id
   key    = var.proxy_cert_bundle_name
   source = var.proxy_cert_bundle_filepath

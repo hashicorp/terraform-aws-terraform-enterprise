@@ -40,8 +40,18 @@ jobs:
         id: validate
         working-directory: ./tests/public-install
         env:
-          AWS_DEFAULT_REGION: us-west-2
+          AWS_DEFAULT_REGION: us-east-2
         run: terraform validate -no-color
+
+      - name: Terraform Apply
+        id: apply
+        working-directory: ./tests/public-install
+        run: terraform apply -auto-approve -input=false -no-color
+
+      - name: Terraform Destroy
+        id: destroy
+        working-directory: ./tests/public-install
+        run: terraform destroy -auto-approve -input=false -no-color
 
       # Run Terraform commands between these comments ^^^
 
@@ -81,6 +91,34 @@ jobs:
             ```
             ${{ steps.validate.outputs.stdout }}
             ${{ steps.validate.outputs.stderr }}
+            ```
+
+            </details>
+
+            #### Terraform Apply :book: `${{ steps.apply.outcome }}`
+
+            <details>
+              <summary>
+                <b>Terraform Apply Output</b> :book:
+              </summary>
+
+            ```
+            ${{ steps.apply.outputs.stdout }}
+            ${{ steps.apply.outputs.stderr }}
+            ```
+
+            </details>
+
+            #### Terraform Destroy :fire: `${{ steps.destroy.outcome }}`
+
+            <details>
+              <summary>
+                <b>Terraform Destroy Output</b> :fire:
+              </summary>
+
+            ```
+            ${{ steps.destroy.outputs.stdout }}
+            ${{ steps.destroy.outputs.stderr }}
             ```
 
             </details>

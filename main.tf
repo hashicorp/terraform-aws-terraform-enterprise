@@ -47,6 +47,7 @@ module "object_storage" {
   friendly_name_prefix       = var.friendly_name_prefix
   kms_key_arn                = aws_kms_key.tfe_key.arn
   tfe_license_filepath       = var.tfe_license_filepath
+  external_bootstrap_bucket  = var.external_bootstrap_bucket
   tfe_license_name           = var.tfe_license_name
   proxy_cert_bundle_filepath = var.proxy_cert_bundle_filepath
   proxy_cert_bundle_name     = var.proxy_cert_bundle_name
@@ -157,7 +158,7 @@ module "user_data" {
   source = "./modules/user_data"
 
   active_active                 = local.active_active
-  aws_bucket_bootstrap          = module.object_storage.s3_bucket_bootstrap
+  aws_bucket_bootstrap          = var.external_bootstrap_bucket != null ? var.external_bootstrap_bucket : module.object_storage.s3_bucket_bootstrap
   aws_bucket_data               = module.object_storage.s3_bucket_data
   aws_region                    = data.aws_region.current.name
   fqdn                          = local.fqdn
