@@ -23,6 +23,7 @@ variable "tfe_license_filepath" {
 variable "external_bootstrap_bucket" {
   type        = string
   description = "The name of the S3 bucket for Replicated licenses."
+  default     = null
 }
 
 variable "friendly_name_prefix" {
