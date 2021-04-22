@@ -37,6 +37,7 @@ resource "aws_security_group_rule" "tfe_outbound" {
 }
 
 resource "aws_security_group_rule" "tfe_bastion_ssh_allow" {
+  count                    = var.deploy_bastion ? 1 : 0
   security_group_id        = aws_security_group.tfe_instance.id
   type                     = "ingress"
   from_port                = 22
@@ -60,7 +61,7 @@ resource "aws_launch_configuration" "tfe" {
   name_prefix   = "${var.friendly_name_prefix}-tfe-ec2-asg-lt-"
   image_id      = var.ami_id
   instance_type = var.instance_type
-  key_name      = var.bastion_key
+  key_name      = var.deploy_bastion ? var.bastion_key : null
   user_data     = var.userdata_script
 
   iam_instance_profile = var.aws_iam_instance_profile

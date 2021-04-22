@@ -10,24 +10,24 @@ variable "userdata_script" {
 
 variable "aws_lb" {
   description = <<-EOD
-  The identity of the security group attached to the load balancer which will be authorized to communicate with the TFE 
-  EC2 instance(s).
+  The identity of the security group attached to the load balancer which will be
+  authorized to communicate with the TFE EC2 instance(s).
   EOD
   type        = string
 }
 
 variable "aws_lb_target_group_tfe_tg_443_arn" {
   description = <<-EOD
-  The Amazon Resource Name of the load balancer target group for traffic on port 443 which will be backed by the TFE 
-  EC2 autoscaling group.
+  The Amazon Resource Name of the load balancer target group for traffic on port
+  443 which will be backed by the TFE EC2 autoscaling group.
   EOD
   type        = string
 }
 
 variable "aws_lb_target_group_tfe_tg_8800_arn" {
   description = <<-EOD
-  The Amazon Resource Name of the load balancer target group for traffic on port 8800 which will be backed by the TFE 
-  EC2 autoscaling group.
+  The Amazon Resource Name of the load balancer target group for traffic on port
+  8800 which will be backed by the TFE EC2 autoscaling group.
   EOD
   type        = string
 }
@@ -35,6 +35,12 @@ variable "aws_lb_target_group_tfe_tg_8800_arn" {
 variable "aws_iam_instance_profile" {
   description = "The name of the IAM instance profile to be associated with the TFE EC2 instance(s)."
   type        = string
+}
+
+variable "deploy_bastion" {
+  type        = bool
+  description = "(Optional) Boolean indicating whether to deploy a Bastion instance (true) or not (false). Only specify true if deploy_vpc is true."
+  default     = true
 }
 
 variable "bastion_sg" {
