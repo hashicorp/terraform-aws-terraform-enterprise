@@ -103,7 +103,7 @@ jobs:
         env:
           K6_PATHNAME: "./k6"
           TFE_URL: "${{ steps.retrieve-tfe-url.stdout }}"
-          TFE_API_TOKEN: "${{ steps.retrieve-iact-token.stdout }}"
+          TFE_API_TOKEN: "${{ steps.create-admin.stdout }}"
           TFE_EMAIL: tf-onprem-team@hashicorp.com
         run: |
           make smoke-test
