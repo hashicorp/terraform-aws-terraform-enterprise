@@ -98,6 +98,7 @@ jobs:
             | jq --raw-output '.token'
 
       - name: Run k6 Smoke Tests
+        id: run-smoke-tests
         working-directory: *K6_WORK_DIR
         env:
           K6_PATHNAME: "./k6"
@@ -164,6 +165,20 @@ jobs:
             ```
             ${{ steps.apply.outputs.stdout }}
             ${{ steps.apply.outputs.stderr }}
+            ```
+
+            </details>
+
+            #### K6 Smoke Tests :building_construction: `${{ steps.run-smoke-tests.outcome }}`
+
+            <details>
+              <summary>
+                <b>K6 Smoke Tests Output</b> :building_construction:
+              </summary>
+
+            ```
+            ${{ steps.run-smoke-tests.outputs.stdout }}
+            ${{ steps.run-smoke-tests.outputs.stderr }}
             ```
 
             </details>
