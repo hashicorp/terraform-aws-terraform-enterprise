@@ -94,7 +94,7 @@ output "login_url" {
   description = "Login URL to setup the TFE instance once it is initialized"
 }
 
-output "health_check_url" {
-  value       = "https://${local.fqdn}/_health_check"
-  description = "The URL to access the TFE instance health check."
+output "tfe_url" {
+  value       = "https://${local.fqdn}/"
+  description = "The URL to the TFE application."
 }
