@@ -52,6 +52,14 @@ jobs:
         working-directory: *PUBLIC_WORK_DIR
         run: terraform apply -auto-approve -input=false -no-color
 
+      - name: Wait For TFE
+        id: wait-for-tfe
+        working-directory: *PUBLIC_WORK_DIR
+        timeout-minutes: 15
+        run: |
+          echo "Curling \`health_check_url\` for a return status of 200..."
+          while ! curl -sfS --max-time 5 $( terraform output health_check_url ); do sleep 5; done
+
       - name: Terraform Destroy
         id: destroy
         working-directory: *PUBLIC_WORK_DIR
