@@ -1,11 +1,5 @@
 name: Pull Request Test Handler
 
-# This is used to define anchors for repeated keys or configuration blocks.
-tfe_parameters:
-  working-directories:
-    public: &PUBLIC_WORK_DIR ./tests/public-install
-    k6: &K6_WORK_DIR ./tests/tfe-load-test
-
 on:
   repository_dispatch:
     types:
@@ -15,6 +9,9 @@ jobs:
   public_install:
     name: Run tf-test on Public Install
     runs-on: ubuntu-latest
+    env:
+      WORK_DIR_PATH: ./tests/public-install
+      K6_WORK_DIR_PATH: ./tests/tfe-load-test
     steps:
       - name: Create URL to the run output
         id: vars
@@ -32,7 +29,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: 'master'
-          path: *K6_WORK_DIR
+          path: ${{ env.K6_WORK_DIR_PATH }}
           repository: hashicorp/tfe-load-test
           token: ${{ secrets.PAT }}
 
@@ -55,24 +52,24 @@ jobs:
 
       - name: Terraform Init
         id: init
-        working-directory: *PUBLIC_WORK_DIR
+        working-directory: ${{ env.WORK_DIR_PATH }}
         run: terraform init -input=false -no-color
 
       - name: Terraform Validate
         id: validate
-        working-directory: *PUBLIC_WORK_DIR
+        working-directory: ${{ env.WORK_DIR_PATH }}
         env:
           AWS_DEFAULT_REGION: us-east-2
         run: terraform validate -no-color
 
       - name: Terraform Apply
         id: apply
-        working-directory: *PUBLIC_WORK_DIR
+        working-directory: ${{ env.WORK_DIR_PATH }}
         run: terraform apply -auto-approve -input=false -no-color
 
       - name: Wait For TFE
         id: wait-for-tfe
-        working-directory: *PUBLIC_WORK_DIR
+        working-directory: ${{ env.WORK_DIR_PATH }}
         timeout-minutes: 15
         run: |
           echo "Curling \`health_check_url\` for a return status of 200..."
@@ -99,7 +96,7 @@ jobs:
 
       - name: Run k6 Smoke Tests
         id: run-smoke-tests
-        working-directory: *K6_WORK_DIR
+        working-directory: ${{ env.K6_WORK_DIR_PATH }}
         env:
           K6_PATHNAME: "./k6"
           TFE_URL: "${{ steps.retrieve-tfe-url.stdout }}"
@@ -110,7 +107,7 @@ jobs:
 
       - name: Terraform Destroy
         id: destroy
-        working-directory: *PUBLIC_WORK_DIR
+        working-directory: ${{ env.WORK_DIR_PATH }}
         run: terraform destroy -auto-approve -input=false -no-color
 
       # Run Terraform commands between these comments ^^^
