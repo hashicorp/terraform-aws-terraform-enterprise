@@ -1,9 +1,5 @@
 name: Pull Request Test Handler
 
-# This is used to define anchors for repeated keys or configuration blocks.
-tfe_parameters:
-  working-directory: &PUBLIC_WORK_DIR ./tests/public-install
-
 on:
   repository_dispatch:
     types:
@@ -13,17 +9,36 @@ jobs:
   public_install:
     name: Run tf-test on Public Install
     runs-on: ubuntu-latest
+    env:
+      WORK_DIR_PATH: ./tests/public-install
+      K6_WORK_DIR_PATH: ./tests/tfe-load-test
     steps:
       - name: Create URL to the run output
         id: vars
         run: echo ::set-output name=run-url::https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
 
-      # Checkout the branch of the pull request under test
+      # Checkout the branch of the pull request being tested
       - name: Checkout
         uses: actions/checkout@v2
         with:
           repository: ${{ github.event.client_payload.pull_request.head.repo.full_name }}
           ref: ${{ github.event.client_payload.pull_request.head.sha }}
+
+      # Checkout the hashicorp/tfe-load-test repository
+      - name: Checkout TFE Load Test
+        uses: actions/checkout@v2
+        with:
+          ref: 'master'
+          path: ${{ env.K6_WORK_DIR_PATH }}
+          repository: hashicorp/tfe-load-test
+          token: ${{ secrets.PAT }}
+
+      - name: Install required tools
+        env:
+          K6_URL: https://github.com/loadimpact/k6/releases/download/v0.31.1/k6-v0.31.1-linux64.tar.gz
+        run: |
+          sudo apt-get install jq
+          curl -L $K6_URL | tar xyz --strip-components
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -37,32 +52,62 @@ jobs:
 
       - name: Terraform Init
         id: init
-        working-directory: *PUBLIC_WORK_DIR
+        working-directory: ${{ env.WORK_DIR_PATH }}
         run: terraform init -input=false -no-color
 
       - name: Terraform Validate
         id: validate
-        working-directory: *PUBLIC_WORK_DIR
+        working-directory: ${{ env.WORK_DIR_PATH }}
         env:
           AWS_DEFAULT_REGION: us-east-2
         run: terraform validate -no-color
 
       - name: Terraform Apply
         id: apply
-        working-directory: *PUBLIC_WORK_DIR
+        working-directory: ${{ env.WORK_DIR_PATH }}
         run: terraform apply -auto-approve -input=false -no-color
 
       - name: Wait For TFE
         id: wait-for-tfe
-        working-directory: *PUBLIC_WORK_DIR
+        working-directory: ${{ env.WORK_DIR_PATH }}
         timeout-minutes: 15
         run: |
           echo "Curling \`health_check_url\` for a return status of 200..."
           while ! curl -sfS --max-time 5 $( terraform output health_check_url ); do sleep 5; done
 
+      - name: Retrieve TFE URL
+        id: retrieve-tfe-url
+        run: |
+          terraform output -no-color -raw tfe_url
+
+      - name: Retrieve IACT Token
+        id: retrieve-iact-token
+        run: |
+          curl $( terraform output -no-color -raw iact_url )
+
+      - name: Create Admin in TFE
+        id: create-admin
+        run: |
+          curl \
+            --header "Content-Type: application/json" \
+            --data '{ "username": "tester", "email": "tf-onprem-team@hashicorp", "password": "${{ secrets.TFE_PASSWORD }}" }' \
+            $( terraform output -no-color -raw initial_admin_user_url )?token=${{ steps.retrieve-iact-token.stdout }} \
+            | jq --raw-output '.token'
+
+      - name: Run k6 Smoke Tests
+        id: run-smoke-tests
+        working-directory: ${{ env.K6_WORK_DIR_PATH }}
+        env:
+          K6_PATHNAME: "./k6"
+          TFE_URL: "${{ steps.retrieve-tfe-url.stdout }}"
+          TFE_API_TOKEN: "${{ steps.create-admin.stdout }}"
+          TFE_EMAIL: tf-onprem-team@hashicorp.com
+        run: |
+          make smoke-test
+
       - name: Terraform Destroy
         id: destroy
-        working-directory: *PUBLIC_WORK_DIR
+        working-directory: ${{ env.WORK_DIR_PATH }}
         run: terraform destroy -auto-approve -input=false -no-color
 
       # Run Terraform commands between these comments ^^^
@@ -117,6 +162,20 @@ jobs:
             ```
             ${{ steps.apply.outputs.stdout }}
             ${{ steps.apply.outputs.stderr }}
+            ```
+
+            </details>
+
+            #### K6 Smoke Tests :building_construction: `${{ steps.run-smoke-tests.outcome }}`
+
+            <details>
+              <summary>
+                <b>K6 Smoke Tests Output</b> :building_construction:
+              </summary>
+
+            ```
+            ${{ steps.run-smoke-tests.outputs.stdout }}
+            ${{ steps.run-smoke-tests.outputs.stderr }}
             ```
 
             </details>
