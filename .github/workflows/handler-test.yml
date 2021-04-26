@@ -1,5 +1,9 @@
 name: Pull Request Test Handler
 
+# This is used to define anchors for repeated keys or configuration blocks.
+tfe_parameters:
+  working-directory: &PUBLIC_WORK_DIR ./tests/public-install
+
 on:
   repository_dispatch:
     types:
@@ -33,24 +37,32 @@ jobs:
 
       - name: Terraform Init
         id: init
-        working-directory: ./tests/public-install
+        working-directory: *PUBLIC_WORK_DIR
         run: terraform init -input=false -no-color
 
       - name: Terraform Validate
         id: validate
-        working-directory: ./tests/public-install
+        working-directory: *PUBLIC_WORK_DIR
         env:
           AWS_DEFAULT_REGION: us-east-2
         run: terraform validate -no-color
 
       - name: Terraform Apply
         id: apply
-        working-directory: ./tests/public-install
+        working-directory: *PUBLIC_WORK_DIR
         run: terraform apply -auto-approve -input=false -no-color
+
+      - name: Wait For TFE
+        id: wait-for-tfe
+        working-directory: *PUBLIC_WORK_DIR
+        timeout-minutes: 15
+        run: |
+          echo "Curling \`health_check_url\` for a return status of 200..."
+          while ! curl -sfS --max-time 5 $( terraform output health_check_url ); do sleep 5; done
 
       - name: Terraform Destroy
         id: destroy
-        working-directory: ./tests/public-install
+        working-directory: *PUBLIC_WORK_DIR
         run: terraform destroy -auto-approve -input=false -no-color
 
       # Run Terraform commands between these comments ^^^
