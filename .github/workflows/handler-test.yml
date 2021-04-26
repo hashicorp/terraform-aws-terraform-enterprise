@@ -2,7 +2,9 @@ name: Pull Request Test Handler
 
 # This is used to define anchors for repeated keys or configuration blocks.
 tfe_parameters:
-  working-directory: &PUBLIC_WORK_DIR ./tests/public-install
+  working-directories:
+    public: &PUBLIC_WORK_DIR ./tests/public-install
+    k6: &K6_WORK_DIR ./tests/tfe-load-test
 
 on:
   repository_dispatch:
