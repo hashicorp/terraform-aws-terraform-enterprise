@@ -93,3 +93,8 @@ output "login_url" {
   value       = "https://${local.fqdn}/admin/account/new?token=${module.user_data.user_token.value}"
   description = "Login URL to setup the TFE instance once it is initialized"
 }
+
+output "health_check_url" {
+  value       = "https://${local.fqdn}/_health_check"
+  description = "The URL to access the TFE instance health check."
+}
