@@ -18,7 +18,7 @@ jobs:
         id: vars
         run: echo ::set-output name=run-url::https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
 
-      # Checkout the branch of the pull request under test
+      # Checkout the branch of the pull request under tests/
       - name: Checkout
         uses: actions/checkout@v2
         with:
