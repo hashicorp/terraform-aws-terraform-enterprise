@@ -18,29 +18,30 @@ module "public_active_active" {
   domain_name          = var.domain_name
   friendly_name_prefix = random_string.friendly_name.id
   tfe_license_name     = "terraform-aws-terraform-enterprise.rli"
+  ami_id               = var.ami_id
 
-  deploy_secretsmanager        = false
-  deploy_vpc                   = false
-  external_bootstrap_bucket    = var.external_bootstrap_bucket
-  iact_subnet_list             = var.iact_subnet_list
-  instance_type                = "m5.xlarge"
-  kms_key_alias                = "test-public-active-active"
-  load_balancing_scheme        = "PUBLIC"
-  network_id                   = var.network_id
-  network_private_subnet_cidrs = var.network_private_subnet_cidrs
-  network_private_subnets      = var.network_private_subnets
-  network_public_subnets       = var.network_public_subnets
-  node_count                   = 2
-  redis_encryption_at_rest     = false
-  redis_encryption_in_transit  = false
-  redis_require_password       = false
-  tfe_license_filepath         = ""
-  tfe_subdomain                = "test-public-active-active"
+  deploy_secretsmanager       = false
+  deploy_vpc                  = true
+  external_bootstrap_bucket   = var.external_bootstrap_bucket
+  iact_subnet_list            = var.iact_subnet_list
+  instance_type               = "m5.xlarge"
+  kms_key_alias               = "test-public-active-active"
+  load_balancing_scheme       = "PUBLIC"
+  node_count                  = 2
+  redis_encryption_at_rest    = false
+  redis_encryption_in_transit = false
+  redis_require_password      = false
+  tfe_license_filepath        = ""
+  tfe_subdomain               = "test-public-active-active"
+
+  iam_role_policy_arns = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]
+  key_name             = var.key_name
 
   common_tags = {
     Terraform   = "cloud"
     Environment = "tfe_modules_test"
     Test        = "Public Active/Active"
     Repository  = "hashicorp/terraform-aws-terraform-enterprise"
+    OkToDelete  = "True"
   }
 }

@@ -2,19 +2,32 @@
 set -euo pipefail
 # General OS management
 install_jq() {
-  curl --silent -Lo /bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
-  chmod +x /bin/jq
+  if ! command -v jq &> /dev/null
+  then
+   	echo "[$(date +"%FT%T")] Install jq" | tee -a /var/log/ptfe.log
+    curl --silent -Lo /bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
+    chmod +x /bin/jq
+  else
+    echo "[$(date +"%FT%T")] Skipping jq installation - already installed" | tee -a /var/log/ptfe.log
+  fi
 }
 
 install_awscli() {
-  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-  unzip awscliv2.zip
-  ./aws/install
-  rm -f ./awscliv2.zip
-  rm -rf ./aws
+  if ! command -v aws &> /dev/null
+  then
+   	echo "[$(date +"%FT%T")] Install AWS CLI" | tee -a /var/log/ptfe.log
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    unzip awscliv2.zip
+    ./aws/install
+    rm -f ./awscliv2.zip
+    rm -rf ./aws
+  else
+    echo "[$(date +"%FT%T")] Skipping AWS CLI installation - already installed" | tee -a /var/log/ptfe.log
+  fi
 }
 
 configure_proxy() {
+  echo "[$(date +"%FT%T")] Configure proxy" | tee -a /var/log/ptfe.log
   local proxy_ip="$1"
   # Use a unique name so no_proxy can be exported
   local no_proxy_local="$2"
@@ -69,8 +82,14 @@ install_packages() {
 
   case "$distribution" in
     "ubuntu")
-      apt-get update -y
-      apt-get install -y unzip
+      if ! command -v unzip &> /dev/null
+      then
+   	    echo "[$(date +"%FT%T")] Install unzip" | tee -a /var/log/ptfe.log
+        apt-get update -y
+        apt-get install -y unzip
+      else
+        echo "[$(date +"%FT%T")] Skipping unzip installation - already installed" | tee -a /var/log/ptfe.log
+      fi
       ;;
     "rhel")
       yum install -y \
@@ -104,6 +123,7 @@ detect_distribution() {
 }
 
 retrieve_tfe_license() {
+  echo "[$(date +"%FT%T")] Retrieve TFE Licence" | tee -a /var/log/ptfe.log
   local s3_bucket_bootstrap="$1"
   local tfe_license="$2"
 
@@ -111,7 +131,7 @@ retrieve_tfe_license() {
 }
 
 install_tfe() {
-  echo "[Terraform Enterprise] Setting up" | tee -a /var/log/ptfe.log
+  echo "[$(date +"%FT%T")] Setting up TFE" | tee -a /var/log/ptfe.log
 
   local proxy_ip="$1"
   local no_proxy="$2"
@@ -140,6 +160,7 @@ install_tfe() {
 }
 
 configure_tfe() {
+  echo "[$(date +"%FT%T")] Configuring TFE" | tee -a /var/log/ptfe.log
   local replicated="$1"
   local settings="$2"
 
