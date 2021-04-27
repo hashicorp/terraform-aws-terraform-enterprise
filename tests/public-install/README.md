@@ -17,11 +17,13 @@ installation with the following traits.
 
 This test assumes the following resources exist.
 
-* Valid DNS Zone managed in Route53
-* Valid AWS ACM certificate
+- Valid DNS Zone managed in Route53
+- Valid AWS ACM certificate
 
 ## How this test is used
 
 This test is leveraged by this repository's continuous integration setup which
 leverages workspaces in a Terraform Cloud workspaces as a remote backend so that
 Terraform state is preserved.
+
+This message is a test.
