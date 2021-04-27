@@ -78,7 +78,7 @@ jobs:
         timeout-minutes: 15
         run: |
           echo "Curling \`health_check_url\` for a return status of 200..."
-          while ! curl -sfS --max-time 5 ${{ steps.retrieve-health-check-url.stdout }}; do sleep 5; done
+          while ! curl -sfS --max-time 5 ${{ steps.retrieve-health-check-url.outputs.stdout }}; do sleep 5; done
 
       - name: Retrieve TFE URL
         id: retrieve-tfe-url
@@ -95,7 +95,7 @@ jobs:
       - name: Retrieve IACT Token
         id: retrieve-iact-token
         run: |
-          curl ${{ steps.retrieve-iact-url.stdout }}
+          curl ${{ steps.retrieve-iact-url.outputs.stdout }}
 
       - name: Retrieve Initial Admin User URL
         id: retrieve-initial-admin-user-url
@@ -109,7 +109,7 @@ jobs:
           curl \
             --header "Content-Type: application/json" \
             --data '{ "username": "tester", "email": "tf-onprem-team@hashicorp", "password": "${{ secrets.TFE_PASSWORD }}" }' \
-            ${{ steps.retrieve-initial-admin-user-url.stdout }}?token=${{ steps.retrieve-iact-token.stdout }} \
+            ${{ steps.retrieve-initial-admin-user-url.outputs.stdout }}?token=${{ steps.retrieve-iact-token.outputs.stdout }} \
             | jq --raw-output '.token'
 
       - name: Run k6 Smoke Tests
@@ -117,8 +117,8 @@ jobs:
         working-directory: ${{ env.K6_WORK_DIR_PATH }}
         env:
           K6_PATHNAME: "./k6"
-          TFE_URL: "${{ steps.retrieve-tfe-url.stdout }}"
-          TFE_API_TOKEN: "${{ steps.create-admin.stdout }}"
+          TFE_URL: "${{ steps.retrieve-tfe-url.outputs.stdout }}"
+          TFE_API_TOKEN: "${{ steps.create-admin.outputs.stdout }}"
           TFE_EMAIL: tf-onprem-team@hashicorp.com
         run: |
           make smoke-test
