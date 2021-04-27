@@ -67,23 +67,41 @@ jobs:
         working-directory: ${{ env.WORK_DIR_PATH }}
         run: terraform apply -auto-approve -input=false -no-color
 
+      - name: Retrieve Health Check URL
+        id: retrieve-health-check-url
+        working-directory: ${{ env.WORK_DIR_PATH }}
+        run: |
+          terraform output -no-color -raw health_check_url
+
       - name: Wait For TFE
         id: wait-for-tfe
-        working-directory: ${{ env.WORK_DIR_PATH }}
         timeout-minutes: 15
         run: |
           echo "Curling \`health_check_url\` for a return status of 200..."
-          while ! curl -sfS --max-time 5 $( terraform output health_check_url ); do sleep 5; done
+          while ! curl -sfS --max-time 5 ${{ steps.retrieve-health-check-url.stdout }}; do sleep 5; done
 
       - name: Retrieve TFE URL
         id: retrieve-tfe-url
+        working-directory: ${{ env.WORK_DIR_PATH }}
         run: |
           terraform output -no-color -raw tfe_url
+
+      - name: Retrieve IACT URL
+        id: retrieve-iact-url
+        working-directory: ${{ env.WORK_DIR_PATH }}
+        run: |
+          terraform output -no-color -raw iact_url
 
       - name: Retrieve IACT Token
         id: retrieve-iact-token
         run: |
-          curl $( terraform output -no-color -raw iact_url )
+          curl ${{ steps.retrieve-iact-url.stdout }}
+
+      - name: Retrieve Initial Admin User URL
+        id: retrieve-initial-admin-user-url
+        working-directory: ${{ env.WORK_DIR_PATH }}
+        run: |
+          terraform output -no-color -raw initial_admin_user_url
 
       - name: Create Admin in TFE
         id: create-admin
@@ -91,7 +109,7 @@ jobs:
           curl \
             --header "Content-Type: application/json" \
             --data '{ "username": "tester", "email": "tf-onprem-team@hashicorp", "password": "${{ secrets.TFE_PASSWORD }}" }' \
-            $( terraform output -no-color -raw initial_admin_user_url )?token=${{ steps.retrieve-iact-token.stdout }} \
+            ${{ steps.retrieve-initial-admin-user-url.stdout }}?token=${{ steps.retrieve-iact-token.stdout }} \
             | jq --raw-output '.token'
 
       - name: Run k6 Smoke Tests
