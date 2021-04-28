@@ -143,7 +143,7 @@ module "bastion" {
   friendly_name_prefix       = var.friendly_name_prefix
   kms_key_id                 = aws_kms_key.tfe_key.arn
   network_id                 = local.network_id
-  userdata_script            = module.user_data.bastion_userdata_base64_encoded
+  user_data_base64           = module.user_data.bastion_user_data_base64
 
   common_tags = var.common_tags
 }
@@ -163,6 +163,8 @@ module "user_data" {
   aws_region                    = data.aws_region.current.name
   fqdn                          = local.fqdn
   generated_bastion_key_private = local.bastion_key_private
+  iact_subnet_list              = var.iact_subnet_list
+  iact_subnet_time_limit        = var.iact_subnet_time_limit
   kms_key_arn                   = aws_kms_key.tfe_key.arn
   pg_dbname                     = module.database.db_name
   pg_password                   = module.database.db_password
@@ -233,5 +235,5 @@ module "vm" {
   network_subnets_private             = local.network_private_subnets
   network_private_subnet_cidrs        = local.network_private_subnet_cidrs
   node_count                          = var.node_count
-  userdata_script                     = module.user_data.tfe_userdata_base64_encoded
+  user_data_base64                    = module.user_data.tfe_user_data_base64
 }

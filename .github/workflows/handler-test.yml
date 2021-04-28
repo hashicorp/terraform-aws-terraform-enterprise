@@ -62,6 +62,17 @@ jobs:
           AWS_DEFAULT_REGION: us-east-2
         run: terraform validate -no-color
 
+      - name: Retrieve GitHub Actions CIDR list
+        id: retrieve-github-actions-cidr-list
+        run: |
+          curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/meta | jq .actions | tr -d '\n'
+      
+      - name: Write Terraform Variables
+        id: write-terraform-variables
+        working-directory: ${{ env.WORK_DIR_PATH }}
+        run: |
+          echo "iact_subnet_list = ${{ steps.retrieve-github-actions-cidr-list.outputs.stdout }}" > github.auto.tfvars
+
       - name: Terraform Apply
         id: apply
         working-directory: ${{ env.WORK_DIR_PATH }}

@@ -3,8 +3,8 @@ variable "default_ami_id" {
   type        = string
 }
 
-variable "userdata_script" {
-  description = "A user data script to be executed when launching the TFE EC2 instance(s)."
+variable "user_data_base64" {
+  description = "A Base64 encoded user data script to be executed when launching the TFE EC2 instance(s)."
   type        = string
 }
 
