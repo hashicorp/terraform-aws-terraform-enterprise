@@ -14,6 +14,11 @@ variable "external_bootstrap_bucket" {
   default     = null
 }
 
+variable "iact_subnet_list" {
+  description = "A list of CIDR masks that configure the ability to retrieve the IACT from outside the host."
+  type        = list(string)
+}
+
 variable "acm_certificate_arn" {
   type        = string
   description = "The ARN of an existing ACM certificate."
