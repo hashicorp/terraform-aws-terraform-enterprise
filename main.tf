@@ -163,6 +163,8 @@ module "user_data" {
   aws_region                    = data.aws_region.current.name
   fqdn                          = local.fqdn
   generated_bastion_key_private = local.bastion_key_private
+  iact_subnet_list              = var.iact_subnet_list
+  iact_subnet_time_limit        = var.iact_subnet_time_limit
   kms_key_arn                   = aws_kms_key.tfe_key.arn
   pg_dbname                     = module.database.db_name
   pg_password                   = module.database.db_password
