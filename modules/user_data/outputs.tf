@@ -1,4 +1,4 @@
-output "bastion_userdata_base64_encoded" {
+output "bastion_user_data_base64" {
   value = base64encode(local.bastion_user_data)
 
   description = "The Base64 encoded user data script to be executed when the bastion EC2 intance is launched."
@@ -10,7 +10,7 @@ output "replicated_dashboard_password" {
   description = "The password which is required to access the administrator dashboard."
 }
 
-output "tfe_userdata_base64_encoded" {
+output "tfe_user_data_base64" {
   value = base64encode(local.tfe_user_data)
 
   description = "The Base64 encoded user data script to be executed when the TFE EC2 instances are launched."

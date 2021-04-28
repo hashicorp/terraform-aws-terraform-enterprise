@@ -62,7 +62,7 @@ resource "aws_launch_configuration" "tfe" {
   image_id         = var.ami_id
   instance_type    = var.instance_type
   key_name         = var.deploy_bastion ? var.bastion_key : null
-  user_data_base64 = var.userdata_script
+  user_data_base64 = var.user_data_base64
 
   iam_instance_profile = var.aws_iam_instance_profile
   security_groups      = [aws_security_group.tfe_instance.id]

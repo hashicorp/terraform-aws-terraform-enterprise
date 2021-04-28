@@ -12,8 +12,8 @@ variable "kms_key_id" {
   type        = string
 }
 
-variable "userdata_script" {
-  description = "A user data script to be executed when the bastion EC2 instance is launched."
+variable "user_data_base64" {
+  description = "A Base64 encoded user data script to be executed when the bastion EC2 instance is launched."
   type        = string
 }
 

@@ -143,7 +143,7 @@ module "bastion" {
   friendly_name_prefix       = var.friendly_name_prefix
   kms_key_id                 = aws_kms_key.tfe_key.arn
   network_id                 = local.network_id
-  userdata_script            = module.user_data.bastion_userdata_base64_encoded
+  user_data_base64           = module.user_data.bastion_user_data_base64
 
   common_tags = var.common_tags
 }
@@ -235,5 +235,5 @@ module "vm" {
   network_subnets_private             = local.network_private_subnets
   network_private_subnet_cidrs        = local.network_private_subnet_cidrs
   node_count                          = var.node_count
-  userdata_script                     = module.user_data.tfe_userdata_base64_encoded
+  user_data_base64                    = module.user_data.tfe_user_data_base64
 }
