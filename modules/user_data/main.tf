@@ -83,6 +83,14 @@ locals {
     install_id = {
       value = random_id.install_id.hex
     }
+
+    iact_subnet_list = {
+      value = join(",", var.iact_subnet_list)
+    }
+
+    iact_subnet_time_limit = {
+      value = var.iact_subnet_time_limit != null ? tostring(var.iact_subnet_time_limit) : ""
+    }
   }
 
   base_external_configs = {

@@ -43,6 +43,8 @@ module "public_install" {
   redis_encryption_at_rest    = false
   redis_require_password      = false
 
+  iact_subnet_list = var.iact_subnet_list
+
   common_tags = {
     Terraform   = "cloud"
     Environment = "tfe_modules_test"

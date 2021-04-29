@@ -91,3 +91,15 @@ variable "no_proxy" {
   description = "(Optional) List of IP addresses to not proxy"
   default     = []
 }
+
+variable "iact_subnet_list" {
+  default     = []
+  description = "A list of CIDR masks that configure the ability to retrieve the IACT from outside the host."
+  type        = list(string)
+}
+
+variable "iact_subnet_time_limit" {
+  default     = null
+  description = "The time limit that requests from the subnets listed can request the IACT, as measured from the instance creation in minutes."
+  type        = number
+}

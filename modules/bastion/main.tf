@@ -11,7 +11,7 @@ resource "aws_instance" "bastion" {
   vpc_security_group_ids      = [aws_security_group.bastion[0].id]
   key_name                    = var.bastion_keypair
   associate_public_ip_address = "true"
-  user_data                   = var.userdata_script
+  user_data_base64            = var.user_data_base64
 
   root_block_device {
     volume_size = 20
