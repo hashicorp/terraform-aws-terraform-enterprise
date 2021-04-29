@@ -154,74 +154,15 @@ jobs:
 
             ### Terraform Test Report :newspaper:
 
-            #### Terraform Initialization :gear: `${{ steps.init.outcome }}`
+            - Terraform Initialization :gear: `${{ steps.init.outcome }}`
 
-            <details>
-              <summary>
-                <b>Terraform Initialization Output</b> :gear:
-              </summary>
+            - Terraform Validation :mag: `${{ steps.validate.outcome }}`
 
-            ```
-            ${{ steps.init.outputs.stdout }}
-            ${{ steps.init.outputs.stderr }}
-            ```
+            - Terraform Apply :book: `${{ steps.apply.outcome }}`
 
-            </details>
+            - K6 Smoke Test :building_construction: `${{ steps.run-smoke-test.outcome }}`
 
-            #### Terraform Validation :mag: `${{ steps.validate.outcome }}`
-
-            <details>
-              <summary>
-                <b>Terraform Validation Output</b> :mag:
-              </summary>
-
-            ```
-            ${{ steps.validate.outputs.stdout }}
-            ${{ steps.validate.outputs.stderr }}
-            ```
-
-            </details>
-
-            #### Terraform Apply :book: `${{ steps.apply.outcome }}`
-
-            <details>
-              <summary>
-                <b>Terraform Apply Output</b> :book:
-              </summary>
-
-            ```
-            ${{ steps.apply.outputs.stdout }}
-            ${{ steps.apply.outputs.stderr }}
-            ```
-
-            </details>
-
-            #### K6 Smoke Test :building_construction: `${{ steps.run-smoke-test.outcome }}`
-
-            <details>
-              <summary>
-                <b>K6 Smoke Test Result</b> :building_construction:
-              </summary>
-
-            ```
-            ${{ steps.run-smoke-test.outputs.result }}
-            ```
-
-            </details>
-
-            #### Terraform Destroy :fire: `${{ steps.destroy.outcome }}`
-
-            <details>
-              <summary>
-                <b>Terraform Destroy Output</b> :fire:
-              </summary>
-
-            ```
-            ${{ steps.destroy.outputs.stdout }}
-            ${{ steps.destroy.outputs.stderr }}
-            ```
-
-            </details>
+            - Terraform Destroy :fire: `${{ steps.destroy.outcome }}`
 
             :link: [Action Summary Page][1]
 
