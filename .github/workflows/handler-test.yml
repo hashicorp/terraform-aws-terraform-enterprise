@@ -133,7 +133,7 @@ jobs:
           TFE_API_TOKEN: "${{ steps.create-admin.outputs.token }}"
           TFE_EMAIL: tf-onprem-team@hashicorp.com
         run: |
-          echo "::set-output name=result::$( make smoke-test 2>&1 )"
+          make smoke-test
 
       - name: Terraform Destroy
         id: destroy
