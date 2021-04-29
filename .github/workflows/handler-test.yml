@@ -62,16 +62,17 @@ jobs:
           AWS_DEFAULT_REGION: us-east-2
         run: terraform validate -no-color
 
-      - name: Retrieve GitHub Actions CIDR list
-        id: retrieve-github-actions-cidr-list
+      - name: Retrieve GitHub Actions CIDRs
+        id: retrieve-github-actions-cidrs
         run: |
-          curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/meta | jq .actions | tr -d '\n'
+          echo "::set-output name=list::$( \
+            curl -H 'Accept: application/vnd.github.v3+json' https://api.github.com/meta | jq .actions | tr -d '\n' )"
       
       - name: Write Terraform Variables
         id: write-terraform-variables
         working-directory: ${{ env.WORK_DIR_PATH }}
         run: |
-          echo "iact_subnet_list = ${{ steps.retrieve-github-actions-cidr-list.outputs.stdout }}" > github.auto.tfvars
+          echo "iact_subnet_list = ${{ steps.retrieve-github-actions-cidrs.outputs.list }}" > github.auto.tfvars
 
       - name: Terraform Apply
         id: apply
@@ -103,10 +104,10 @@ jobs:
         run: |
           terraform output -no-color -raw iact_url
 
-      - name: Retrieve IACT Token
-        id: retrieve-iact-token
+      - name: Retrieve IACT
+        id: retrieve-iact
         run: |
-          curl ${{ steps.retrieve-iact-url.outputs.stdout }}
+          echo "::set-output name=token::$( curl ${{ steps.retrieve-iact-url.outputs.stdout }} )"
 
       - name: Retrieve Initial Admin User URL
         id: retrieve-initial-admin-user-url
@@ -117,22 +118,26 @@ jobs:
       - name: Create Admin in TFE
         id: create-admin
         run: |
-          curl \
-            --header "Content-Type: application/json" \
-            --data '{ "username": "tester", "email": "tf-onprem-team@hashicorp", "password": "${{ secrets.TFE_PASSWORD }}" }' \
-            ${{ steps.retrieve-initial-admin-user-url.outputs.stdout }}?token=${{ steps.retrieve-iact-token.outputs.stdout }} \
-            | jq --raw-output '.token'
+          echo "::set-output name=token::$( \
+            curl \
+            --header 'Content-Type: application/json' \
+            --data '{ \
+              \"username\": \"tester\", \
+              \"email\": \"tf-onprem-team@hashicorp\", \
+              \"password\": \"${{ secrets.TFE_PASSWORD }}\" }' \
+            ${{ steps.retrieve-initial-admin-user-url.outputs.stdout }}?token=${{ steps.retrieve-iact.outputs.token }} \
+            | jq --raw-output '.token' )"
 
-      - name: Run k6 Smoke Tests
-        id: run-smoke-tests
+      - name: Run k6 Smoke Test
+        id: run-smoke-test
         working-directory: ${{ env.K6_WORK_DIR_PATH }}
         env:
           K6_PATHNAME: "./k6"
           TFE_URL: "${{ steps.retrieve-tfe-url.outputs.stdout }}"
-          TFE_API_TOKEN: "${{ steps.create-admin.outputs.stdout }}"
+          TFE_API_TOKEN: "${{ steps.create-admin.outputs.token }}"
           TFE_EMAIL: tf-onprem-team@hashicorp.com
         run: |
-          make smoke-test
+          echo "::set-output name=result::$( make smoke-test 2>&1 )"
 
       - name: Terraform Destroy
         id: destroy
@@ -195,16 +200,15 @@ jobs:
 
             </details>
 
-            #### K6 Smoke Tests :building_construction: `${{ steps.run-smoke-tests.outcome }}`
+            #### K6 Smoke Test :building_construction: `${{ steps.run-smoke-test.outcome }}`
 
             <details>
               <summary>
-                <b>K6 Smoke Tests Output</b> :building_construction:
+                <b>K6 Smoke Test Result</b> :building_construction:
               </summary>
 
             ```
-            ${{ steps.run-smoke-tests.outputs.stdout }}
-            ${{ steps.run-smoke-tests.outputs.stderr }}
+            ${{ steps.run-smoke-test.outputs.result }}
             ```
 
             </details>
