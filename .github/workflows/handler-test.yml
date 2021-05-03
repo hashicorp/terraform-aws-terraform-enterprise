@@ -112,8 +112,9 @@ jobs:
       - name: Create Admin in TFE
         id: create-admin
         run: |
-          echo '{"username": "test", "email": "tf-onprem-team@hashicorp", "password": "${{ secrets.TFE_PASSWORD }}"}' \
-            > payload.json
+          echo \
+            '{"username": "test", "email": "tf-onprem-team@hashicorp.com", "password": "${{ secrets.TFE_PASSWORD }}"}' \
+            > ./payload.json
           echo "::set-output name=token::$( \
             curl \
             --header 'Content-Type: application/json' \
