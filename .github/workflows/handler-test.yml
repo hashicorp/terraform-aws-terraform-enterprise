@@ -63,12 +63,10 @@ jobs:
           AWS_DEFAULT_REGION: us-east-2
         run: terraform validate -no-color
 
-      - name: Write GitHub Actions CIDRs to Terraform Variables
+      - name: Write GitHub Actions runner CIDR to Terraform Variables
         working-directory: ${{ env.WORK_DIR_PATH }}
         run: |
-          echo "iact_subnet_list = $( \
-            curl -H 'Accept: application/vnd.github.v3+json' https://api.github.com/meta | jq .actions | tr -d '\n' )" \
-            > github.auto.tfvars
+          echo "iact_subnet_list = [\"$( dig +short @resolver1.opendns.com myip.opendns.com )/32\"]" > github.auto.tfvars
 
       - name: Terraform Apply
         id: apply
