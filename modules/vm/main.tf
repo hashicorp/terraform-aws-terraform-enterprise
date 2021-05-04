@@ -67,6 +67,13 @@ resource "aws_launch_configuration" "tfe" {
   iam_instance_profile = var.aws_iam_instance_profile
   security_groups      = [aws_security_group.tfe_instance.id]
 
+  metadata_options {
+    http_endpoint = "enabled"
+    # A hop limit of at least 2 is required for AWS Cost Estimation to function.
+    http_put_response_hop_limit = 2
+    http_tokens                 = "optional"
+  }
+
   root_block_device {
     encrypted             = true
     volume_type           = "gp2"
