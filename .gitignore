@@ -14,3 +14,6 @@
 
 .DS_Store
 *.bk
+
+# Editor files
+.vscode
