@@ -115,12 +115,17 @@ jobs:
           echo \
             '{"username": "test", "email": "tf-onprem-team@hashicorp.com", "password": "${{ secrets.TFE_PASSWORD }}"}' \
             > ./payload.json
-          echo "::set-output name=token::$( \
+          echo "::set-output name=response::$( \
             curl \
+            --verbose \
             --header 'Content-Type: application/json' \
             --data @./payload.json \
-            ${{ steps.retrieve-initial-admin-user-url.outputs.stdout }}?token=${{ steps.retrieve-iact.outputs.token }} \
-            | jq --raw-output '.token' )"
+            ${{ steps.retrieve-initial-admin-user-url.outputs.stdout }}?token=${{ steps.retrieve-iact.outputs.token }})"
+
+      - name: Retrieve Admin Token
+        id: retrieve-admin-token
+        run: |
+          echo "::set-output name=token::$(echo '${{ steps.create-admin.outputs.response }}' | jq --raw-output '.token')"
 
       - name: Run k6 Smoke Test
         id: run-smoke-test
@@ -128,7 +133,7 @@ jobs:
         env:
           K6_PATHNAME: "./k6"
           TFE_URL: "${{ steps.retrieve-tfe-url.outputs.stdout }}"
-          TFE_API_TOKEN: "${{ steps.create-admin.outputs.token }}"
+          TFE_API_TOKEN: "${{ steps.retrieve-admin-token.outputs.token }}"
           TFE_EMAIL: tf-onprem-team@hashicorp.com
         run: |
           make smoke-test
