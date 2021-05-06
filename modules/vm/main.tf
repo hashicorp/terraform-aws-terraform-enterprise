@@ -118,4 +118,8 @@ resource "aws_autoscaling_group" "tfe_asg" {
       }
     ]
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }

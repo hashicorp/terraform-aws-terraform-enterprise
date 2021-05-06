@@ -1,8 +1,8 @@
-# TEST: Public Installation Terraform Enterprise
+# TEST: Public Active/Active Terraform Enterprise
 
 ## About this test
 
-This test for Terraform Enterprise as a Public Installation creates a TFE
+This test for Terraform Enterprise creates a TFE
 installation with the following traits.
 
 - Active/Active mode
@@ -17,8 +17,8 @@ installation with the following traits.
 
 This test assumes the following resources exist.
 
-* Valid DNS Zone managed in Route53
-* Valid AWS ACM certificate
+- Valid DNS Zone managed in Route53
+- Valid AWS ACM certificate
 
 ## How this test is used
 
