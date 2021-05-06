@@ -102,7 +102,7 @@ jobs:
         id: retrieve-iact
         run: |
           echo "::set-output name=token::$( \
-            curl --fail --retry 5 --retry-all-errors --verbose ${{ steps.retrieve-iact-url.outputs.stdout }} )"
+            curl --fail --retry 5 --verbose ${{ steps.retrieve-iact-url.outputs.stdout }} )"
 
       - name: Retrieve Initial Admin User URL
         id: retrieve-initial-admin-user-url
@@ -120,7 +120,6 @@ jobs:
             curl \
             --fail \
             --retry 5 \
-            --retry-all-errors \
             --verbose \
             --header 'Content-Type: application/json' \
             --data @./payload.json \
