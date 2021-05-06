@@ -6,11 +6,11 @@ on:
       - test-command
 
 jobs:
-  public_install:
-    name: Run tf-test on Public Install
+  public_active_active:
+    name: Run tf-test on Public Active/Active
     runs-on: ubuntu-latest
     env:
-      WORK_DIR_PATH: ./tests/public-install
+      WORK_DIR_PATH: ./tests/public-active-active
       K6_WORK_DIR_PATH: ./tests/tfe-load-test
     steps:
       - name: Create URL to the run output
