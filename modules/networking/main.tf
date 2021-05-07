@@ -64,6 +64,12 @@ module "vpc_endpoints" {
   tags               = var.common_tags
 
   endpoints = {
+    ec2 = {
+      service             = "ec2"
+      service_type        = "Interface"
+      private_dns_enabled = true
+      subnet_ids          = module.vpc.private_subnets
+    }
     ec2messages = {
       private_dns_enabled = true
       service             = "ec2messages"
@@ -72,6 +78,12 @@ module "vpc_endpoints" {
       tags = {
         Name = "${var.friendly_name_prefix}-tfe-ec2messages-vpc-endpoint"
       }
+    }
+    kms = {
+      service             = "kms"
+      service_type        = "Interface"
+      private_dns_enabled = true
+      subnet_ids          = module.vpc.private_subnets
     }
     s3 = {
       service = "s3"
