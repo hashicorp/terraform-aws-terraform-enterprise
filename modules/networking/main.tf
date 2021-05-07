@@ -86,7 +86,9 @@ module "vpc_endpoints" {
       subnet_ids          = module.vpc.private_subnets
     }
     s3 = {
-      service = "s3"
+      route_table_ids = module.vpc.private_route_table_ids
+      service         = "s3"
+      service_type    = "Gateway"
       tags = {
         Name = "${var.friendly_name_prefix}-tfe-s3-vpc-endpoint"
       }
