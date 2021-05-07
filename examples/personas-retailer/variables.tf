@@ -23,11 +23,6 @@ variable "license_path" {
   description = "File path to Replicated license file"
 }
 
-variable "existing_aws_keypair" {
-  type        = string
-  description = "An existing AWS Key Pair to SSH into the Bastion host."
-}
-
 variable "acm_certificate_arn" {
   type        = string
   description = "The ARN of an existing ACM certificate."

@@ -49,8 +49,7 @@ module "retailer_deployment" {
 
   acm_certificate_arn = var.acm_certificate_arn
 
-  deploy_bastion  = true
-  bastion_keypair = var.existing_aws_keypair
+  deploy_bastion = false
 
   proxy_ip = "${aws_instance.proxy.private_ip}:${local.http_proxy_port}"
 
@@ -61,4 +60,6 @@ module "retailer_deployment" {
   redis_encryption_in_transit = true
   redis_require_password      = true
   redis_encryption_at_rest    = false
+
+  iam_role_policy_arns = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]
 }
