@@ -8,48 +8,48 @@ data "aws_availability_zones" "available" {
 #################################################
 # VPC
 #################################################
-resource "aws_vpc" "main" {
-  count = var.deploy_vpc == true ? 1 : 0
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "~> 3.0"
 
-  cidr_block           = var.network_cidr
-  enable_dns_hostnames = true
-  enable_dns_support   = true
-
-  tags = merge(
-    { Name = "${var.friendly_name_prefix}-tfe-vpc" },
-    var.common_tags
-  )
-}
-
-#################################################
-# Subnets
-#################################################
-resource "aws_subnet" "public" {
-  count = var.deploy_vpc == true ? length(var.network_public_subnet_cidrs) : 0
-
-  vpc_id                  = aws_vpc.main[0].id
-  cidr_block              = var.network_public_subnet_cidrs[count.index]
-  availability_zone       = element(data.aws_availability_zones.available.names, count.index)
+  azs                     = data.aws_availability_zones.available.names
+  cidr                    = var.network_cidr
+  create_igw              = true
+  enable_dns_hostnames    = true
+  enable_dns_support      = true
+  enable_nat_gateway      = true
   map_public_ip_on_launch = true
+  name                    = "${var.friendly_name_prefix}-tfe-vpc"
+  one_nat_gateway_per_az  = false
+  private_subnets         = var.network_private_subnet_cidrs
+  public_subnets          = var.network_public_subnet_cidrs
+  single_nat_gateway      = false
+  tags                    = var.common_tags
 
-  tags = merge(
-    { Name = "${var.friendly_name_prefix}-public-${element(data.aws_availability_zones.available.names, count.index)}" },
-    var.common_tags
-  )
-}
-
-resource "aws_subnet" "private" {
-  count = var.deploy_vpc == true ? length(var.network_private_subnet_cidrs) : 0
-
-  vpc_id                  = aws_vpc.main[0].id
-  cidr_block              = var.network_private_subnet_cidrs[count.index]
-  availability_zone       = element(data.aws_availability_zones.available.names, count.index)
-  map_public_ip_on_launch = false
-
-  tags = merge(
-    { Name = "${var.friendly_name_prefix}-private-${element(data.aws_availability_zones.available.names, count.index)}" },
-    var.common_tags
-  )
+  igw_tags = {
+    Name = "${var.friendly_name_prefix}-tfe-igw"
+  }
+  nat_eip_tags = {
+    Name = "${var.friendly_name_prefix}-tfe-nat-eip"
+  }
+  nat_gateway_tags = {
+    Name = "${var.friendly_name_prefix}-tfe-tgw"
+  }
+  private_route_table_tags = {
+    Name = "${var.friendly_name_prefix}-tfe-rtb-private"
+  }
+  private_subnet_tags = {
+    Name = "${var.friendly_name_prefix}-private"
+  }
+  public_route_table_tags = {
+    Name = "${var.friendly_name_prefix}-tfe-rtb-public"
+  }
+  public_subnet_tags = {
+    Name = "${var.friendly_name_prefix}-public"
+  }
+  vpc_tags = {
+    Name = "${var.friendly_name_prefix}-tfe-vpc"
+  }
 }
 
 #################################################
