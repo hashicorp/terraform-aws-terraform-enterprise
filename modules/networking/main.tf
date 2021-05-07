@@ -67,6 +67,7 @@ module "vpc_endpoints" {
     ec2messages = {
       private_dns_enabled = true
       service             = "ec2messages"
+      service_type        = "Interface"
       subnet_ids          = module.vpc.private_subnets
       tags = {
         Name = "${var.friendly_name_prefix}-tfe-ec2messages-vpc-endpoint"
@@ -81,6 +82,7 @@ module "vpc_endpoints" {
     ssm = {
       private_dns_enabled = true
       service             = "ssm"
+      service_type        = "Interface"
       subnet_ids          = module.vpc.private_subnets
       tags = {
         Name = "${var.friendly_name_prefix}-tfe-ssm-vpc-endpoint"
@@ -89,6 +91,7 @@ module "vpc_endpoints" {
     ssmmessages = {
       private_dns_enabled = true
       service             = "ssmmessages"
+      service_type        = "Interface"
       subnet_ids          = module.vpc.private_subnets
       tags = {
         Name = "${var.friendly_name_prefix}-tfe-ssmmessages-vpc-endpoint"
