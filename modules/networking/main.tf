@@ -12,19 +12,22 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 3.0"
 
-  azs                     = data.aws_availability_zones.available.names
-  cidr                    = var.network_cidr
-  create_igw              = true
-  enable_dns_hostnames    = true
-  enable_dns_support      = true
-  enable_nat_gateway      = true
-  map_public_ip_on_launch = true
-  name                    = "${var.friendly_name_prefix}-tfe-vpc"
-  one_nat_gateway_per_az  = false
-  private_subnets         = var.network_private_subnet_cidrs
-  public_subnets          = var.network_public_subnet_cidrs
-  single_nat_gateway      = false
-  tags                    = var.common_tags
+  azs                            = data.aws_availability_zones.available.names
+  cidr                           = var.network_cidr
+  create_igw                     = true
+  default_security_group_egress  = []
+  default_security_group_ingress = []
+  enable_dns_hostnames           = true
+  enable_dns_support             = true
+  enable_nat_gateway             = true
+  manage_default_security_group  = true
+  map_public_ip_on_launch        = true
+  name                           = "${var.friendly_name_prefix}-tfe-vpc"
+  one_nat_gateway_per_az         = false
+  private_subnets                = var.network_private_subnet_cidrs
+  public_subnets                 = var.network_public_subnet_cidrs
+  single_nat_gateway             = false
+  tags                           = var.common_tags
 
   igw_tags = {
     Name = "${var.friendly_name_prefix}-tfe-igw"
@@ -56,8 +59,9 @@ module "vpc_endpoints" {
   source  = "terraform-aws-modules/vpc/aws//modules/vpc-endpoints"
   version = "~> 3.0"
 
-  vpc_id = module.vpc.vpc_id
-  tags   = var.common_tags
+  security_group_ids = [module.vpc.default_security_group_id]
+  vpc_id             = module.vpc.vpc_id
+  tags               = var.common_tags
 
   endpoints = {
     ec2messages = {
