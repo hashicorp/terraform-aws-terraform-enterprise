@@ -73,7 +73,9 @@ install_packages() {
       apt-get install -y unzip
       ;;
     "rhel")
-      yum install -y unzip
+      yum install -y \
+        unzip \
+        https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
       ;;
   esac
 }
