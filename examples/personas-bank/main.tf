@@ -65,8 +65,6 @@ module "bank_deployment" {
 
   acm_certificate_arn = var.acm_certificate_arn
 
-  bastion_keypair = var.existing_aws_keypair
-
   proxy_cert_bundle_filepath = local_file.ca.filename
   proxy_cert_bundle_name     = "mitmproxy"
   proxy_ip                   = "${aws_instance.proxy.private_ip}:${local.http_proxy_port}"

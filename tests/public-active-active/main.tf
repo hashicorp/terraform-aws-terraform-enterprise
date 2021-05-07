@@ -19,7 +19,6 @@ module "public_active_active" {
   friendly_name_prefix = random_string.friendly_name.id
   tfe_license_name     = "terraform-aws-terraform-enterprise.rli"
 
-  deploy_bastion               = false
   deploy_secretsmanager        = false
   deploy_vpc                   = false
   external_bootstrap_bucket    = var.external_bootstrap_bucket

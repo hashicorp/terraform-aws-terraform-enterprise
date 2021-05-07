@@ -8,10 +8,6 @@ variable "active_active" {
   description = "A boolean that indicates if the TFE deployment is Active/Active or Standalone."
   type        = bool
 }
-variable "generated_bastion_key_private" {
-  description = "The PEM formatted private data of the SSH key pair associated with the bastion EC2 instance."
-  type        = string
-}
 variable "aws_bucket_bootstrap" {
   description = "The name of the S3 storage bucket which contains TFE bootstrap artifacts."
   type        = string

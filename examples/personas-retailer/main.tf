@@ -49,8 +49,6 @@ module "retailer_deployment" {
 
   acm_certificate_arn = var.acm_certificate_arn
 
-  deploy_bastion = false
-
   proxy_ip = "${aws_instance.proxy.private_ip}:${local.http_proxy_port}"
 
   ami_id = data.aws_ami.rhel.id

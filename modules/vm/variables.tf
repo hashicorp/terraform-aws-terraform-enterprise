@@ -37,22 +37,6 @@ variable "aws_iam_instance_profile" {
   type        = string
 }
 
-variable "deploy_bastion" {
-  type        = bool
-  description = "(Optional) Boolean indicating whether to deploy a Bastion instance (true) or not (false). Only specify true if deploy_vpc is true."
-  default     = true
-}
-
-variable "bastion_sg" {
-  description = "The identity of the security group attached to the bastion EC2 instance."
-  type        = string
-}
-
-variable "bastion_key" {
-  description = "The name of the key pair used for SSH access to the bastion EC2 instance."
-  type        = string
-}
-
 variable "network_id" {
   description = "The identity of the VPC in which the security group attached to the TFE EC2 instance will be delpoyed."
   type        = string
@@ -77,7 +61,7 @@ variable "active_active" {
 
 variable "ami_id" {
   type        = string
-  description = "AMI ID to use for TFE instances and bastion host"
+  description = "AMI ID to use for TFE instances"
 }
 
 variable "friendly_name_prefix" {

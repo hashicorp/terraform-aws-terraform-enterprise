@@ -1,16 +1,3 @@
-# Bastion
-output "bastion_public_dns" {
-  value = module.bastion.bastion_public_dns
-
-  description = "The public DNS name assigned to the bastion EC2 instance."
-}
-
-output "bastion_public_ip" {
-  value = module.bastion.bastion_public_ip
-
-  description = "The public IP address assigned to the bastion EC2 instance."
-}
-
 # KMS
 output "kms_key_arn" {
   value = aws_kms_key.tfe_key.arn

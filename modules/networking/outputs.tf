@@ -1,9 +1,3 @@
-output "bastion_host_subnet" {
-  value = module.vpc.public_subnets[0]
-
-  description = "The identity of the public subnetwork in which the bastion EC2 instance will be deployed."
-}
-
 output "network_id" {
   value = module.vpc.vpc_id
 
