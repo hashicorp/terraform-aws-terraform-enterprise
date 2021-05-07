@@ -110,3 +110,10 @@ data "aws_iam_policy_document" "tfe_asg_discovery" {
     resources = ["*"]
   }
 }
+
+resource "aws_iam_role_policy_attachment" "misc" {
+  for_each = var.iam_role_policy_arns
+
+  role       = aws_iam_role.instance_role.name
+  policy_arn = each.value
+}

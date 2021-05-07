@@ -63,7 +63,8 @@ module "service_accounts" {
   friendly_name_prefix     = var.friendly_name_prefix
   kms_key_arn              = aws_kms_key.tfe_key.arn
 
-  common_tags = var.common_tags
+  common_tags          = var.common_tags
+  iam_role_policy_arns = var.iam_role_policy_arns
 }
 
 module "secrets_manager" {

@@ -139,6 +139,12 @@ variable "iact_subnet_time_limit" {
   type        = number
 }
 
+variable "iam_role_policy_arns" {
+  default     = []
+  description = "A set of Amazon Resource Names of IAM role policys to be attached to the TFE IAM role."
+  type        = set(string)
+}
+
 # KMS
 variable "kms_key_alias" {
   type        = string
