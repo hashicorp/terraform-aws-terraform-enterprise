@@ -10,12 +10,6 @@ variable "common_tags" {
 }
 
 # Network
-variable "deploy_vpc" {
-  type        = bool
-  description = "(Optional) Boolean indicating whether to deploy a VPC (true) or not (false)."
-  default     = true
-}
-
 variable "network_cidr" {
   type        = string
   description = "(Optional) CIDR block for VPC."

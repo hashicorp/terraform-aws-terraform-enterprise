@@ -77,9 +77,10 @@ module "secrets_manager" {
 }
 
 module "networking" {
+  count = var.deploy_vpc ? 1 : 0
+
   source = "./modules/networking"
 
-  deploy_vpc                   = var.deploy_vpc
   friendly_name_prefix         = var.friendly_name_prefix
   network_cidr                 = var.network_cidr
   network_private_subnet_cidrs = var.network_private_subnet_cidrs
@@ -89,10 +90,10 @@ module "networking" {
 }
 
 locals {
-  network_id                   = var.deploy_vpc ? module.networking.network_id : var.network_id
-  network_private_subnets      = var.deploy_vpc ? module.networking.network_private_subnets : var.network_private_subnets
-  network_public_subnets       = var.deploy_vpc ? module.networking.network_public_subnets : var.network_public_subnets
-  network_private_subnet_cidrs = var.deploy_vpc ? module.networking.network_private_subnet_cidrs : var.network_private_subnet_cidrs
+  network_id                   = var.deploy_vpc ? module.networking[0].network_id : var.network_id
+  network_private_subnets      = var.deploy_vpc ? module.networking[0].network_private_subnets : var.network_private_subnets
+  network_public_subnets       = var.deploy_vpc ? module.networking[0].network_public_subnets : var.network_public_subnets
+  network_private_subnet_cidrs = var.deploy_vpc ? module.networking[0].network_private_subnet_cidrs : var.network_private_subnet_cidrs
 }
 
 module "redis" {

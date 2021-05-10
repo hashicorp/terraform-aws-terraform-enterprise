@@ -13,25 +13,25 @@ output "kms_key_id" {
 
 # Network
 output "network_id" {
-  value = module.networking.network_id
+  value = local.network_id
 
   description = "The identity of the VPC in which resources are deployed."
 }
 
 output "private_subnet_ids" {
-  value = module.networking.network_private_subnets
+  value = local.network_private_subnets
 
   description = "The identities of the private subnetworks deployed within the VPC."
 }
 
 output "public_subnet_ids" {
-  value = module.networking.network_public_subnets
+  value = local.network_public_subnets
 
   description = "The identities of the public subnetworks deployed within the VPC."
 }
 
 output "network_private_subnet_cidrs" {
-  value = module.networking.network_private_subnet_cidrs
+  value = local.network_private_subnet_cidrs
 
   description = "The CIDR blocks of the private subnetworks deployed within the VPC."
 }
