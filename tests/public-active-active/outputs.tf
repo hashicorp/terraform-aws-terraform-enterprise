@@ -1,6 +1,8 @@
 output "public_active_active" {
   value       = module.public_active_active
   description = "The output of all the public_active_active module."
+  # This output is marked as sensitive to work around a bug in Terraform 0.14
+  sensitive = true
 }
 
 output "tfe_url" {
