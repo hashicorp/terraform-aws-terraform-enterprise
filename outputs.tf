@@ -93,3 +93,9 @@ output "tfe_url" {
   value       = "https://${local.fqdn}/"
   description = "The URL to the TFE application."
 }
+
+output "tfe_autoscaling_group" {
+  value = module.vm.tfe_autoscaling_group
+
+  description = "The autoscaling group which hosts the TFE EC2 instance(s)."
+}
