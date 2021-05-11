@@ -1,12 +1,5 @@
 terraform {
-  backend "remote" {
-    organization = "terraform-enterprise-modules-test"
-
-    workspaces {
-      name = "aws-public-active-active"
-    }
-  }
-  required_version = ">= 0.13"
+  required_version = ">= 0.14"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
