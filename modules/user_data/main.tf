@@ -216,10 +216,4 @@ locals {
       )
     }
   )
-  bastion_user_data = templatefile(
-    "${path.module}/templates/bastion_user_data.sh.tpl",
-    {
-      tfe_bastion_private_key = var.generated_bastion_key_private
-    }
-  )
 }

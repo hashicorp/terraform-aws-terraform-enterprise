@@ -36,16 +36,6 @@ resource "aws_security_group_rule" "tfe_outbound" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-resource "aws_security_group_rule" "tfe_bastion_ssh_allow" {
-  count                    = var.deploy_bastion ? 1 : 0
-  security_group_id        = aws_security_group.tfe_instance.id
-  type                     = "ingress"
-  from_port                = 22
-  to_port                  = 22
-  protocol                 = "tcp"
-  source_security_group_id = var.bastion_sg
-}
-
 resource "aws_security_group_rule" "tfe_dashboard" {
   count                    = var.active_active ? 0 : 1
   security_group_id        = aws_security_group.tfe_instance.id
@@ -61,10 +51,10 @@ resource "aws_launch_configuration" "tfe" {
   name_prefix      = "${var.friendly_name_prefix}-tfe-ec2-asg-lt-"
   image_id         = var.ami_id
   instance_type    = var.instance_type
-  key_name         = var.deploy_bastion ? var.bastion_key : null
   user_data_base64 = var.user_data_base64
 
   iam_instance_profile = var.aws_iam_instance_profile
+  key_name             = var.key_name
   security_groups      = [aws_security_group.tfe_instance.id]
 
   metadata_options {

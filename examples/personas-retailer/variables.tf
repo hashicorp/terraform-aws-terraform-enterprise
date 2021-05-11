@@ -23,11 +23,6 @@ variable "license_path" {
   description = "File path to Replicated license file"
 }
 
-variable "existing_aws_keypair" {
-  type        = string
-  description = "An existing AWS Key Pair to SSH into the Bastion host."
-}
-
 variable "acm_certificate_arn" {
   type        = string
   description = "The ARN of an existing ACM certificate."
@@ -54,4 +49,9 @@ variable "squid_volume_size" {
   type        = string
   default     = "256"
   description = "Volume size in GiB for Squid proxy"
+}
+
+variable "key_name" {
+  description = "The name of the key pair to be used for SSH access to the EC2 instance(s)."
+  type        = string
 }

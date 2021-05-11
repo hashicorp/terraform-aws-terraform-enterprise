@@ -3,7 +3,7 @@
 variable "ami_id" {
   type        = string
   default     = ""
-  description = "AMI ID to use for TFE instances and bastion host"
+  description = "AMI ID to use for TFE instances"
 }
 
 variable "acm_certificate_arn" {
@@ -66,12 +66,6 @@ variable "instance_type" {
 variable "network_id" {
   default     = ""
   description = "The identity of the VPC in which resources will be deployed."
-  type        = string
-}
-
-variable "bastion_host_subnet" {
-  default     = ""
-  description = "The identity of the subnetwork in which the bastion EC2 instance will be deployed."
   type        = string
 }
 
@@ -139,6 +133,18 @@ variable "iact_subnet_time_limit" {
   type        = number
 }
 
+variable "iam_role_policy_arns" {
+  default     = []
+  description = "A set of Amazon Resource Names of IAM role policys to be attached to the TFE IAM role."
+  type        = set(string)
+}
+
+variable "key_name" {
+  default     = null
+  description = "The name of the key pair to be used for SSH access to the EC2 instance(s)."
+  type        = string
+}
+
 # KMS
 variable "kms_key_alias" {
   type        = string
@@ -200,37 +206,6 @@ variable "admin_dashboard_ingress_ranges" {
   type        = list(string)
   description = "(Optional) List of CIDR ranges that are allowed to acces the admin dashboard. Only used for standalone installations."
   default     = ["0.0.0.0/0"]
-}
-
-# Bastion
-variable "deploy_bastion" {
-  type        = bool
-  description = "(Optional) Boolean indicating whether to deploy a Bastion instance (true) or not (false). Only specify true if deploy_vpc is true."
-  default     = true
-}
-
-variable "bastion_keypair" {
-  type        = string
-  description = "(Optional) Specifies existing SSH key pair to use for Bastion instance. Only specify if deploy_bastion is true."
-  default     = null
-}
-
-variable "bastion_ingress_cidr_allow" {
-  type        = list(string)
-  description = "(Optional) List of CIDR ranges to allow SSH ingress to Bastion instance. Only specify if deploy_bastion is true."
-  default     = ["0.0.0.0/0"]
-}
-
-variable "bastion_key_private" {
-  type        = string
-  description = "(Optional) Private key for existing bastion host. Only specify if deploy_bastion is false."
-  default     = ""
-}
-
-variable "bastion_sg" {
-  type        = string
-  description = "(Optional) Security group id for bastion security group to allow traffic between bastion and nodes. Only specify if deploy_bastion is false."
-  default     = ""
 }
 
 # PROXY SETTINGS

@@ -1,9 +1,3 @@
-output "bastion_user_data_base64" {
-  value = base64encode(local.bastion_user_data)
-
-  description = "The Base64 encoded user data script to be executed when the bastion EC2 intance is launched."
-}
-
 output "replicated_dashboard_password" {
   value = random_string.password.result
 

@@ -51,8 +51,6 @@ resource "aws_instance" "proxy" {
     aws_security_group.proxy.id
   ]
 
-  key_name = var.existing_aws_keypair
-
   user_data = base64encode(
     templatefile(
       "${path.module}/templates/mitmproxy.sh.tpl",

@@ -63,7 +63,8 @@ module "service_accounts" {
   friendly_name_prefix     = var.friendly_name_prefix
   kms_key_arn              = aws_kms_key.tfe_key.arn
 
-  common_tags = var.common_tags
+  common_tags          = var.common_tags
+  iam_role_policy_arns = var.iam_role_policy_arns
 }
 
 module "secrets_manager" {
@@ -76,9 +77,10 @@ module "secrets_manager" {
 }
 
 module "networking" {
+  count = var.deploy_vpc ? 1 : 0
+
   source = "./modules/networking"
 
-  deploy_vpc                   = var.deploy_vpc
   friendly_name_prefix         = var.friendly_name_prefix
   network_cidr                 = var.network_cidr
   network_private_subnet_cidrs = var.network_private_subnet_cidrs
@@ -88,11 +90,10 @@ module "networking" {
 }
 
 locals {
-  bastion_host_subnet          = var.deploy_vpc ? module.networking.bastion_host_subnet : var.bastion_host_subnet
-  network_id                   = var.deploy_vpc ? module.networking.network_id : var.network_id
-  network_private_subnets      = var.deploy_vpc ? module.networking.network_private_subnets : var.network_private_subnets
-  network_public_subnets       = var.deploy_vpc ? module.networking.network_public_subnets : var.network_public_subnets
-  network_private_subnet_cidrs = var.deploy_vpc ? module.networking.network_private_subnet_cidrs : var.network_private_subnet_cidrs
+  network_id                   = var.deploy_vpc ? module.networking[0].network_id : var.network_id
+  network_private_subnets      = var.deploy_vpc ? module.networking[0].network_private_subnets : var.network_private_subnets
+  network_public_subnets       = var.deploy_vpc ? module.networking[0].network_public_subnets : var.network_public_subnets
+  network_private_subnet_cidrs = var.deploy_vpc ? module.networking[0].network_private_subnet_cidrs : var.network_private_subnet_cidrs
 }
 
 module "redis" {
@@ -131,54 +132,30 @@ module "database" {
   common_tags = var.common_tags
 }
 
-module "bastion" {
-  source = "./modules/bastion"
-
-  ami_id                     = local.ami_id
-  bastion_host_subnet        = local.bastion_host_subnet
-  bastion_ingress_cidr_allow = var.bastion_ingress_cidr_allow
-  bastion_keypair            = var.bastion_keypair
-  deploy_bastion             = var.deploy_bastion
-  deploy_vpc                 = var.deploy_vpc
-  friendly_name_prefix       = var.friendly_name_prefix
-  kms_key_id                 = aws_kms_key.tfe_key.arn
-  network_id                 = local.network_id
-  user_data_base64           = module.user_data.bastion_user_data_base64
-
-  common_tags = var.common_tags
-}
-
-locals {
-  bastion_key_private = var.deploy_bastion ? module.bastion.generated_bastion_key_private : var.bastion_key_private
-  bastion_key_public  = var.deploy_bastion ? module.bastion.generated_bastion_key_public : var.bastion_key_private
-  bastion_sg          = var.deploy_bastion ? module.bastion.bastion_sg : var.bastion_sg
-}
-
 module "user_data" {
   source = "./modules/user_data"
 
-  active_active                 = local.active_active
-  aws_bucket_bootstrap          = var.external_bootstrap_bucket != null ? var.external_bootstrap_bucket : module.object_storage.s3_bucket_bootstrap
-  aws_bucket_data               = module.object_storage.s3_bucket_data
-  aws_region                    = data.aws_region.current.name
-  fqdn                          = local.fqdn
-  generated_bastion_key_private = local.bastion_key_private
-  iact_subnet_list              = var.iact_subnet_list
-  iact_subnet_time_limit        = var.iact_subnet_time_limit
-  kms_key_arn                   = aws_kms_key.tfe_key.arn
-  pg_dbname                     = module.database.db_name
-  pg_password                   = module.database.db_password
-  pg_netloc                     = module.database.db_endpoint
-  pg_user                       = module.database.db_username
-  proxy_cert_bundle_name        = var.proxy_cert_bundle_name
-  proxy_ip                      = var.proxy_ip
-  no_proxy                      = var.no_proxy
-  redis_host                    = module.redis.redis_endpoint
-  redis_pass                    = module.redis.redis_password
-  redis_port                    = module.redis.redis_port
-  redis_use_password_auth       = module.redis.redis_use_password_auth
-  redis_use_tls                 = module.redis.redis_transit_encryption_enabled
-  tfe_license                   = var.tfe_license_name
+  active_active           = local.active_active
+  aws_bucket_bootstrap    = var.external_bootstrap_bucket != null ? var.external_bootstrap_bucket : module.object_storage.s3_bucket_bootstrap
+  aws_bucket_data         = module.object_storage.s3_bucket_data
+  aws_region              = data.aws_region.current.name
+  fqdn                    = local.fqdn
+  iact_subnet_list        = var.iact_subnet_list
+  iact_subnet_time_limit  = var.iact_subnet_time_limit
+  kms_key_arn             = aws_kms_key.tfe_key.arn
+  pg_dbname               = module.database.db_name
+  pg_password             = module.database.db_password
+  pg_netloc               = module.database.db_endpoint
+  pg_user                 = module.database.db_username
+  proxy_cert_bundle_name  = var.proxy_cert_bundle_name
+  proxy_ip                = var.proxy_ip
+  no_proxy                = var.no_proxy
+  redis_host              = module.redis.redis_endpoint
+  redis_pass              = module.redis.redis_password
+  redis_port              = module.redis.redis_port
+  redis_use_password_auth = module.redis.redis_use_password_auth
+  redis_use_tls           = module.redis.redis_transit_encryption_enabled
+  tfe_license             = var.tfe_license_name
 }
 
 module "load_balancer" {
@@ -225,11 +202,9 @@ module "vm" {
   aws_lb                              = var.load_balancing_scheme == "PRIVATE_TCP" ? null : module.load_balancer[0].aws_lb_security_group
   aws_lb_target_group_tfe_tg_443_arn  = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_443_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_443_arn
   aws_lb_target_group_tfe_tg_8800_arn = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn
-  deploy_bastion                      = var.deploy_bastion
-  bastion_key                         = local.bastion_key_public
-  bastion_sg                          = local.bastion_sg
   default_ami_id                      = local.default_ami_id
   friendly_name_prefix                = var.friendly_name_prefix
+  key_name                            = var.key_name
   instance_type                       = var.instance_type
   network_id                          = local.network_id
   network_subnets_private             = local.network_private_subnets

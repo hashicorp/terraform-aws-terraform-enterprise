@@ -18,25 +18,25 @@ As the goal for this main module is to provide a drop-in solution for installing
 
 This module is intended to run in an AWS account with minimal preparation, however it does have the following pre-requisites:
 
-### Terraform version >= 0.13
+### Terraform version >= 0.14
 
-This module requires Terraform version `0.13` or greater to be installed on the running machine.
+This module requires Terraform version `0.14` or greater to be installed on the running machine.
 
 ### Credentials / Permissions
 
 #### AWS Services Used
 
-* AWS Identity & Access Management (IAM)
-* AWS Key Management System (KMS)
-* Amazon RDS (Postgres)
-* Amazon EC2
-* Amazon Elastic Loadbalancing (ALB)
-* Amazon Certificate Manager (ACM)
-* Amazon Route53
-* Amazon Elasticache (Redis)
-* Amazon VPC
-* Amazon S3
-* [OPTIONAL] Amazon Secrets Manager
+- AWS Identity & Access Management (IAM)
+- AWS Key Management System (KMS)
+- Amazon RDS (Postgres)
+- Amazon EC2
+- Amazon Elastic Loadbalancing (ALB)
+- Amazon Certificate Manager (ACM)
+- Amazon Route53
+- Amazon Elasticache (Redis)
+- Amazon VPC
+- Amazon S3
+- [OPTIONAL] Amazon Secrets Manager
 
 ### Public Hosted Zone
 
@@ -49,6 +49,7 @@ If you're managing DNS outside of Route53, please see the documentation on [crea
 Certificate validation can take up two hours, causing timeouts during module apply if the cert is generated as one of the resources contained in the module. For that reason, once the hosted zone has been created, the certificate must be created or imported into ACM. To create or import manually, see the [AWS ACM certificate documentation](https://docs.aws.amazon.com/acm/latest/userguide/gs.html). To create or manage certificates with Terraform, we recommend the [official ACM module in the Terraform Registry](https://registry.terraform.io/modules/terraform-aws-modules/acm/aws/latest).
 
 **Note:** This module has been tested in the following AWS regions:
+
 - `us-east-1`
 - `eu-west-1`
 - `eu-west-2`
@@ -74,7 +75,7 @@ module "tfe_node" {
 }
 ```
 
-- *OPTIONAL*: This module can be deployed with a custom AMI rather than the default base given (Ubuntu 20.04 LTS), and has been verified to be functional with Ubuntu 20.04 LTS and RHEL 7.x based images. To deploy using a custom image, use the following configuration instead:
+- _OPTIONAL_: This module can be deployed with a custom AMI rather than the default base given (Ubuntu 20.04 LTS), and has been verified to be functional with Ubuntu 20.04 LTS and RHEL 7.x based images. To deploy using a custom image, use the following configuration instead:
 
 ```hcl
 provider "aws" {
@@ -93,39 +94,33 @@ module "tfe_node" {
 
 - Run `terraform init` and `terraform apply`
 
-* Note: When using SSH to connect from the bastion host to the TFE instances, specify the SSH private key with the following command:
-
-```shell
-$ ssh -i ~/.ssh/tfe <tfe instance>
-```
-
 ## Module Manifest
 
 This module will create all infrastructure resources required to install Terraform Enterprise in a standalone or active-active configuration (depending on how many nodes you specify) on AWS in the designated region according to the Reference Architecture. The default base AMI used is Ubuntu 20.04 LTS but you may specify a RHEL 7.x AMI ID by using the `ami_id` variable.
 
 The resources created are:
 
-* VPC with public and private subnets and bastion host
-* PostgreSQL instance
-* Redis cache
-* S3 bucket for installation bootstrapping
-* Auto-scaling group behind Application Load Balancer (ALB)
-* Secrets Manager Secret used for deploys
-* KMS key
-* IAM Instance Role and IAM Policy to allow instances to retrieve bootstrap secrets
-* Route53 A Record for Load Balancer on TFE domain
-* Supporting security groups and rules for application functionality
+- VPC with public and private subnets
+- PostgreSQL instance
+- Redis cache
+- S3 bucket for installation bootstrapping
+- Auto-scaling group behind Application Load Balancer (ALB)
+- Secrets Manager Secret used for deploys
+- KMS key
+- IAM Instance Role and IAM Policy to allow instances to retrieve bootstrap secrets
+- Route53 A Record for Load Balancer on TFE domain
+- Supporting security groups and rules for application functionality
 
 ## Examples
 
 We have included documentation and reference examples for additional common installation scenarios for TFE, as well as examples for supporting resources that lack official modules.
 
-* [Example: Deploying behind a proxy](./examples/behind-proxy)
-* [Example: Deploying into an existing private network](./examples/existing-private-network)
-* [Example: Deploying while managing DNS outside of AWS](./examples/external-dns)
-* [Example: Deploying the Startup Persona](./examples/personas-startup)
-* [Example: Deploying the Retailer Persona](./examples/personas-retailer)
-* [Example: Deploying the Bank Persona](./examples/personas-bank)
+- [Example: Deploying behind a proxy](./examples/behind-proxy)
+- [Example: Deploying into an existing private network](./examples/existing-private-network)
+- [Example: Deploying while managing DNS outside of AWS](./examples/external-dns)
+- [Example: Deploying the Startup Persona](./examples/personas-startup)
+- [Example: Deploying the Retailer Persona](./examples/personas-retailer)
+- [Example: Deploying the Bank Persona](./examples/personas-bank)
 
 ## License
 

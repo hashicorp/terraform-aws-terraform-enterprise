@@ -27,3 +27,9 @@ output "retailer_proxy_private_address" {
 
   description = "The private IP address of the proxy EC2 instance."
 }
+
+output "tfe_autoscaling_group_name" {
+  value = module.retailer_deployment.tfe_autoscaling_group.name
+
+  description = "The name of the autoscaling group which hosts the TFE EC2 instance(s)."
+}

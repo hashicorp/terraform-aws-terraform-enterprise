@@ -1,16 +1,3 @@
-# Bastion
-output "bastion_public_dns" {
-  value = module.bastion.bastion_public_dns
-
-  description = "The public DNS name assigned to the bastion EC2 instance."
-}
-
-output "bastion_public_ip" {
-  value = module.bastion.bastion_public_ip
-
-  description = "The public IP address assigned to the bastion EC2 instance."
-}
-
 # KMS
 output "kms_key_arn" {
   value = aws_kms_key.tfe_key.arn
@@ -26,27 +13,35 @@ output "kms_key_id" {
 
 # Network
 output "network_id" {
-  value = module.networking.network_id
+  value = local.network_id
 
   description = "The identity of the VPC in which resources are deployed."
+  # This output is marked as sensitive to work around a bug in Terraform 0.14
+  sensitive = true
 }
 
 output "private_subnet_ids" {
-  value = module.networking.network_private_subnets
+  value = local.network_private_subnets
 
   description = "The identities of the private subnetworks deployed within the VPC."
+  # This output is marked as sensitive to work around a bug in Terraform 0.14
+  sensitive = true
 }
 
 output "public_subnet_ids" {
-  value = module.networking.network_public_subnets
+  value = local.network_public_subnets
 
   description = "The identities of the public subnetworks deployed within the VPC."
+  # This output is marked as sensitive to work around a bug in Terraform 0.14
+  sensitive = true
 }
 
 output "network_private_subnet_cidrs" {
-  value = module.networking.network_private_subnet_cidrs
+  value = local.network_private_subnet_cidrs
 
   description = "The CIDR blocks of the private subnetworks deployed within the VPC."
+  # This output is marked as sensitive to work around a bug in Terraform 0.14
+  sensitive = true
 }
 
 # Security Groups
@@ -97,4 +92,10 @@ output "login_url" {
 output "tfe_url" {
   value       = "https://${local.fqdn}/"
   description = "The URL to the TFE application."
+}
+
+output "tfe_autoscaling_group" {
+  value = module.vm.tfe_autoscaling_group
+
+  description = "The autoscaling group which hosts the TFE EC2 instance(s)."
 }

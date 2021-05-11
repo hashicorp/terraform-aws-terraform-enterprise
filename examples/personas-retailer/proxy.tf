@@ -23,8 +23,6 @@ resource "aws_instance" "proxy" {
     aws_security_group.proxy.id,
   ]
 
-  key_name = var.existing_aws_keypair
-
   user_data = data.template_cloudinit_config.config_proxy.rendered
 
   root_block_device {
