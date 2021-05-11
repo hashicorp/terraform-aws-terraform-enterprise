@@ -85,3 +85,9 @@ variable "network_private_subnet_cidrs" {
   description = "(Optional) List of private subnet CIDR ranges to create in VPC."
   default     = ["10.0.32.0/20", "10.0.48.0/20"]
 }
+
+variable "key_name" {
+  default     = null
+  description = "The name of the key pair to be used for SSH access to the EC2 instance(s)."
+  type        = string
+}

@@ -54,6 +54,7 @@ resource "aws_launch_configuration" "tfe" {
   user_data_base64 = var.user_data_base64
 
   iam_instance_profile = var.aws_iam_instance_profile
+  key_name             = var.key_name
   security_groups      = [aws_security_group.tfe_instance.id]
 
   metadata_options {

@@ -139,6 +139,12 @@ variable "iam_role_policy_arns" {
   type        = set(string)
 }
 
+variable "key_name" {
+  default     = null
+  description = "The name of the key pair to be used for SSH access to the EC2 instance(s)."
+  type        = string
+}
+
 # KMS
 variable "kms_key_alias" {
   type        = string

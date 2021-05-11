@@ -204,6 +204,7 @@ module "vm" {
   aws_lb_target_group_tfe_tg_8800_arn = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn
   default_ami_id                      = local.default_ami_id
   friendly_name_prefix                = var.friendly_name_prefix
+  key_name                            = var.key_name
   instance_type                       = var.instance_type
   network_id                          = local.network_id
   network_subnets_private             = local.network_private_subnets
