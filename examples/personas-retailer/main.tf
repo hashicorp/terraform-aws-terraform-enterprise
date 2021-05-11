@@ -60,4 +60,5 @@ module "retailer_deployment" {
   redis_encryption_at_rest    = false
 
   iam_role_policy_arns = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]
+  key_name             = var.key_name
 }

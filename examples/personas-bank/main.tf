@@ -77,5 +77,8 @@ module "bank_deployment" {
   redis_encryption_in_transit = true
   redis_encryption_at_rest    = true
 
+  iam_role_policy_arns = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]
+  key_name             = var.key_name
+
   common_tags = var.common_tags
 }

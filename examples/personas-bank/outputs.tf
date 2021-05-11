@@ -15,3 +15,9 @@ output "bank_deployment" {
 
   description = "The outputs of the root module."
 }
+
+output "tfe_autoscaling_group_name" {
+  value = module.bank_deployment.tfe_autoscaling_group.name
+
+  description = "The name of the autoscaling group which hosts the TFE EC2 instance(s)."
+}

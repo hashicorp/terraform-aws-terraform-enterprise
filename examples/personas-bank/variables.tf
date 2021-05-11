@@ -33,3 +33,8 @@ variable "common_tags" {
   description = "(Optional) Map of common tags for all taggable AWS resources."
   default     = {}
 }
+
+variable "key_name" {
+  description = "The name of the key pair to be used for SSH access to the EC2 instance(s)."
+  type        = string
+}

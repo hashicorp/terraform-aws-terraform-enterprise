@@ -50,3 +50,8 @@ variable "squid_volume_size" {
   default     = "256"
   description = "Volume size in GiB for Squid proxy"
 }
+
+variable "key_name" {
+  description = "The name of the key pair to be used for SSH access to the EC2 instance(s)."
+  type        = string
+}

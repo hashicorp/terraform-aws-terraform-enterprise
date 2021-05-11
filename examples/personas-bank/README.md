@@ -34,7 +34,7 @@ not be used. Therefore when deploying, the existing VPC must have:
 
 - Ensure account meets module pre-requisites from above.
 - Create a Terraform configuration that pulls in this module and specifies
-    values of the required variables:
+  values of the required variables:
 
 ```hcl
 provider "aws" {
@@ -70,14 +70,29 @@ With the configuration created, run `terraform init` and `terraform apply` to pr
 An SOCKS5 proxy over an SSH channel on your workstation can be used
 to access the TFE deployment from outside of the AWS network. The
 following example demonstrates how to establish a SOCKS5 proxy using
-Bash, the AWS CLI, and an Internet browser.
+Bash, the AWS CLI, jq, ssh, and an Internet browser.
 
-First, establish the SOCKS5 proxy. The following command creates a
+First, establish the SOCKS5 proxy. The following commands create a
 proxy listening to port 5000 and bound to localhost which forwards
 traffic through one of the compute instances in the TFE delpoyment.
 Be sure to change the values in between `< >`:
 
 ```bash
+group_name=$(terraform output tfe_autoscaling_group_name)
+instance_id=$( \
+  aws autoscaling describe-auto-scaling-groups \
+    --auto-scaling-group-name $group_name | \
+    jq --raw-output .AutoScalingGroups[0].Instances[0].InstanceId
+)
+ssh \
+  -i <pathname of private key from key pair specified by var.key_name> \
+  -o 'ProxyCommand sh -c "\
+    aws ssm start-session \
+      --target %h \
+      --document-name AWS-StartSSHSession \
+      --parameters \'portNumber=%p\'"' \
+  -N -p 22 -D localhost:5000 \
+  ec2-user@$instance_id
 ```
 
 Second, a web browser or the operating system must be configured to use
@@ -86,7 +101,7 @@ the browser or operating system in use, but in Firefox, this can be
 configured in:
 
 > Preferences > Network Settings > Manual proxy configuration >
-SOCKS: Host; Port
+> SOCKS: Host; Port
 
 Third, the URL from the login_url Terraform output can be accessed
 through the browser to start using the deployment. It is expected that
