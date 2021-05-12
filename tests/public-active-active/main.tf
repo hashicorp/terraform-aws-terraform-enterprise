@@ -24,6 +24,7 @@ module "public_active_active" {
   external_bootstrap_bucket    = var.external_bootstrap_bucket
   iact_subnet_list             = var.iact_subnet_list
   instance_type                = "m5.xlarge"
+  kms_key_alias                = "test-public-active-active"
   load_balancing_scheme        = "PUBLIC"
   network_id                   = var.network_id
   network_private_subnet_cidrs = var.network_private_subnet_cidrs
