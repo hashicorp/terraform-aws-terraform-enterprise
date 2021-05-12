@@ -55,11 +55,27 @@ module "vpc" {
   }
 }
 
+resource "aws_security_group" "ssm" {
+  description = "The security group of Systems Manager for TFE."
+  name        = "${var.friendly_name_prefix}-tfe"
+  tags        = var.common_tags
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+    from_port = 443
+    protocol  = "tcp"
+    to_port   = 443
+
+    cidr_blocks = module.vpc.private_subnets_cidr_blocks
+    description = "Allow the ingress of HTTPS traffic from all private subnets."
+  }
+}
+
 module "vpc_endpoints" {
   source  = "terraform-aws-modules/vpc/aws//modules/vpc-endpoints"
   version = "~> 3.0"
 
-  security_group_ids = [module.vpc.default_security_group_id]
+  security_group_ids = [aws_security_group.ssm.id]
   vpc_id             = module.vpc.vpc_id
   tags               = var.common_tags
 
