@@ -15,7 +15,7 @@ install_jq() {
 install_awscli() {
   if ! command -v aws &> /dev/null
   then
-   	echo "[$(date +"%FT%T")] Install AWS CLI" | tee -a /var/log/ptfe.log
+    echo "[$(date +"%FT%T")] Install AWS CLI" | tee -a /var/log/ptfe.log
     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
     unzip awscliv2.zip
     ./aws/install
