@@ -82,9 +82,11 @@ jobs:
       - name: Wait For TFE
         id: wait-for-tfe
         timeout-minutes: 15
+        env:
+          HEALTH_CHECK_URL: ${{ steps.retrieve-health-check-url.outputs.stdout }}
         run: |
           echo "Curling \`health_check_url\` for a return status of 200..."
-          while ! curl -sfS --max-time 5 ${{ steps.retrieve-health-check-url.outputs.stdout }}; do sleep 5; done
+          while ! curl -sfS --max-time 5 "$HEALTH_CHECK_URL"; do sleep 5; done
 
       - name: Retrieve TFE URL
         id: retrieve-tfe-url
@@ -100,9 +102,11 @@ jobs:
 
       - name: Retrieve IACT
         id: retrieve-iact
+        env:
+          IACT_URL: ${{ steps.retrieve-iact-url.outputs.stdout }}
         run: |
           echo "::set-output name=token::$( \
-            curl --fail --retry 5 --verbose ${{ steps.retrieve-iact-url.outputs.stdout }} )"
+            curl --fail --retry 5 --verbose "$IACT_URL" )"
 
       - name: Retrieve Initial Admin User URL
         id: retrieve-initial-admin-user-url
@@ -112,9 +116,13 @@ jobs:
 
       - name: Create Admin in TFE
         id: create-admin
+        env:
+          TFE_PASSWORD: ${{ secrets.TFE_PASSWORD }}
+          IAU_URL: ${{ steps.retrieve-initial-admin-user-url.outputs.stdout }}
+          IACT: ${{ steps.retrieve-iact.outputs.token }}
         run: |
           echo \
-            '{"username": "test", "email": "tf-onprem-team@hashicorp.com", "password": "${{ secrets.TFE_PASSWORD }}"}' \
+            '{"username": "test", "email": "tf-onprem-team@hashicorp.com", "password": "$TFE_PASSWORD"}' \
             > ./payload.json
           echo "::set-output name=response::$( \
             curl \
@@ -123,12 +131,14 @@ jobs:
             --verbose \
             --header 'Content-Type: application/json' \
             --data @./payload.json \
-            ${{ steps.retrieve-initial-admin-user-url.outputs.stdout }}?token=${{ steps.retrieve-iact.outputs.token }})"
+            "$IAU_URL"?token="$IACT")"
 
       - name: Retrieve Admin Token
         id: retrieve-admin-token
+        env:
+          RESPONSE: ${{ steps.create-admin.outputs.response }}
         run: |
-          echo "::set-output name=token::$(echo '${{ steps.create-admin.outputs.response }}' | jq --raw-output '.token')"
+          echo "::set-output name=token::$(echo "$RESPONSE" | jq --raw-output '.token')"
 
       - name: Run k6 Smoke Test
         id: run-smoke-test
