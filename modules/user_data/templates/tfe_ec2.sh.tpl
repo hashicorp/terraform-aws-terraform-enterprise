@@ -4,7 +4,7 @@ set -euo pipefail
 install_jq() {
   if ! command -v jq &> /dev/null
   then
-   	echo "[$(date +"%FT%T")] Install jq" | tee -a /var/log/ptfe.log
+    echo "[$(date +"%FT%T")] Install jq" | tee -a /var/log/ptfe.log
     curl --silent -Lo /bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
     chmod +x /bin/jq
   else
@@ -84,7 +84,7 @@ install_packages() {
     "ubuntu")
       if ! command -v unzip &> /dev/null
       then
-   	    echo "[$(date +"%FT%T")] Install unzip" | tee -a /var/log/ptfe.log
+        echo "[$(date +"%FT%T")] Install unzip" | tee -a /var/log/ptfe.log
         apt-get update -y
         apt-get install -y unzip
       else
