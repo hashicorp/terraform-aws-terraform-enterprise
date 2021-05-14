@@ -287,11 +287,11 @@ jobs:
         run: |
           ssh \
             -i ./ssh-key.pem \
-            -o 'ProxyCommand sh -c "\
-              aws ssm start-session \
+            -o 'ProxyCommand sh -c \
+              "aws ssm start-session \
                 --target %h \
                 --document-name AWS-StartSSHSession \
-                --parameters \'portNumber=%p\'"' \
+                --parameters \"portNumber=%p\""' \
             -f -N -p 22 -D localhost:5000 \
             ec2-user@"$INSTANCE_ID"
           echo "Curling \`health_check_url\` for a return status of 200..."
@@ -320,11 +320,11 @@ jobs:
         run: |
           ssh \
             -i ./ssh-key.pem \
-            -o 'ProxyCommand sh -c "\
-              aws ssm start-session \
+            -o 'ProxyCommand sh -c \
+              "aws ssm start-session \
                 --target %h \
                 --document-name AWS-StartSSHSession \
-                --parameters \'portNumber=%p\'"' \
+                --parameters \"portNumber=%p\""' \
             -f -N -p 22 -D localhost:5000 \
             ec2-user@"$INSTANCE_ID"
           echo "::set-output name=token::$( \
@@ -346,11 +346,11 @@ jobs:
         run: |
           ssh \
             -i ./ssh-key.pem \
-            -o 'ProxyCommand sh -c "\
-              aws ssm start-session \
+            -o 'ProxyCommand sh -c \
+              "aws ssm start-session \
                 --target %h \
                 --document-name AWS-StartSSHSession \
-                --parameters \'portNumber=%p\'"' \
+                --parameters \"portNumber=%p\""' \
             -f -N -p 22 -D localhost:5000 \
             ec2-user@"INSTANCE_ID"
           echo \
@@ -387,11 +387,11 @@ jobs:
         run: |
           ssh \
             -i ./ssh-key.pem \
-            -o 'ProxyCommand sh -c "\
-              aws ssm start-session \
+            -o 'ProxyCommand sh -c \
+              "aws ssm start-session \
                 --target %h \
                 --document-name AWS-StartSSHSession \
-                --parameters \'portNumber=%p\'"' \
+                --parameters \"portNumber=%p\""' \
             -f -N -p 22 -D localhost:5000 \
             ec2-user@"$INSTANCE_ID"
           make smoke-test
