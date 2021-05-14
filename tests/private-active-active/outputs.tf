@@ -30,10 +30,8 @@ output "initial_admin_user_url" {
   description = "The URL with path to access the TFE instance Initial Admin User."
 }
 
-output "tfe_autoscaling_group_name" {
-  value = module.private_active_active.tfe_autoscaling_group.name
+output "tfe_instance_id" {
+  value = data.aws_instances.main.ids[0]
 
-  description = "The name of the autoscaling group which hosts the TFE EC2 instance(s)."
-  # This output is marked as sensitive to work around a bug in Terraform 0.14
-  sensitive = true
+  description = "The ID of a TFE EC2 instance."
 }
