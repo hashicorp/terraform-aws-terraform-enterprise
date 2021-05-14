@@ -256,21 +256,11 @@ jobs:
         run: |
           terraform output -no-color -raw health_check_url
 
-      - name: Retrieve Auto Scaling Group name
-        id: retrieve-asg-name
-        working-directory: ${{ env.WORK_DIR_PATH }}
-        run: |
-          terraform output -no-color -raw tfe_autoscaling_group_name
-
       - name: Retrieve Instance ID
         id: retrieve-instance-id
-        env:
-          ASG_NAME: ${{ steps.retrieve-asg-name.outputs.stdout }}
+        working-directory: ${{ env.WORK_DIR_PATH }}
         run: |
-          echo "::set-output name=id::$( \
-            aws autoscaling describe-auto-scaling-groups \
-              --auto-scaling-group-name "$ASG_NAME" | \
-            jq --raw-output .AutoScalingGroups[0].Instances[0].InstanceId)"
+          terraform output -no-color -raw tfe_instance_id
 
       - name: Write Private SSH Key
         env:
@@ -282,7 +272,7 @@ jobs:
         id: wait-for-tfe
         timeout-minutes: 15
         env:
-          INSTANCE_ID: ${{ steps.retrieve-instance-id.outputs.id }}
+          INSTANCE_ID: ${{ steps.retrieve-instance-id.outputs.stdout }}
           HEALTH_CHECK_URL: ${{ steps.retrieve-health-check-url.outputs.stdout }}
         run: |
           ssh \
@@ -315,7 +305,7 @@ jobs:
       - name: Retrieve IACT
         id: retrieve-iact
         env:
-          INSTANCE_ID: ${{ steps.retrieve-instance-id.outputs.id }}
+          INSTANCE_ID: ${{ steps.retrieve-instance-id.outputs.stdout }}
           IACT_URL: ${{ steps.retrieve-iact-url.outputs.stdout }}
         run: |
           ssh \
@@ -339,7 +329,7 @@ jobs:
       - name: Create Admin in TFE
         id: create-admin
         env:
-          INSTANCE_ID: ${{ steps.retrieve-instance-id.outputs.id }}
+          INSTANCE_ID: ${{ steps.retrieve-instance-id.outputs.stdout }}
           TFE_PASSWORD: ${{ secrets.TFE_PASSWORD }}
           IAU_URL: ${{ steps.retrieve-initial-admin-user-url.outputs.stdout }}
           IACT_TOKEN: ${{ steps.retrieve-iact.outputs.token }}
@@ -377,7 +367,7 @@ jobs:
         id: run-smoke-test
         working-directory: ${{ env.K6_WORK_DIR_PATH }}
         env:
-          INSTANCE_ID: ${{ steps.retrieve-instance-id.outputs.id }}
+          INSTANCE_ID: ${{ steps.retrieve-instance-id.outputs.stdout }}
           K6_PATHNAME: "./k6"
           TFE_URL: "${{ steps.retrieve-tfe-url.outputs.stdout }}"
           TFE_API_TOKEN: "${{ steps.retrieve-admin-token.outputs.token }}"
