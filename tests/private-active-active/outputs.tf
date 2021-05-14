@@ -2,6 +2,8 @@ output "private_active_active" {
   value = module.private_active_active
 
   description = "The outputs of the private_active_active module."
+  # This output is marked as sensitive to work around a bug in Terraform 0.14
+  sensitive = true
 }
 
 output "tfe_url" {
@@ -32,4 +34,6 @@ output "tfe_autoscaling_group_name" {
   value = module.private_active_active.tfe_autoscaling_group.name
 
   description = "The name of the autoscaling group which hosts the TFE EC2 instance(s)."
+  # This output is marked as sensitive to work around a bug in Terraform 0.14
+  sensitive = true
 }
