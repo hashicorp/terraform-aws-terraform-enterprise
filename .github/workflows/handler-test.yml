@@ -168,7 +168,7 @@ jobs:
           body: |
             :computer: @hc-team-tfe
 
-            ### Terraform Test Report :newspaper:
+            ### Terraform Public Active/Active Test Report :newspaper:
 
             - Terraform Initialization :gear: `${{ steps.init.outcome }}`
 
@@ -413,7 +413,7 @@ jobs:
           body: |
             :computer: @hc-team-tfe
 
-            ### Terraform Test Report :newspaper:
+            ### Terraform Private Active/Active Test Report :newspaper:
 
             - Terraform Initialization :gear: `${{ steps.init.outcome }}`
 
