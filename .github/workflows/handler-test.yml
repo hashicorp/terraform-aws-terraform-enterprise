@@ -12,6 +12,7 @@ jobs:
     env:
       WORK_DIR_PATH: ./tests/public-active-active
       K6_WORK_DIR_PATH: ./tests/tfe-load-test
+      AWS_DEFAULT_REGION: us-east-2
     steps:
       - name: Create URL to the run output
         id: vars
@@ -59,8 +60,6 @@ jobs:
       - name: Terraform Validate
         id: validate
         working-directory: ${{ env.WORK_DIR_PATH }}
-        env:
-          AWS_DEFAULT_REGION: us-east-2
         run: terraform validate -no-color
 
       - name: Write GitHub Actions runner CIDR to Terraform Variables
@@ -236,8 +235,6 @@ jobs:
       - name: Terraform Validate
         id: validate
         working-directory: ${{ env.WORK_DIR_PATH }}
-        env:
-          AWS_DEFAULT_REGION: us-east-2
         run: terraform validate -no-color
 
       - name: Write GitHub Actions runner CIDR to Terraform Variables
@@ -272,6 +269,8 @@ jobs:
         id: wait-for-tfe
         timeout-minutes: 15
         env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.PRIVATE_ACTIVE_ACTIVE_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.PRIVATE_ACTIVE_ACTIVE_AWS_SECRET_ACCESS_KEY }}
           INSTANCE_ID: ${{ steps.retrieve-instance-id.outputs.stdout }}
           HEALTH_CHECK_URL: ${{ steps.retrieve-health-check-url.outputs.stdout }}
         run: |
@@ -305,6 +304,8 @@ jobs:
       - name: Retrieve IACT
         id: retrieve-iact
         env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.PRIVATE_ACTIVE_ACTIVE_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.PRIVATE_ACTIVE_ACTIVE_AWS_SECRET_ACCESS_KEY }}
           INSTANCE_ID: ${{ steps.retrieve-instance-id.outputs.stdout }}
           IACT_URL: ${{ steps.retrieve-iact-url.outputs.stdout }}
         run: |
@@ -329,6 +330,8 @@ jobs:
       - name: Create Admin in TFE
         id: create-admin
         env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.PRIVATE_ACTIVE_ACTIVE_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.PRIVATE_ACTIVE_ACTIVE_AWS_SECRET_ACCESS_KEY }}
           INSTANCE_ID: ${{ steps.retrieve-instance-id.outputs.stdout }}
           TFE_PASSWORD: ${{ secrets.TFE_PASSWORD }}
           IAU_URL: ${{ steps.retrieve-initial-admin-user-url.outputs.stdout }}
@@ -367,6 +370,8 @@ jobs:
         id: run-smoke-test
         working-directory: ${{ env.K6_WORK_DIR_PATH }}
         env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.PRIVATE_ACTIVE_ACTIVE_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.PRIVATE_ACTIVE_ACTIVE_AWS_SECRET_ACCESS_KEY }}
           INSTANCE_ID: ${{ steps.retrieve-instance-id.outputs.stdout }}
           K6_PATHNAME: "./k6"
           TFE_URL: "${{ steps.retrieve-tfe-url.outputs.stdout }}"
