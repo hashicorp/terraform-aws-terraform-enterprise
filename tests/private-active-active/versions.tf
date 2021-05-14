@@ -1,4 +1,11 @@
 terraform {
+  backend "remote" {
+    organization = "terraform-enterprise-modules-test"
+
+    workspaces {
+      name = "aws-private-active-active"
+    }
+  }
   required_version = ">= 0.14"
   required_providers {
     aws = {
@@ -8,10 +15,6 @@ terraform {
     random = {
       source  = "hashicorp/random"
       version = "~> 3.1"
-    }
-    template = {
-      source  = "hashicorp/template"
-      version = "~> 2.1"
     }
   }
 }

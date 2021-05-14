@@ -15,9 +15,9 @@ data "template_cloudinit_config" "config_proxy" {
 
 resource "aws_instance" "proxy" {
   ami           = data.aws_ami.rhel.id
-  instance_type = var.squid_instance_type
+  instance_type = "m4.large"
 
-  subnet_id = module.retailer_deployment.private_subnet_ids[0]
+  subnet_id = var.network_private_subnets[0]
 
   vpc_security_group_ids = [
     aws_security_group.proxy.id,
@@ -27,18 +27,17 @@ resource "aws_instance" "proxy" {
 
   root_block_device {
     volume_type = "gp2"
-    volume_size = var.squid_volume_size
-
+    volume_size = 20
   }
 }
 
 resource "aws_security_group" "proxy" {
-  name   = "${local.complete_prefix}-sg-proxy-allow"
-  vpc_id = module.retailer_deployment.network_id
+  name   = "${random_string.friendly_name.result}-sg-proxy-allow"
+  vpc_id = var.network_id
 
   tags = merge(
-    { Name = "${local.complete_prefix}-sg-proxy-allow" },
-    var.common_tags
+    { Name = "${random_string.friendly_name.result}-sg-proxy-allow" },
+    local.common_tags
   )
 }
 
@@ -47,7 +46,7 @@ resource "aws_security_group_rule" "proxy_ingress" {
   from_port   = local.http_proxy_port
   to_port     = local.http_proxy_port
   protocol    = "tcp"
-  cidr_blocks = module.retailer_deployment.network_private_subnet_cidrs
+  cidr_blocks = var.network_private_subnet_cidrs
   description = "Allow internal traffic to proxy instance"
 
   security_group_id = aws_security_group.proxy.id
