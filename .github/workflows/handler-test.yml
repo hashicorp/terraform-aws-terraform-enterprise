@@ -278,11 +278,12 @@ jobs:
 
       - name: Wait For TFE
         id: wait-for-tfe
-        timeout-minutes: 15
+        timeout-minutes: 20
         env:
           INSTANCE_ID: ${{ steps.retrieve-instance-id.outputs.stdout }}
           HEALTH_CHECK_URL: ${{ steps.retrieve-health-check-url.outputs.stdout }}
         run: |
+          aws ec2 wait instance-running --instance-id "$INSTANCE_ID"
           ssh \
             -i ./ssh-key.pem \
             -o 'ProxyCommand sh -c \
