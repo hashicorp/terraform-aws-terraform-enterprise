@@ -12,6 +12,7 @@ jobs:
     env:
       WORK_DIR_PATH: ./tests/public-active-active
       K6_WORK_DIR_PATH: ./tests/tfe-load-test
+      AWS_DEFAULT_REGION: us-east-2
     steps:
       - name: Create URL to the run output
         id: vars
@@ -59,8 +60,6 @@ jobs:
       - name: Terraform Validate
         id: validate
         working-directory: ${{ env.WORK_DIR_PATH }}
-        env:
-          AWS_DEFAULT_REGION: us-east-2
         run: terraform validate -no-color
 
       - name: Write GitHub Actions runner CIDR to Terraform Variables
@@ -236,8 +235,6 @@ jobs:
       - name: Terraform Validate
         id: validate
         working-directory: ${{ env.WORK_DIR_PATH }}
-        env:
-          AWS_DEFAULT_REGION: us-east-2
         run: terraform validate -no-color
 
       - name: Write GitHub Actions runner CIDR to Terraform Variables
@@ -267,6 +264,16 @@ jobs:
           SSH_KEY: ${{ secrets.PRIVATE_ACTIVE_ACTIVE_SSH_KEY }}
         run: |
           echo "$SSH_KEY" > ./ssh-key.pem
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.PRIVATE_ACTIVE_ACTIVE_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PRIVATE_ACTIVE_ACTIVE_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+          role-to-assume: ${{ secrets.PRIVATE_ACTIVE_ACTIVE_AWS_ROLE_TO_ASSUME }}
+          role-duration-seconds: 2400
+          role-skip-session-tagging: true
 
       - name: Wait For TFE
         id: wait-for-tfe
