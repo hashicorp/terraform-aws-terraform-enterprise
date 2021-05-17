@@ -285,12 +285,14 @@ jobs:
         run: |
           aws ec2 wait instance-status-ok --instance-ids "$INSTANCE_ID"
           ssh \
-            -i ./ssh-key.pem \
+            -o 'BatchMode yes' \
+            -o 'StrictHostKeyChecking accept-new' \
             -o 'ProxyCommand sh -c \
               "aws ssm start-session \
                 --target %h \
                 --document-name AWS-StartSSHSession \
                 --parameters \"portNumber=%p\""' \
+            -i ./ssh-key.pem \
             -f -N -p 22 -D localhost:5000 \
             ec2-user@"$INSTANCE_ID"
           echo "Curling \`health_check_url\` for a return status of 200..."
@@ -318,12 +320,14 @@ jobs:
           IACT_URL: ${{ steps.retrieve-iact-url.outputs.stdout }}
         run: |
           ssh \
-            -i ./ssh-key.pem \
+            -o 'BatchMode yes' \
+            -o 'StrictHostKeyChecking accept-new' \
             -o 'ProxyCommand sh -c \
               "aws ssm start-session \
                 --target %h \
                 --document-name AWS-StartSSHSession \
                 --parameters \"portNumber=%p\""' \
+            -i ./ssh-key.pem \
             -f -N -p 22 -D localhost:5000 \
             ec2-user@"$INSTANCE_ID"
           echo "::set-output name=token::$( \
@@ -344,12 +348,14 @@ jobs:
           IACT_TOKEN: ${{ steps.retrieve-iact.outputs.token }}
         run: |
           ssh \
-            -i ./ssh-key.pem \
+            -o 'BatchMode yes' \
+            -o 'StrictHostKeyChecking accept-new' \
             -o 'ProxyCommand sh -c \
               "aws ssm start-session \
                 --target %h \
                 --document-name AWS-StartSSHSession \
                 --parameters \"portNumber=%p\""' \
+            -i ./ssh-key.pem \
             -f -N -p 22 -D localhost:5000 \
             ec2-user@"INSTANCE_ID"
           echo \
@@ -385,12 +391,14 @@ jobs:
           https_proxy: socks5://localhost:5000/
         run: |
           ssh \
-            -i ./ssh-key.pem \
+            -o 'BatchMode yes' \
+            -o 'StrictHostKeyChecking accept-new' \
             -o 'ProxyCommand sh -c \
               "aws ssm start-session \
                 --target %h \
                 --document-name AWS-StartSSHSession \
                 --parameters \"portNumber=%p\""' \
+            -i ./ssh-key.pem \
             -f -N -p 22 -D localhost:5000 \
             ec2-user@"$INSTANCE_ID"
           make smoke-test
