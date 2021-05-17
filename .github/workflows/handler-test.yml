@@ -188,6 +188,7 @@ jobs:
     env:
       WORK_DIR_PATH: ./tests/private-active-active
       K6_WORK_DIR_PATH: ./tests/tfe-load-test
+      AWS_DEFAULT_REGION: us-east-2
     steps:
       - name: Create URL to the run output
         id: vars
