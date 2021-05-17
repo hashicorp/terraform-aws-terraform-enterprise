@@ -278,12 +278,12 @@ jobs:
 
       - name: Wait For TFE
         id: wait-for-tfe
-        timeout-minutes: 15
+        timeout-minutes: 20
         env:
           INSTANCE_ID: ${{ steps.retrieve-instance-id.outputs.stdout }}
           HEALTH_CHECK_URL: ${{ steps.retrieve-health-check-url.outputs.stdout }}
         run: |
-          ssh \
+          while ! ssh \
             -i ./ssh-key.pem \
             -o 'ProxyCommand sh -c \
               "aws ssm start-session \
@@ -291,7 +291,8 @@ jobs:
                 --document-name AWS-StartSSHSession \
                 --parameters \"portNumber=%p\""' \
             -f -N -p 22 -D localhost:5000 \
-            ec2-user@"$INSTANCE_ID"
+            ec2-user@"$INSTANCE_ID"; \
+            do sleep 10; done
           echo "Curling \`health_check_url\` for a return status of 200..."
           while ! curl \
             -sfS --max-time 5 --proxy socks5://localhost:5000 \
