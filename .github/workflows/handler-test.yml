@@ -265,6 +265,7 @@ jobs:
           SSH_KEY: ${{ secrets.PRIVATE_ACTIVE_ACTIVE_SSH_KEY }}
         run: |
           echo "$SSH_KEY" > ./ssh-key.pem
+          chmod 0400 ./ssh-key.pem
       
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
