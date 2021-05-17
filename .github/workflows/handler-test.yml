@@ -283,7 +283,7 @@ jobs:
           INSTANCE_ID: ${{ steps.retrieve-instance-id.outputs.stdout }}
           HEALTH_CHECK_URL: ${{ steps.retrieve-health-check-url.outputs.stdout }}
         run: |
-          aws ec2 wait instance-running --instance-id "$INSTANCE_ID"
+          aws ec2 wait instance-status-ok --instance-ids "$INSTANCE_ID"
           ssh \
             -i ./ssh-key.pem \
             -o 'ProxyCommand sh -c \
