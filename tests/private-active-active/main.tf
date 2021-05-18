@@ -43,7 +43,7 @@ module "private_active_active" {
   deploy_secretsmanager        = false
   deploy_vpc                   = false
   external_bootstrap_bucket    = var.external_bootstrap_bucket
-  iact_subnet_list             = var.iact_subnet_list
+  iact_subnet_list             = var.network_private_subnet_cidrs
   iam_role_policy_arns         = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]
   instance_type                = "m5.4xlarge"
   key_name                     = var.key_name
