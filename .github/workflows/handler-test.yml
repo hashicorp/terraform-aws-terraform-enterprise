@@ -262,9 +262,9 @@ jobs:
 
       - name: Write Private SSH Key
         env:
-          SSH_KEY: ${{ secrets.PRIVATE_ACTIVE_ACTIVE_SSH_KEY }}
+          SSH_KEY_BASE64: ${{ secrets.PRIVATE_ACTIVE_ACTIVE_SSH_KEY_BASE64 }}
         run: |
-          echo "$SSH_KEY" > ./ssh-key.pem
+          echo "$SSH_KEY_BASE64" | base64 --decode > ./ssh-key.pem
           chmod 0400 ./ssh-key.pem
       
       - name: Configure AWS Credentials
