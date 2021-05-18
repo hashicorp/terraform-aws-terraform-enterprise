@@ -262,11 +262,11 @@ jobs:
 
       - name: Write Private SSH Key
         env:
-          SSH_KEY: ${{ secrets.PRIVATE_ACTIVE_ACTIVE_SSH_KEY }}
+          SSH_KEY_BASE64: ${{ secrets.PRIVATE_ACTIVE_ACTIVE_SSH_KEY_BASE64 }}
         run: |
-          echo "$SSH_KEY" > ./ssh-key.pem
+          echo "$SSH_KEY_BASE64" | base64 --decode > ./ssh-key.pem
           chmod 0400 ./ssh-key.pem
-      
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -294,7 +294,7 @@ jobs:
                 --document-name AWS-StartSSHSession \
                 --parameters \"portNumber=%p\""' \
             -i ./ssh-key.pem \
-            -f -N -p 22 -D localhost:5000 \
+            -f -N -p 22 -D localhost:5000 -v \
             ec2-user@"$INSTANCE_ID"
           echo "Curling \`health_check_url\` for a return status of 200..."
           while ! curl \
@@ -358,7 +358,7 @@ jobs:
                 --parameters \"portNumber=%p\""' \
             -i ./ssh-key.pem \
             -f -N -p 22 -D localhost:5000 \
-            ec2-user@"INSTANCE_ID"
+            ec2-user@"$INSTANCE_ID"
           echo \
             '{"username": "test", "email": "tf-onprem-team@hashicorp.com", "password": "$TFE_PASSWORD"}' \
             > ./payload.json
@@ -399,7 +399,7 @@ jobs:
                 --target %h \
                 --document-name AWS-StartSSHSession \
                 --parameters \"portNumber=%p\""' \
-            -i ./ssh-key.pem \
+            -i ../../ssh-key.pem \
             -f -N -p 22 -D localhost:5000 \
             ec2-user@"$INSTANCE_ID"
           make smoke-test
@@ -436,4 +436,3 @@ jobs:
             :link: [Action Summary Page][1]
 
             [1]: ${{ steps.vars.outputs.run-url }}
-
