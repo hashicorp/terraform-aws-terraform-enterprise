@@ -399,7 +399,7 @@ jobs:
                 --target %h \
                 --document-name AWS-StartSSHSession \
                 --parameters \"portNumber=%p\""' \
-            -i ./ssh-key.pem \
+            -i ../../ssh-key.pem \
             -f -N -p 22 -D localhost:5000 \
             ec2-user@"$INSTANCE_ID"
           make smoke-test
