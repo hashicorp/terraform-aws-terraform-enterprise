@@ -266,7 +266,7 @@ jobs:
         run: |
           echo "$SSH_KEY_BASE64" | base64 --decode > ./ssh-key.pem
           chmod 0400 ./ssh-key.pem
-      
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -436,4 +436,3 @@ jobs:
             :link: [Action Summary Page][1]
 
             [1]: ${{ steps.vars.outputs.run-url }}
-
