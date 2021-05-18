@@ -238,11 +238,6 @@ jobs:
         working-directory: ${{ env.WORK_DIR_PATH }}
         run: terraform validate -no-color
 
-      - name: Write GitHub Actions runner CIDR to Terraform Variables
-        working-directory: ${{ env.WORK_DIR_PATH }}
-        run: |
-          echo "iact_subnet_list = [\"$( dig +short @resolver1.opendns.com myip.opendns.com )/32\"]" > github.auto.tfvars
-
       - name: Terraform Apply
         id: apply
         working-directory: ${{ env.WORK_DIR_PATH }}
@@ -277,12 +272,9 @@ jobs:
           role-duration-seconds: 2400
           role-skip-session-tagging: true
 
-      - name: Wait For TFE
-        id: wait-for-tfe
-        timeout-minutes: 20
+      - name: Start SOCKS5 Proxy
         env:
           INSTANCE_ID: ${{ steps.retrieve-instance-id.outputs.stdout }}
-          HEALTH_CHECK_URL: ${{ steps.retrieve-health-check-url.outputs.stdout }}
         run: |
           aws ec2 wait instance-status-ok --instance-ids "$INSTANCE_ID"
           ssh \
@@ -294,8 +286,15 @@ jobs:
                 --document-name AWS-StartSSHSession \
                 --parameters \"portNumber=%p\""' \
             -i ./ssh-key.pem \
-            -f -N -p 22 -D localhost:5000 -v \
+            -f -N -p 22 -D localhost:5000 \
             ec2-user@"$INSTANCE_ID"
+
+      - name: Wait For TFE
+        id: wait-for-tfe
+        timeout-minutes: 15
+        env:
+          HEALTH_CHECK_URL: ${{ steps.retrieve-health-check-url.outputs.stdout }}
+        run: |
           echo "Curling \`health_check_url\` for a return status of 200..."
           while ! curl \
             -sfS --max-time 5 --proxy socks5://localhost:5000 \
@@ -317,20 +316,8 @@ jobs:
       - name: Retrieve IACT
         id: retrieve-iact
         env:
-          INSTANCE_ID: ${{ steps.retrieve-instance-id.outputs.stdout }}
           IACT_URL: ${{ steps.retrieve-iact-url.outputs.stdout }}
         run: |
-          ssh \
-            -o 'BatchMode yes' \
-            -o 'StrictHostKeyChecking accept-new' \
-            -o 'ProxyCommand sh -c \
-              "aws ssm start-session \
-                --target %h \
-                --document-name AWS-StartSSHSession \
-                --parameters \"portNumber=%p\""' \
-            -i ./ssh-key.pem \
-            -f -N -p 22 -D localhost:5000 \
-            ec2-user@"$INSTANCE_ID"
           echo "::set-output name=token::$( \
             curl --fail --retry 5 --verbose --proxy socks5://localhost:5000 "$IACT_URL" )"
 
@@ -343,22 +330,10 @@ jobs:
       - name: Create Admin in TFE
         id: create-admin
         env:
-          INSTANCE_ID: ${{ steps.retrieve-instance-id.outputs.stdout }}
           TFE_PASSWORD: ${{ secrets.TFE_PASSWORD }}
           IAU_URL: ${{ steps.retrieve-initial-admin-user-url.outputs.stdout }}
           IACT_TOKEN: ${{ steps.retrieve-iact.outputs.token }}
         run: |
-          ssh \
-            -o 'BatchMode yes' \
-            -o 'StrictHostKeyChecking accept-new' \
-            -o 'ProxyCommand sh -c \
-              "aws ssm start-session \
-                --target %h \
-                --document-name AWS-StartSSHSession \
-                --parameters \"portNumber=%p\""' \
-            -i ./ssh-key.pem \
-            -f -N -p 22 -D localhost:5000 \
-            ec2-user@"$INSTANCE_ID"
           echo \
             '{"username": "test", "email": "tf-onprem-team@hashicorp.com", "password": "$TFE_PASSWORD"}' \
             > ./payload.json
@@ -383,7 +358,6 @@ jobs:
         id: run-smoke-test
         working-directory: ${{ env.K6_WORK_DIR_PATH }}
         env:
-          INSTANCE_ID: ${{ steps.retrieve-instance-id.outputs.stdout }}
           K6_PATHNAME: "./k6"
           TFE_URL: "${{ steps.retrieve-tfe-url.outputs.stdout }}"
           TFE_API_TOKEN: "${{ steps.retrieve-admin-token.outputs.token }}"
@@ -391,17 +365,6 @@ jobs:
           http_proxy: socks5://localhost:5000/
           https_proxy: socks5://localhost:5000/
         run: |
-          ssh \
-            -o 'BatchMode yes' \
-            -o 'StrictHostKeyChecking accept-new' \
-            -o 'ProxyCommand sh -c \
-              "aws ssm start-session \
-                --target %h \
-                --document-name AWS-StartSSHSession \
-                --parameters \"portNumber=%p\""' \
-            -i ../../ssh-key.pem \
-            -f -N -p 22 -D localhost:5000 \
-            ec2-user@"$INSTANCE_ID"
           make smoke-test
 
       - name: Terraform Destroy
