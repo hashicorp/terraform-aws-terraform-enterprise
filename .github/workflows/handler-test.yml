@@ -294,7 +294,7 @@ jobs:
                 --document-name AWS-StartSSHSession \
                 --parameters \"portNumber=%p\""' \
             -i ./ssh-key.pem \
-            -f -N -p 22 -D localhost:5000 \
+            -f -N -p 22 -D localhost:5000 -v \
             ec2-user@"$INSTANCE_ID"
           echo "Curling \`health_check_url\` for a return status of 200..."
           while ! curl \
