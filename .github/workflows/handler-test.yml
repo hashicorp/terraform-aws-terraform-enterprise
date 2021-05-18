@@ -358,7 +358,7 @@ jobs:
                 --parameters \"portNumber=%p\""' \
             -i ./ssh-key.pem \
             -f -N -p 22 -D localhost:5000 \
-            ec2-user@"INSTANCE_ID"
+            ec2-user@"$INSTANCE_ID"
           echo \
             '{"username": "test", "email": "tf-onprem-team@hashicorp.com", "password": "$TFE_PASSWORD"}' \
             > ./payload.json
