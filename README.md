@@ -118,9 +118,6 @@ We have included documentation and reference examples for additional common inst
 - [Example: Deploying behind a proxy](./examples/behind-proxy)
 - [Example: Deploying into an existing private network](./examples/existing-private-network)
 - [Example: Deploying while managing DNS outside of AWS](./examples/external-dns)
-- [Example: Deploying the Startup Persona](./examples/personas-startup)
-- [Example: Deploying the Retailer Persona](./examples/personas-retailer)
-- [Example: Deploying the Bank Persona](./examples/personas-bank)
 
 ## License
 
