@@ -23,5 +23,5 @@ This test assumes the following resources already exist:
 ## How this test is used
 
 This test is leveraged by this repository's continuous integration
-setup which leverages workspaces in a Terraform Cloud workspaces as a
+setup which leverages a Terraform Cloud workspace as a
 remote backend so that Terraform state is preserved.
