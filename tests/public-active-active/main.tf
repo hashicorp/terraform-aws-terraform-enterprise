@@ -37,10 +37,5 @@ module "public_active_active" {
   tfe_license_filepath         = ""
   tfe_subdomain                = "test-public-active-active"
 
-  common_tags = {
-    Terraform   = "cloud"
-    Environment = "tfe_modules_test"
-    Test        = "Public Active/Active"
-    Repository  = "hashicorp/terraform-aws-terraform-enterprise"
-  }
+  common_tags = local.common_tags
 }
