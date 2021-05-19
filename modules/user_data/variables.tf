@@ -95,7 +95,7 @@ variable "iact_subnet_list" {
 }
 
 variable "iact_subnet_time_limit" {
-  default     = null
+  default     = 60
   description = "The time limit that requests from the subnets listed can request the IACT, as measured from the instance creation in minutes."
   type        = number
 }
