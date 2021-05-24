@@ -6,7 +6,7 @@ terraform {
       name = "aws-private-tcp-active-active"
     }
   }
-  
+
   required_version = ">= 0.14"
   required_providers {
     aws = {
