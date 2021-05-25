@@ -399,3 +399,222 @@ jobs:
             :link: [Action Summary Page][1]
 
             [1]: ${{ steps.vars.outputs.run-url }}
+
+  private_tcp_active_active:
+    name: Run tf-test on Private TCP Active/Active
+    runs-on: ubuntu-latest
+    env:
+      WORK_DIR_PATH: ./tests/private-tcp-active-active
+      K6_WORK_DIR_PATH: ./tests/tfe-load-test
+      AWS_DEFAULT_REGION: us-east-2
+    steps:
+      - name: Create URL to the run output
+        id: vars
+        run: echo ::set-output name=run-url::https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
+
+      # Checkout the branch of the pull request being tested
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.event.client_payload.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.client_payload.pull_request.head.sha }}
+
+      # Checkout the hashicorp/tfe-load-test repository
+      - name: Checkout TFE Load Test
+        uses: actions/checkout@v2
+        with:
+          ref: 'master'
+          path: ${{ env.K6_WORK_DIR_PATH }}
+          repository: hashicorp/tfe-load-test
+          token: ${{ secrets.PAT }}
+
+      - name: Install required tools
+        working-directory: ${{ env.K6_WORK_DIR_PATH }}
+        env:
+          K6_URL: https://github.com/loadimpact/k6/releases/download/v0.31.1/k6-v0.31.1-linux64.tar.gz
+        run: |
+          sudo apt-get install jq
+          curl -L $K6_URL | tar -xz --strip-components=1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          cli_config_credentials_hostname: 'app.terraform.io'
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          terraform_version: 0.14.8
+          terraform_wrapper: true
+
+      # Run Terraform commands between these comments vvv
+
+      - name: Terraform Init
+        id: init
+        working-directory: ${{ env.WORK_DIR_PATH }}
+        run: terraform init -input=false -no-color
+
+      - name: Terraform Validate
+        id: validate
+        working-directory: ${{ env.WORK_DIR_PATH }}
+        run: terraform validate -no-color
+
+      - name: Terraform Apply
+        id: apply
+        working-directory: ${{ env.WORK_DIR_PATH }}
+        run: terraform apply -auto-approve -input=false -no-color
+
+      - name: Retrieve Health Check URL
+        id: retrieve-health-check-url
+        working-directory: ${{ env.WORK_DIR_PATH }}
+        run: |
+          terraform output -no-color -raw health_check_url
+
+      - name: Retrieve Instance ID
+        id: retrieve-instance-id
+        working-directory: ${{ env.WORK_DIR_PATH }}
+        run: |
+          terraform output -no-color -raw tfe_instance_id
+
+      - name: Write Private TCP SSH Key
+        env:
+          SSH_KEY_BASE64: ${{ secrets.PRIVATE_TCP_ACTIVE_ACTIVE_SSH_KEY_BASE64 }}
+        run: |
+          echo "$SSH_KEY_BASE64" | base64 --decode > ./ssh-key.pem
+          chmod 0400 ./ssh-key.pem
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.PRIVATE_TCP_ACTIVE_ACTIVE_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PRIVATE_TCP_ACTIVE_ACTIVE_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+          role-to-assume: ${{ secrets.PRIVATE_TCP_ACTIVE_ACTIVE_AWS_ROLE_TO_ASSUME }}
+          role-duration-seconds: 2400
+          role-skip-session-tagging: true
+
+      - name: Start SOCKS5 Proxy
+        env:
+          INSTANCE_ID: ${{ steps.retrieve-instance-id.outputs.stdout }}
+        run: |
+          aws ec2 wait instance-status-ok --instance-ids "$INSTANCE_ID"
+          ssh \
+            -o 'BatchMode yes' \
+            -o 'StrictHostKeyChecking accept-new' \
+            -o 'ProxyCommand sh -c \
+              "aws ssm start-session \
+                --target %h \
+                --document-name AWS-StartSSHSession \
+                --parameters \"portNumber=%p\""' \
+            -i ./ssh-key.pem \
+            -f -N -p 22 -D localhost:5000 \
+            ec2-user@"$INSTANCE_ID"
+
+      - name: Wait For TFE
+        id: wait-for-tfe
+        timeout-minutes: 15
+        env:
+          HEALTH_CHECK_URL: ${{ steps.retrieve-health-check-url.outputs.stdout }}
+        run: |
+          echo "Curling \`health_check_url\` for a return status of 200..."
+          while ! curl \
+            -sfS --max-time 5 --proxy socks5://localhost:5000 \
+            $HEALTH_CHECK_URL; \
+            do sleep 5; done
+
+      - name: Retrieve TFE URL
+        id: retrieve-tfe-url
+        working-directory: ${{ env.WORK_DIR_PATH }}
+        run: |
+          terraform output -no-color -raw tfe_url
+
+      - name: Retrieve IACT URL
+        id: retrieve-iact-url
+        working-directory: ${{ env.WORK_DIR_PATH }}
+        run: |
+          terraform output -no-color -raw iact_url
+
+      - name: Retrieve IACT
+        id: retrieve-iact
+        env:
+          IACT_URL: ${{ steps.retrieve-iact-url.outputs.stdout }}
+        run: |
+          echo "::set-output name=token::$( \
+            curl --fail --retry 5 --verbose --proxy socks5://localhost:5000 "$IACT_URL" )"
+
+      - name: Retrieve Initial Admin User URL
+        id: retrieve-initial-admin-user-url
+        working-directory: ${{ env.WORK_DIR_PATH }}
+        run: |
+          terraform output -no-color -raw initial_admin_user_url
+
+      - name: Create Admin in TFE
+        id: create-admin
+        env:
+          TFE_PASSWORD: ${{ secrets.TFE_PASSWORD }}
+          IAU_URL: ${{ steps.retrieve-initial-admin-user-url.outputs.stdout }}
+          IACT_TOKEN: ${{ steps.retrieve-iact.outputs.token }}
+        run: |
+          echo \
+            '{"username": "test", "email": "tf-onprem-team@hashicorp.com", "password": "$TFE_PASSWORD"}' \
+            > ./payload.json
+          echo "::set-output name=response::$( \
+            curl \
+            --fail \
+            --retry 5 \
+            --verbose \
+            --header 'Content-Type: application/json' \
+            --data @./payload.json \
+            --proxy socks5://localhost:5000 \
+            "$IAU_URL"?token="$IACT_TOKEN")"
+
+      - name: Retrieve Admin Token
+        id: retrieve-admin-token
+        env:
+          RESPONSE: ${{ steps.create-admin.outputs.response }}
+        run: |
+          echo "::set-output name=token::$(echo "$RESPONSE" | jq --raw-output '.token')"
+
+      - name: Run k6 Smoke Test
+        id: run-smoke-test
+        working-directory: ${{ env.K6_WORK_DIR_PATH }}
+        env:
+          K6_PATHNAME: "./k6"
+          TFE_URL: "${{ steps.retrieve-tfe-url.outputs.stdout }}"
+          TFE_API_TOKEN: "${{ steps.retrieve-admin-token.outputs.token }}"
+          TFE_EMAIL: tf-onprem-team@hashicorp.com
+          http_proxy: socks5://localhost:5000/
+          https_proxy: socks5://localhost:5000/
+        run: |
+          make smoke-test
+
+      - name: Terraform Destroy
+        id: destroy
+        working-directory: ${{ env.WORK_DIR_PATH }}
+        run: terraform destroy -auto-approve -input=false -no-color
+
+      # Run Terraform commands between these comments ^^^
+
+      - name: Update comment
+        if: ${{ always() }}
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          token: ${{ secrets.PAT }}
+          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+          comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
+          body: |
+            :computer: @hc-team-tfe
+
+            ### Terraform Private TCP Active/Active Test Report :newspaper:
+
+            - Terraform Initialization :gear: `${{ steps.init.outcome }}`
+
+            - Terraform Validation :mag: `${{ steps.validate.outcome }}`
+
+            - Terraform Apply :book: `${{ steps.apply.outcome }}`
+
+            - K6 Smoke Test :building_construction: `${{ steps.run-smoke-test.outcome }}`
+
+            - Terraform Destroy :fire: `${{ steps.destroy.outcome }}`
+
+            :link: [Action Summary Page][1]
+
+            [1]: ${{ steps.vars.outputs.run-url }}
+            

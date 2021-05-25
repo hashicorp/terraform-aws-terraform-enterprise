@@ -1,10 +1,10 @@
 resource "aws_security_group" "proxy" {
   name   = "${local.complete_prefix}-sg-proxy-allow"
-  vpc_id = module.bank_deployment.network_id
+  vpc_id = module.private_tcp_active_active.network_id
 
   tags = merge(
     { Name = "${local.complete_prefix}-sg-proxy-allow" },
-    var.common_tags
+    local.common_tags
   )
 }
 
@@ -45,7 +45,7 @@ resource "aws_instance" "proxy" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "m4.xlarge"
 
-  subnet_id = module.bank_deployment.public_subnet_ids[0]
+  subnet_id = module.private_tcp_active_active.public_subnet_ids[0]
 
   vpc_security_group_ids = [
     aws_security_group.proxy.id
