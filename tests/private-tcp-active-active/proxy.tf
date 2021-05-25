@@ -1,9 +1,9 @@
 resource "aws_security_group" "proxy" {
-  name   = "${local.complete_prefix}-sg-proxy-allow"
+  name   = "${random_string.friendly_name.result}-sg-proxy-allow"
   vpc_id = module.private_tcp_active_active.network_id
 
   tags = merge(
-    { Name = "${local.complete_prefix}-sg-proxy-allow" },
+    { Name = "${random_string.friendly_name.result}-sg-proxy-allow" },
     local.common_tags
   )
 }

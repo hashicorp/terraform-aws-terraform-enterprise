@@ -4,12 +4,6 @@ provider "aws" {
   }
 }
 
-resource "random_pet" "subdomain" {
-  length    = 2
-  separator = "-"
-  prefix    = var.prefix
-}
-
 resource "random_string" "friendly_name" {
   length  = 4
   upper   = false # Some AWS resources do not accept uppercase characters.
@@ -54,7 +48,7 @@ module "private_tcp_active_active" {
 
   acm_certificate_arn  = var.acm_certificate_arn
   domain_name          = var.domain_name
-  friendly_name_prefix = random_string.friendly_name.id
+  friendly_name_prefix = random_string.friendly_name.result
   tfe_license_name     = "terraform-aws-terraform-enterprise.rli"
 
   ami_id                       = data.aws_ami.rhel.id
