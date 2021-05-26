@@ -67,8 +67,7 @@ module "private_tcp_active_active" {
   network_public_subnets       = var.network_public_subnets
   node_count                   = 2
   proxy_ip                     = "${aws_instance.proxy.private_ip}:${local.http_proxy_port}"
-  proxy_cert_bundle_filepath   = local_file.ca.filename
-  proxy_cert_bundle_name       = "mitmproxy"
+  proxy_cert_bundle_name       = data.aws_s3_bucket_object.proxy_certificate.key
   redis_encryption_at_rest     = true
   redis_encryption_in_transit  = true
   redis_require_password       = true
