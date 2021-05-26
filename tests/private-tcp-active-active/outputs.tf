@@ -40,4 +40,6 @@ output "tfe_autoscaling_group_name" {
   value = module.private_tcp_active_active.tfe_autoscaling_group.name
 
   description = "The name of the autoscaling group which hosts the TFE EC2 instance(s)."
+  # This output is marked as sensitive to work around a bug in Terraform 0.14
+  sensitive = true
 }
