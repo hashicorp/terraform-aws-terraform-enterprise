@@ -43,3 +43,13 @@ variable "key_name" {
   description = "The name of the key pair to be used for SSH access to the EC2 instance(s)."
   type        = string
 }
+
+variable "proxy_certificate_bucket_object_key" {
+  description = "The key of the proxy certificate bucket object."
+  type        = string
+}
+
+variable "proxy_private_key_bucket_object_key" {
+  description = "The key of the proxy private key bucket object."
+  type        = string
+}
