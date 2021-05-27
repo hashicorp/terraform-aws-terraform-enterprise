@@ -41,11 +41,43 @@ resource "aws_security_group_rule" "proxy_egress" {
   security_group_id = aws_security_group.proxy.id
 }
 
+resource "aws_iam_instance_profile" "proxy" {
+  name_prefix = "${random_string.friendly_name.result}-proxy"
+  role        = aws_iam_role.instance_role.name
+}
+
+resource "aws_iam_role" "instance_role" {
+  name_prefix        = "${random_string.friendly_name.result}-proxy"
+  assume_role_policy = data.aws_iam_policy_document.instance_role.json
+
+  tags = local.common_tags
+}
+
+data "aws_iam_policy_document" "instance_role" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "sts:AssumeRole",
+    ]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "ssm" {
+  role       = aws_iam_role.instance_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
 resource "aws_instance" "proxy" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "m4.xlarge"
 
-  subnet_id = module.private_tcp_active_active.public_subnet_ids[0]
+  iam_instance_profile = aws_iam_instance_profile.proxy.name
+  subnet_id            = module.private_tcp_active_active.private_subnet_ids[0]
 
   vpc_security_group_ids = [
     aws_security_group.proxy.id

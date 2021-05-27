@@ -31,9 +31,9 @@ output "initial_admin_user_url" {
 }
 
 output "tfe_instance_id" {
-  value = data.aws_instances.main.ids[0]
+  value = aws_instance.proxy.id
 
-  description = "The ID of a TFE EC2 instance."
+  description = "The ID of the proxy EC2 instance."
 }
 
 output "tfe_autoscaling_group_name" {

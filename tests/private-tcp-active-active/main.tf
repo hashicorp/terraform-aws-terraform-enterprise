@@ -76,11 +76,3 @@ module "private_tcp_active_active" {
 
   common_tags = local.common_tags
 }
-
-data "aws_instances" "main" {
-  instance_tags = local.common_tags
-
-  depends_on = [
-    module.private_tcp_active_active
-  ]
-}
