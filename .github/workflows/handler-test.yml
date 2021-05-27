@@ -498,6 +498,8 @@ jobs:
           ssh \
             -o 'BatchMode yes' \
             -o 'StrictHostKeyChecking accept-new' \
+            -o 'ServerAliveInterval 5' \
+            -o 'ServerAliveCountMax 3' \
             -o 'ProxyCommand sh -c \
               "aws ssm start-session \
                 --target %h \
