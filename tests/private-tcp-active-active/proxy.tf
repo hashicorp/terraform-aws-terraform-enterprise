@@ -77,6 +77,7 @@ resource "aws_instance" "proxy" {
   instance_type = "m4.xlarge"
 
   iam_instance_profile = aws_iam_instance_profile.proxy.name
+  key_name             = var.key_name
   subnet_id            = module.private_tcp_active_active.private_subnet_ids[0]
 
   vpc_security_group_ids = [

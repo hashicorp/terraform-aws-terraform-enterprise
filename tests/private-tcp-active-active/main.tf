@@ -58,7 +58,6 @@ module "private_tcp_active_active" {
   iact_subnet_list             = ["0.0.0.0/0"]
   iam_role_policy_arns         = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]
   instance_type                = "m5.8xlarge"
-  key_name                     = var.key_name
   kms_key_alias                = "test-private-tcp-active-active"
   load_balancing_scheme        = "PRIVATE_TCP"
   network_id                   = var.network_id
