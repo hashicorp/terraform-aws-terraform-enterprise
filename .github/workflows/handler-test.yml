@@ -8,7 +8,7 @@ on:
 jobs:
   public_active_active:
     name: Run tf-test on Public Active/Active
-    if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, "all") || contains(github.event.client_payload.slash_command.args.unnamed.all, "public-active-active") }}
+    if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, 'all') || contains(github.event.client_payload.slash_command.args.unnamed.all, 'public-active-active') }}
     runs-on: ubuntu-latest
     env:
       WORK_DIR_PATH: ./tests/public-active-active
@@ -186,7 +186,7 @@ jobs:
             [1]: ${{ steps.vars.outputs.run-url }}
   private_active_active:
     name: Run tf-test on Private Active/Active
-    if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, "all") || contains(github.event.client_payload.slash_command.args.unnamed.all, "private-active-active") }}
+    if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, 'all') || contains(github.event.client_payload.slash_command.args.unnamed.all, 'private-active-active') }}
     runs-on: ubuntu-latest
     env:
       WORK_DIR_PATH: ./tests/private-active-active
@@ -406,7 +406,7 @@ jobs:
 
   private_tcp_active_active:
     name: Run tf-test on Private TCP Active/Active
-    if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, "all") || contains(github.event.client_payload.slash_command.args.unnamed.all, "private-tcp-active-active") }}
+    if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, 'all') || contains(github.event.client_payload.slash_command.args.unnamed.all, 'private-tcp-active-active') }}
     runs-on: ubuntu-latest
     env:
       WORK_DIR_PATH: ./tests/private-tcp-active-active
