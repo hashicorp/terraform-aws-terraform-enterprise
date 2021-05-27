@@ -587,6 +587,7 @@ jobs:
           TFE_URL: "${{ steps.retrieve-tfe-url.outputs.stdout }}"
           TFE_API_TOKEN: "${{ steps.retrieve-admin-token.outputs.token }}"
           TFE_EMAIL: tf-onprem-team@hashicorp.com
+          TFE_SKIP_TLS_VERIFY: "true"
           http_proxy: socks5://localhost:5000/
           https_proxy: socks5://localhost:5000/
         run: |
@@ -624,4 +625,3 @@ jobs:
             :link: [Action Summary Page][1]
 
             [1]: ${{ steps.vars.outputs.run-url }}
-            
