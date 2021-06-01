@@ -9,11 +9,13 @@ jobs:
   help:
     name: Run help
     runs-on: ubuntu-latest
+    permissions:
+      pull-request: write
     steps:
       - name: Update comment
         uses: peter-evans/create-or-update-comment@v1
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
