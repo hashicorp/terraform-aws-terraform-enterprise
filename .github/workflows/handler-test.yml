@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      pull-request: write
     env:
       WORK_DIR_PATH: ./tests/public-active-active
       K6_WORK_DIR_PATH: ./tests/tfe-load-test
@@ -167,7 +168,7 @@ jobs:
         if: ${{ always() }}
         uses: peter-evans/create-or-update-comment@v1
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
@@ -194,6 +195,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      pull-request: write
     env:
       WORK_DIR_PATH: ./tests/private-active-active
       K6_WORK_DIR_PATH: ./tests/tfe-load-test
@@ -390,7 +392,7 @@ jobs:
         if: ${{ always() }}
         uses: peter-evans/create-or-update-comment@v1
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
@@ -418,6 +420,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      pull-request: write
     env:
       WORK_DIR_PATH: ./tests/private-tcp-active-active
       K6_WORK_DIR_PATH: ./tests/tfe-load-test
@@ -624,7 +627,7 @@ jobs:
         if: ${{ always() }}
         uses: peter-evans/create-or-update-comment@v1
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
