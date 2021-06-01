@@ -38,7 +38,8 @@ jobs:
           ref: 'master'
           path: ${{ env.K6_WORK_DIR_PATH }}
           repository: hashicorp/tfe-load-test
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TFE_LOAD_TEST_TOKEN }}
+          persist-credentials: false
 
       - name: Install required tools
         working-directory: ${{ env.K6_WORK_DIR_PATH }}
@@ -221,7 +222,8 @@ jobs:
           ref: 'master'
           path: ${{ env.K6_WORK_DIR_PATH }}
           repository: hashicorp/tfe-load-test
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TFE_LOAD_TEST_TOKEN }}
+          persist-credentials: false
 
       - name: Install required tools
         working-directory: ${{ env.K6_WORK_DIR_PATH }}
@@ -446,7 +448,8 @@ jobs:
           ref: 'master'
           path: ${{ env.K6_WORK_DIR_PATH }}
           repository: hashicorp/tfe-load-test
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TFE_LOAD_TEST_TOKEN }}
+          persist-credentials: false
 
       - name: Install required tools
         working-directory: ${{ env.K6_WORK_DIR_PATH }}
