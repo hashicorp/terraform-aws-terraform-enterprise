@@ -10,7 +10,7 @@ jobs:
     name: Slash Command Dispatcher
     runs-on: ubuntu-latest
     permissions:
-      pull-request: write
+      pull-requests: write
     steps:
       - name: Slash Command Dispatch
         uses: peter-evans/slash-command-dispatch@v2
