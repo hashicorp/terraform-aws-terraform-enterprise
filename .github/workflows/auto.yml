@@ -14,9 +14,14 @@ jobs:
 
     name: Run terraform fmt
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        persist-credentials: false
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
@@ -31,9 +36,14 @@ jobs:
 
     name: Run terraform-lint
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        persist-credentials: false
 
     - name: Setup Terraform Lint
       uses: terraform-linters/setup-tflint@v1

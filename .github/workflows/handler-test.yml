@@ -10,6 +10,9 @@ jobs:
     name: Run tf-test on Public Active/Active
     if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, 'all') || contains(github.event.client_payload.slash_command.args.unnamed.all, 'public-active-active') }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-request: write
     env:
       WORK_DIR_PATH: ./tests/public-active-active
       K6_WORK_DIR_PATH: ./tests/tfe-load-test
@@ -25,6 +28,8 @@ jobs:
         with:
           repository: ${{ github.event.client_payload.pull_request.head.repo.full_name }}
           ref: ${{ github.event.client_payload.pull_request.head.sha }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
 
       # Checkout the hashicorp/tfe-load-test repository
       - name: Checkout TFE Load Test
@@ -33,7 +38,8 @@ jobs:
           ref: 'master'
           path: ${{ env.K6_WORK_DIR_PATH }}
           repository: hashicorp/tfe-load-test
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GH_TFE_LOAD_TEST_TOKEN }}
+          persist-credentials: false
 
       - name: Install required tools
         working-directory: ${{ env.K6_WORK_DIR_PATH }}
@@ -163,7 +169,7 @@ jobs:
         if: ${{ always() }}
         uses: peter-evans/create-or-update-comment@v1
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
@@ -188,6 +194,9 @@ jobs:
     name: Run tf-test on Private Active/Active
     if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, 'all') || contains(github.event.client_payload.slash_command.args.unnamed.all, 'private-active-active') }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-request: write
     env:
       WORK_DIR_PATH: ./tests/private-active-active
       K6_WORK_DIR_PATH: ./tests/tfe-load-test
@@ -203,6 +212,8 @@ jobs:
         with:
           repository: ${{ github.event.client_payload.pull_request.head.repo.full_name }}
           ref: ${{ github.event.client_payload.pull_request.head.sha }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
 
       # Checkout the hashicorp/tfe-load-test repository
       - name: Checkout TFE Load Test
@@ -211,7 +222,8 @@ jobs:
           ref: 'master'
           path: ${{ env.K6_WORK_DIR_PATH }}
           repository: hashicorp/tfe-load-test
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GH_TFE_LOAD_TEST_TOKEN }}
+          persist-credentials: false
 
       - name: Install required tools
         working-directory: ${{ env.K6_WORK_DIR_PATH }}
@@ -382,7 +394,7 @@ jobs:
         if: ${{ always() }}
         uses: peter-evans/create-or-update-comment@v1
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
@@ -408,6 +420,9 @@ jobs:
     name: Run tf-test on Private TCP Active/Active
     if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, 'all') || contains(github.event.client_payload.slash_command.args.unnamed.all, 'private-tcp-active-active') }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-request: write
     env:
       WORK_DIR_PATH: ./tests/private-tcp-active-active
       K6_WORK_DIR_PATH: ./tests/tfe-load-test
@@ -423,6 +438,8 @@ jobs:
         with:
           repository: ${{ github.event.client_payload.pull_request.head.repo.full_name }}
           ref: ${{ github.event.client_payload.pull_request.head.sha }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
 
       # Checkout the hashicorp/tfe-load-test repository
       - name: Checkout TFE Load Test
@@ -431,7 +448,8 @@ jobs:
           ref: 'master'
           path: ${{ env.K6_WORK_DIR_PATH }}
           repository: hashicorp/tfe-load-test
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GH_TFE_LOAD_TEST_TOKEN }}
+          persist-credentials: false
 
       - name: Install required tools
         working-directory: ${{ env.K6_WORK_DIR_PATH }}
@@ -612,7 +630,7 @@ jobs:
         if: ${{ always() }}
         uses: peter-evans/create-or-update-comment@v1
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |

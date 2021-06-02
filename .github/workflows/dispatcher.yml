@@ -9,11 +9,16 @@ jobs:
   slash_command_dispatch:
     name: Slash Command Dispatcher
     runs-on: ubuntu-latest
+    permissions:
+      pull-request: write
     steps:
       - name: Slash Command Dispatch
         uses: peter-evans/slash-command-dispatch@v2
         with:
-          token: ${{ secrets.PAT }}
+          # The `public_repo` scope is required by this token to create repository_dispatch and workflow_dispatch
+          # events on public repositories. The default GITHUB_TOKEN does not support the `public_repo` scope.
+          token: ${{ secrets.GH_DISPATCH_TOKEN }}
+          reaction-token: ${{ secrets.GITHUB_TOKEN }}
           commands: |
             test
             help
