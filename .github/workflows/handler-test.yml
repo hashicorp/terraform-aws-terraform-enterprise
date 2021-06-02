@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-request: write
+      pull-requests: write
     env:
       WORK_DIR_PATH: ./tests/public-active-active
       K6_WORK_DIR_PATH: ./tests/tfe-load-test
@@ -196,7 +196,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-request: write
+      pull-requests: write
     env:
       WORK_DIR_PATH: ./tests/private-active-active
       K6_WORK_DIR_PATH: ./tests/tfe-load-test
@@ -422,7 +422,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-request: write
+      pull-requests: write
     env:
       WORK_DIR_PATH: ./tests/private-tcp-active-active
       K6_WORK_DIR_PATH: ./tests/tfe-load-test

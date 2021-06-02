@@ -10,7 +10,7 @@ jobs:
     name: Run help
     runs-on: ubuntu-latest
     permissions:
-      pull-request: write
+      pull-requests: write
     steps:
       - name: Update comment
         uses: peter-evans/create-or-update-comment@v1
