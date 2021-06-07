@@ -60,25 +60,32 @@ variable "load_balancing_scheme" {
 # AMI
 # ---
 
+variable "ami_id" {
+  type        = string
+  default     = null
+  description = "AMI ID of the custom image to use for TFE instances. If this value is provided, you do not need any of the following ami variable values."
+}
+
 variable "ami_owners" {
   type        = list(string)
   default     = ["self"]
-  description = "List of AMI owners to limit search."
+  description = "List of AMI owners to limit search. (Not needed if providing ami_id value.)"
 }
 
 variable "ami_filter_name" {
   type        = string
-  default     = "tag"
-  description = "The name of a key off of which to filter with a key/value pair. Example: \"tag:Distro\""
+  default     = null
+  description = "The name of a key off of which to filter with a key/value pair. Example: \"tag:Distro\" (Not needed if providing ami_id value.)"
 }
 
 variable "ami_filter_value" {
   type        = string
-  description = "The value off of which to filter with a key/value pair. Example: \"Ubuntu\""
+  default     = null
+  description = "The value off of which to filter with a key/value pair. Example: \"Ubuntu\" (Not needed if providing ami_id value.)"
 }
 
 variable "ami_most_recent" {
   type        = bool
   default     = true
-  description = "If more than one result is returned, use the most recent AMI."
+  description = "If more than one result is returned, use the most recent AMI. (Not needed if providing ami_id value.)"
 }
