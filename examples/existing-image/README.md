@@ -25,8 +25,6 @@ root module, which defaults to a node count of 2, creating an Active/Active conf
   of the required variables (you may do this in a `terraform.tfvars` file):
 
 ```hcl
-provider "aws" {}
-
 locals {
   ami_search = var.ami_id == null ? true : false
   ami_id     = local.ami_search ? data.aws_ami.existing[0].id : var.ami_id
