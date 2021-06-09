@@ -20,16 +20,11 @@ module "public_active_active" {
   tfe_license_name     = "terraform-aws-terraform-enterprise.rli"
 
   deploy_secretsmanager        = false
-  deploy_vpc                   = false
   external_bootstrap_bucket    = var.external_bootstrap_bucket
   iact_subnet_list             = var.iact_subnet_list
   instance_type                = "m5.xlarge"
   kms_key_alias                = "test-public-active-active"
   load_balancing_scheme        = "PUBLIC"
-  network_id                   = var.network_id
-  network_private_subnet_cidrs = var.network_private_subnet_cidrs
-  network_private_subnets      = var.network_private_subnets
-  network_public_subnets       = var.network_public_subnets
   node_count                   = 2
   redis_encryption_at_rest     = false
   redis_encryption_in_transit  = false
