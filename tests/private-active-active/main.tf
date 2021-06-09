@@ -47,7 +47,7 @@ module "private_active_active" {
   iam_role_policy_arns         = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]
   instance_type                = "m5.4xlarge"
   key_name                     = var.key_name
-  kms_key_alias                = "test-private-active-active"
+  kms_key_alias                = "${random_string.friendly_name.id}-test-private-active-active"
   load_balancing_scheme        = "PRIVATE"
   network_id                   = var.network_id
   network_private_subnet_cidrs = var.network_private_subnet_cidrs
@@ -59,7 +59,7 @@ module "private_active_active" {
   redis_encryption_in_transit  = true
   redis_require_password       = true
   tfe_license_filepath         = ""
-  tfe_subdomain                = "test-private-active-active"
+  tfe_subdomain                = "${random_string.friendly_name.id}-test-private-active-active"
 
   common_tags = local.common_tags
 }

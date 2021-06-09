@@ -24,7 +24,7 @@ module "public_active_active" {
   external_bootstrap_bucket    = var.external_bootstrap_bucket
   iact_subnet_list             = var.iact_subnet_list
   instance_type                = "m5.xlarge"
-  kms_key_alias                = "test-public-active-active"
+  kms_key_alias                = "${random_string.friendly_name.id}-test-public-active-active"
   load_balancing_scheme        = "PUBLIC"
   network_id                   = var.network_id
   network_private_subnet_cidrs = var.network_private_subnet_cidrs
@@ -35,7 +35,7 @@ module "public_active_active" {
   redis_encryption_in_transit  = false
   redis_require_password       = false
   tfe_license_filepath         = ""
-  tfe_subdomain                = "test-public-active-active"
+  tfe_subdomain                = "${random_string.friendly_name.id}-test-public-active-active"
 
   common_tags = local.common_tags
 }
