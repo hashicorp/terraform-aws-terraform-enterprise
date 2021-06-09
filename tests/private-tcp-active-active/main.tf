@@ -53,17 +53,12 @@ module "private_tcp_active_active" {
 
   ami_id                       = data.aws_ami.rhel.id
   deploy_secretsmanager        = false
-  deploy_vpc                   = false
   external_bootstrap_bucket    = var.external_bootstrap_bucket
   iact_subnet_list             = ["0.0.0.0/0"]
   iam_role_policy_arns         = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]
   instance_type                = "m5.8xlarge"
   kms_key_alias                = "test-private-tcp-active-active"
   load_balancing_scheme        = "PRIVATE_TCP"
-  network_id                   = var.network_id
-  network_private_subnet_cidrs = var.network_private_subnet_cidrs
-  network_private_subnets      = var.network_private_subnets
-  network_public_subnets       = var.network_public_subnets
   node_count                   = 2
   proxy_ip                     = "${aws_instance.proxy.private_ip}:${local.http_proxy_port}"
   proxy_cert_bundle_name       = data.aws_s3_bucket_object.proxy_certificate.key
