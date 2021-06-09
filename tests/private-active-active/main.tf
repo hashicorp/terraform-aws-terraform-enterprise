@@ -43,7 +43,7 @@ module "private_active_active" {
   deploy_secretsmanager       = false
   external_bootstrap_bucket   = var.external_bootstrap_bucket
   iact_subnet_list            = ["0.0.0.0/0"]
-  iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]
+  iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type               = "m5.4xlarge"
   key_name                    = var.key_name
   kms_key_alias               = "test-private-active-active"

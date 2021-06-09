@@ -21,6 +21,7 @@ module "public_active_active" {
 
   deploy_secretsmanager       = false
   external_bootstrap_bucket   = var.external_bootstrap_bucket
+  iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   iact_subnet_list            = var.iact_subnet_list
   instance_type               = "m5.xlarge"
   kms_key_alias               = "test-public-active-active"
