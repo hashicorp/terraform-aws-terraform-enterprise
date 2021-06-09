@@ -135,7 +135,7 @@ variable "iact_subnet_time_limit" {
 
 variable "iam_role_policy_arns" {
   default     = []
-  description = "A set of Amazon Resource Names of IAM role policys to be attached to the TFE IAM role."
+  description = "A set of Amazon Resource Names of IAM role policies to be attached to the TFE IAM role."
   type        = set(string)
 }
 
