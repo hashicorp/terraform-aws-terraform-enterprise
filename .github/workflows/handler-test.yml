@@ -566,7 +566,7 @@ jobs:
           echo "::set-output name=token::$( \
             curl --fail --retry 5 --verbose \
             --insecure \
-            --connect-timeout 5 \
+            --connect-timeout 10 \
             --proxy socks5://localhost:5000 "$IACT_URL" )"
 
       - name: Retrieve Initial Admin User URL
