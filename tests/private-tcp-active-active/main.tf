@@ -48,7 +48,7 @@ module "private_tcp_active_active" {
 
   acm_certificate_arn  = var.acm_certificate_arn
   domain_name          = var.domain_name
-  friendly_name_prefix = random_string.friendly_name.result
+  friendly_name_prefix = local.friendly_name_prefix
   tfe_license_name     = "terraform-aws-terraform-enterprise.rli"
 
   ami_id                       = data.aws_ami.rhel.id
@@ -56,9 +56,9 @@ module "private_tcp_active_active" {
   deploy_vpc                   = false
   external_bootstrap_bucket    = var.external_bootstrap_bucket
   iact_subnet_list             = ["0.0.0.0/0"]
-  iam_role_policy_arns         = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]
+  iam_role_policy_arns         = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type                = "m5.8xlarge"
-  kms_key_alias                = "test-private-tcp-active-active"
+  kms_key_alias                = "${local.friendly_name_prefix}-test-private-tcp-active-active"
   load_balancing_scheme        = "PRIVATE_TCP"
   network_id                   = var.network_id
   network_private_subnet_cidrs = var.network_private_subnet_cidrs
@@ -71,7 +71,7 @@ module "private_tcp_active_active" {
   redis_encryption_in_transit  = true
   redis_require_password       = true
   tfe_license_filepath         = ""
-  tfe_subdomain                = "test-private-tcp-active-active"
+  tfe_subdomain                = "${local.friendly_name_prefix}-test-private-tcp-active-active"
 
   common_tags = local.common_tags
 }
