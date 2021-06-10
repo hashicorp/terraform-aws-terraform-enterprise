@@ -73,7 +73,7 @@ resource "aws_iam_role" "proxy_instance_role" {
   name_prefix        = "${local.friendly_name_prefix}-proxy-ssm"
   assume_role_policy = data.aws_iam_policy_document.proxy_instance_role.json
 
-  tags = var.common_tags
+  tags = local.common_tags
 }
 
 data "aws_iam_policy_document" "proxy_instance_role" {
