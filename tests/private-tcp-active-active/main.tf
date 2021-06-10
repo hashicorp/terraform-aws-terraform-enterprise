@@ -56,7 +56,7 @@ module "private_tcp_active_active" {
   deploy_vpc                   = false
   external_bootstrap_bucket    = var.external_bootstrap_bucket
   iact_subnet_list             = ["0.0.0.0/0"]
-  iam_role_policy_arns         = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]
+  iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type                = "m5.8xlarge"
   kms_key_alias                = "${local.friendly_name_prefix}-test-private-tcp-active-active"
   load_balancing_scheme        = "PRIVATE_TCP"
