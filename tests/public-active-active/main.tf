@@ -23,7 +23,7 @@ module "public_active_active" {
   deploy_vpc                   = false
   external_bootstrap_bucket    = var.external_bootstrap_bucket
   iact_subnet_list             = var.iact_subnet_list
-  iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
+  iam_role_policy_arns         = ["arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type                = "m5.xlarge"
   kms_key_alias                = "${local.friendly_name_prefix}-test-public-active-active"
   load_balancing_scheme        = "PUBLIC"
