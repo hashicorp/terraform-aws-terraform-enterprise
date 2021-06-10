@@ -36,7 +36,7 @@ module "private_active_active" {
 
   acm_certificate_arn  = var.acm_certificate_arn
   domain_name          = var.domain_name
-  friendly_name_prefix = random_string.friendly_name.id
+  friendly_name_prefix = local.friendly_name_prefix
   tfe_license_name     = "terraform-aws-terraform-enterprise.rli"
 
   ami_id                      = data.aws_ami.rhel.id
@@ -46,7 +46,7 @@ module "private_active_active" {
   iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type               = "m5.4xlarge"
   key_name                    = var.key_name
-  kms_key_alias               = "test-private-active-active"
+  kms_key_alias               = "${local.friendly_name_prefix}-test-private-active-active"
   load_balancing_scheme       = "PRIVATE"
   node_count                  = 2
   proxy_ip                    = "${aws_instance.proxy.private_ip}:${local.http_proxy_port}"
@@ -54,7 +54,7 @@ module "private_active_active" {
   redis_encryption_in_transit = true
   redis_require_password      = true
   tfe_license_filepath        = ""
-  tfe_subdomain               = "test-private-active-active"
+  tfe_subdomain               = "${local.friendly_name_prefix}-test-private-active-active"
 
   common_tags = local.common_tags
 }
