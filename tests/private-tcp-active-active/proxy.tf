@@ -2,7 +2,7 @@ resource "aws_security_group" "proxy" {
   name   = "${local.friendly_name_prefix}-sg-proxy-allow"
   vpc_id = module.private_tcp_active_active.network_id
 
-  tags = { 
+  tags = {
     Name = "${local.friendly_name_prefix}-sg-proxy-allow"
   }
 }

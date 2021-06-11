@@ -61,7 +61,7 @@ module "private_tcp_active_active" {
   iact_subnet_list            = ["0.0.0.0/0"]
   iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type               = "m5.8xlarge"
-  kms_key_alias               = "${local.friendly_name_prefix}-test-private-tcp-active-active"
+  kms_key_alias               = local.test_name
   load_balancing_scheme       = "PRIVATE_TCP"
   node_count                  = 2
   proxy_ip                    = "${aws_instance.proxy.private_ip}:${local.http_proxy_port}"
@@ -70,7 +70,7 @@ module "private_tcp_active_active" {
   redis_encryption_in_transit = true
   redis_require_password      = true
   tfe_license_filepath        = ""
-  tfe_subdomain               = "${local.friendly_name_prefix}-test-private-tcp-active-active"
+  tfe_subdomain               = local.test_name
 
   asg_tags = local.common_tags
 }

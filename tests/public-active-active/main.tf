@@ -28,14 +28,14 @@ module "public_active_active" {
   iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   iact_subnet_list            = var.iact_subnet_list
   instance_type               = "m5.xlarge"
-  kms_key_alias               = "${local.friendly_name_prefix}-test-public-active-active"
+  kms_key_alias               = local.test_name
   load_balancing_scheme       = "PUBLIC"
   node_count                  = 2
   redis_encryption_at_rest    = false
   redis_encryption_in_transit = false
   redis_require_password      = false
   tfe_license_filepath        = ""
-  tfe_subdomain               = "${local.friendly_name_prefix}-test-public-active-active"
+  tfe_subdomain               = local.test_name
 
   asg_tags = local.common_tags
 }
