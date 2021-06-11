@@ -5,7 +5,7 @@ resource "aws_security_group" "proxy" {
   # Prefix removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
   tags = {
     # Name = "${local.friendly_name_prefix}-sg-proxy-allow"
-    Name = "${local.friendly_name_prefix}-sg-proxy-allow"
+    Name = "sg-proxy-allow"
   }
 }
 
