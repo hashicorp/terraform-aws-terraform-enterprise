@@ -23,9 +23,9 @@ resource "aws_kms_key" "tfe_key" {
   is_enabled              = true
   key_usage               = "ENCRYPT_DECRYPT"
 
-  // Prefix removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
+  # Prefix removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
   tags = {
-    // Name = "${var.friendly_name_prefix}-tfe-kms-key"
+    # Name = "${var.friendly_name_prefix}-tfe-kms-key"
     Name = "tfe-kms-key"
   }
 }
