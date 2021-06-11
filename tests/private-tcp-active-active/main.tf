@@ -2,6 +2,10 @@ provider "aws" {
   assume_role {
     role_arn = var.aws_role_arn
   }
+
+  default_tags {
+    tags = local.common_tags
+  }
 }
 
 resource "random_string" "friendly_name" {
@@ -68,5 +72,5 @@ module "private_tcp_active_active" {
   tfe_license_filepath        = ""
   tfe_subdomain               = "${local.friendly_name_prefix}-test-private-tcp-active-active"
 
-  common_tags = local.common_tags
+  asg_tags = local.common_tags
 }

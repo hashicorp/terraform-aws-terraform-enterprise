@@ -1,11 +1,10 @@
 resource "aws_security_group" "proxy" {
-  name   = "${random_string.friendly_name.result}-sg-proxy-allow"
+  name   = "${local.friendly_name_prefix}-sg-proxy-allow"
   vpc_id = module.private_tcp_active_active.network_id
 
-  tags = merge(
-    { Name = "${random_string.friendly_name.result}-sg-proxy-allow" },
-    local.common_tags
-  )
+  tags = { 
+    Name = "${local.friendly_name_prefix}-sg-proxy-allow"
+  }
 }
 
 resource "aws_security_group_rule" "proxy_ingress_mitmproxy" {
@@ -42,15 +41,13 @@ resource "aws_security_group_rule" "proxy_egress" {
 }
 
 resource "aws_iam_instance_profile" "proxy" {
-  name_prefix = "${random_string.friendly_name.result}-proxy"
+  name_prefix = "${local.friendly_name_prefix}-proxy"
   role        = aws_iam_role.instance_role.name
 }
 
 resource "aws_iam_role" "instance_role" {
-  name_prefix        = "${random_string.friendly_name.result}-proxy"
+  name_prefix        = "${local.friendly_name_prefix}-proxy"
   assume_role_policy = data.aws_iam_policy_document.instance_role.json
-
-  tags = local.common_tags
 }
 
 data "aws_iam_policy_document" "instance_role" {

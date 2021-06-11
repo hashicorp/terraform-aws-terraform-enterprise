@@ -76,7 +76,21 @@ variable "node_count" {
 
 variable "common_tags" {
   type        = map(string)
-  description = "(Optional) Map of common tags for all taggable AWS resources."
+  description = <<DESC
+  (Optional) Map of common tags for AWS resources. If you are using the AWS provider's default_tags which
+  tags every taggable resource, then every resource using this variable will be tagged with both default_tags
+  and this map value.
+  DESC
+  default     = {}
+}
+
+variable "asg_tags" {
+  type        = map(string)
+  description = <<DESC
+  (Optional) Map of tags only used for the autoscaling group. If you are using the AWS provider's default_tags, 
+  please note that it tags every taggable resource except for the autoscaling group, therefore this variable may
+  be used to duplicate the key/value pairs in the default_tags if you wish.
+  DESC
   default     = {}
 }
 

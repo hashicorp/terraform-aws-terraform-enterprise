@@ -34,9 +34,13 @@ variable "tfe_license_filepath" {
 }
 
 variable "common_tags" {
-  default     = {}
   type        = map(string)
-  description = "(Optional) Map of common tags for all taggable AWS resources."
+  description = <<DESC
+  (Optional) Map of common tags for AWS resources. If you are using the AWS provider's default_tags which
+  tags every taggable resource, then every resource using this variable will be tagged with both default_tags
+  and this map value.
+  DESC
+  default     = {}
 }
 
 variable "iact_subnet_list" {
