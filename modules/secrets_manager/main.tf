@@ -4,8 +4,10 @@ resource "aws_secretsmanager_secret" "tfe_install" {
   name        = var.secretsmanager_secret_name == null ? "${var.friendly_name_prefix}-tfe-install-secrets" : var.secretsmanager_secret_name
   description = "TFE install secret metadata"
 
+  // Prefix removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
   tags = {
-    Name = "${var.friendly_name_prefix}-tfe-install-secrets"
+    // Name = "${var.friendly_name_prefix}-tfe-install-secrets"
+    Name = "tfe-install-secrets"
   }
 }
 

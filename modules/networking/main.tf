@@ -28,29 +28,38 @@ module "vpc" {
   public_subnets                 = var.network_public_subnet_cidrs
   single_nat_gateway             = false
 
+  // Prefixes removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
   igw_tags = {
-    Name = "${var.friendly_name_prefix}-tfe-igw"
+    // Name = "${var.friendly_name_prefix}-tfe-igw"
+    Name = "tfe-igw"
   }
   nat_eip_tags = {
-    Name = "${var.friendly_name_prefix}-tfe-nat-eip"
+    // Name = "${var.friendly_name_prefix}-tfe-nat-eip"
+    Name = "tfe-nat-eip"
   }
   nat_gateway_tags = {
-    Name = "${var.friendly_name_prefix}-tfe-tgw"
+    // Name = "${var.friendly_name_prefix}-tfe-tgw"
+    Name = "tfe-tgw"
   }
   private_route_table_tags = {
-    Name = "${var.friendly_name_prefix}-tfe-rtb-private"
+    // Name = "${var.friendly_name_prefix}-tfe-rtb-private"
+    Name = "tfe-rtb-private"
   }
   private_subnet_tags = {
-    Name = "${var.friendly_name_prefix}-private"
+    // Name = "${var.friendly_name_prefix}-private"
+    Name = "private"
   }
   public_route_table_tags = {
-    Name = "${var.friendly_name_prefix}-tfe-rtb-public"
+    // Name = "${var.friendly_name_prefix}-tfe-rtb-public"
+    Name = "tfe-rtb-public"
   }
   public_subnet_tags = {
-    Name = "${var.friendly_name_prefix}-public"
+    // Name = "${var.friendly_name_prefix}-public"
+    Name = "public"
   }
   vpc_tags = {
-    Name = "${var.friendly_name_prefix}-tfe-vpc"
+    // Name = "${var.friendly_name_prefix}-tfe-vpc"
+    Name = "tfe-vpc"
   }
 }
 
@@ -88,8 +97,10 @@ module "vpc_endpoints" {
       service             = "ec2messages"
       service_type        = "Interface"
       subnet_ids          = module.vpc.private_subnets
+      // Prefix removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
       tags = {
-        Name = "${var.friendly_name_prefix}-tfe-ec2messages-vpc-endpoint"
+        // Name = "${var.friendly_name_prefix}-tfe-ec2messages-vpc-endpoint"
+        Name = "tfe-ec2messages-vpc-endpoint"
       }
     }
     kms = {
@@ -102,8 +113,10 @@ module "vpc_endpoints" {
       route_table_ids = module.vpc.private_route_table_ids
       service         = "s3"
       service_type    = "Gateway"
+      // Prefix removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
       tags = {
-        Name = "${var.friendly_name_prefix}-tfe-s3-vpc-endpoint"
+        // Name = "${var.friendly_name_prefix}-tfe-s3-vpc-endpoint"
+        Name = "tfe-s3-vpc-endpoint"
       }
     }
     ssm = {
@@ -111,8 +124,10 @@ module "vpc_endpoints" {
       service             = "ssm"
       service_type        = "Interface"
       subnet_ids          = module.vpc.private_subnets
+      // Prefix removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
       tags = {
-        Name = "${var.friendly_name_prefix}-tfe-ssm-vpc-endpoint"
+        // Name = "${var.friendly_name_prefix}-tfe-ssm-vpc-endpoint"
+        Name = "tfe-ssm-vpc-endpoint"
       }
     }
     ssmmessages = {
@@ -120,8 +135,10 @@ module "vpc_endpoints" {
       service             = "ssmmessages"
       service_type        = "Interface"
       subnet_ids          = module.vpc.private_subnets
+      // Prefix removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
       tags = {
-        Name = "${var.friendly_name_prefix}-tfe-ssmmessages-vpc-endpoint"
+        // Name = "${var.friendly_name_prefix}-tfe-ssmmessages-vpc-endpoint"
+        Name = "tfe-ssmmessages-vpc-endpoint"
       }
     }
   }
