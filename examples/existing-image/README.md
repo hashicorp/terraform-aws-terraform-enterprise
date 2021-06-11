@@ -60,8 +60,6 @@ module "existing_image_example" {
   ami_id                = local.ami_id
   iact_subnet_list      = var.iact_subnet_list
   load_balancing_scheme = var.load_balancing_scheme
-
-  common_tags = var.common_tags
 }
 ```
 
@@ -83,7 +81,6 @@ The variable inputs described in this document serve as a reference configuratio
 | `tfe_subdomain` | Desired DNS record subdomain | string | `tfe` |
 | `tfe_license_name` | The name to use when copying the TFE license file to the EC2 instance. | string | `license.rli` |
 | `tfe_license_filepath` | The absolute path to the TFE license file on the system running Terraform. | string | `Users/yourname/license.rli` |
-| `common_tags` | Map of tags to use for resources | map(string) | `{ Owner = "Your Name" }` |
 | `iact_subnet_list` | A list of CIDR masks that configure the ability to retrieve the IACT from outside the host. | list(string) | `["0.0.0.0/0"]` |
 | `load_balancing_scheme` | Load Balancing Scheme. Supported values are: "PRIVATE"; "PRIVATE_TCP"; "PUBLIC". | string | `PUBLIC` |
 | `ami_id` | AMI ID of the custom image to use for TFE instances. If this value is provided, you do not need any of the following ami variable values. | string | `ami-12345` |

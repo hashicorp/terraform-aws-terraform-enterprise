@@ -36,10 +36,9 @@ resource "aws_security_group" "proxy" {
   name   = "${local.friendly_name_prefix}-sg-proxy-allow"
   vpc_id = module.private_active_active.network_id
 
-  tags = merge(
-    { Name = "${local.friendly_name_prefix}-sg-proxy-allow" },
-    local.common_tags
-  )
+  tags = {
+    Name = "${local.friendly_name_prefix}-sg-proxy-allow"
+  }
 }
 
 resource "aws_security_group_rule" "proxy_ingress" {

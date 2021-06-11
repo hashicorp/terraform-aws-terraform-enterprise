@@ -11,16 +11,6 @@ variable "acm_certificate_arn" {
   description = "ACM certificate ARN to use with load balancer"
 }
 
-variable "common_tags" {
-  type        = map(string)
-  description = <<DESC
-  (Optional) Map of common tags for AWS resources. If you are using the AWS provider's default_tags which
-  tags every taggable resource, then every resource using this variable will be tagged with both default_tags and 
-  this map value.
-  DESC
-  default     = {}
-}
-
 variable "asg_tags" {
   type        = map(string)
   description = <<DESC

@@ -27,7 +27,6 @@ module "vpc" {
   private_subnets                = var.network_private_subnet_cidrs
   public_subnets                 = var.network_public_subnet_cidrs
   single_nat_gateway             = false
-  tags                           = var.common_tags
 
   igw_tags = {
     Name = "${var.friendly_name_prefix}-tfe-igw"
@@ -58,7 +57,6 @@ module "vpc" {
 resource "aws_security_group" "ssm" {
   description = "The security group of Systems Manager for TFE."
   name        = "${var.friendly_name_prefix}-tfe"
-  tags        = var.common_tags
   vpc_id      = module.vpc.vpc_id
 
   ingress {
@@ -77,7 +75,6 @@ module "vpc_endpoints" {
 
   security_group_ids = [aws_security_group.ssm.id]
   vpc_id             = module.vpc.vpc_id
-  tags               = var.common_tags
 
   endpoints = {
     ec2 = {

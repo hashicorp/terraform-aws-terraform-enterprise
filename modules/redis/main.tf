@@ -8,8 +8,6 @@ resource "aws_security_group" "redis" {
   description = "The security group of the Redis deployment for TFE."
   name        = "${var.friendly_name_prefix}-tfe-redis"
   vpc_id      = var.network_id
-
-  tags = var.common_tags
 }
 
 resource "aws_security_group_rule" "redis_tfe_ingress" {
@@ -81,6 +79,4 @@ resource "aws_elasticache_replication_group" "redis" {
 
   at_rest_encryption_enabled = var.redis_encryption_at_rest
   kms_key_id                 = (var.redis_encryption_at_rest == true) ? var.kms_key_arn : null
-
-  tags = var.common_tags
 }

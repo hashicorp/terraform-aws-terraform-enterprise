@@ -33,6 +33,4 @@ module "existing_image_example" {
   ami_id                = local.ami_id
   iact_subnet_list      = var.iact_subnet_list
   load_balancing_scheme = var.load_balancing_scheme
-
-  common_tags = var.common_tags
 }

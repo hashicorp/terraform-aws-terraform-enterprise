@@ -18,16 +18,6 @@ variable "kms_key_arn" {
   type        = string
 }
 
-variable "common_tags" {
-  type        = map(string)
-  description = <<DESC
-  (Optional) Map of common tags for AWS resources. If you are using the AWS provider's default_tags which
-  tags every taggable resource, then every resource using this variable will be tagged with both default_tags
-  and this map value.
-  DESC
-  default     = {}
-}
-
 variable "iam_role_policy_arns" {
   default     = []
   description = "A set of Amazon Resource Names of IAM role policys to be attached to the TFE IAM role."

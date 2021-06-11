@@ -16,8 +16,6 @@ resource "aws_s3_bucket" "tfe_bootstrap_bucket" {
   }
 
   force_destroy = true
-
-  tags = var.common_tags
 }
 
 resource "aws_s3_bucket_object" "tfe_license" {
@@ -25,8 +23,6 @@ resource "aws_s3_bucket_object" "tfe_license" {
   bucket = aws_s3_bucket.tfe_bootstrap_bucket.id
   key    = var.tfe_license_name
   source = var.tfe_license_filepath
-
-  tags = var.common_tags
 }
 
 resource "aws_s3_bucket_object" "proxy_cert_bundle" {
@@ -34,8 +30,6 @@ resource "aws_s3_bucket_object" "proxy_cert_bundle" {
   bucket = aws_s3_bucket.tfe_bootstrap_bucket.id
   key    = var.proxy_cert_bundle_name
   source = var.proxy_cert_bundle_filepath
-
-  tags = var.common_tags
 }
 
 resource "aws_s3_bucket_public_access_block" "tfe_bootstrap_bucket" {
@@ -65,8 +59,6 @@ resource "aws_s3_bucket" "tfe_data_bucket" {
   }
 
   force_destroy = true
-
-  tags = var.common_tags
 }
 
 resource "aws_s3_bucket_public_access_block" "tfe_data" {

@@ -7,8 +7,6 @@ resource "aws_security_group" "postgresql" {
   description = "The security group of the PostgreSQL deployment for TFE."
   name        = "${var.friendly_name_prefix}-tfe-postgresql"
   vpc_id      = var.network_id
-
-  tags = var.common_tags
 }
 
 resource "aws_security_group_rule" "postgresql_tfe_ingress" {
@@ -50,8 +48,6 @@ resource "aws_security_group_rule" "postgresql_egress" {
 resource "aws_db_subnet_group" "tfe" {
   name       = var.friendly_name_prefix
   subnet_ids = var.network_subnets_private
-
-  tags = var.common_tags
 }
 
 resource "aws_db_instance" "postgresql" {
@@ -80,6 +76,4 @@ resource "aws_db_instance" "postgresql" {
   storage_encrypted      = true
   storage_type           = "gp2"
   vpc_security_group_ids = [aws_security_group.postgresql.id]
-
-  tags = var.common_tags
 }

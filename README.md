@@ -57,6 +57,8 @@ Certificate validation can take up two hours, causing timeouts during module app
 ## How to Use This Module
 
 - Ensure account meets module pre-requisites from above.
+- You may also choose to use this module with a custom AMI image as shown in the [`existing-image`](./examples/existing-image) example.
+- Please note that while some resources are individually and uniquely tagged, all common tags are expected to be configured within the AWS provider as shown in the example code snippet below.
 
 - Create a Terraform configuration that pulls in this module and specifies values
   of the required variables:
@@ -64,30 +66,16 @@ Certificate validation can take up two hours, causing timeouts during module app
 ```hcl
 provider "aws" {
   region = "<your AWS region>"
+  default_tags {
+    tags = var.common_tags
+  }
 }
 
 module "tfe_node" {
   source                 = "<filepath to cloned module directory>"
-  friendly_name_prefix   = "<prefix for tagging/naming AWS resources>"
+  friendly_name_prefix   = "<prefix for naming AWS resources>"
   domain_name            = "<domain for creating the Terraform Enterprise subdomain on. >"
   tfe_license_filepath   = "<filepath to your .rli file>"
-  acm_certificate_arn    = "<ARN for ACM cert to be used with load balancer>"
-}
-```
-
-- _OPTIONAL_: This module can be deployed with a custom AMI rather than the default base given (Ubuntu 20.04 LTS), and has been verified to be functional with Ubuntu 20.04 LTS and RHEL 7.x based images. To deploy using a custom image, use the following configuration instead:
-
-```hcl
-provider "aws" {
-  region = "<your AWS region>"
-}
-
-module "tfe_node" {
-  source               = "<filepath to cloned module directory>"
-  ami_id               = "<the ID of your preferred AMI>"
-  friendly_name_prefix = "<prefix for tagging/naming AWS resources>"
-  domain_name          = "<domain for creating the Terraform Enterprise subdomain on. >"
-  tfe_license_filepath = "<filepath to your .rli file>"
   acm_certificate_arn    = "<ARN for ACM cert to be used with load balancer>"
 }
 ```
@@ -115,9 +103,10 @@ The resources created are:
 
 We have included documentation and reference examples for additional common installation scenarios for TFE, as well as examples for supporting resources that lack official modules.
 
-- [Example: Deploying behind a proxy](./examples/behind-proxy)
-- [Example: Deploying into an existing private network](./examples/existing-private-network)
-- [Example: Deploying while managing DNS outside of AWS](./examples/external-dns)
+- [Example: Deploying with an existing, custom image](./examples/existing-image)
+- [Example: Deploying behind a proxy (coming soon...)](./examples/behind-proxy)
+- [Example: Deploying into an existing private network (coming soon...)](./examples/existing-private-network)
+- [Example: Deploying while managing DNS outside of AWS (coming soon...)](./examples/external-dns)
 
 ## License
 

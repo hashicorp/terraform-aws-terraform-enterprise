@@ -3,8 +3,6 @@ resource "aws_lb" "tfe_lb" {
   internal           = true
   load_balancer_type = "network"
   subnets            = var.network_private_subnets
-
-  tags = var.common_tags
 }
 
 resource "aws_lb_listener" "tfe_listener_443" {
@@ -27,8 +25,6 @@ resource "aws_lb_target_group" "tfe_tg_443" {
   health_check {
     protocol = "TCP"
   }
-
-  tags = var.common_tags
 }
 
 resource "aws_lb_listener" "tfe_listener_8800" {
@@ -57,8 +53,6 @@ resource "aws_lb_target_group" "tfe_tg_8800" {
     path     = "/"
     protocol = "TCP"
   }
-
-  tags = var.common_tags
 }
 
 data "aws_route53_zone" "tfe" {

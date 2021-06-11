@@ -3,16 +3,6 @@ variable "active_active" {
   description = "Flag for active-active configuation: true for active-active, false for standalone"
 }
 
-variable "common_tags" {
-  type        = map(string)
-  description = <<DESC
-  (Optional) Map of common tags for AWS resources. If you are using the AWS provider's default_tags which
-  tags every taggable resource, then every resource using this variable will be tagged with both default_tags
-  and this map value.
-  DESC
-  default     = {}
-}
-
 variable "kms_key_arn" {
   description = <<-EOD
   The Amazon Resource Name of the KMS key which will be used by the Redis Elasticache replication group to encrypt data 
