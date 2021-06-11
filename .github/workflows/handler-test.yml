@@ -541,7 +541,7 @@ jobs:
           echo "Curling \`health_check_url\` for a return status of 200..."
           while ! curl \
             --insecure \
-            --connect-timeout 5 \
+            --connect-timeout 10 \
             -sfS --max-time 5 --proxy socks5://localhost:5000 \
             $HEALTH_CHECK_URL; \
             do sleep 5; done
@@ -566,7 +566,7 @@ jobs:
           echo "::set-output name=token::$( \
             curl --fail --retry 5 --verbose \
             --insecure \
-            --connect-timeout 5 \
+            --connect-timeout 10 \
             --proxy socks5://localhost:5000 "$IACT_URL" )"
 
       - name: Retrieve Initial Admin User URL
@@ -588,7 +588,7 @@ jobs:
           echo "::set-output name=response::$( \
             curl \
             --insecure \
-            --connect-timeout 5 \
+            --connect-timeout 10 \
             --fail \
             --retry 5 \
             --verbose \

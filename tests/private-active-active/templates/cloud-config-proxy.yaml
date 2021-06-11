@@ -38,9 +38,12 @@ write_files:
 
 packages:
     - squid
+    - https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
 
 runcmd:
     - firewall-cmd --permanent --add-port=${http_proxy_port}/tcp
     - firewall-cmd --reload
     - systemctl start squid
     - systemctl enable squid
+    - systemctl enable amazon-ssm-agent
+    - systemctl start amazon-ssm-agent

@@ -14,10 +14,11 @@ data "template_cloudinit_config" "config_proxy" {
 }
 
 resource "aws_instance" "proxy" {
-  ami           = data.aws_ami.rhel.id
-  instance_type = "m4.large"
+  ami                  = data.aws_ami.rhel.id
+  instance_type        = "m4.large"
+  iam_instance_profile = aws_iam_instance_profile.proxy_ssm.name
 
-  subnet_id = var.network_private_subnets[0]
+  subnet_id = module.private_active_active.private_subnet_ids[0]
 
   vpc_security_group_ids = [
     aws_security_group.proxy.id,
@@ -32,11 +33,11 @@ resource "aws_instance" "proxy" {
 }
 
 resource "aws_security_group" "proxy" {
-  name   = "${random_string.friendly_name.result}-sg-proxy-allow"
-  vpc_id = var.network_id
+  name   = "${local.friendly_name_prefix}-sg-proxy-allow"
+  vpc_id = module.private_active_active.network_id
 
   tags = merge(
-    { Name = "${random_string.friendly_name.result}-sg-proxy-allow" },
+    { Name = "${local.friendly_name_prefix}-sg-proxy-allow" },
     local.common_tags
   )
 }
@@ -46,7 +47,7 @@ resource "aws_security_group_rule" "proxy_ingress" {
   from_port   = local.http_proxy_port
   to_port     = local.http_proxy_port
   protocol    = "tcp"
-  cidr_blocks = var.network_private_subnet_cidrs
+  cidr_blocks = module.private_active_active.network_private_subnet_cidrs
   description = "Allow internal traffic to proxy instance"
 
   security_group_id = aws_security_group.proxy.id
@@ -61,4 +62,35 @@ resource "aws_security_group_rule" "proxy_egress" {
   description = "Allow all egress traffic from proxy instance"
 
   security_group_id = aws_security_group.proxy.id
+}
+
+resource "aws_iam_instance_profile" "proxy_ssm" {
+  name_prefix = "${local.friendly_name_prefix}-proxy-ssm"
+  role        = aws_iam_role.proxy_instance_role.name
+}
+
+resource "aws_iam_role" "proxy_instance_role" {
+  name_prefix        = "${local.friendly_name_prefix}-proxy-ssm"
+  assume_role_policy = data.aws_iam_policy_document.proxy_instance_role.json
+
+  tags = local.common_tags
+}
+
+data "aws_iam_policy_document" "proxy_instance_role" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "sts:AssumeRole",
+    ]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "ssm" {
+  role       = aws_iam_role.proxy_instance_role.name
+  policy_arn = local.ssm_policy_arn
 }

@@ -8,5 +8,5 @@ locals {
   }
 
   friendly_name_prefix = random_string.friendly_name.id
-
+  ssm_policy_arn       = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }

@@ -51,27 +51,22 @@ module "private_tcp_active_active" {
   friendly_name_prefix = local.friendly_name_prefix
   tfe_license_name     = "terraform-aws-terraform-enterprise.rli"
 
-  ami_id                       = data.aws_ami.rhel.id
-  deploy_secretsmanager        = false
-  deploy_vpc                   = false
-  external_bootstrap_bucket    = var.external_bootstrap_bucket
-  iact_subnet_list             = ["0.0.0.0/0"]
-  iam_role_policy_arns         = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
-  instance_type                = "m5.8xlarge"
-  kms_key_alias                = "${local.friendly_name_prefix}-test-private-tcp-active-active"
-  load_balancing_scheme        = "PRIVATE_TCP"
-  network_id                   = var.network_id
-  network_private_subnet_cidrs = var.network_private_subnet_cidrs
-  network_private_subnets      = var.network_private_subnets
-  network_public_subnets       = var.network_public_subnets
-  node_count                   = 2
-  proxy_ip                     = "${aws_instance.proxy.private_ip}:${local.http_proxy_port}"
-  proxy_cert_bundle_name       = data.aws_s3_bucket_object.proxy_certificate.key
-  redis_encryption_at_rest     = true
-  redis_encryption_in_transit  = true
-  redis_require_password       = true
-  tfe_license_filepath         = ""
-  tfe_subdomain                = "${local.friendly_name_prefix}-test-private-tcp-active-active"
+  ami_id                      = data.aws_ami.rhel.id
+  deploy_secretsmanager       = false
+  external_bootstrap_bucket   = var.external_bootstrap_bucket
+  iact_subnet_list            = ["0.0.0.0/0"]
+  iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
+  instance_type               = "m5.8xlarge"
+  kms_key_alias               = "${local.friendly_name_prefix}-test-private-tcp-active-active"
+  load_balancing_scheme       = "PRIVATE_TCP"
+  node_count                  = 2
+  proxy_ip                    = "${aws_instance.proxy.private_ip}:${local.http_proxy_port}"
+  proxy_cert_bundle_name      = data.aws_s3_bucket_object.proxy_certificate.key
+  redis_encryption_at_rest    = true
+  redis_encryption_in_transit = true
+  redis_require_password      = true
+  tfe_license_filepath        = ""
+  tfe_subdomain               = "${local.friendly_name_prefix}-test-private-tcp-active-active"
 
   common_tags = local.common_tags
 }
