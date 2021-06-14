@@ -11,5 +11,4 @@ locals {
   }
 
   friendly_name_prefix = random_string.friendly_name.id
-  test_name            = "${local.friendly_name_prefix}-test-private-tcp-active-active"
 }
