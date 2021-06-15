@@ -159,7 +159,7 @@ jobs:
 
       - name: Terraform Destroy
         id: destroy
-        if: ${{ github.event.client_payload.slash_command.args.named.destroy != 'false' }}
+        if: ${{ always() && github.event.client_payload.slash_command.args.named.destroy != 'false' }}
         working-directory: ${{ env.WORK_DIR_PATH }}
         run: terraform destroy -auto-approve -input=false -no-color
 
@@ -384,7 +384,7 @@ jobs:
 
       - name: Terraform Destroy
         id: destroy
-        if: ${{ github.event.client_payload.slash_command.args.named.destroy != 'false' }}
+        if: ${{ always() && github.event.client_payload.slash_command.args.named.destroy != 'false' }}
         working-directory: ${{ env.WORK_DIR_PATH }}
         run: terraform destroy -auto-approve -input=false -no-color
 
@@ -620,7 +620,7 @@ jobs:
 
       - name: Terraform Destroy
         id: destroy
-        if: ${{ github.event.client_payload.slash_command.args.named.destroy != 'false' }}
+        if: ${{ always() && github.event.client_payload.slash_command.args.named.destroy != 'false' }}
         working-directory: ${{ env.WORK_DIR_PATH }}
         run: terraform destroy -auto-approve -input=false -no-color
 
