@@ -173,7 +173,7 @@ jobs:
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
-            ### ${{ fromJSON('[":x:", ":heavy_check_mark:"]')[steps.destroy.outcome == "success" || (steps.destroy.outcome == "skipped" && steps.run-smoke-test.outcome == "success")] }} Terraform Public Active/Active Test Report
+            ### ${{ fromJSON('[":x:", ":heavy_check_mark:"]')[job.status == "success"] }} Terraform Public Active/Active Test Report
 
             :link: [Action Summary Page](${{ steps.vars.outputs.run-url }})
 
