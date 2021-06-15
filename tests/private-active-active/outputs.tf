@@ -35,3 +35,9 @@ output "tfe_instance_id" {
 
   description = "The ID of a TFE EC2 instance."
 }
+
+output "proxy_instance_id" {
+  value = aws_instance.proxy.id
+
+  description = "The ID of the proxy EC2 instance."
+}
