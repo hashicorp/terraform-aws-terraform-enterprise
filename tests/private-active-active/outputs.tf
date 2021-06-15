@@ -30,12 +30,6 @@ output "initial_admin_user_url" {
   description = "The URL with path to access the TFE instance Initial Admin User."
 }
 
-output "tfe_instance_id" {
-  value = data.aws_instances.main.ids[0]
-
-  description = "The ID of a TFE EC2 instance."
-}
-
 output "proxy_instance_id" {
   value = aws_instance.proxy.id
 
