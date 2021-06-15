@@ -37,13 +37,13 @@ write_files:
             refresh_pattern .       0   20% 4320
 
 packages:
-    - squid
     - https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+    - squid
 
 runcmd:
+    - systemctl enable amazon-ssm-agent
+    - systemctl start amazon-ssm-agent
     - firewall-cmd --permanent --add-port=${http_proxy_port}/tcp
     - firewall-cmd --reload
     - systemctl start squid
     - systemctl enable squid
-    - systemctl enable amazon-ssm-agent
-    - systemctl start amazon-ssm-agent
