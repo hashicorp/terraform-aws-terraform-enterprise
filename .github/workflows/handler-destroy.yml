@@ -148,15 +148,10 @@ jobs:
           terraform_version: 0.14.8
           terraform_wrapper: true
 
-      - name: Terraform Plan Destroy
-        id: plan-destroy
-        working-directory: ${{ env.WORK_DIR_PATH }}
-        run: terraform plan -destroy -out=destroy.tfplan
-
       - name: Terraform Destroy
         id: apply-destroy
         working-directory: ${{ env.WORK_DIR_PATH }}
-        run: terraform apply destroy.tfplan
+        run: terraform destroy -auto-approve -input=false -no-color
 
       - name: Update comment
         if: ${{ always() }}
@@ -169,8 +164,6 @@ jobs:
             :computer: @hc-team-tfe
 
             ### Terraform Private TCP Active/Active Destruction Report :newspaper:
-
-            - `${{ steps.plan-destroy.outcome }}` Terraform Plan Destroy :page_facing_up:
 
             - `${{ steps.apply-destroy.outcome }}` Terraform Destroy :fire:
 
