@@ -21,6 +21,7 @@ jobs:
           reaction-token: ${{ secrets.GITHUB_TOKEN }}
           commands: |
             test
+            destroy
             help
           permission: maintain
           issue-type: pull-request
