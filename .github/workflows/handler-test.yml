@@ -302,7 +302,7 @@ jobs:
                 --parameters \"portNumber=%p\""' \
             -i ./ssh-key.pem \
             -f -N -p 22 -D localhost:5000 \
-            ec2-user@"$INSTANCE_ID"
+            ubuntu@"$INSTANCE_ID"
 
       - name: Wait For TFE
         id: wait-for-tfe
