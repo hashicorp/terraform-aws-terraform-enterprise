@@ -17,6 +17,7 @@ resource "aws_instance" "proxy" {
   ami                  = data.aws_ami.rhel.id
   instance_type        = "m4.large"
   iam_instance_profile = aws_iam_instance_profile.proxy_ssm.name
+  key_name             = var.key_name
 
   subnet_id = module.private_active_active.private_subnet_ids[0]
 
