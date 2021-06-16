@@ -12,5 +12,5 @@ locals {
 
   friendly_name_prefix = random_string.friendly_name.id
   ssm_policy_arn       = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-  test_name            = "${local.friendly_name_prefix}-test-private-tcp-active-active
+  test_name            = "${local.friendly_name_prefix}-test-private-tcp-active-active"
 }
