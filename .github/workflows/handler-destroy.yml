@@ -38,6 +38,11 @@ jobs:
           terraform_version: 0.14.8
           terraform_wrapper: true
 
+      - name: Terraform Init
+        id: init
+        working-directory: ${{ env.WORK_DIR_PATH }}
+        run: terraform init -input=false -no-color
+
       - name: Terraform Destroy
         id: destroy
         working-directory: ${{ env.WORK_DIR_PATH }}
@@ -54,6 +59,8 @@ jobs:
             :computer: @hc-team-tfe
 
             ### Terraform Public Active/Active Destruction Report :newspaper:
+
+            - `${{ steps.init.outcome }}` Terraform Initialization :gear: 
 
             - `${{ steps.destroy.outcome }}` Terraform Destroy :fire:
 
@@ -93,6 +100,11 @@ jobs:
           terraform_version: 0.14.8
           terraform_wrapper: true
 
+      - name: Terraform Init
+        id: init
+        working-directory: ${{ env.WORK_DIR_PATH }}
+        run: terraform init -input=false -no-color
+
       - name: Terraform Destroy
         id: destroy
         working-directory: ${{ env.WORK_DIR_PATH }}
@@ -109,6 +121,8 @@ jobs:
             :computer: @hc-team-tfe
 
             ### Terraform Private Active/Active Destruction Report :newspaper:
+
+            - `${{ steps.init.outcome }}` Terraform Initialization :gear: 
 
             - `${{ steps.destroy.outcome }}` Terraform Destroy :fire:
 
@@ -148,6 +162,11 @@ jobs:
           terraform_version: 0.14.8
           terraform_wrapper: true
 
+      - name: Terraform Init
+        id: init
+        working-directory: ${{ env.WORK_DIR_PATH }}
+        run: terraform init -input=false -no-color
+
       - name: Terraform Destroy
         id: destroy
         working-directory: ${{ env.WORK_DIR_PATH }}
@@ -164,6 +183,8 @@ jobs:
             :computer: @hc-team-tfe
 
             ### Terraform Private TCP Active/Active Destruction Report :newspaper:
+
+            - `${{ steps.init.outcome }}` Terraform Initialization :gear: 
 
             - `${{ steps.destroy.outcome }}` Terraform Destroy :fire:
 
