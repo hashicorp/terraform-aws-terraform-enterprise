@@ -41,9 +41,3 @@ variable "network_private_subnet_cidrs" {
   description = "(Optional) List of private subnet CIDR ranges to create in VPC."
   default     = ["10.0.32.0/20", "10.0.48.0/20"]
 }
-
-variable "common_tags" {
-  type        = map(string)
-  description = "(Optional) Map of common tags for all taggable AWS resources."
-  default     = {}
-}

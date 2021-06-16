@@ -23,10 +23,11 @@ resource "aws_kms_key" "tfe_key" {
   is_enabled              = true
   key_usage               = "ENCRYPT_DECRYPT"
 
-  tags = merge(
-    { Name = "${var.friendly_name_prefix}-tfe-kms-key" },
-    var.common_tags,
-  )
+  # Prefix removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
+  tags = {
+    # Name = "${var.friendly_name_prefix}-tfe-kms-key"
+    Name = "tfe-kms-key"
+  }
 }
 
 resource "aws_kms_alias" "key_alias" {
@@ -51,8 +52,6 @@ module "object_storage" {
   tfe_license_name           = var.tfe_license_name
   proxy_cert_bundle_filepath = var.proxy_cert_bundle_filepath
   proxy_cert_bundle_name     = var.proxy_cert_bundle_name
-
-  common_tags = var.common_tags
 }
 
 module "service_accounts" {
@@ -62,9 +61,7 @@ module "service_accounts" {
   aws_bucket_data_arn      = module.object_storage.s3_bucket_data_arn
   friendly_name_prefix     = var.friendly_name_prefix
   kms_key_arn              = aws_kms_key.tfe_key.arn
-
-  common_tags          = var.common_tags
-  iam_role_policy_arns = var.iam_role_policy_arns
+  iam_role_policy_arns     = var.iam_role_policy_arns
 }
 
 module "secrets_manager" {
@@ -72,8 +69,6 @@ module "secrets_manager" {
 
   friendly_name_prefix  = var.friendly_name_prefix
   deploy_secretsmanager = var.deploy_secretsmanager
-
-  common_tags = var.common_tags
 }
 
 module "networking" {
@@ -85,8 +80,6 @@ module "networking" {
   network_cidr                 = var.network_cidr
   network_private_subnet_cidrs = var.network_private_subnet_cidrs
   network_public_subnet_cidrs  = var.network_public_subnet_cidrs
-
-  common_tags = var.common_tags
 }
 
 locals {
@@ -114,8 +107,6 @@ module "redis" {
   redis_encryption_in_transit = var.redis_encryption_in_transit
   redis_encryption_at_rest    = var.redis_encryption_at_rest
   redis_require_password      = var.redis_require_password
-
-  common_tags = var.common_tags
 }
 
 module "database" {
@@ -128,8 +119,6 @@ module "database" {
   network_private_subnet_cidrs = var.network_private_subnet_cidrs
   network_subnets_private      = local.network_private_subnets
   tfe_instance_sg              = module.vm.tfe_instance_sg
-
-  common_tags = var.common_tags
 }
 
 module "user_data" {
@@ -173,8 +162,6 @@ module "load_balancer" {
   network_public_subnets         = local.network_public_subnets
   network_private_subnets        = local.network_private_subnets
   ssl_policy                     = var.ssl_policy
-
-  common_tags = var.common_tags
 }
 
 module "private_tcp_load_balancer" {
@@ -189,8 +176,6 @@ module "private_tcp_load_balancer" {
   network_id              = local.network_id
   network_private_subnets = local.network_private_subnets
   ssl_policy              = var.ssl_policy
-
-  common_tags = var.common_tags
 }
 
 module "vm" {
@@ -202,7 +187,7 @@ module "vm" {
   aws_lb                              = var.load_balancing_scheme == "PRIVATE_TCP" ? null : module.load_balancer[0].aws_lb_security_group
   aws_lb_target_group_tfe_tg_443_arn  = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_443_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_443_arn
   aws_lb_target_group_tfe_tg_8800_arn = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn
-  common_tags                         = var.common_tags
+  asg_tags                            = var.asg_tags
   default_ami_id                      = local.default_ami_id
   friendly_name_prefix                = var.friendly_name_prefix
   key_name                            = var.key_name

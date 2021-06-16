@@ -18,12 +18,6 @@ variable "kms_key_arn" {
   type        = string
 }
 
-variable "common_tags" {
-  type        = map(string)
-  description = "(Optional) Map of common tags for all taggable AWS resources."
-  default     = {}
-}
-
 variable "iam_role_policy_arns" {
   default     = []
   description = "A set of Amazon Resource Names of IAM role policys to be attached to the TFE IAM role."

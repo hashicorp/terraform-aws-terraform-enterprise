@@ -3,12 +3,6 @@ variable "friendly_name_prefix" {
   type        = string
 }
 
-variable "common_tags" {
-  type        = map(string)
-  description = "(Optional) Map of common tags for all taggable AWS resources."
-  default     = {}
-}
-
 variable "deploy_secretsmanager" {
   type        = bool
   description = "(Optional) Boolean indicating whether to deploy AWS Secrets Manager secret (true) or not (false)."

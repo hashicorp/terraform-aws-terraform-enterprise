@@ -1,8 +1,6 @@
 resource "aws_security_group" "tfe_lb_allow" {
   name   = "${var.friendly_name_prefix}-tfe-lb-allow"
   vpc_id = var.network_id
-
-  tags = var.common_tags
 }
 
 resource "aws_security_group_rule" "tfe_lb_allow_inbound_http" {
@@ -39,8 +37,6 @@ resource "aws_security_group_rule" "tfe_lb_allow_inbound_dashboard" {
 resource "aws_security_group" "tfe_outbound_allow" {
   name   = "${var.friendly_name_prefix}-tfe-outbound-allow"
   vpc_id = var.network_id
-
-  tags = var.common_tags
 }
 
 resource "aws_security_group_rule" "tfe_outbound_allow_all" {
@@ -64,8 +60,6 @@ resource "aws_lb" "tfe_lb" {
     aws_security_group.tfe_lb_allow.id,
     aws_security_group.tfe_outbound_allow.id
   ]
-
-  tags = var.common_tags
 }
 
 resource "aws_lb_listener" "tfe_listener_80" {
@@ -108,8 +102,6 @@ resource "aws_lb_target_group" "tfe_tg_443" {
     protocol = "HTTPS"
     matcher  = "200-399"
   }
-
-  tags = var.common_tags
 }
 
 resource "aws_lb_listener" "tfe_listener_8800" {
@@ -139,8 +131,6 @@ resource "aws_lb_target_group" "tfe_tg_8800" {
     protocol = "HTTPS"
     matcher  = "200-399"
   }
-
-  tags = var.common_tags
 }
 
 data "aws_route53_zone" "tfe" {

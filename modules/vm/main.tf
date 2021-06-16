@@ -4,8 +4,6 @@
 resource "aws_security_group" "tfe_instance" {
   name   = "${var.friendly_name_prefix}-tfe-ec2-sg"
   vpc_id = var.network_id
-
-  tags = var.common_tags
 }
 
 resource "aws_security_group_rule" "tfe_ui" {
@@ -101,7 +99,7 @@ resource "aws_autoscaling_group" "tfe_asg" {
       },
     ],
     [
-      for k, v in var.common_tags : {
+      for k, v in var.asg_tags : {
         key                 = k
         value               = v
         propagate_at_launch = true

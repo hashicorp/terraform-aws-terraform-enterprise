@@ -33,12 +33,6 @@ variable "tfe_license_filepath" {
   description = "The absolute path to the TFE license file on the system running Terraform."
 }
 
-variable "common_tags" {
-  default     = {}
-  type        = map(string)
-  description = "(Optional) Map of common tags for all taggable AWS resources."
-}
-
 variable "iact_subnet_list" {
   default     = ["0.0.0.0/0"]
   type        = list(string)

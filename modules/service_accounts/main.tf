@@ -6,8 +6,6 @@ resource "aws_iam_instance_profile" "tfe" {
 resource "aws_iam_role" "instance_role" {
   name_prefix        = "${var.friendly_name_prefix}-tfe"
   assume_role_policy = data.aws_iam_policy_document.instance_role.json
-
-  tags = var.common_tags
 }
 
 data "aws_iam_policy_document" "instance_role" {

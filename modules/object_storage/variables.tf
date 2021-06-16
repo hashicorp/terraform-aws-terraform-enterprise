@@ -1,9 +1,3 @@
-variable "common_tags" {
-  type        = map(string)
-  description = "(Optional) Map of common tags for all taggable AWS resources."
-  default     = {}
-}
-
 variable "kms_key_arn" {
   description = "The Amazon Resource Name of the KMS key with which S3 storage bucket objects will be encrypted."
   type        = string

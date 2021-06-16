@@ -17,6 +17,7 @@ resource "aws_instance" "proxy" {
   ami                  = data.aws_ami.rhel.id
   instance_type        = "m4.large"
   iam_instance_profile = aws_iam_instance_profile.proxy_ssm.name
+  key_name             = var.key_name
 
   subnet_id = module.private_active_active.private_subnet_ids[0]
 
@@ -36,10 +37,11 @@ resource "aws_security_group" "proxy" {
   name   = "${local.friendly_name_prefix}-sg-proxy-allow"
   vpc_id = module.private_active_active.network_id
 
-  tags = merge(
-    { Name = "${local.friendly_name_prefix}-sg-proxy-allow" },
-    local.common_tags
-  )
+  # Prefix removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
+  tags = {
+    # Name = "${local.friendly_name_prefix}-sg-proxy-allow"
+    Name = "sg-proxy-allow"
+  }
 }
 
 resource "aws_security_group_rule" "proxy_ingress" {
@@ -72,8 +74,6 @@ resource "aws_iam_instance_profile" "proxy_ssm" {
 resource "aws_iam_role" "proxy_instance_role" {
   name_prefix        = "${local.friendly_name_prefix}-proxy-ssm"
   assume_role_policy = data.aws_iam_policy_document.proxy_instance_role.json
-
-  tags = local.common_tags
 }
 
 data "aws_iam_policy_document" "proxy_instance_role" {

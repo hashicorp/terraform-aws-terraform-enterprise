@@ -74,9 +74,13 @@ variable "node_count" {
   description = "The number of nodes you want in your autoscaling group (1 for standalone, 2 for active-active configuration)"
 }
 
-variable "common_tags" {
+variable "asg_tags" {
   type        = map(string)
-  description = "(Optional) Map of common tags for all taggable AWS resources."
+  description = <<DESC
+  (Optional) Map of tags only used for the autoscaling group. If you are using the AWS provider's default_tags, 
+  please note that it tags every taggable resource except for the autoscaling group, therefore this variable may
+  be used to duplicate the key/value pairs in the default_tags if you wish.
+  DESC
   default     = {}
 }
 
