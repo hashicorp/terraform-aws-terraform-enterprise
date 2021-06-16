@@ -68,7 +68,7 @@ data "aws_iam_policy_document" "instance_role" {
 
 resource "aws_iam_role_policy_attachment" "ssm" {
   role       = aws_iam_role.instance_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  policy_arn = local.ssm_policy_arn
 }
 
 resource "aws_instance" "proxy" {
