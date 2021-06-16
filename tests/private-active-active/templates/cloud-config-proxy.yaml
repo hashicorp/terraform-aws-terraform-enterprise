@@ -37,7 +37,6 @@ write_files:
             refresh_pattern .       0   20% 4320
 
 packages:
-    - https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
     - squid
 
 runcmd:

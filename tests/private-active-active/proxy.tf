@@ -1,3 +1,19 @@
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["099720109477"] # Canonical
+}
+
 data "template_cloudinit_config" "config_proxy" {
   gzip          = true
   base64_encode = true
@@ -14,7 +30,7 @@ data "template_cloudinit_config" "config_proxy" {
 }
 
 resource "aws_instance" "proxy" {
-  ami                  = data.aws_ami.rhel.id
+  ami                  = data.aws_ami.ubuntu.id
   instance_type        = "m4.large"
   iam_instance_profile = aws_iam_instance_profile.proxy_ssm.name
   key_name             = var.key_name
