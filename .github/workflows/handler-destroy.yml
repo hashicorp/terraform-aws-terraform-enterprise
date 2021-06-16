@@ -39,7 +39,7 @@ jobs:
           terraform_wrapper: true
 
       - name: Terraform Destroy
-        id: apply-destroy
+        id: destroy
         working-directory: ${{ env.WORK_DIR_PATH }}
         run: terraform destroy -auto-approve -input=false -no-color
 
@@ -55,7 +55,7 @@ jobs:
 
             ### Terraform Public Active/Active Destruction Report :newspaper:
 
-            - `${{ steps.apply-destroy.outcome }}` Terraform Destroy :fire:
+            - `${{ steps.destroy.outcome }}` Terraform Destroy :fire:
 
             :link: [Action Summary Page][1]
 
@@ -94,7 +94,7 @@ jobs:
           terraform_wrapper: true
 
       - name: Terraform Destroy
-        id: apply-destroy
+        id: destroy
         working-directory: ${{ env.WORK_DIR_PATH }}
         run: terraform destroy -auto-approve -input=false -no-color
 
@@ -110,7 +110,7 @@ jobs:
 
             ### Terraform Private Active/Active Destruction Report :newspaper:
 
-            - `${{ steps.apply-destroy.outcome }}` Terraform Destroy :fire:
+            - `${{ steps.destroy.outcome }}` Terraform Destroy :fire:
 
             :link: [Action Summary Page][1]
 
@@ -149,7 +149,7 @@ jobs:
           terraform_wrapper: true
 
       - name: Terraform Destroy
-        id: apply-destroy
+        id: destroy
         working-directory: ${{ env.WORK_DIR_PATH }}
         run: terraform destroy -auto-approve -input=false -no-color
 
@@ -165,7 +165,7 @@ jobs:
 
             ### Terraform Private TCP Active/Active Destruction Report :newspaper:
 
-            - `${{ steps.apply-destroy.outcome }}` Terraform Destroy :fire:
+            - `${{ steps.destroy.outcome }}` Terraform Destroy :fire:
 
             :link: [Action Summary Page][1]
 
