@@ -268,7 +268,7 @@ jobs:
         id: retrieve-instance-id
         working-directory: ${{ env.WORK_DIR_PATH }}
         run: |
-          terraform output -no-color -raw tfe_instance_id
+          terraform output -no-color -raw proxy_instance_id
 
       - name: Write Private SSH Key
         env:
@@ -494,7 +494,7 @@ jobs:
         id: retrieve-instance-id
         working-directory: ${{ env.WORK_DIR_PATH }}
         run: |
-          terraform output -no-color -raw tfe_instance_id
+          terraform output -no-color -raw proxy_instance_id
 
       - name: Write Private TCP SSH Key
         env:
