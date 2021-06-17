@@ -26,7 +26,7 @@ resource "aws_instance" "proxy" {
     aws_security_group.proxy.id,
   ]
 
-  user_data = base64encode(
+  user_data_base64 = base64encode(
     templatefile(
       "${path.module}/templates/squidproxy.sh.tpl",
       {
