@@ -1,20 +1,21 @@
-data "template_cloudinit_config" "config_proxy" {
-  gzip          = true
-  base64_encode = true
+data "aws_ami" "ubuntu" {
+  most_recent = true
 
-  part {
-    content_type = "text/cloud-config"
-    content = templatefile(
-      "${path.module}/templates/cloud-config-proxy.yaml",
-      {
-        http_proxy_port = local.http_proxy_port
-      }
-    )
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
   }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["099720109477"] # Canonical
 }
 
 resource "aws_instance" "proxy" {
-  ami                  = data.aws_ami.rhel.id
+  ami                  = data.aws_ami.ubuntu.id
   instance_type        = "m4.large"
   iam_instance_profile = aws_iam_instance_profile.proxy_ssm.name
   key_name             = var.key_name
@@ -25,7 +26,14 @@ resource "aws_instance" "proxy" {
     aws_security_group.proxy.id,
   ]
 
-  user_data = data.template_cloudinit_config.config_proxy.rendered
+  user_data_base64 = base64encode(
+    templatefile(
+      "${path.module}/templates/squidproxy.sh.tpl",
+      {
+        http_proxy_port = local.http_proxy_port
+      }
+    )
+  )
 
   root_block_device {
     volume_type = "gp2"

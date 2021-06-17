@@ -20,17 +20,6 @@ resource "aws_security_group_rule" "proxy_ingress_mitmproxy" {
   security_group_id = aws_security_group.proxy.id
 }
 
-resource "aws_security_group_rule" "proxy_ingress_ssh" {
-  type        = "ingress"
-  from_port   = 22
-  to_port     = 22
-  protocol    = "tcp"
-  cidr_blocks = ["0.0.0.0/0"]
-  description = "Allow SSH to proxy instance"
-
-  security_group_id = aws_security_group.proxy.id
-}
-
 resource "aws_security_group_rule" "proxy_egress" {
   type        = "egress"
   from_port   = 0
