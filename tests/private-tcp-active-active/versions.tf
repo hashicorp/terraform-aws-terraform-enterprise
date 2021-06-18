@@ -3,7 +3,7 @@ terraform {
     organization = "terraform-enterprise-modules-test"
 
     workspaces {
-      name = "aws-private-tcp-active-active"
+      name = "aws-private-tcp-active-active-crash"
     }
   }
 
