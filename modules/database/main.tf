@@ -60,7 +60,8 @@ resource "aws_db_instance" "postgresql" {
 
   allow_major_version_upgrade = false
   apply_immediately           = true
-  backup_retention_period     = 0
+  backup_retention_period     = var.db_backup_retention
+  backup_window               = var.db_backup_window
   db_subnet_group_name        = aws_db_subnet_group.tfe.name
   delete_automated_backups    = true
   deletion_protection         = false
