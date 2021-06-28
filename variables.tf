@@ -45,6 +45,18 @@ variable "db_size" {
   description = "PostgreSQL instance size."
 }
 
+variable "db_backup_retention" {
+  type        = number
+  description = "The days to retain backups for. Must be between 0 and 35"
+  default     = 0
+}
+
+variable "db_backup_window" {
+  type        = string
+  description = "The daily time range (in UTC) during which automated backups are created if they are enabled"
+  default     = null
+}
+
 variable "postgres_engine_version" {
   type        = string
   default     = "9.6.20"
