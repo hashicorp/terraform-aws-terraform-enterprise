@@ -173,23 +173,20 @@ jobs:
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
-            :computer: @hc-team-tfe
+            ### ${{ fromJSON('[":x:", ":white_check_mark:"]')[job.status == "success"] }} Terraform Public Active/Active Test Report
 
-            ### Terraform Public Active/Active Test Report :newspaper:
+            :link: [Action Summary Page](${{ steps.vars.outputs.run-url }})
 
-            - Terraform Initialization :gear: `${{ steps.init.outcome }}`
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.init.outcome == "success"] }} Terraform Init
 
-            - Terraform Validation :mag: `${{ steps.validate.outcome }}`
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.validate.outcome == "success"] }} Terraform Validate
 
-            - Terraform Apply :book: `${{ steps.apply.outcome }}`
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.apply.outcome == "success"] }} Terraform Apply
 
-            - K6 Smoke Test :building_construction: `${{ steps.run-smoke-test.outcome }}`
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.run-smoke-test.outcome == "success"] }} Run k6 Smoke Test
 
-            - Terraform Destroy :fire: `${{ steps.destroy.outcome }}`
+            ${{ fromJSON('["", "- ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.destroy.outcome == "success"] }} Terraform Destroy"]')[github.event.client_payload.slash_command.args.named.destroy != 'false'] }}
 
-            :link: [Action Summary Page][1]
-
-            [1]: ${{ steps.vars.outputs.run-url }}
   private_active_active:
     name: Run tf-test on Private Active/Active
     if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, 'all') || contains(github.event.client_payload.slash_command.args.unnamed.all, 'private-active-active') }}
@@ -398,23 +395,19 @@ jobs:
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
-            :computer: @hc-team-tfe
+            ### ${{ fromJSON('[":x:", ":white_check_mark:"]')[job.status == "success"] }} Terraform Private Active/Active Test Report
 
-            ### Terraform Private Active/Active Test Report :newspaper:
+            :link: [Action Summary Page](${{ steps.vars.outputs.run-url }})
 
-            - Terraform Initialization :gear: `${{ steps.init.outcome }}`
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.init.outcome == "success"] }} Terraform Init
 
-            - Terraform Validation :mag: `${{ steps.validate.outcome }}`
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.validate.outcome == "success"] }} Terraform Validate
 
-            - Terraform Apply :book: `${{ steps.apply.outcome }}`
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.apply.outcome == "success"] }} Terraform Apply
 
-            - K6 Smoke Test :building_construction: `${{ steps.run-smoke-test.outcome }}`
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.run-smoke-test.outcome == "success"] }} Run k6 Smoke Test
 
-            - Terraform Destroy :fire: `${{ steps.destroy.outcome }}`
-
-            :link: [Action Summary Page][1]
-
-            [1]: ${{ steps.vars.outputs.run-url }}
+            ${{ fromJSON('["", "- ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.destroy.outcome == "success"] }} Terraform Destroy"]')[github.event.client_payload.slash_command.args.named.destroy != 'false'] }}
 
   private_tcp_active_active:
     name: Run tf-test on Private TCP Active/Active
@@ -634,20 +627,16 @@ jobs:
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
-            :computer: @hc-team-tfe
+            ### ${{ fromJSON('[":x:", ":white_check_mark:"]')[job.status == "success"] }} Terraform Private TCP Active/Active Test Report
 
-            ### Terraform Private TCP Active/Active Test Report :newspaper:
+            :link: [Action Summary Page](${{ steps.vars.outputs.run-url }})
 
-            - Terraform Initialization :gear: `${{ steps.init.outcome }}`
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.init.outcome == "success"] }} Terraform Init
 
-            - Terraform Validation :mag: `${{ steps.validate.outcome }}`
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.validate.outcome == "success"] }} Terraform Validate
 
-            - Terraform Apply :book: `${{ steps.apply.outcome }}`
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.apply.outcome == "success"] }} Terraform Apply
 
-            - K6 Smoke Test :building_construction: `${{ steps.run-smoke-test.outcome }}`
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.run-smoke-test.outcome == "success"] }} Run k6 Smoke Test
 
-            - Terraform Destroy :fire: `${{ steps.destroy.outcome }}`
-
-            :link: [Action Summary Page][1]
-
-            [1]: ${{ steps.vars.outputs.run-url }}
+            ${{ fromJSON('["", "- ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.destroy.outcome == "success"] }} Terraform Destroy"]')[github.event.client_payload.slash_command.args.named.destroy != 'false'] }}
