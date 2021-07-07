@@ -173,19 +173,19 @@ jobs:
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
-            ### ${{ fromJSON('[":x:", ":white_check_mark:"]')[job.status == "success"] }} Terraform Public Active/Active Test Report
+            ### ${{ fromJSON('[":x:", ":white_check_mark:"]')[job.status == 'success'] }} Terraform Public Active/Active Test Report
 
             :link: [Action Summary Page](${{ steps.vars.outputs.run-url }})
 
-            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.init.outcome == "success"] }} Terraform Init
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.init.outcome == 'success'] }} Terraform Init
 
-            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.validate.outcome == "success"] }} Terraform Validate
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.validate.outcome == 'success'] }} Terraform Validate
 
-            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.apply.outcome == "success"] }} Terraform Apply
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.apply.outcome == 'success'] }} Terraform Apply
 
-            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.run-smoke-test.outcome == "success"] }} Run k6 Smoke Test
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.run-smoke-test.outcome == 'success'] }} Run k6 Smoke Test
 
-            ${{ fromJSON('["", "- ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.destroy.outcome == "success"] }} Terraform Destroy"]')[github.event.client_payload.slash_command.args.named.destroy != 'false'] }}
+            ${{ fromJSON('["", "- ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.destroy.outcome == 'success'] }} Terraform Destroy"]')[github.event.client_payload.slash_command.args.named.destroy != 'false'] }}
 
   private_active_active:
     name: Run tf-test on Private Active/Active
@@ -395,19 +395,19 @@ jobs:
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
-            ### ${{ fromJSON('[":x:", ":white_check_mark:"]')[job.status == "success"] }} Terraform Private Active/Active Test Report
+            ### ${{ fromJSON('[":x:", ":white_check_mark:"]')[job.status == 'success'] }} Terraform Private Active/Active Test Report
 
             :link: [Action Summary Page](${{ steps.vars.outputs.run-url }})
 
-            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.init.outcome == "success"] }} Terraform Init
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.init.outcome == 'success'] }} Terraform Init
 
-            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.validate.outcome == "success"] }} Terraform Validate
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.validate.outcome == 'success'] }} Terraform Validate
 
-            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.apply.outcome == "success"] }} Terraform Apply
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.apply.outcome == 'success'] }} Terraform Apply
 
-            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.run-smoke-test.outcome == "success"] }} Run k6 Smoke Test
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.run-smoke-test.outcome == 'success'] }} Run k6 Smoke Test
 
-            ${{ fromJSON('["", "- ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.destroy.outcome == "success"] }} Terraform Destroy"]')[github.event.client_payload.slash_command.args.named.destroy != 'false'] }}
+            ${{ fromJSON('["", "- ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.destroy.outcome == 'success'] }} Terraform Destroy"]')[github.event.client_payload.slash_command.args.named.destroy != 'false'] }}
 
   private_tcp_active_active:
     name: Run tf-test on Private TCP Active/Active
@@ -627,16 +627,16 @@ jobs:
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
-            ### ${{ fromJSON('[":x:", ":white_check_mark:"]')[job.status == "success"] }} Terraform Private TCP Active/Active Test Report
+            ### ${{ fromJSON('[":x:", ":white_check_mark:"]')[job.status == 'success'] }} Terraform Private TCP Active/Active Test Report
 
             :link: [Action Summary Page](${{ steps.vars.outputs.run-url }})
 
-            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.init.outcome == "success"] }} Terraform Init
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.init.outcome == 'success'] }} Terraform Init
 
-            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.validate.outcome == "success"] }} Terraform Validate
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.validate.outcome == 'success'] }} Terraform Validate
 
-            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.apply.outcome == "success"] }} Terraform Apply
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.apply.outcome == 'success'] }} Terraform Apply
 
-            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.run-smoke-test.outcome == "success"] }} Run k6 Smoke Test
+            - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.run-smoke-test.outcome == 'success'] }} Run k6 Smoke Test
 
-            ${{ fromJSON('["", "- ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.destroy.outcome == "success"] }} Terraform Destroy"]')[github.event.client_payload.slash_command.args.named.destroy != 'false'] }}
+            ${{ fromJSON('["", "- ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.destroy.outcome == 'success'] }} Terraform Destroy"]')[github.event.client_payload.slash_command.args.named.destroy != 'false'] }}
