@@ -185,7 +185,7 @@ jobs:
 
             - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.run-smoke-test.outcome == 'success'] }} Run k6 Smoke Test
 
-            ${{ fromJSON('["", "- ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.destroy.outcome == 'success'] }} Terraform Destroy"]')[github.event.client_payload.slash_command.args.named.destroy != 'false'] }}
+            ${{ github.event.client_payload.slash_command.args.named.destroy != 'false' && format('- {0} Terraform Destroy', fromJSON('[":x:", ":white_check_mark:"]')[steps.destroy.outcome == 'success']) || '' }}
 
   private_active_active:
     name: Run tf-test on Private Active/Active
@@ -407,7 +407,7 @@ jobs:
 
             - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.run-smoke-test.outcome == 'success'] }} Run k6 Smoke Test
 
-            ${{ fromJSON('["", "- ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.destroy.outcome == 'success'] }} Terraform Destroy"]')[github.event.client_payload.slash_command.args.named.destroy != 'false'] }}
+            ${{ github.event.client_payload.slash_command.args.named.destroy != 'false' && format('- {0} Terraform Destroy', fromJSON('[":x:", ":white_check_mark:"]')[steps.destroy.outcome == 'success']) || '' }}
 
   private_tcp_active_active:
     name: Run tf-test on Private TCP Active/Active
@@ -639,4 +639,4 @@ jobs:
 
             - ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.run-smoke-test.outcome == 'success'] }} Run k6 Smoke Test
 
-            ${{ fromJSON('["", "- ${{ fromJSON('[":x:", ":white_check_mark:"]')[steps.destroy.outcome == 'success'] }} Terraform Destroy"]')[github.event.client_payload.slash_command.args.named.destroy != 'false'] }}
+            ${{ github.event.client_payload.slash_command.args.named.destroy != 'false' && format('- {0} Terraform Destroy', fromJSON('[":x:", ":white_check_mark:"]')[steps.destroy.outcome == 'success']) || '' }}
