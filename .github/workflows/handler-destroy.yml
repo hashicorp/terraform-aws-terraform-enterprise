@@ -7,7 +7,7 @@ on:
 
 jobs:
   public_active_active:
-    name: Destroy resources from Public Active/Active test
+    name: Destroy resources from Public Active/Active
     if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, 'all') || contains(github.event.client_payload.slash_command.args.unnamed.all, 'public-active-active') }}
     runs-on: ubuntu-latest
     permissions:
@@ -56,17 +56,13 @@ jobs:
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
-            :computer: @hc-team-tfe
+            ${{ format('### {0} Terraform Public Active/Active Destruction Report', job.status == 'success' && ':white_check_mark:' || ':x:') }}
 
-            ### Terraform Public Active/Active Destruction Report :newspaper:
+            ${{ format(':link: [Action Summary Page]({0})', steps.vars.outputs.run-url) }}
 
-            - `${{ steps.init.outcome }}` Terraform Initialization :gear: 
+            ${{ format('- {0} Terraform Init', steps.init.outcome == 'success' && ':white_check_mark:' || ':x:') }}
 
-            - `${{ steps.destroy.outcome }}` Terraform Destroy :fire:
-
-            :link: [Action Summary Page][1]
-
-            [1]: ${{ steps.vars.outputs.run-url }}
+            ${{ format('- {0} Terraform Destroy', steps.destroy.outcome == 'success' && ':white_check_mark:' || ':x:') }}
 
   private_active_active:
     name: Destroy resources from Private Active/Active
@@ -118,17 +114,13 @@ jobs:
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
-            :computer: @hc-team-tfe
+            ${{ format('### {0} Terraform Private Active/Active Destruction Report', job.status == 'success' && ':white_check_mark:' || ':x:') }}
 
-            ### Terraform Private Active/Active Destruction Report :newspaper:
+            ${{ format(':link: [Action Summary Page]({0})', steps.vars.outputs.run-url) }}
 
-            - `${{ steps.init.outcome }}` Terraform Initialization :gear: 
+            ${{ format('- {0} Terraform Init', steps.init.outcome == 'success' && ':white_check_mark:' || ':x:') }}
 
-            - `${{ steps.destroy.outcome }}` Terraform Destroy :fire:
-
-            :link: [Action Summary Page][1]
-
-            [1]: ${{ steps.vars.outputs.run-url }}
+            ${{ format('- {0} Terraform Destroy', steps.destroy.outcome == 'success' && ':white_check_mark:' || ':x:') }}
 
   private_tcp_active_active:
     name: Destroy resources from Private TCP Active/Active
@@ -180,14 +172,10 @@ jobs:
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
-            :computer: @hc-team-tfe
+            ${{ format('### {0} Terraform Private TCP Active/Active Destruction Report', job.status == 'success' && ':white_check_mark:' || ':x:') }}
 
-            ### Terraform Private TCP Active/Active Destruction Report :newspaper:
+            ${{ format(':link: [Action Summary Page]({0})', steps.vars.outputs.run-url) }}
 
-            - `${{ steps.init.outcome }}` Terraform Initialization :gear: 
+            ${{ format('- {0} Terraform Init', steps.init.outcome == 'success' && ':white_check_mark:' || ':x:') }}
 
-            - `${{ steps.destroy.outcome }}` Terraform Destroy :fire:
-
-            :link: [Action Summary Page][1]
-
-            [1]: ${{ steps.vars.outputs.run-url }}
+            ${{ format('- {0} Terraform Destroy', steps.destroy.outcome == 'success' && ':white_check_mark:' || ':x:') }}
