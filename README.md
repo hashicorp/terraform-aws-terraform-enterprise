@@ -81,9 +81,9 @@ module "tfe_node" {
 ## Access to the Application Servers
 
 - Cloud-native access to application servers which lie behind load-balancers is recommended over SSH/bastion-based access.
-- This module in its default state does not deploy a means to access the command line of your application servers.  Your options at this time are:
-  - Use a custom image and bake in the AWS SSM agent configured accordingly.
-  - Engineer an SSH solution using the code in this module so that access can be granted in the specific circumstances relevant to your uses case.
+- This module deploys the SSM agent on RHEL (it is already present in the Ubuntu AWS marketplace images), but requires an IAM role policy ARN such as "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore" in the `iam_role_policy_arns` list in order to enable access via SSM.  Your options at this time are:
+  - Deploy the requisite IAM role policy.
+  - Add additional resources to deploy a bastion host as required to be able to access the application hosts on the command line.
 
 ## Module Manifest
 
