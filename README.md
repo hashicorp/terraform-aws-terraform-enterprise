@@ -1,10 +1,6 @@
 # Terraform Enterprise AWS Module
 
-**IMPORTANT**: You are viewing a **beta version** of the official
-module to install Terraform Enterprise. This new version is
-**incompatible with earlier versions**, and it is not currently meant
-for production use. Please contact your Customer Success Manager for
-details before using.
+**IMPORTANT**: You are viewing a **beta version** of the official module to install Terraform Enterprise. This new version is **incompatible with earlier versions**, and it is not currently meant for production use. Please contact your Customer Success Manager for details before using.
 
 This is a Terraform module for provisioning a Terraform Enterprise Cluster on AWS. Terraform Enterprise is our self-hosted distribution of Terraform Cloud. It offers enterprises a private instance of the Terraform Cloud application, with no resource limits and with additional enterprise-grade architectural features like audit logging and SAML single sign-on.
 
@@ -81,6 +77,13 @@ module "tfe_node" {
 ```
 
 - Run `terraform init` and `terraform apply`
+
+## Access to the Application Servers
+
+- Cloud-native access to application servers which lie behind load-balancers is recommended over SSH/bastion-based access.
+- This module deploys the SSM agent on RHEL (it is already present in the Ubuntu AWS marketplace images), but requires an IAM role policy ARN such as "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore" in the `iam_role_policy_arns` list in order to enable access via SSM.  Your options at this time are:
+  - Deploy the requisite IAM role policy.
+  - Add additional resources to deploy a bastion host as required to be able to access the application hosts on the command line.
 
 ## Module Manifest
 
