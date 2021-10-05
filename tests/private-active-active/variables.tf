@@ -8,12 +8,6 @@ variable "domain_name" {
   description = "Domain for creating the Terraform Enterprise subdomain on."
 }
 
-variable "external_bootstrap_bucket" {
-  type        = string
-  description = "The name of the S3 bucket for bootstrap artifacts."
-  default     = null
-}
-
 variable "acm_certificate_arn" {
   type        = string
   description = "The ARN of an existing ACM certificate."
@@ -22,4 +16,11 @@ variable "acm_certificate_arn" {
 variable "key_name" {
   description = "The name of the key pair to be used for SSH access to the EC2 instance(s)."
   type        = string
+}
+
+variable "tfe_license_secret_name" {
+  type        = string
+  description = <<-EOD
+  The name of the Secrets Manager secret under which the Base64 encoded Terraform Enterprise license is stored.
+  EOD
 }

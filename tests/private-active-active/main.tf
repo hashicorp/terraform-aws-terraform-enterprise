@@ -15,22 +15,6 @@ resource "random_string" "friendly_name" {
   special = false
 }
 
-data "aws_ami" "rhel" {
-  owners = ["309956199498"] # RedHat
-
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["RHEL-7.9_HVM-*-x86_64-*-Hourly2-GP2"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
-
 locals {
   http_proxy_port = 3128
 }
@@ -41,11 +25,9 @@ module "private_active_active" {
   acm_certificate_arn  = var.acm_certificate_arn
   domain_name          = var.domain_name
   friendly_name_prefix = local.friendly_name_prefix
-  tfe_license_name     = "terraform-aws-terraform-enterprise.rli"
+  tfe_license_secret   = data.aws_secretsmanager_secret.tfe_license
 
   ami_id                      = data.aws_ami.rhel.id
-  deploy_secretsmanager       = false
-  external_bootstrap_bucket   = var.external_bootstrap_bucket
   iact_subnet_list            = ["0.0.0.0/0"]
   iam_role_policy_arns        = [local.ssm_policy_arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type               = "m5.4xlarge"
@@ -57,7 +39,6 @@ module "private_active_active" {
   redis_encryption_at_rest    = false
   redis_encryption_in_transit = true
   redis_require_password      = true
-  tfe_license_filepath        = ""
   tfe_subdomain               = local.test_name
 
   asg_tags = local.common_tags

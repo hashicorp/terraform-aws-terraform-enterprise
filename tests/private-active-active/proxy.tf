@@ -1,19 +1,3 @@
-data "aws_ami" "ubuntu" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["099720109477"] # Canonical
-}
-
 resource "aws_instance" "proxy" {
   ami                  = data.aws_ami.ubuntu.id
   instance_type        = "m4.large"
@@ -82,20 +66,6 @@ resource "aws_iam_instance_profile" "proxy_ssm" {
 resource "aws_iam_role" "proxy_instance_role" {
   name_prefix        = "${local.friendly_name_prefix}-proxy-ssm"
   assume_role_policy = data.aws_iam_policy_document.proxy_instance_role.json
-}
-
-data "aws_iam_policy_document" "proxy_instance_role" {
-  statement {
-    effect = "Allow"
-    actions = [
-      "sts:AssumeRole",
-    ]
-
-    principals {
-      type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
-    }
-  }
 }
 
 resource "aws_iam_role_policy_attachment" "ssm" {
