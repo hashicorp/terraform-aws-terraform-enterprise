@@ -45,30 +45,19 @@ locals {
 module "object_storage" {
   source = "./modules/object_storage"
 
-  friendly_name_prefix       = var.friendly_name_prefix
-  kms_key_arn                = aws_kms_key.tfe_key.arn
-  tfe_license_filepath       = var.tfe_license_filepath
-  external_bootstrap_bucket  = var.external_bootstrap_bucket
-  tfe_license_name           = var.tfe_license_name
-  proxy_cert_bundle_filepath = var.proxy_cert_bundle_filepath
-  proxy_cert_bundle_name     = var.proxy_cert_bundle_name
+  friendly_name_prefix = var.friendly_name_prefix
+  kms_key_arn          = aws_kms_key.tfe_key.arn
 }
 
 module "service_accounts" {
   source = "./modules/service_accounts"
 
-  aws_bucket_bootstrap_arn = module.object_storage.s3_bucket_bootstrap_arn
-  aws_bucket_data_arn      = module.object_storage.s3_bucket_data_arn
-  friendly_name_prefix     = var.friendly_name_prefix
-  kms_key_arn              = aws_kms_key.tfe_key.arn
-  iam_role_policy_arns     = var.iam_role_policy_arns
-}
-
-module "secrets_manager" {
-  source = "./modules/secrets_manager"
-
+  aws_bucket_data_arn   = module.object_storage.s3_bucket_data_arn
+  ca_certificate_secret = var.ca_certificate_secret
   friendly_name_prefix  = var.friendly_name_prefix
-  deploy_secretsmanager = var.deploy_secretsmanager
+  kms_key_arn           = aws_kms_key.tfe_key.arn
+  iam_role_policy_arns  = var.iam_role_policy_arns
+  tfe_license_secret    = var.tfe_license_secret
 }
 
 module "networking" {
@@ -127,7 +116,6 @@ module "user_data" {
   source = "./modules/user_data"
 
   active_active           = local.active_active
-  aws_bucket_bootstrap    = var.external_bootstrap_bucket != null ? var.external_bootstrap_bucket : module.object_storage.s3_bucket_bootstrap
   aws_bucket_data         = module.object_storage.s3_bucket_data
   aws_region              = data.aws_region.current.name
   fqdn                    = local.fqdn
@@ -138,7 +126,7 @@ module "user_data" {
   pg_password             = module.database.db_password
   pg_netloc               = module.database.db_endpoint
   pg_user                 = module.database.db_username
-  proxy_cert_bundle_name  = var.proxy_cert_bundle_name
+  ca_certificate_secret   = var.ca_certificate_secret
   proxy_ip                = var.proxy_ip
   no_proxy                = var.no_proxy
   redis_host              = module.redis.redis_endpoint
@@ -146,7 +134,7 @@ module "user_data" {
   redis_port              = module.redis.redis_port
   redis_use_password_auth = module.redis.redis_use_password_auth
   redis_use_tls           = module.redis.redis_transit_encryption_enabled
-  tfe_license             = var.tfe_license_name
+  tfe_license_secret      = var.tfe_license_secret
 }
 
 module "load_balancer" {
