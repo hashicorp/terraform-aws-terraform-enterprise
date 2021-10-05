@@ -41,20 +41,6 @@ resource "aws_iam_role" "instance_role" {
   assume_role_policy = data.aws_iam_policy_document.instance_role.json
 }
 
-data "aws_iam_policy_document" "instance_role" {
-  statement {
-    effect = "Allow"
-    actions = [
-      "sts:AssumeRole",
-    ]
-
-    principals {
-      type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
-    }
-  }
-}
-
 resource "aws_iam_role_policy_attachment" "ssm" {
   role       = aws_iam_role.instance_role.name
   policy_arn = local.ssm_policy_arn
@@ -76,9 +62,9 @@ resource "aws_instance" "proxy" {
     templatefile(
       "${path.module}/templates/mitmproxy.sh.tpl",
       {
-        certificate     = data.aws_s3_bucket_object.proxy_certificate.body
+        certificate_secret     = data.aws_secretsmanager_secret.ca_certificate
         http_proxy_port = local.http_proxy_port
-        private_key     = data.aws_s3_bucket_object.proxy_private_key.body
+        private_key_secret     = data.aws_secretsmanager_secret.ca_private_key
       }
     )
   )

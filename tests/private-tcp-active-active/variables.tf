@@ -8,12 +8,6 @@ variable "domain_name" {
   description = "Domain for creating the Terraform Enterprise subdomain on."
 }
 
-variable "external_bootstrap_bucket" {
-  type        = string
-  description = "The name of the S3 bucket for bootstrap artifacts."
-  default     = null
-}
-
 variable "acm_certificate_arn" {
   type        = string
   description = "The ARN of an existing ACM certificate."
@@ -24,12 +18,23 @@ variable "key_name" {
   type        = string
 }
 
-variable "proxy_certificate_bucket_object_key" {
-  description = "The key of the proxy certificate bucket object."
+variable "tfe_license_secret_name" {
   type        = string
+  description = <<-EOD
+  The name of the Secrets Manager secret under which the Base64 encoded Terraform Enterprise license is stored.
+  EOD
 }
 
-variable "proxy_private_key_bucket_object_key" {
-  description = "The key of the proxy private key bucket object."
+variable "ca_certificate_secret_name" {
   type        = string
+  description = <<-EOD
+  The name of the Secrets Manager secret under which the Base64 encoded CA certificate is stored.
+  EOD
+}
+
+variable "ca_private_key_secret_name" {
+  type        = string
+  description = <<-EOD
+  The name of the Secrets Manager secret under which the Base64 encoded CA private key is stored.
+  EOD
 }
