@@ -23,3 +23,8 @@ variable "acm_certificate_arn" {
   type        = string
   description = "The ARN of an existing ACM certificate."
 }
+
+variable "key_name" {
+  description = "The name of the key pair to be used for SSH access to the EC2 instance(s)."
+  type        = string
+}

@@ -28,6 +28,7 @@ module "public_active_active" {
   iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   iact_subnet_list            = var.iact_subnet_list
   instance_type               = "m5.xlarge"
+  key_name                    = var.key_name
   kms_key_alias               = local.test_name
   load_balancing_scheme       = "PUBLIC"
   node_count                  = 2
