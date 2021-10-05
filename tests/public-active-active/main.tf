@@ -21,10 +21,8 @@ module "public_active_active" {
   acm_certificate_arn  = var.acm_certificate_arn
   domain_name          = var.domain_name
   friendly_name_prefix = local.friendly_name_prefix
-  tfe_license_name     = "terraform-aws-terraform-enterprise.rli"
+  tfe_license_secret   = data.aws_secretsmanager_secret.tfe_license
 
-  deploy_secretsmanager       = false
-  external_bootstrap_bucket   = var.external_bootstrap_bucket
   iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   iact_subnet_list            = var.iact_subnet_list
   instance_type               = "m5.xlarge"
@@ -35,7 +33,6 @@ module "public_active_active" {
   redis_encryption_at_rest    = false
   redis_encryption_in_transit = false
   redis_require_password      = false
-  tfe_license_filepath        = ""
   tfe_subdomain               = local.test_name
 
   asg_tags = local.common_tags
