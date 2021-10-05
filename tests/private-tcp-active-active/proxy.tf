@@ -62,9 +62,9 @@ resource "aws_instance" "proxy" {
     templatefile(
       "${path.module}/templates/mitmproxy.sh.tpl",
       {
-        certificate_secret     = data.aws_secretsmanager_secret.ca_certificate
-        http_proxy_port = local.http_proxy_port
-        private_key_secret     = data.aws_secretsmanager_secret.ca_private_key
+        certificate_secret = data.aws_secretsmanager_secret.ca_certificate
+        http_proxy_port    = local.http_proxy_port
+        private_key_secret = data.aws_secretsmanager_secret.ca_private_key
       }
     )
   )
