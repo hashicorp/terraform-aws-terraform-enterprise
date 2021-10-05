@@ -169,12 +169,14 @@ locals {
 }
 
 locals {
+  import_settings_from  = "/etc/ptfe-settings.json"
+  license_file_location = "/etc/ptfe-license.rli"
   replicated_base_config = {
     BypassPreflightChecks        = true
     DaemonAuthenticationPassword = random_string.password.result
     DaemonAuthenticationType     = "password"
-    ImportSettingsFrom           = "/etc/ptfe-settings.json"
-    LicenseFileLocation          = "/etc/ptfe-license.rli"
+    ImportSettingsFrom           = local.import_settings_from
+    LicenseFileLocation          = local.license_file_location
     TlsBootstrapType             = "self-signed"
     TlsBootstrapHostname         = var.fqdn
   }
@@ -196,13 +198,14 @@ locals {
   tfe_user_data = templatefile(
     "${path.module}/templates/tfe_ec2.sh.tpl",
     {
-      s3_bucket_bootstrap = var.aws_bucket_bootstrap
-      tfe_license         = var.tfe_license
-      replicated          = base64encode(local.repl_configs)
-      settings            = base64encode(local.tfe_configs)
-      active_active       = var.active_active
-      proxy_ip            = var.proxy_ip
-      proxy_cert          = var.proxy_cert_bundle_name
+      import_settings_from  = local.import_settings_from
+      tfe_license_secret    = var.tfe_license_secret
+      license_file_location = local.license_file_location
+      replicated            = base64encode(local.repl_configs)
+      settings              = base64encode(local.tfe_configs)
+      active_active         = var.active_active
+      ca_certificate_secret = var.ca_certificate_secret
+      proxy_ip              = var.proxy_ip
       no_proxy = join(
         ",",
         concat(
