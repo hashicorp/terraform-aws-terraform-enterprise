@@ -9,6 +9,7 @@ variable "domain_name" {
 }
 
 variable "iact_subnet_list" {
+  default     = []
   description = "A list of CIDR masks that configure the ability to retrieve the IACT from outside the host."
   type        = list(string)
 }
