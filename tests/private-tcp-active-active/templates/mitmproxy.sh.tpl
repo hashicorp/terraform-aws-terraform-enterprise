@@ -39,8 +39,12 @@ rm -rf ./aws
 
 echo "[$(date +"%FT%T")] Downloading Public Certificate and Private Key" | tee -a /var/log/ptfe.log
 # Obtain access token for Azure Key Vault
-certificate_data_b64=$(aws secretsmanager get-secret-value --secret-id ${certificate_secret.arn} | jq --raw-output .SecretString)
-key_data_b64=$(aws secretsmanager get-secret-value --secret-id ${private_key_secret.arn} | jq --raw-output .SecretString)
+certificate_data_b64=$(\
+  aws secretsmanager get-secret-value --secret-id ${certificate_secret.arn} \
+  | jq --raw-output '.SecretBinary,.SecretString | select(. != null)')
+key_data_b64=$(\
+  aws secretsmanager get-secret-value --secret-id ${private_key_secret.arn} \
+  | jq --raw-output '.SecretBinary,.SecretString | select(. != null)')
 
 echo "[$(date +"%FT%T")]  Deploying Public Certificate and Private Key for mitmproxy" | tee -a /var/log/ptfe.log
 cat <<EOF >/etc/mitmproxy/mitmproxy-ca.pem
