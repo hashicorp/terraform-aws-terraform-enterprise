@@ -59,7 +59,7 @@ variable "db_backup_window" {
 
 variable "postgres_engine_version" {
   type        = string
-  default     = "9.6.20"
+  default     = "12.8"
   description = "PostgreSQL version."
 }
 
