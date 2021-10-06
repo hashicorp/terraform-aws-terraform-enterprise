@@ -46,6 +46,13 @@ resource "aws_iam_role_policy_attachment" "ssm" {
   policy_arn = local.ssm_policy_arn
 }
 
+resource "aws_iam_role_policy" "secretsmanager" {
+  policy = data.aws_iam_policy_document.secretsmanager.json
+  role   = aws_iam_role.instance_role.id
+
+  name = "${local.friendly_name_prefix}-proxy-secretsmanager"
+}
+
 resource "aws_instance" "proxy" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "m4.xlarge"

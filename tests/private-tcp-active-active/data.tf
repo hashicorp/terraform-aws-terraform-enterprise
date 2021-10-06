@@ -55,3 +55,12 @@ data "aws_iam_policy_document" "instance_role" {
     }
   }
 }
+
+data "aws_iam_policy_document" "secretsmanager" {
+  statement {
+    actions   = ["secretsmanager:GetSecretValue"]
+    effect    = "Allow"
+    resources = [data.aws_secretsmanager_secret.ca_certificate.arn, data.aws_secretsmanager_secret.ca_private_key.arn]
+    sid       = "AllowSecretsManagerSecretAccess"
+  }
+}
