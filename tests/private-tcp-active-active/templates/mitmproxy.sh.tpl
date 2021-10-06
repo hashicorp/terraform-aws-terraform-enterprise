@@ -2,6 +2,9 @@
 
 set -e -u -o pipefail
 
+apt-get --yes --option "Acquire::Retries=5" update
+apt-get install --yes unzip
+
 mkdir -p /etc/mitmproxy
 
 touch /etc/systemd/system/mitmproxy.service
