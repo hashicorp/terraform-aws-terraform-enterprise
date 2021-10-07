@@ -14,7 +14,7 @@ variable "acm_certificate_arn" {
 variable "asg_tags" {
   type        = map(string)
   description = <<DESC
-  (Optional) Map of tags only used for the autoscaling group. If you are using the AWS provider's default_tags, 
+  (Optional) Map of tags only used for the autoscaling group. If you are using the AWS provider's default_tags,
   please note that it tags every taggable resource except for the autoscaling group, therefore this variable may
   be used to duplicate the key/value pairs in the default_tags if you wish.
   DESC
@@ -59,7 +59,7 @@ variable "db_backup_window" {
 
 variable "postgres_engine_version" {
   type        = string
-  default     = "9.6.20"
+  default     = "12.8"
   description = "PostgreSQL version."
 }
 
@@ -120,23 +120,6 @@ variable "tfe_subdomain" {
   description = "Subdomain for accessing the Terraform Enterprise UI."
 }
 
-variable "tfe_license_name" {
-  type        = string
-  default     = "ptfe-license.rli"
-  description = "The name to use when copying the TFE license file to the EC2 instance."
-}
-
-variable "tfe_license_filepath" {
-  description = "The pathname of the TFE license file on the system running Terraform."
-  type        = string
-}
-
-variable "external_bootstrap_bucket" {
-  type        = string
-  description = "The name of the S3 bucket for Replicated licenses."
-  default     = null
-}
-
 variable "iact_subnet_list" {
   default     = []
   description = "A list of CIDR masks that configure the ability to retrieve the IACT from outside the host."
@@ -175,10 +158,23 @@ variable "kms_key_deletion_window" {
 }
 
 # Secrets Manager
-variable "deploy_secretsmanager" {
-  type        = bool
-  description = "(Optional) Boolean indicating whether to deploy AWS Secrets Manager secret (true) or not (false)."
-  default     = false
+variable "tfe_license_secret" {
+  type = object({
+    arn = string
+  })
+  description = "The Secrets Manager secret under which the Base64 encoded Terraform Enterprise license is stored."
+}
+
+variable "ca_certificate_secret" {
+  default = null
+  type = object({
+    arn = string
+  })
+  description = <<-EOD
+  A Secrets Manager secret which contains the Base64 encoded version of a PEM encoded public certificate of a
+  certificate authority (CA) to be trusted by the EC2 instance(s). This argument
+  is only required if TLS certificates in the deployment are not issued by a well-known CA.
+  EOD
 }
 
 # Load Balancer
@@ -229,18 +225,6 @@ variable "admin_dashboard_ingress_ranges" {
 variable "proxy_ip" {
   type        = string
   description = "(Optional) IP address of existing web proxy to route TFE traffic through."
-  default     = ""
-}
-
-variable "proxy_cert_bundle_name" {
-  type        = string
-  description = "(Optional) Name for proxy cert bundle in S3."
-  default     = ""
-}
-
-variable "proxy_cert_bundle_filepath" {
-  type        = string
-  description = "(Optional) Filepath for proxy cert bundle to copy to S3."
   default     = ""
 }
 

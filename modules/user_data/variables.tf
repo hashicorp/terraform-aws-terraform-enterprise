@@ -8,10 +8,7 @@ variable "active_active" {
   description = "A boolean that indicates if the TFE deployment is Active/Active or Standalone."
   type        = bool
 }
-variable "aws_bucket_bootstrap" {
-  description = "The name of the S3 storage bucket which contains TFE bootstrap artifacts."
-  type        = string
-}
+
 variable "aws_bucket_data" {
   description = "The name of the S3 storage bucket which contains TFE runtime data."
   type        = string
@@ -20,10 +17,14 @@ variable "aws_region" {
   description = "The region in which the S3 storage bucket which contains TFE runtime data is deployed."
   type        = string
 }
-variable "tfe_license" {
-  description = "The name of the S3 storage bucket object which contains the TFE license."
-  type        = string
+
+variable "tfe_license_secret" {
+  type = object({
+    arn = string
+  })
+  description = "The Secrets Manager secret under which the Base64 encoded Terraform Enterprise license is stored."
 }
+
 variable "kms_key_arn" {
   description = "The Amazon Resource Name of the KMS key which is used to encrypt S3 storage bucket objects."
   type        = string
@@ -73,15 +74,21 @@ variable "pg_password" {
   type        = string
 }
 
+variable "ca_certificate_secret" {
+  type = object({
+    arn = string
+  })
+  description = <<-EOD
+  A Secrets Manager secret which contains the Base64 encoded version of a PEM encoded public certificate of a
+  certificate authority (CA) to be trusted by the EC2 instance.
+  EOD
+}
+
 variable "proxy_ip" {
   description = "The IP address of the HTTP proxy through which TFE traffic will be routed."
   type        = string
 }
-variable "proxy_cert_bundle_name" {
-  type        = string
-  description = "(Optional) name of cert bundle stored in S3"
-  default     = ""
-}
+
 variable "no_proxy" {
   type        = list(string)
   description = "(Optional) List of IP addresses to not proxy"

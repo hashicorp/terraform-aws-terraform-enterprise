@@ -51,26 +51,6 @@ output "tfe_instance_sg" {
   description = "The identity of the security group attached to the TFE EC2 instance."
 }
 
-# Secrets Manager
-output "secretsmanager_secret_arn" {
-  value = module.secrets_manager.secretsmanager_secret_arn
-
-  description = "The Amazon Resource Name of the Secrets Manager secret."
-}
-
-# S3
-output "bootstrap_bucket_name" {
-  value = module.object_storage.s3_bucket_bootstrap
-
-  description = "The name of the S3 bucket which contains TFE bootstrap artifacts."
-}
-
-output "bootstrap_bucket_arn" {
-  value = module.object_storage.s3_bucket_bootstrap_arn
-
-  description = "The Amazon Resource Name of the S3 bucket which contains TFE bootstrap artifacts."
-}
-
 # Load balancer
 output "load_balancer_address" {
   value = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].load_balancer_address : module.load_balancer[0].load_balancer_address

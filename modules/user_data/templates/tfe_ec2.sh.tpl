@@ -14,31 +14,43 @@ install_awscli() {
   rm -rf ./aws
 }
 
+configure_ca_certificate() {
+  %{ if ca_certificate_secret != null ~}
+  echo "[$(date +"%FT%T")] [Terraform Enterprise] Configuring CA certificate" | tee -a /var/log/ptfe.log
+
+  local distribution="$1"
+  local ca_certificate_directory="/dev/null"
+  local update_ca_certificates="/dev/null"
+
+  if [[ $distribution == "ubuntu" ]]
+  then
+    ca_certificate_directory="/usr/local/share/ca-certificates/extra"
+    update_ca_certificates="update-ca-certificates"
+  elif [[ $distribution == "rhel" ]]
+  then
+    ca_certificate_directory="/usr/share/pki/ca-trust-source/anchors"
+    update_ca_certificates="update-ca-trust"
+  fi
+
+  mkdir --parents $ca_certificate_directory
+  ca_certificate_data_b64=$(\
+    aws secretsmanager get-secret-value --secret-id ${ca_certificate_secret.arn} \
+    | jq --raw-output '.SecretBinary,.SecretString | select(. != null)')
+  echo $ca_certificate_data_b64 | base64 --decode > $ca_certificate_directory/tfe-ca-certificate.crt
+  eval $update_ca_certificates
+  jq ". + { ca_certs: { value: \"$(echo $ca_certificate_data_b64 | base64 --decode)\" } }" -- ${import_settings_from} > ${import_settings_from}.updated
+  cp ${import_settings_from}.updated ${import_settings_from}
+  %{ else ~}
+  echo "[$(date +"%FT%T")] [Terraform Enterprise] Skipping CA certificate configuration" | tee -a /var/log/ptfe.log
+  %{ endif ~}
+}
+
 configure_proxy() {
   local proxy_ip="$1"
   # Use a unique name so no_proxy can be exported
   local no_proxy_local="$2"
-  local proxy_cert="$3"
-  local s3_bucket_bootstrap="$4"
-  local distribution="$5"
+  local distribution="$3"
   local cert_pathname=""
-
-  if [[ $proxy_cert != "" ]]
-  then
-    if [[ $distribution == "ubuntu" ]]
-    then
-      mkdir -p /usr/local/share/ca-certificates/extra
-      cert_pathname="/usr/local/share/ca-certificates/extra/cust-ca-certificates.crt"
-      aws s3 cp "s3://$s3_bucket_bootstrap/$proxy_cert" "$cert_pathname"
-      update-ca-certificates
-    elif [[ $distribution == "rhel" ]]
-    then
-      mkdir -p /usr/share/pki/ca-trust-source/anchors
-      cert_pathname="/usr/share/pki/ca-trust-source/anchors/cust-ca-certificates.crt"
-      aws s3 cp "s3://$s3_bucket_bootstrap/$proxy_cert" "$cert_pathname"
-      update-ca-trust
-    fi
-  fi
 
   cat <<EOF >>/etc/environment
 http_proxy="$proxy_ip"
@@ -55,13 +67,6 @@ EOF
   export http_proxy="$proxy_ip"
   export https_proxy="$proxy_ip"
   export no_proxy="$no_proxy_local"
-
-  if [[ $proxy_cert != "" ]]
-  then
-    install_jq
-    jq ". + { ca_certs: { value: \"$(cat $cert_pathname)\" } }" -- /etc/ptfe-settings.json > ptfe-settings.json.updated
-    cp ./ptfe-settings.json.updated /etc/ptfe-settings.json
-  fi
 }
 
 install_packages() {
@@ -104,10 +109,11 @@ detect_distribution() {
 }
 
 retrieve_tfe_license() {
-  local s3_bucket_bootstrap="$1"
-  local tfe_license="$2"
-
-  aws s3 cp "s3://$s3_bucket_bootstrap/$tfe_license" /etc/ptfe-license.rli
+  echo "[$(date +"%FT%T")] [Terraform Enterprise] Retrieving Terraform Enterprise license" | tee -a /var/log/ptfe.log
+  license_data_b64=$(\
+    aws secretsmanager get-secret-value --secret-id ${tfe_license_secret.arn} \
+    | jq --raw-output '.SecretBinary,.SecretString | select(. != null)')
+  echo $license_data_b64 | base64 --decode > ${license_file_location}
 }
 
 install_tfe() {
@@ -144,14 +150,11 @@ configure_tfe() {
   local settings="$2"
 
   echo "$replicated" | base64 -d > /etc/replicated.conf
-  echo "$settings" | base64 -d > /etc/ptfe-settings.json
+  echo "$settings" | base64 -d > ${import_settings_from}
 }
 
 proxy_ip="${proxy_ip}"
 no_proxy="${no_proxy}"
-proxy_cert="${proxy_cert}"
-s3_bucket_bootstrap="${s3_bucket_bootstrap}"
-tfe_license="${tfe_license}"
 replicated="${replicated}"
 settings="${settings}"
 active_active="${active_active}"
@@ -160,9 +163,11 @@ distribution=$(detect_distribution)
 configure_tfe "$replicated" "$settings"
 install_packages "$distribution"
 install_awscli
-retrieve_tfe_license "$s3_bucket_bootstrap" "$tfe_license"
+install_jq
+retrieve_tfe_license
+configure_ca_certificate "$distribution"
 if [[ $proxy_ip != "" ]]
 then
-  configure_proxy "$proxy_ip" "$no_proxy" "$proxy_cert" "$s3_bucket_bootstrap" "$distribution"
+  configure_proxy "$proxy_ip" "$no_proxy" "$distribution"
 fi
 install_tfe "$proxy_ip" "$no_proxy" "$active_active"

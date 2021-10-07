@@ -22,38 +22,19 @@ data "aws_iam_policy_document" "instance_role" {
   }
 }
 
-resource "aws_iam_role_policy" "s3_bootstrap_bucket" {
-  name   = "${var.friendly_name_prefix}-tfe-bootstrap"
+resource "aws_iam_role_policy" "secretsmanager" {
+  policy = data.aws_iam_policy_document.secretsmanager.json
   role   = aws_iam_role.instance_role.id
-  policy = data.aws_iam_policy_document.tfe_s3_bootstrap_bucket.json
+
+  name = "${var.friendly_name_prefix}-tfe-secretsmanager"
 }
 
-data "aws_iam_policy_document" "tfe_s3_bootstrap_bucket" {
+data "aws_iam_policy_document" "secretsmanager" {
   statement {
-    sid    = "AllowS3ActionsBootstrap"
-    effect = "Allow"
-    actions = [
-      "s3:Get*",
-      "s3:List*",
-      "s3:PutObject*"
-    ]
-    resources = [
-      var.aws_bucket_bootstrap_arn,
-      "${var.aws_bucket_bootstrap_arn}/*",
-    ]
-  }
-  statement {
-    sid    = "AllowKMSActionsBootstrap"
-    effect = "Allow"
-    actions = [
-      "kms:Decrypt",
-      "kms:ReEncrypt",
-      "kms:GenerateDataKey",
-      "kms:DescribeKey",
-    ]
-    resources = [
-      var.kms_key_arn,
-    ]
+    actions   = ["secretsmanager:GetSecretValue"]
+    effect    = "Allow"
+    resources = local.secret_arns
+    sid       = "AllowSecretsManagerSecretAccess"
   }
 }
 

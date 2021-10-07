@@ -5,8 +5,8 @@ set -e -u -o pipefail
 sysctl --write net.ipv6.conf.all.disable_ipv6=1
 sysctl --write net.ipv6.conf.default.disable_ipv6=1
 sysctl --write net.ipv6.conf.lo.disable_ipv6=1
-apt-get --yes update
-apt-get install --yes squid3
+apt-get --yes --option "Acquire::Retries=5" update
+apt-get install --yes --option "Acquire::Retries=5" squid3
 
 cat <<EOF > /etc/squid/squid.conf
 http_port ${http_proxy_port}

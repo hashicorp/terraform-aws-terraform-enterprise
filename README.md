@@ -71,7 +71,7 @@ module "tfe_node" {
   source                 = "<filepath to cloned module directory>"
   friendly_name_prefix   = "<prefix for naming AWS resources>"
   domain_name            = "<domain for creating the Terraform Enterprise subdomain on. >"
-  tfe_license_filepath   = "<filepath to your .rli file>"
+  tfe_license_secret     = data.aws_secretsmanager.tfe_license
   acm_certificate_arn    = "<ARN for ACM cert to be used with load balancer>"
 }
 ```
@@ -81,7 +81,7 @@ module "tfe_node" {
 ## Access to the Application Servers
 
 - Cloud-native access to application servers which lie behind load-balancers is recommended over SSH/bastion-based access.
-- This module deploys the SSM agent on RHEL (it is already present in the Ubuntu AWS marketplace images), but requires an IAM role policy ARN such as "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore" in the `iam_role_policy_arns` list in order to enable access via SSM.  Your options at this time are:
+- This module deploys the SSM agent on RHEL (it is already present in the Ubuntu AWS marketplace images), but requires an IAM role policy ARN such as "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore" in the `iam_role_policy_arns` list in order to enable access via SSM. Your options at this time are:
   - Deploy the requisite IAM role policy.
   - Add additional resources to deploy a bastion host as required to be able to access the application hosts on the command line.
 
