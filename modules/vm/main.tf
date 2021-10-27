@@ -3,7 +3,7 @@
 ###############
 resource "aws_security_group" "tfe_instance" {
   name        = "${var.friendly_name_prefix}-tfe-ec2-sg"
-  description = "Security group for access to the TFE EC2 instances"
+  description = "Managed by Terraform"
   vpc_id      = var.network_id
 }
 

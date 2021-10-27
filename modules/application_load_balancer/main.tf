@@ -1,6 +1,6 @@
 resource "aws_security_group" "tfe_lb_allow" {
   name        = "${var.friendly_name_prefix}-tfe-lb-allow"
-  description = "Load-balancer security group for TFE"
+  description = "Managed by Terraform"
   vpc_id      = var.network_id
 }
 
@@ -37,7 +37,7 @@ resource "aws_security_group_rule" "tfe_lb_allow_inbound_dashboard" {
 
 resource "aws_security_group" "tfe_outbound_allow" {
   name        = "${var.friendly_name_prefix}-tfe-outbound-allow"
-  description = "Outbound security group for TFE environment"
+  description = "Managed by Terraform"
   vpc_id      = var.network_id
 }
 
