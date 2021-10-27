@@ -10,6 +10,13 @@ resource "aws_instance" "proxy" {
     aws_security_group.proxy.id,
   ]
 
+  monitoring = true
+
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+  }
+
   user_data_base64 = base64encode(
     templatefile(
       "${path.module}/templates/squidproxy.sh.tpl",
@@ -22,12 +29,15 @@ resource "aws_instance" "proxy" {
   root_block_device {
     volume_type = "gp2"
     volume_size = 20
+    encrypted   = true
   }
+  ebs_optimized = true
 }
 
 resource "aws_security_group" "proxy" {
-  name   = "${local.friendly_name_prefix}-sg-proxy-allow"
-  vpc_id = module.private_active_active.network_id
+  name        = "${local.friendly_name_prefix}-sg-proxy-allow"
+  vpc_id      = module.private_active_active.network_id
+  description = "Security group for allowing proxy connections to the created proxy EC2 instance(s)"
 
   # Prefix removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
   tags = {

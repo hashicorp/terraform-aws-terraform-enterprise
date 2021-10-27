@@ -1,6 +1,7 @@
 resource "aws_security_group" "tfe_lb_allow" {
-  name   = "${var.friendly_name_prefix}-tfe-lb-allow"
-  vpc_id = var.network_id
+  name        = "${var.friendly_name_prefix}-tfe-lb-allow"
+  description = "Load-balancer security group for TFE"
+  vpc_id      = var.network_id
 }
 
 resource "aws_security_group_rule" "tfe_lb_allow_inbound_http" {
@@ -35,8 +36,9 @@ resource "aws_security_group_rule" "tfe_lb_allow_inbound_dashboard" {
 }
 
 resource "aws_security_group" "tfe_outbound_allow" {
-  name   = "${var.friendly_name_prefix}-tfe-outbound-allow"
-  vpc_id = var.network_id
+  name        = "${var.friendly_name_prefix}-tfe-outbound-allow"
+  description = "Outbound security group for TFE environment"
+  vpc_id      = var.network_id
 }
 
 resource "aws_security_group_rule" "tfe_outbound_allow_all" {
@@ -51,10 +53,21 @@ resource "aws_security_group_rule" "tfe_outbound_allow_all" {
 }
 
 resource "aws_lb" "tfe_lb" {
-  name               = "${var.friendly_name_prefix}-tfe-web-alb"
-  internal           = (var.load_balancing_scheme == "PRIVATE")
-  load_balancer_type = "application"
-  subnets            = var.load_balancing_scheme == "PRIVATE" ? var.network_private_subnets : var.network_public_subnets
+  #checkov:skip=CKV_AWS_150:We will expect that people might want to spin up/down infrastructure quickly. Skip checking for delete protection.
+  name                       = "${var.friendly_name_prefix}-tfe-web-alb"
+  internal                   = (var.load_balancing_scheme == "PRIVATE")
+  load_balancer_type         = "application"
+  subnets                    = var.load_balancing_scheme == "PRIVATE" ? var.network_private_subnets : var.network_public_subnets
+  drop_invalid_header_fields = true
+
+  dynamic "access_logs" {
+    for_each = var.logging_bucket != null ? [var.logging_bucket] : []
+    content {
+      bucket  = var.logging_bucket
+      prefix  = var.logging_prefix
+      enabled = true
+    }
+  }
 
   security_groups = [
     aws_security_group.tfe_lb_allow.id,

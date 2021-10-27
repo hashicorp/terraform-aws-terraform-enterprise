@@ -77,7 +77,7 @@ variable "node_count" {
 variable "asg_tags" {
   type        = map(string)
   description = <<DESC
-  (Optional) Map of tags only used for the autoscaling group. If you are using the AWS provider's default_tags, 
+  (Optional) Map of tags only used for the autoscaling group. If you are using the AWS provider's default_tags,
   please note that it tags every taggable resource except for the autoscaling group, therefore this variable may
   be used to duplicate the key/value pairs in the default_tags if you wish.
   DESC

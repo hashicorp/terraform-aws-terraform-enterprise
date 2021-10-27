@@ -1,4 +1,5 @@
 resource "aws_s3_bucket" "tfe_data_bucket" {
+  #checkov:skip=CKV_AWS_144:While cross-region might make sense someday, right now it doesn't for TFE
   bucket = "${var.friendly_name_prefix}-tfe-data"
   acl    = "private"
 
@@ -12,6 +13,14 @@ resource "aws_s3_bucket" "tfe_data_bucket" {
         kms_master_key_id = var.kms_key_arn
         sse_algorithm     = "aws:kms"
       }
+    }
+  }
+
+  dynamic "logging" {
+    for_each = var.logging_bucket == null ? [] : [var.logging_bucket]
+    content {
+      target_bucket = logging.value
+      target_prefix = var.logging_prefix
     }
   }
 

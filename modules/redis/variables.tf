@@ -5,7 +5,7 @@ variable "active_active" {
 
 variable "kms_key_arn" {
   description = <<-EOD
-  The Amazon Resource Name of the KMS key which will be used by the Redis Elasticache replication group to encrypt data 
+  The Amazon Resource Name of the KMS key which will be used by the Redis Elasticache replication group to encrypt data
   at rest.
   EOD
   type        = string
@@ -13,7 +13,7 @@ variable "kms_key_arn" {
 
 variable "tfe_instance_sg" {
   description = <<-EOD
-  The identity of the security group attached to the TFE EC2 instance(s) which will be authorized to communicate with 
+  The identity of the security group attached to the TFE EC2 instance(s) which will be authorized to communicate with
   the Redis Elasticache replication group.
   EOD
   type        = string
@@ -21,7 +21,7 @@ variable "tfe_instance_sg" {
 
 variable "network_id" {
   description = <<-EOD
-  The identity of the VPC in which the security group attached to the Redis Elasticache replication group will be 
+  The identity of the VPC in which the security group attached to the Redis Elasticache replication group will be
   deployed.
   EOD
   type        = string

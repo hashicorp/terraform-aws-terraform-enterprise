@@ -30,6 +30,7 @@ variable "load_balancing_scheme" {
 }
 
 variable "ssl_policy" {
+  default     = "ELBSecurityPolicy-TLS-1-2-2017-01"
   description = "The name of the SSL policy to assign to the load balancer listeners."
   type        = string
 }
@@ -56,4 +57,16 @@ variable "active_active" {
 variable "friendly_name_prefix" {
   type        = string
   description = "(Required) Friendly name prefix used for tagging and naming AWS resources."
+}
+
+variable "logging_bucket" {
+  type        = string
+  description = "S3 bucket name for logging of resources to. Requires a bucket in the same region that TFE is in."
+  default     = null
+}
+
+variable "logging_prefix" {
+  type        = string
+  description = "Optional prefix to prepend to TFE resource logs in S3 bucket"
+  default     = null
 }

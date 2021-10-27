@@ -1,6 +1,7 @@
 resource "aws_security_group" "proxy" {
-  name   = "${local.friendly_name_prefix}-sg-proxy-allow"
-  vpc_id = module.private_tcp_active_active.network_id
+  name        = "${local.friendly_name_prefix}-sg-proxy-allow"
+  vpc_id      = module.private_tcp_active_active.network_id
+  description = "Security group for TFE TCP proxy"
 
   # Prefix removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
   tags = {
@@ -56,6 +57,12 @@ resource "aws_iam_role_policy" "secretsmanager" {
 resource "aws_instance" "proxy" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "m4.xlarge"
+  monitoring    = true
+
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+  }
 
   iam_instance_profile = aws_iam_instance_profile.proxy.name
   key_name             = var.key_name
@@ -76,7 +83,10 @@ resource "aws_instance" "proxy" {
     )
   )
 
+  ebs_optimized = true
+
   root_block_device {
+    encrypted   = true
     volume_type = "gp2"
     volume_size = "100"
   }

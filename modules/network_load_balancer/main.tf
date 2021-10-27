@@ -1,8 +1,19 @@
 resource "aws_lb" "tfe_lb" {
-  name               = "${var.friendly_name_prefix}-tfe-nlb"
-  internal           = true
-  load_balancer_type = "network"
-  subnets            = var.network_private_subnets
+  #checkov:skip=CKV_AWS_150:Given we are automating this for the most part we can recover from a deleted load-balancer. Okay for now.
+  name                             = "${var.friendly_name_prefix}-tfe-nlb"
+  internal                         = true
+  load_balancer_type               = "network"
+  enable_cross_zone_load_balancing = true
+  subnets                          = var.network_private_subnets
+
+  dynamic "access_logs" {
+    for_each = var.logging_bucket != null ? [var.logging_bucket] : []
+    content {
+      bucket  = var.logging_bucket
+      prefix  = var.logging_prefix
+      enabled = true
+    }
+  }
 }
 
 resource "aws_lb_listener" "tfe_listener_443" {

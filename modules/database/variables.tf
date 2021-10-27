@@ -28,6 +28,12 @@ variable "engine_version" {
   description = "PostgreSQL version."
 }
 
+variable "monitoring_interval" {
+  type        = number
+  description = "Interval in seconds for monitoring of the RDS database. Any value other than null will enable enhanced monitoring."
+  default     = null
+}
+
 variable "network_subnets_private" {
   description = <<-EOD
   A list of the identities of the private subnetworks in which the PostgreSQL RDS instance will be deployed.
@@ -51,4 +57,15 @@ variable "network_private_subnet_cidrs" {
   type        = list(string)
   description = "(Optional) List of private subnet CIDR ranges to create in VPC."
   default     = ["10.0.32.0/20", "10.0.48.0/20"]
+}
+
+
+variable "enabled_cloudwatch_logs" {
+  type        = list(string)
+  description = "List of enabled cloudwatch log export types. From list here: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance#enabled_cloudwatch_logs_exports"
+  default     = null
+  validation {
+    condition     = contains(["postgresql", "upgrade"], var.enabled_cloudwatch_logs)
+    error_message = "Allowed cloudwatch log export types don't match allowed. Must be postgresql, upgrade."
+  }
 }

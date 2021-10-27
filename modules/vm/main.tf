@@ -2,12 +2,14 @@
 # TFE CLUSTER #
 ###############
 resource "aws_security_group" "tfe_instance" {
-  name   = "${var.friendly_name_prefix}-tfe-ec2-sg"
-  vpc_id = var.network_id
+  name        = "${var.friendly_name_prefix}-tfe-ec2-sg"
+  description = "Security group for access to the TFE EC2 instances"
+  vpc_id      = var.network_id
 }
 
 resource "aws_security_group_rule" "tfe_ui" {
   security_group_id        = aws_security_group.tfe_instance.id
+  description              = "Allow ingress traffic to TFE from the load-balancers"
   type                     = "ingress"
   from_port                = 443
   to_port                  = 443
@@ -18,6 +20,7 @@ resource "aws_security_group_rule" "tfe_ui" {
 
 resource "aws_security_group_rule" "tfe_inbound" {
   security_group_id = aws_security_group.tfe_instance.id
+  description       = "Allow ICMP ingress traffic to TFE"
   type              = "ingress"
   from_port         = 0
   to_port           = 0
@@ -27,6 +30,7 @@ resource "aws_security_group_rule" "tfe_inbound" {
 
 resource "aws_security_group_rule" "tfe_outbound" {
   security_group_id = aws_security_group.tfe_instance.id
+  description       = "Allow egress traffic to all IPV4 addresses"
   type              = "egress"
   from_port         = 0
   to_port           = 0
@@ -37,6 +41,7 @@ resource "aws_security_group_rule" "tfe_outbound" {
 resource "aws_security_group_rule" "tfe_dashboard" {
   count                    = var.active_active ? 0 : 1
   security_group_id        = aws_security_group.tfe_instance.id
+  description              = "Allow ingress traffic to dashboard service for TFE from the load-balancer(s)"
   type                     = "ingress"
   from_port                = 8800
   to_port                  = 8800

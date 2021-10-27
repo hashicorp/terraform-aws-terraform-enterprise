@@ -21,6 +21,18 @@ variable "asg_tags" {
   default     = {}
 }
 
+variable "logging_bucket" {
+  type        = string
+  description = "S3 bucket name for logging of resources to. Requires a bucket in the same region that TFE is in."
+  default     = null
+}
+
+variable "logging_prefix" {
+  type        = string
+  description = "Optional prefix to prepend to TFE resource logs in S3 bucket"
+  default     = null
+}
+
 variable "redis_cache_size" {
   type        = string
   default     = "cache.m4.large"
@@ -55,6 +67,22 @@ variable "db_backup_window" {
   type        = string
   description = "The daily time range (in UTC) during which automated backups are created if they are enabled"
   default     = null
+}
+
+variable "db_monitoring_interval" {
+  type        = number
+  description = "Interval in seconds for monitoring of the RDS database. Any value other than null will enable enhanced monitoring."
+  default     = null
+}
+
+variable "db_enabled_cloudwatch_logs" {
+  type        = list(string)
+  description = "List of enabled cloudwatch log export types. From list here: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance#enabled_cloudwatch_logs_exports"
+  default     = null
+  validation {
+    condition     = contains(["postgresql", "upgrade"], var.db_enabled_cloudwatch_logs)
+    error_message = "Allowed cloudwatch log export types don't match allowed. Must be postgresql, upgrade."
+  }
 }
 
 variable "postgres_engine_version" {
@@ -110,7 +138,7 @@ variable "node_count" {
 
 variable "ssl_policy" {
   type        = string
-  default     = "ELBSecurityPolicy-2016-08"
+  default     = "ELBSecurityPolicy-TLS-1-2-2017-01"
   description = "SSL policy to use on ALB listener"
 }
 

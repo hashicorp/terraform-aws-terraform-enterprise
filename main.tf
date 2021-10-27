@@ -19,7 +19,7 @@ data "aws_ami" "ubuntu" {
 resource "aws_kms_key" "tfe_key" {
   deletion_window_in_days = var.kms_key_deletion_window
   description             = "AWS KMS Customer-managed key to encrypt TFE and other resources"
-  enable_key_rotation     = false
+  enable_key_rotation     = true
   is_enabled              = true
   key_usage               = "ENCRYPT_DECRYPT"
 
@@ -106,10 +106,12 @@ module "database" {
   db_backup_window             = var.db_backup_window
   engine_version               = var.postgres_engine_version
   friendly_name_prefix         = var.friendly_name_prefix
+  monitoring_interval          = var.db_monitoring_interval
   network_id                   = local.network_id
   network_private_subnet_cidrs = var.network_private_subnet_cidrs
   network_subnets_private      = local.network_private_subnets
   tfe_instance_sg              = module.vm.tfe_instance_sg
+  enabled_cloudwatch_logs      = var.db_enabled_cloudwatch_logs
 }
 
 module "user_data" {
@@ -152,6 +154,8 @@ module "load_balancer" {
   network_public_subnets         = local.network_public_subnets
   network_private_subnets        = local.network_private_subnets
   ssl_policy                     = var.ssl_policy
+  logging_bucket                 = var.logging_bucket
+  logging_prefix                 = var.logging_prefix
 }
 
 module "private_tcp_load_balancer" {
@@ -166,6 +170,8 @@ module "private_tcp_load_balancer" {
   network_id              = local.network_id
   network_private_subnets = local.network_private_subnets
   ssl_policy              = var.ssl_policy
+  logging_bucket          = var.logging_bucket
+  logging_prefix          = var.logging_prefix
 }
 
 module "vm" {

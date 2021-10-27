@@ -7,3 +7,15 @@ variable "friendly_name_prefix" {
   type        = string
   description = "(Required) Friendly name prefix used for tagging and naming AWS resources."
 }
+
+variable "logging_bucket" {
+  type        = string
+  description = "S3 bucket name for logging of resources to. Requires a bucket in the same region that TFE is in."
+  default     = null
+}
+
+variable "logging_prefix" {
+  type        = string
+  description = "Optional prefix to prepend to TFE resource logs in S3 bucket"
+  default     = null
+}

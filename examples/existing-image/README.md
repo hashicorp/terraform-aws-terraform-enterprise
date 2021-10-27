@@ -2,7 +2,7 @@
 
 ## About This Example
 
-This example functions as a reference for how to use this module to install 
+This example functions as a reference for how to use this module to install
 Terraform Enterprise with a custom image (AMI) in AWS.
 
 ## Module Prerequisites
