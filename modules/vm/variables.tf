@@ -64,6 +64,12 @@ variable "ami_id" {
   description = "AMI ID to use for TFE instances"
 }
 
+variable "ami_kms_key_arn" {
+  type        = string
+  description = "Optional KMS key ARN to use with the TFE ASG for encrypted AMIs"
+  default     = null
+}
+
 variable "friendly_name_prefix" {
   type        = string
   description = "(Required) Friendly name prefix used for tagging and naming AWS resources."

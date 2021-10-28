@@ -5,7 +5,7 @@ data "aws_ami" "ubuntu" {
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+    values = [var.ami_name_filter]
   }
 
   filter {
@@ -13,7 +13,7 @@ data "aws_ami" "ubuntu" {
     values = ["hvm"]
   }
 
-  owners = ["099720109477"] # Canonical
+  owners = [var.ami_owner]
 }
 
 resource "aws_kms_key" "tfe_key" {
@@ -180,6 +180,7 @@ module "vm" {
   active_active                       = local.active_active
   aws_iam_instance_profile            = module.service_accounts.aws_iam_instance_profile
   ami_id                              = local.ami_id
+  ami_kms_key_arn                     = var.ami_kms_key_arn
   aws_lb                              = var.load_balancing_scheme == "PRIVATE_TCP" ? null : module.load_balancer[0].aws_lb_security_group
   aws_lb_target_group_tfe_tg_443_arn  = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_443_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_443_arn
   aws_lb_target_group_tfe_tg_8800_arn = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn

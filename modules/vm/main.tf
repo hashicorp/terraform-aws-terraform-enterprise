@@ -79,6 +79,21 @@ resource "aws_launch_configuration" "tfe" {
   }
 }
 
+# Add ability for ASG to access KMS keys for encrypted images
+resource "aws_iam_service_linked_role" "tfe_asg" {
+  aws_service_name = "autoscaling.amazonaws.com"
+  custom_suffix    = "${var.friendly_name_prefix}-tfe-asg"
+}
+
+resource "aws_kms_grant" "kms_grant_autoscaling" {
+  count             = var.ami_kms_key_arn != null ? 1 : 0
+  name              = "kms_grant_autoscaling"
+  key_id            = var.ami_kms_key_arn
+  grantee_principal = aws_iam_service_linked_role.tfe_asg.arn
+  operations        = ["Decrypt", "ReEncryptFrom"]
+  retire_on_delete  = true
+}
+
 resource "aws_autoscaling_group" "tfe_asg" {
   name                = "${var.friendly_name_prefix}-tfe-asg"
   min_size            = var.node_count
@@ -94,6 +109,7 @@ resource "aws_autoscaling_group" "tfe_asg" {
   health_check_grace_period = var.default_ami_id ? 900 : 1500
   health_check_type         = "ELB"
   launch_configuration      = aws_launch_configuration.tfe.name
+  service_linked_role_arn   = aws_iam_service_linked_role.tfe_asg.arn
 
   tags = concat(
     [
