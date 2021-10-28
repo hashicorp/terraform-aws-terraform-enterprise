@@ -45,10 +45,10 @@ resource "aws_kms_key" "tfe_key" {
   key_usage               = "ENCRYPT_DECRYPT"
 
   # Prefix removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
-  tags = merge({
+  tags = {
     # Name = "${var.friendly_name_prefix}-tfe-kms-key"
     Name = "tfe-kms-key"
-  }, var.default_tags)
+  }
 }
 
 resource "aws_kms_alias" "key_alias" {
