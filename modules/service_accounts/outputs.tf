@@ -6,4 +6,3 @@ output "aws_iam_instance_profile" {
   storage buckets and EC2 autoscaling group.
   EOD
 }
-

@@ -25,7 +25,6 @@ resource "aws_kms_key" "tfe_key" {
 
   # Prefix removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
   tags = {
-    # Name = "${var.friendly_name_prefix}-tfe-kms-key"
     Name = "tfe-kms-key"
   }
 }
@@ -115,26 +114,41 @@ module "database" {
 module "user_data" {
   source = "./modules/user_data"
 
-  active_active           = local.active_active
-  aws_bucket_data         = module.object_storage.s3_bucket_data
-  aws_region              = data.aws_region.current.name
-  fqdn                    = local.fqdn
-  iact_subnet_list        = var.iact_subnet_list
-  iact_subnet_time_limit  = var.iact_subnet_time_limit
-  kms_key_arn             = aws_kms_key.tfe_key.arn
-  pg_dbname               = module.database.db_name
-  pg_password             = module.database.db_password
-  pg_netloc               = module.database.db_endpoint
-  pg_user                 = module.database.db_username
-  ca_certificate_secret   = var.ca_certificate_secret
-  proxy_ip                = var.proxy_ip
-  no_proxy                = var.no_proxy
+  tfe_license_secret     = var.tfe_license_secret
+  active_active          = local.active_active
+  aws_bucket_data        = module.object_storage.s3_bucket_data
+  aws_region             = data.aws_region.current.name
+  fqdn                   = local.fqdn
+  iact_subnet_list       = var.iact_subnet_list
+  iact_subnet_time_limit = var.iact_subnet_time_limit
+  kms_key_arn            = aws_kms_key.tfe_key.arn
+  ca_certificate_secret  = var.ca_certificate_secret
+
+  # Postgres
+  pg_dbname   = module.database.db_name
+  pg_password = module.database.db_password
+  pg_netloc   = module.database.db_endpoint
+  pg_user     = module.database.db_username
+
+  # Proxy
+  proxy_ip = var.proxy_ip
+  no_proxy = var.no_proxy
+
+  # Redis
   redis_host              = module.redis.redis_endpoint
   redis_pass              = module.redis.redis_password
   redis_port              = module.redis.redis_port
   redis_use_password_auth = module.redis.redis_use_password_auth
   redis_use_tls           = module.redis.redis_transit_encryption_enabled
-  tfe_license_secret      = var.tfe_license_secret
+
+  # External Vault
+  extern_vault_enable      = var.extern_vault_enable
+  extern_vault_addr        = var.extern_vault_addr
+  extern_vault_role_id     = var.extern_vault_role_id
+  extern_vault_secret_id   = var.extern_vault_secret_id
+  extern_vault_path        = var.extern_vault_path
+  extern_vault_token_renew = var.extern_vault_token_renew
+  extern_vault_namespace   = var.extern_vault_namespace
 }
 
 module "load_balancer" {

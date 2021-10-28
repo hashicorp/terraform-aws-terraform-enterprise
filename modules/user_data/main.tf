@@ -166,6 +166,37 @@ locals {
       value = var.redis_use_tls
     }
   }
+
+  external_vault = {
+
+    extern_vault_enable = {
+      value = var.extern_vault_enable
+    }
+
+    extern_vault_path = {
+      value = var.extern_vault_path
+    }
+
+    extern_vault_addr = {
+      value = var.extern_vault_addr
+    }
+
+    extern_vault_role_id = {
+      value = var.extern_vault_role_id
+    }
+
+    extern_vault_secret_id = {
+      value = var.extern_vault_secret_id
+    }
+
+    extern_vault_token_renew = {
+      value = var.extern_vault_token_renew
+    }
+
+    extern_vault_namespace = {
+      value = var.extern_vault_namespace
+    }
+  }
 }
 
 locals {
@@ -185,8 +216,9 @@ locals {
 ## Build tfe config json
 locals {
   # take all the partials and merge them into the base configs, if false, merging empty map is noop
-  is_redis_configs = var.active_active ? local.redis_configs : {}
-  tfe_configs      = jsonencode(merge(local.base_configs, local.base_external_configs, local.external_aws_configs, local.is_redis_configs))
+  is_redis_configs  = var.active_active ? local.redis_configs : {}
+  is_external_vault = var.extern_vault_enable == 1 ? local.external_vault : {}
+  tfe_configs       = jsonencode(merge(local.base_configs, local.base_external_configs, local.external_aws_configs, local.is_redis_configs, local.is_external_vault))
 }
 
 ## build replicated config json
