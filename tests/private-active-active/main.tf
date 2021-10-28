@@ -26,7 +26,6 @@ module "private_active_active" {
   domain_name          = var.domain_name
   friendly_name_prefix = local.friendly_name_prefix
   tfe_license_secret   = data.aws_secretsmanager_secret.tfe_license
-  extern_vault_enable    = 0
 
   ami_id                      = data.aws_ami.rhel.id
   iact_subnet_list            = ["0.0.0.0/0"]

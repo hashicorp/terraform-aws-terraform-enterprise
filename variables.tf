@@ -263,6 +263,7 @@ variable "redis_require_password" {
 # External Vault
 # --------------
 variable "extern_vault_enable" {
+  default     = 0
   type        = number
   description = "(Optional) Indicate if an external Vault cluster is being used. Set to 1 if so."
 }
