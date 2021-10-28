@@ -17,6 +17,13 @@ data "aws_ami" "ubuntu" {
   owners = [var.ami_owner]
 }
 
+# Find encryption status of located image
+locals {
+  block_device_mappings = {
+    for device in data.aws_ami.ubuntu.block_device_mappings : device.device_name => device
+  }
+}
+
 # If the user has selected to do a copy-down of the AMI to their local account, do so and use it as the default.
 # This prevents AMI lifecycle events (disappearing AMIs for instance) from affecting ASG
 resource "aws_ami_copy" "tfe_copy" {
@@ -24,8 +31,10 @@ resource "aws_ami_copy" "tfe_copy" {
   name              = "${var.friendly_name_prefix}-${data.aws_ami.ubuntu.name}-local-copy"
   source_ami_id     = data.aws_ami.ubuntu.id
   source_ami_region = data.aws_region.current.name
-  encrypted         = data.aws_ami.ubuntu.block_device_mappings[0].ebs.encrypted
-  tags              = var.tags
+  encrypted         = local.block_device_mappings["/dev/sda1"].encrypted
+  tags = {
+    Name = "${var.friendly_name_prefix}-${data.aws_ami.ubuntu.name}-local-copy"
+  }
 }
 
 resource "aws_kms_key" "tfe_key" {
@@ -36,10 +45,10 @@ resource "aws_kms_key" "tfe_key" {
   key_usage               = "ENCRYPT_DECRYPT"
 
   # Prefix removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
-  tags = {
+  tags = merge({
     # Name = "${var.friendly_name_prefix}-tfe-kms-key"
     Name = "tfe-kms-key"
-  }
+  }, var.default_tags)
 }
 
 resource "aws_kms_alias" "key_alias" {
