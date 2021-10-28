@@ -142,7 +142,7 @@ install_tfe() {
 
   curl -o /tmp/install.sh https://get.replicated.com/docker/terraformenterprise/active-active
   chmod +x /tmp/install.sh
-  /tmp/install.sh "$${arguments[@]}" | tee -a /var/log/ptfe.log
+  bash /tmp/install.sh "$${arguments[@]}" | tee -a /var/log/ptfe.log
 }
 
 configure_tfe() {
