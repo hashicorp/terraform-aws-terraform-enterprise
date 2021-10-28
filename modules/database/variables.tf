@@ -65,7 +65,7 @@ variable "enabled_cloudwatch_logs" {
   description = "List of enabled cloudwatch log export types. From list here: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance#enabled_cloudwatch_logs_exports"
   default     = null
   validation {
-    condition     = var.enabled_cloudwatch_logs != null ? contains(["postgresql", "upgrade"], var.enabled_cloudwatch_logs) : true
+    condition     = var.enabled_cloudwatch_logs != null ? can(contains(["postgresql", "upgrade"], var.enabled_cloudwatch_logs)) : true
     error_message = "Allowed cloudwatch log export types don't match allowed. Must be: postgresql, upgrade."
   }
 }
