@@ -25,6 +25,12 @@ variable "ami_kms_key_arn" {
   default     = null
 }
 
+variable "ami_copy" {
+  type        = bool
+  description = "Optional boolean to enable/disable copying of the found AMI to the local account/region. Useful for lifecycled AMIs."
+  default     = false
+}
+
 variable "acm_certificate_arn" {
   type        = string
   description = "ACM certificate ARN to use with load balancer"

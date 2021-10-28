@@ -1,5 +1,6 @@
 data "aws_region" "current" {}
 
+# Seach for ubuntu AMI based on supplied AMI parameters
 data "aws_ami" "ubuntu" {
   most_recent = true
 
@@ -14,6 +15,17 @@ data "aws_ami" "ubuntu" {
   }
 
   owners = [var.ami_owner]
+}
+
+# If the user has selected to do a copy-down of the AMI to their local account, do so and use it as the default.
+# This prevents AMI lifecycle events (disappearing AMIs for instance) from affecting ASG
+resource "aws_ami_copy" "tfe_copy" {
+  count             = var.ami_copy ? 1 : 0
+  name              = "${var.friendly_name_prefix}-${data.aws_ami.ubuntu.name}-local-copy"
+  source_ami_id     = data.aws_ami.ubuntu.id
+  source_ami_region = data.aws_region.current.name
+  encrypted         = data.aws_ami.ubuntu.block_device_mappings[0].ebs.encrypted
+  tags              = var.tags
 }
 
 resource "aws_kms_key" "tfe_key" {
@@ -37,7 +49,8 @@ resource "aws_kms_alias" "key_alias" {
 
 locals {
   active_active  = var.node_count >= 2
-  ami_id         = local.default_ami_id ? data.aws_ami.ubuntu.id : var.ami_id
+  ami_id_fixup   = coalesce(join("", aws_ami_copy.tfe_copy.*.id), data.aws_ami.ubuntu.id)
+  ami_id         = local.default_ami_id ? local.ami_id_fixup : var.ami_id
   default_ami_id = var.ami_id == ""
   fqdn           = "${var.tfe_subdomain}.${var.domain_name}"
 }
