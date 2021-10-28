@@ -4,6 +4,13 @@ config {
   disabled_by_default = false
 }
 
+plugin "aws" {
+  enabled = true
+  deep_check = false
+  source = "github.com/terraform-linters/tflint-ruleset-aws"
+  version = "0.8.0"
+}
+
 rule "terraform_deprecated_index" {
   enabled = true
 }
