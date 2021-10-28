@@ -31,7 +31,7 @@ resource "aws_ami_copy" "tfe_copy" {
   name              = "${var.friendly_name_prefix}-${data.aws_ami.ubuntu.name}-local-copy"
   source_ami_id     = data.aws_ami.ubuntu.id
   source_ami_region = data.aws_region.current.name
-  encrypted         = local.block_device_mappings["/dev/sda1"].encrypted
+  encrypted         = local.block_device_mappings["/dev/sda1"].ebs.encrypted
   tags = {
     Name = "${var.friendly_name_prefix}-${data.aws_ami.ubuntu.name}-local-copy"
   }
