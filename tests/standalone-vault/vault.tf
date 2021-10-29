@@ -62,8 +62,8 @@ resource "vault_auth_backend" "approle" {
 }
 
 resource "vault_approle_auth_backend_role" "approle" {
-  backend   = vault_auth_backend.approle.path
-  role_name = "${local.test_name}-role"
+  backend        = vault_auth_backend.approle.path
+  role_name      = "${local.test_name}-role"
   token_policies = [vault_policy.ptfe.name]
 }
 
@@ -73,6 +73,6 @@ resource "vault_approle_auth_backend_role_secret_id" "approle" {
 }
 
 resource "vault_mount" "transit" {
-  name = "transit"
   path = "transit"
+  type = "transit"
 }
