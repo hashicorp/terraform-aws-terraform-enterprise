@@ -71,3 +71,8 @@ resource "vault_approle_auth_backend_role_secret_id" "approle" {
   backend   = vault_auth_backend.approle.path
   role_name = vault_approle_auth_backend_role.approle.role_name
 }
+
+resource "vault_mount" "transit" {
+  name = "transit"
+  path = "transit"
+}
