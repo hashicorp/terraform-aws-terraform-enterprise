@@ -136,8 +136,8 @@ install_tfe() {
   fi
 
   %{if active_active ~}
-	arguments+=("disable-replicated-ui")
-	%{ endif ~}
+  arguments+=("disable-replicated-ui")
+  %{ endif ~}
 
   curl -o /tmp/install.sh https://get.replicated.com/docker/terraformenterprise/active-active
   chmod +x /tmp/install.sh
