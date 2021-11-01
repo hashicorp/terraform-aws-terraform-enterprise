@@ -43,22 +43,24 @@ resource "aws_security_group" "proxy" {
 }
 
 resource "aws_security_group_rule" "proxy_ingress" {
-  type              = "ingress"
-  from_port         = local.http_proxy_port
-  to_port           = local.http_proxy_port
-  protocol          = "tcp"
-  cidr_blocks       = module.private_active_active.network_private_subnet_cidrs
-  description       = "Allow internal traffic to proxy instance"
+  type        = "ingress"
+  from_port   = local.http_proxy_port
+  to_port     = local.http_proxy_port
+  protocol    = "tcp"
+  cidr_blocks = module.private_active_active.network_private_subnet_cidrs
+  description = "Allow internal traffic to proxy instance"
+
   security_group_id = aws_security_group.proxy.id
 }
 
 resource "aws_security_group_rule" "proxy_egress" {
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "Allow all egress traffic from proxy instance"
+  type        = "egress"
+  from_port   = 0
+  to_port     = 0
+  protocol    = "-1"
+  cidr_blocks = ["0.0.0.0/0"]
+  description = "Allow all egress traffic from proxy instance"
+
   security_group_id = aws_security_group.proxy.id
 }
 
