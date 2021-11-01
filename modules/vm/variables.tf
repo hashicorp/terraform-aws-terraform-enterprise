@@ -1,8 +1,3 @@
-variable "default_ami_id" {
-  description = "The identity of the AMI which will be used to provision the TFE EC2 instance(s)."
-  type        = string
-}
-
 variable "user_data_base64" {
   description = "A Base64 encoded user data script to be executed when launching the TFE EC2 instance(s)."
   type        = string
@@ -100,4 +95,10 @@ variable "key_name" {
   default     = null
   description = "The name of the key pair to be used for SSH access to the EC2 instance(s)."
   type        = string
+}
+
+variable "health_check_grace_period" {
+  default = 900
+  description = "Number of seconds grace period before health-checks are run while spinning up TFE instances"
+  type = number
 }

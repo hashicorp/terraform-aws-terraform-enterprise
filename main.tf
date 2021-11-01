@@ -1,42 +1,5 @@
 data "aws_region" "current" {}
 
-# Seach for ubuntu AMI based on supplied AMI parameters
-data "aws_ami" "ubuntu" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = [var.ami_name_filter]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = [var.ami_owner]
-}
-
-# Find encryption status of located image
-locals {
-  block_device_mappings = {
-    for device in data.aws_ami.ubuntu.block_device_mappings : device.device_name => device
-  }
-}
-
-# If the user has selected to do a copy-down of the AMI to their local account, do so and use it as the default.
-# This prevents AMI lifecycle events (disappearing AMIs for instance) from affecting ASG
-resource "aws_ami_copy" "tfe_copy" {
-  count             = var.ami_copy ? 1 : 0
-  name              = "${var.friendly_name_prefix}-${data.aws_ami.ubuntu.name}-local-copy"
-  source_ami_id     = data.aws_ami.ubuntu.id
-  source_ami_region = data.aws_region.current.name
-  encrypted         = local.block_device_mappings["/dev/sda1"].ebs.encrypted
-  tags = {
-    Name = "${var.friendly_name_prefix}-${data.aws_ami.ubuntu.name}-local-copy"
-  }
-}
-
 resource "aws_kms_key" "tfe_key" {
   deletion_window_in_days = var.kms_key_deletion_window
   description             = "AWS KMS Customer-managed key to encrypt TFE and other resources"
@@ -57,11 +20,8 @@ resource "aws_kms_alias" "key_alias" {
 }
 
 locals {
-  active_active  = var.node_count >= 2
-  ami_id_fixup   = coalesce(join("", aws_ami_copy.tfe_copy.*.id), data.aws_ami.ubuntu.id)
-  ami_id         = local.default_ami_id ? local.ami_id_fixup : var.ami_id
-  default_ami_id = var.ami_id == ""
-  fqdn           = "${var.tfe_subdomain}.${var.domain_name}"
+  active_active = var.node_count >= 2
+  fqdn          = "${var.tfe_subdomain}.${var.domain_name}"
 }
 
 module "object_storage" {
@@ -201,13 +161,12 @@ module "vm" {
 
   active_active                       = local.active_active
   aws_iam_instance_profile            = module.service_accounts.aws_iam_instance_profile
-  ami_id                              = local.ami_id
+  ami_id                              = var.ami_id
   ami_kms_key_arn                     = var.ami_kms_key_arn
   aws_lb                              = var.load_balancing_scheme == "PRIVATE_TCP" ? null : module.load_balancer[0].aws_lb_security_group
   aws_lb_target_group_tfe_tg_443_arn  = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_443_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_443_arn
   aws_lb_target_group_tfe_tg_8800_arn = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn
   asg_tags                            = var.asg_tags
-  default_ami_id                      = local.default_ami_id
   friendly_name_prefix                = var.friendly_name_prefix
   key_name                            = var.key_name
   instance_type                       = var.instance_type
@@ -216,4 +175,5 @@ module "vm" {
   network_private_subnet_cidrs        = local.network_private_subnet_cidrs
   node_count                          = var.node_count
   user_data_base64                    = module.user_data.tfe_user_data_base64
+  health_check_grace_period           = var.health_check_grace_period
 }

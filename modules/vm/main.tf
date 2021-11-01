@@ -106,7 +106,7 @@ resource "aws_autoscaling_group" "tfe_asg" {
   ]
   # Increases grace period for any AMI that is not the default Ubuntu
   # since RHEL has longer startup time
-  health_check_grace_period = var.default_ami_id ? 900 : 1500
+  health_check_grace_period = var.health_check_grace_period
   health_check_type         = "ELB"
   launch_configuration      = aws_launch_configuration.tfe.name
   service_linked_role_arn   = aws_iam_service_linked_role.tfe_asg.arn

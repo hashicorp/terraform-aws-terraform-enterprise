@@ -2,33 +2,13 @@
 
 variable "ami_id" {
   type        = string
-  default     = ""
   description = "AMI ID to use for TFE instances"
-}
-
-variable "ami_name_filter" {
-  type        = string
-  default     = "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
-  description = "AMI data filter to use for finding latest AMI for TFE instances"
-}
-
-variable "ami_owner" {
-  # Note: This must be a string to avoid parsing errors if account ends with a zero
-  type        = string
-  default     = "099720109477"
-  description = "Owner of the AMI to use for TFE if not specifying an AMI ID. Defaults to Canonical."
 }
 
 variable "ami_kms_key_arn" {
   type        = string
   description = "Optional KMS key ARN to use with the TFE ASG for encrypted AMIs"
   default     = null
-}
-
-variable "ami_copy" {
-  type        = bool
-  description = "Optional boolean to enable/disable copying of the found AMI to the local account/region. Useful for lifecycled AMIs."
-  default     = false
 }
 
 variable "acm_certificate_arn" {
@@ -44,6 +24,12 @@ variable "asg_tags" {
   be used to duplicate the key/value pairs in the default_tags if you wish.
   DESC
   default     = {}
+}
+
+variable "health_check_grace_period" {
+  default     = 900
+  description = "Number of seconds grace period before health-checks are run while spinning up TFE instances"
+  type        = number
 }
 
 variable "logging_bucket" {

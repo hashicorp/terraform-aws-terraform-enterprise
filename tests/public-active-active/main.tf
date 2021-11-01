@@ -18,6 +18,7 @@ resource "random_string" "friendly_name" {
 module "public_active_active" {
   source = "../../"
 
+  ami_id               = data.aws_ami.ubuntu
   acm_certificate_arn  = var.acm_certificate_arn
   domain_name          = var.domain_name
   friendly_name_prefix = local.friendly_name_prefix
