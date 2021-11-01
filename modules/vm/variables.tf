@@ -98,7 +98,7 @@ variable "key_name" {
 }
 
 variable "health_check_grace_period" {
-  default = 900
+  default     = 900
   description = "Number of seconds grace period before health-checks are run while spinning up TFE instances"
-  type = number
+  type        = number
 }
