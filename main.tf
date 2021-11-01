@@ -21,7 +21,7 @@ resource "aws_kms_alias" "key_alias" {
 
 locals {
   active_active = var.node_count >= 2
-  fqdn          = "${var.tfe_subdomain}.${var.domain_name}"
+  fqdn          = var.custom_fqdn != null ? var.custom_fqdn : "${var.tfe_subdomain}.${var.domain_name}"
 }
 
 module "object_storage" {

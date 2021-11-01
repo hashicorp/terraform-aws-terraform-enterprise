@@ -107,6 +107,12 @@ variable "domain_name" {
   description = "Domain for creating the Terraform Enterprise subdomain on."
 }
 
+variable "custom_fqdn" {
+  type        = string
+  description = "(Optional) A custom FQDN name to use for the TFE install. Useful for instance if TFE is at the root of the zone."
+  default     = null
+}
+
 variable "friendly_name_prefix" {
   type        = string
   description = "(Required) Friendly name prefix used for tagging and naming AWS resources."
