@@ -10,8 +10,6 @@ resource "aws_instance" "proxy" {
     aws_security_group.proxy.id,
   ]
 
-  monitoring = true
-
   metadata_options {
     http_endpoint = "enabled"
     http_tokens   = "required"
@@ -31,7 +29,6 @@ resource "aws_instance" "proxy" {
     volume_size = 20
     encrypted   = true
   }
-  ebs_optimized = true
 }
 
 resource "aws_security_group" "proxy" {

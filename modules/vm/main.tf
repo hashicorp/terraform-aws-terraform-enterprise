@@ -128,7 +128,7 @@ resource "aws_autoscaling_group" "tfe_asg" {
     ]
   )
 
-  depends_on = [aws_iam_service_linked_role.tfe_asg, aws_kms_grant.kms_grant_autoscaling]
+  depends_on = [aws_kms_grant.kms_grant_autoscaling]
 
   lifecycle {
     create_before_destroy = true

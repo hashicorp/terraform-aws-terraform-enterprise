@@ -57,7 +57,6 @@ resource "aws_iam_role_policy" "secretsmanager" {
 resource "aws_instance" "proxy" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "m4.xlarge"
-  monitoring    = true
 
   metadata_options {
     http_endpoint = "enabled"
@@ -82,8 +81,6 @@ resource "aws_instance" "proxy" {
       }
     )
   )
-
-  ebs_optimized = true
 
   root_block_device {
     encrypted   = true
