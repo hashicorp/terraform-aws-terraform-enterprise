@@ -1,7 +1,6 @@
 resource "aws_security_group" "proxy" {
   name        = "${local.friendly_name_prefix}-sg-proxy-allow"
   vpc_id      = module.private_tcp_active_active.network_id
-  description = "Security group for TFE TCP proxy"
 
   # Prefix removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
   tags = {
