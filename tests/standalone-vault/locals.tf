@@ -1,7 +1,7 @@
 locals {
   common_tags = {
     Terraform   = "False"
-    Environment = "${local.friendly_name_prefix}-test-standalone-external"
+    Environment = "ptfe-replicated CI"
     Description = "Standalone Vault"
     Repository  = "hashicorp/terraform-aws-terraform-enterprise"
     Team        = "Terraform Enterprise on Prem"
