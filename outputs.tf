@@ -64,9 +64,20 @@ output "dns_configuration_notice" {
   description = "A notice to inform users of how to configure an external DNS service to direct traffic to the load balancer."
 }
 
+output "health_check_url" {
+  value = "https://${local.fqdn}/_health_check"
+
+  description = "The URL of the Terraform Enterprise health check endpoint."
+}
+
 output "login_url" {
   value       = "https://${local.fqdn}/admin/account/new?token=${module.user_data.user_token.value}"
   description = "Login URL to setup the TFE instance once it is initialized"
+}
+
+output "replicated_console_url" {
+  value       = "https://${local.fqdn}:8800/"
+  description = "The URL of the Terraform Enterprise administration console."
 }
 
 output "tfe_url" {
