@@ -32,11 +32,13 @@ resource "aws_lb_listener" "tfe_listener_443" {
 resource "aws_lb_target_group" "tfe_tg_443" {
   name     = "${var.friendly_name_prefix}-tfe-alb-tg-443"
   port     = 443
-  protocol = "TCP"
+  protocol = "TLS"
   vpc_id   = var.network_id
 
   health_check {
-    protocol = "TCP"
+    protocol = "HTTPS"
+    path     = "/_health_check"
+    matcher  = "200-399"
   }
 }
 
