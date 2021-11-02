@@ -116,8 +116,10 @@ module "user_data" {
 
   tfe_license_secret     = var.tfe_license_secret
   active_active          = local.active_active
+  aws_access_key_id      = var.aws_access_key_id
   aws_bucket_data        = module.object_storage.s3_bucket_data
   aws_region             = data.aws_region.current.name
+  aws_secret_access_key  = var.aws_secret_access_key
   fqdn                   = local.fqdn
   iact_subnet_list       = var.iact_subnet_list
   iact_subnet_time_limit = var.iact_subnet_time_limit

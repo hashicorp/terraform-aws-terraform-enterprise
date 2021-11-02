@@ -16,6 +16,22 @@ variable "aws_region" {
   type        = string
 }
 
+variable "aws_access_key_id" {
+  description = <<-EOD
+  The identity of the access key which TFE will use to authenticate with S3. This value requires var.
+  aws_secret_access_key to also be set. If this value is null then the IAM instance profile of the EC2 instance which
+  hosts will be used instead.
+  EOD
+  type        = string
+}
+
+variable "aws_secret_access_key" {
+  description = <<-EOD
+  The secret access key which TFE will use to authenticate with S3. This value requires var.aws_secret_access_key to also be set.
+  EOD
+  type        = string
+}
+
 variable "tfe_license_secret" {
   type = object({
     arn = string

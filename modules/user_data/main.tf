@@ -125,7 +125,15 @@ locals {
     }
 
     aws_instance_profile = {
-      value = "1"
+      value = var.aws_access_key_id == null ? "1" : "0"
+    }
+
+    aws_access_key_id = {
+      value = var.aws_access_key_id
+    }
+
+    aws_secret_access_key = {
+      value = var.aws_secret_access_key
     }
 
     s3_bucket = {
