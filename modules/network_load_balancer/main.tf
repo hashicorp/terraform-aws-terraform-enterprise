@@ -30,7 +30,7 @@ resource "aws_lb_listener" "tfe_listener_443" {
 }
 
 resource "aws_lb_target_group" "tfe_tg_443" {
-  name     = "${var.friendly_name_prefix}-tfe-alb-tg-443"
+  name     = "${var.friendly_name_prefix}-tfe-nlb-tg-443"
   port     = 443
   protocol = "TLS"
   vpc_id   = var.network_id
@@ -58,7 +58,7 @@ resource "aws_lb_listener" "tfe_listener_8800" {
 
 resource "aws_lb_target_group" "tfe_tg_8800" {
   count    = var.active_active ? 0 : 1
-  name     = "${var.friendly_name_prefix}-tfe-alb-tg-8800"
+  name     = "${var.friendly_name_prefix}-tfe-nlb-tg-8800"
   port     = 8800
   protocol = "TCP"
   vpc_id   = var.network_id
