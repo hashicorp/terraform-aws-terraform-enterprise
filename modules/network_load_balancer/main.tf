@@ -20,6 +20,8 @@ resource "aws_lb_listener" "tfe_listener_443" {
   load_balancer_arn = aws_lb.tfe_lb.arn
   port              = 443
   protocol          = "TCP"
+  ssl_policy        = var.ssl_policy
+  certificate_arn   = var.certificate_arn
 
   default_action {
     type             = "forward"
@@ -45,7 +47,6 @@ resource "aws_lb_listener" "tfe_listener_8800" {
   protocol          = "TCP"
   ssl_policy        = var.ssl_policy
   certificate_arn   = var.certificate_arn
-
 
   default_action {
     type             = "forward"
