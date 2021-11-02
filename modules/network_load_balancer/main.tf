@@ -19,7 +19,7 @@ resource "aws_lb" "tfe_lb" {
 resource "aws_lb_listener" "tfe_listener_443" {
   load_balancer_arn = aws_lb.tfe_lb.arn
   port              = 443
-  protocol          = "TCP"
+  protocol          = "TLS"
   ssl_policy        = var.ssl_policy
   certificate_arn   = var.certificate_arn
 
@@ -44,7 +44,7 @@ resource "aws_lb_listener" "tfe_listener_8800" {
   count             = var.active_active ? 0 : 1
   load_balancer_arn = aws_lb.tfe_lb.arn
   port              = 8800
-  protocol          = "TCP"
+  protocol          = "TLS"
   ssl_policy        = var.ssl_policy
   certificate_arn   = var.certificate_arn
 
