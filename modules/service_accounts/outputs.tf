@@ -1,8 +1,11 @@
-output "aws_iam_instance_profile" {
-  value = aws_iam_instance_profile.tfe.name
+output "iam_instance_profile" {
+  value = aws_iam_instance_profile.tfe
 
-  description = <<-EOD
-  The name of the IAM instance profile to be attached to the TFE EC2 instance(s) which is authorized to access the S3 
-  storage buckets and EC2 autoscaling group.
-  EOD
+  description = "The IAM instance profile to be attached to the TFE EC2 instance(s)."
+}
+
+output "iam_role" {
+  value = aws_iam_role.instance_role
+
+  description = "The IAM role associated with the instance profile."
 }

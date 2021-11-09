@@ -23,20 +23,11 @@ locals {
   fqdn           = "${var.tfe_subdomain}.${var.domain_name}"
 }
 
-module "object_storage" {
-  source = "./modules/object_storage"
-
-  friendly_name_prefix = var.friendly_name_prefix
-  kms_key_arn          = aws_kms_key.tfe_key.arn
-}
-
 module "service_accounts" {
   source = "./modules/service_accounts"
 
-  aws_bucket_data_arn   = module.object_storage.s3_bucket_data_arn
   ca_certificate_secret = var.ca_certificate_secret
   friendly_name_prefix  = var.friendly_name_prefix
-  kms_key_arn           = aws_kms_key.tfe_key.arn
   iam_role_policy_arns  = var.iam_role_policy_arns
   tfe_license_secret    = var.tfe_license_secret
 }
@@ -48,6 +39,15 @@ module "kms" {
   key_alias           = var.kms_key_alias
   key_deletion_window = var.kms_key_deletion_window
 }
+
+module "object_storage" {
+  source = "./modules/object_storage"
+
+  friendly_name_prefix = var.friendly_name_prefix
+  iam_principal        = local.iam_principal
+  kms_key_arn          = module.kms.key.arn
+}
+
 module "networking" {
   count = var.deploy_vpc ? 1 : 0
 
@@ -106,7 +106,7 @@ module "user_data" {
   tfe_license_secret     = var.tfe_license_secret
   active_active          = local.active_active
   aws_access_key_id      = var.aws_access_key_id
-  aws_bucket_data        = module.object_storage.s3_bucket_data
+  aws_bucket_data        = module.object_storage.s3_bucket.id
   aws_region             = data.aws_region.current.name
   aws_secret_access_key  = var.aws_secret_access_key
   fqdn                   = local.fqdn
@@ -177,7 +177,7 @@ module "vm" {
   source = "./modules/vm"
 
   active_active                       = local.active_active
-  aws_iam_instance_profile            = module.service_accounts.aws_iam_instance_profile
+  aws_iam_instance_profile            = module.service_accounts.iam_instance_profile.name
   ami_id                              = local.ami_id
   aws_lb                              = var.load_balancing_scheme == "PRIVATE_TCP" ? null : module.load_balancer[0].aws_lb_security_group
   aws_lb_target_group_tfe_tg_443_arn  = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_443_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_443_arn
