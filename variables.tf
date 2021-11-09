@@ -25,7 +25,7 @@ variable "aws_access_key_id" {
   default     = null
   description = <<-EOD
   The identity of the access key which TFE will use to authenticate with S3. This value requires var.
-  aws_secret_access_key and var.object_storage_iam_principal to also be set.
+  aws_secret_access_key and var.object_storage_iam_user to also be set.
   EOD
   type        = string
 }
@@ -34,12 +34,12 @@ variable "aws_secret_access_key" {
   default     = null
   description = <<-EOD
   The secret access key which TFE will use to authenticate with S3. This value requires var.aws_secret_access_key and
-  var.object_storage_iam_principal to also be set.
+  var.object_storage_iam_user to also be set.
   EOD
   type        = string
 }
 
-variable "object_storage_iam_principal" {
+variable "object_storage_iam_user" {
   default     = null
   description = <<-EOD
   The IAM user that will be authorized to access the S3 storage bucket which holds Terraform Enterprise runtime data.
