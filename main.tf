@@ -16,24 +16,6 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-resource "aws_kms_key" "tfe_key" {
-  deletion_window_in_days = var.kms_key_deletion_window
-  description             = "AWS KMS Customer-managed key to encrypt TFE and other resources"
-  enable_key_rotation     = false
-  is_enabled              = true
-  key_usage               = "ENCRYPT_DECRYPT"
-
-  # Prefix removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
-  tags = {
-    Name = "tfe-kms-key"
-  }
-}
-
-resource "aws_kms_alias" "key_alias" {
-  name          = "alias/${var.kms_key_alias}"
-  target_key_id = aws_kms_key.tfe_key.key_id
-}
-
 locals {
   active_active  = var.node_count >= 2
   ami_id         = local.default_ami_id ? data.aws_ami.ubuntu.id : var.ami_id
@@ -59,6 +41,13 @@ module "service_accounts" {
   tfe_license_secret    = var.tfe_license_secret
 }
 
+module "kms" {
+  source = "./modules/kms"
+
+  iam_principal       = local.iam_principal
+  key_alias           = var.kms_key_alias
+  key_deletion_window = var.kms_key_deletion_window
+}
 module "networking" {
   count = var.deploy_vpc ? 1 : 0
 
@@ -91,7 +80,7 @@ module "redis" {
   engine_version       = var.redis_engine_version
   parameter_group_name = var.redis_parameter_group_name
 
-  kms_key_arn                 = aws_kms_key.tfe_key.arn
+  kms_key_arn                 = module.kms.key.arn
   redis_encryption_in_transit = var.redis_encryption_in_transit
   redis_encryption_at_rest    = var.redis_encryption_at_rest
   redis_require_password      = var.redis_require_password
@@ -123,7 +112,7 @@ module "user_data" {
   fqdn                   = local.fqdn
   iact_subnet_list       = var.iact_subnet_list
   iact_subnet_time_limit = var.iact_subnet_time_limit
-  kms_key_arn            = aws_kms_key.tfe_key.arn
+  kms_key_arn            = module.kms.key.arn
   ca_certificate_secret  = var.ca_certificate_secret
 
   # Postgres
