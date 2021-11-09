@@ -10,5 +10,5 @@ variable "key_deletion_window" {
 
 variable "iam_principal" {
   description = "The IAM principal (role or user) that will be authorized to use the key."
-  type = object({ arn = string})
+  type        = object({ arn = string })
 }

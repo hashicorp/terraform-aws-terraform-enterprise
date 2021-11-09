@@ -33,7 +33,7 @@ data "aws_iam_policy_document" "tfe_data" {
       "s3:GetBucketLocation",
       "s3:ListBucket",
     ]
-    effect  = "Allow"
+    effect = "Allow"
     principals {
       identifiers = [var.iam_principal.arn]
       type        = "AWS"
