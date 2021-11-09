@@ -59,6 +59,8 @@ data "aws_iam_policy_document" "tfe_data" {
 }
 
 resource "aws_s3_bucket_policy" "tfe_data" {
-  bucket = aws_s3_bucket.tfe_data_bucket.id
+  # Depending on aws_s3_bucket_public_access_block.tfe_data avoids an error due to conflicting, simultaneous operations
+  # against the bucket.
+  bucket = aws_s3_bucket_public_access_block.tfe_data.bucket
   policy = data.aws_iam_policy_document.tfe_data.json
 }
