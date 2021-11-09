@@ -8,10 +8,10 @@ variable "aws_secret_access_key" {
   description = "The secret access key which TFE will use to authenticate with S3."
 }
 
-# variable "aws_role_arn" {
-#   type        = string
-#   description = "The AWS Role ARN to assume for this module."
-# }
+variable "aws_role_arn" {
+  type        = string
+  description = "The AWS Role ARN to assume for this module."
+}
 
 variable "acm_certificate_arn" {
   type        = string
