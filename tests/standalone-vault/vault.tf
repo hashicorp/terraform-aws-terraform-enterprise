@@ -77,8 +77,8 @@ resource "vault_mount" "transit" {
   type = "transit"
 }
 
-resource "vault_quota_rate_limit" "tfe" {
-  name = "tfe"
-  path = "transit/decrypt"
-  rate = 500
-}
+// resource "vault_quota_rate_limit" "tfe" {
+//   name = "tfe"
+//   path = ""
+//   rate = 500
+// }
