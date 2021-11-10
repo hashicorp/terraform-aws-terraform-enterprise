@@ -4,7 +4,7 @@ resource "hcp_vault_cluster" "test" {
   cluster_id      = local.test_name
   hvn_id          = "team-tfe-dev-hvn"
   public_endpoint = true
-  tier            = "dev"
+  tier            = "standard_medium"
 }
 
 resource "hcp_vault_cluster_admin_token" "test" {
@@ -76,9 +76,3 @@ resource "vault_mount" "transit" {
   path = "transit"
   type = "transit"
 }
-
-// resource "vault_quota_rate_limit" "tfe" {
-//   name = "tfe"
-//   path = ""
-//   rate = 500
-// }
