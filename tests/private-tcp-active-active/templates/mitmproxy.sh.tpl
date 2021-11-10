@@ -2,6 +2,9 @@
 
 set -e -u -o pipefail
 
+echo "[$(date +"%FT%T")] Sleeping 30 seconds to let the network settle" | tee -a /var/log/ptfe.log
+sleep 30
+
 apt-get --yes --option "Acquire::Retries=5" update
 apt-get install --yes unzip
 
