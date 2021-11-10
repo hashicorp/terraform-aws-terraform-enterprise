@@ -7,3 +7,8 @@ variable "friendly_name_prefix" {
   type        = string
   description = "(Required) Friendly name prefix used for tagging and naming AWS resources."
 }
+
+variable "iam_principal" {
+  description = "The IAM principal (role or user) that will be authorized to access the S3 storage bucket."
+  type        = object({ arn = string })
+}

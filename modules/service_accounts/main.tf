@@ -38,40 +38,6 @@ data "aws_iam_policy_document" "secretsmanager" {
   }
 }
 
-resource "aws_iam_role_policy" "s3_data_bucket_put" {
-  name   = "${var.friendly_name_prefix}-tfe-data"
-  role   = aws_iam_role.instance_role.id
-  policy = data.aws_iam_policy_document.tfe_s3_data_bucket_put.json
-}
-
-data "aws_iam_policy_document" "tfe_s3_data_bucket_put" {
-  statement {
-    sid    = "AllowS3ActionsData"
-    effect = "Allow"
-    actions = [
-      "s3:*"
-    ]
-    resources = [
-      var.aws_bucket_data_arn,
-      "${var.aws_bucket_data_arn}/*"
-    ]
-  }
-
-  statement {
-    sid    = "AllowKMSActionsData"
-    effect = "Allow"
-    actions = [
-      "kms:Decrypt",
-      "kms:ReEncrypt",
-      "kms:GenerateDataKey",
-      "kms:DescribeKey",
-    ]
-    resources = [
-      var.kms_key_arn,
-    ]
-  }
-}
-
 resource "aws_iam_role_policy" "tfe_asg_discovery" {
   name   = "${var.friendly_name_prefix}-tfe-asg-discovery"
   role   = aws_iam_role.instance_role.id

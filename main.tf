@@ -16,47 +16,29 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-resource "aws_kms_key" "tfe_key" {
-  deletion_window_in_days = var.kms_key_deletion_window
-  description             = "AWS KMS Customer-managed key to encrypt TFE and other resources"
-  enable_key_rotation     = false
-  is_enabled              = true
-  key_usage               = "ENCRYPT_DECRYPT"
+module "service_accounts" {
+  source = "./modules/service_accounts"
 
-  # Prefix removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
-  tags = {
-    Name = "tfe-kms-key"
-  }
+  ca_certificate_secret = var.ca_certificate_secret
+  friendly_name_prefix  = var.friendly_name_prefix
+  iam_role_policy_arns  = var.iam_role_policy_arns
+  tfe_license_secret    = var.tfe_license_secret
 }
 
-resource "aws_kms_alias" "key_alias" {
-  name          = "alias/${var.kms_key_alias}"
-  target_key_id = aws_kms_key.tfe_key.key_id
-}
+module "kms" {
+  source = "./modules/kms"
 
-locals {
-  active_active  = var.node_count >= 2
-  ami_id         = local.default_ami_id ? data.aws_ami.ubuntu.id : var.ami_id
-  default_ami_id = var.ami_id == ""
-  fqdn           = "${var.tfe_subdomain}.${var.domain_name}"
+  iam_principal       = local.iam_principal
+  key_alias           = var.kms_key_alias
+  key_deletion_window = var.kms_key_deletion_window
 }
 
 module "object_storage" {
   source = "./modules/object_storage"
 
   friendly_name_prefix = var.friendly_name_prefix
-  kms_key_arn          = aws_kms_key.tfe_key.arn
-}
-
-module "service_accounts" {
-  source = "./modules/service_accounts"
-
-  aws_bucket_data_arn   = module.object_storage.s3_bucket_data_arn
-  ca_certificate_secret = var.ca_certificate_secret
-  friendly_name_prefix  = var.friendly_name_prefix
-  kms_key_arn           = aws_kms_key.tfe_key.arn
-  iam_role_policy_arns  = var.iam_role_policy_arns
-  tfe_license_secret    = var.tfe_license_secret
+  iam_principal        = local.iam_principal
+  kms_key_arn          = module.kms.key.arn
 }
 
 module "networking" {
@@ -68,13 +50,6 @@ module "networking" {
   network_cidr                 = var.network_cidr
   network_private_subnet_cidrs = var.network_private_subnet_cidrs
   network_public_subnet_cidrs  = var.network_public_subnet_cidrs
-}
-
-locals {
-  network_id                   = var.deploy_vpc ? module.networking[0].network_id : var.network_id
-  network_private_subnets      = var.deploy_vpc ? module.networking[0].network_private_subnets : var.network_private_subnets
-  network_public_subnets       = var.deploy_vpc ? module.networking[0].network_public_subnets : var.network_public_subnets
-  network_private_subnet_cidrs = var.deploy_vpc ? module.networking[0].network_private_subnet_cidrs : var.network_private_subnet_cidrs
 }
 
 module "redis" {
@@ -91,7 +66,7 @@ module "redis" {
   engine_version       = var.redis_engine_version
   parameter_group_name = var.redis_parameter_group_name
 
-  kms_key_arn                 = aws_kms_key.tfe_key.arn
+  kms_key_arn                 = module.kms.key.arn
   redis_encryption_in_transit = var.redis_encryption_in_transit
   redis_encryption_at_rest    = var.redis_encryption_at_rest
   redis_require_password      = var.redis_require_password
@@ -116,12 +91,14 @@ module "user_data" {
 
   tfe_license_secret     = var.tfe_license_secret
   active_active          = local.active_active
-  aws_bucket_data        = module.object_storage.s3_bucket_data
+  aws_access_key_id      = var.aws_access_key_id
+  aws_bucket_data        = module.object_storage.s3_bucket.id
   aws_region             = data.aws_region.current.name
+  aws_secret_access_key  = var.aws_secret_access_key
   fqdn                   = local.fqdn
   iact_subnet_list       = var.iact_subnet_list
   iact_subnet_time_limit = var.iact_subnet_time_limit
-  kms_key_arn            = aws_kms_key.tfe_key.arn
+  kms_key_arn            = module.kms.key.arn
   ca_certificate_secret  = var.ca_certificate_secret
 
   # Postgres
@@ -186,7 +163,7 @@ module "vm" {
   source = "./modules/vm"
 
   active_active                       = local.active_active
-  aws_iam_instance_profile            = module.service_accounts.aws_iam_instance_profile
+  aws_iam_instance_profile            = module.service_accounts.iam_instance_profile.name
   ami_id                              = local.ami_id
   aws_lb                              = var.load_balancing_scheme == "PRIVATE_TCP" ? null : module.load_balancer[0].aws_lb_security_group
   aws_lb_target_group_tfe_tg_443_arn  = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_443_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_443_arn

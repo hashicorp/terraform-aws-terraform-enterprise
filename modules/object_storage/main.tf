@@ -26,3 +26,41 @@ resource "aws_s3_bucket_public_access_block" "tfe_data" {
   restrict_public_buckets = true
   ignore_public_acls      = true
 }
+
+data "aws_iam_policy_document" "tfe_data" {
+  statement {
+    actions = [
+      "s3:GetBucketLocation",
+      "s3:ListBucket",
+    ]
+    effect = "Allow"
+    principals {
+      identifiers = [var.iam_principal.arn]
+      type        = "AWS"
+    }
+    resources = [aws_s3_bucket.tfe_data_bucket.arn]
+    sid       = "AllowS3ListBucketData"
+  }
+
+  statement {
+    actions = [
+      "s3:DeleteObject",
+      "s3:GetObject",
+      "s3:PutObject",
+    ]
+    effect = "Allow"
+    principals {
+      identifiers = [var.iam_principal.arn]
+      type        = "AWS"
+    }
+    resources = ["${aws_s3_bucket.tfe_data_bucket.arn}/*"]
+    sid       = "AllowS3ManagementData"
+  }
+}
+
+resource "aws_s3_bucket_policy" "tfe_data" {
+  # Depending on aws_s3_bucket_public_access_block.tfe_data avoids an error due to conflicting, simultaneous operations
+  # against the bucket.
+  bucket = aws_s3_bucket_public_access_block.tfe_data.bucket
+  policy = data.aws_iam_policy_document.tfe_data.json
+}

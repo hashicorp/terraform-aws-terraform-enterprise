@@ -21,6 +21,34 @@ variable "asg_tags" {
   default     = {}
 }
 
+variable "aws_access_key_id" {
+  default     = null
+  description = <<-EOD
+  The identity of the access key which TFE will use to authenticate with S3. This value requires var.
+  aws_secret_access_key and var.object_storage_iam_user to also be set.
+  EOD
+  type        = string
+}
+
+variable "aws_secret_access_key" {
+  default     = null
+  description = <<-EOD
+  The secret access key which TFE will use to authenticate with S3. This value requires var.aws_secret_access_key and
+  var.object_storage_iam_user to also be set.
+  EOD
+  type        = string
+}
+
+variable "object_storage_iam_user" {
+  default     = null
+  description = <<-EOD
+  The IAM user that will be authorized to access the S3 storage bucket which holds Terraform Enterprise runtime data.
+  This value requires var.aws_access_key_id and var.aws_secret_access_key to also be set. The values of those variables
+  must represent an access key that is associated with this user.
+  EOD
+  type        = object({ arn = string })
+}
+
 variable "redis_cache_size" {
   type        = string
   default     = "cache.m4.large"
