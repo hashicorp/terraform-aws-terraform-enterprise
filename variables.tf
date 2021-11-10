@@ -1,5 +1,5 @@
 # Common
-
+# ------
 variable "ami_id" {
   type        = string
   default     = ""
@@ -79,6 +79,8 @@ variable "instance_type" {
   type        = string
 }
 
+# Network
+# -------
 variable "network_id" {
   default     = ""
   description = "The identity of the VPC in which resources will be deployed."
@@ -97,6 +99,38 @@ variable "network_public_subnets" {
   type        = list(string)
 }
 
+variable "deploy_vpc" {
+  type        = bool
+  description = "(Optional) Boolean indicating whether to deploy a VPC (true) or not (false)."
+  default     = true
+}
+
+variable "network_cidr" {
+  type        = string
+  description = "(Optional) CIDR block for VPC."
+  default     = "10.0.0.0/16"
+}
+
+variable "network_private_subnet_cidrs" {
+  type        = list(string)
+  description = "(Optional) List of private subnet CIDR ranges to create in VPC."
+  default     = ["10.0.32.0/20", "10.0.48.0/20"]
+}
+
+variable "network_public_subnet_cidrs" {
+  type        = list(string)
+  description = "(Optional) List of public subnet CIDR ranges to create in VPC."
+  default     = ["10.0.0.0/20", "10.0.16.0/20"]
+}
+
+variable "admin_dashboard_ingress_ranges" {
+  type        = list(string)
+  description = "(Optional) List of CIDR ranges that are allowed to acces the admin dashboard. Only used for standalone installations."
+  default     = ["0.0.0.0/0"]
+}
+
+# TFE Instance(s)
+# ---------------
 variable "node_count" {
   type        = number
   default     = 2
@@ -145,6 +179,7 @@ variable "key_name" {
 }
 
 # KMS
+# ---
 variable "kms_key_alias" {
   type        = string
   description = "KMS key alias for AWS KMS Customer managed key."
@@ -158,6 +193,7 @@ variable "kms_key_deletion_window" {
 }
 
 # Secrets Manager
+# ---------------
 variable "tfe_license_secret" {
   type = object({
     arn = string
@@ -178,6 +214,7 @@ variable "ca_certificate_secret" {
 }
 
 # Load Balancer
+# -------------
 variable "load_balancing_scheme" {
   default     = "PRIVATE"
   description = "Load Balancing Scheme. Supported values are: \"PRIVATE\"; \"PRIVATE_TCP\"; \"PUBLIC\"."
@@ -189,39 +226,8 @@ variable "load_balancing_scheme" {
   }
 }
 
-# Network
-variable "deploy_vpc" {
-  type        = bool
-  description = "(Optional) Boolean indicating whether to deploy a VPC (true) or not (false)."
-  default     = true
-}
-
-variable "network_cidr" {
-  type        = string
-  description = "(Optional) CIDR block for VPC."
-  default     = "10.0.0.0/16"
-}
-
-variable "network_private_subnet_cidrs" {
-  type        = list(string)
-  description = "(Optional) List of private subnet CIDR ranges to create in VPC."
-  default     = ["10.0.32.0/20", "10.0.48.0/20"]
-}
-
-variable "network_public_subnet_cidrs" {
-  type        = list(string)
-  description = "(Optional) List of public subnet CIDR ranges to create in VPC."
-  default     = ["10.0.0.0/20", "10.0.16.0/20"]
-}
-
-variable "admin_dashboard_ingress_ranges" {
-  type        = list(string)
-  description = "(Optional) List of CIDR ranges that are allowed to acces the admin dashboard. Only used for standalone installations."
-  default     = ["0.0.0.0/0"]
-}
-
 # PROXY SETTINGS
-
+# --------------
 variable "proxy_ip" {
   type        = string
   description = "(Optional) IP address of existing web proxy to route TFE traffic through."
@@ -235,6 +241,7 @@ variable "no_proxy" {
 }
 
 # Redis
+# -----
 variable "redis_encryption_in_transit" {
   type        = bool
   description = "Determine whether Redis traffic is encrypted in transit."
@@ -251,4 +258,48 @@ variable "redis_require_password" {
   type        = bool
   description = "Determine if a password is required for Redis."
   default     = false
+}
+
+# External Vault
+# --------------
+variable "extern_vault_enable" {
+  default     = 0
+  type        = number
+  description = "(Optional) Indicate if an external Vault cluster is being used. Set to 1 if so."
+}
+
+variable "extern_vault_addr" {
+  default     = null
+  type        = string
+  description = "(Required if var.extern_vault_enable = 1) URL of external Vault cluster."
+}
+
+variable "extern_vault_role_id" {
+  default     = null
+  type        = string
+  description = "(Required if var.extern_vault_enable = 1) AppRole RoleId to use to authenticate with the Vault cluster."
+}
+
+variable "extern_vault_secret_id" {
+  default     = null
+  type        = string
+  description = "(Required if var.extern_vault_enable = 1) AppRole SecretId to use to authenticate with the Vault cluster."
+}
+
+variable "extern_vault_path" {
+  default     = "auth/approle"
+  type        = string
+  description = "(Optional) Path on the Vault server for the AppRole auth. Defaults to auth/approle."
+}
+
+variable "extern_vault_token_renew" {
+  default     = 3600
+  type        = number
+  description = "(Optional) How often (in seconds) to renew the Vault token."
+}
+
+variable "extern_vault_namespace" {
+  default     = null
+  type        = string
+  description = "(Optional) The Vault namespace"
 }

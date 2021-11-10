@@ -17,3 +17,9 @@
 
 # Editor files
 .vscode
+ 
+# TFE license
+*.rli
+
+# Local Working dir
+work

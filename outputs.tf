@@ -70,7 +70,7 @@ output "login_url" {
 }
 
 output "tfe_url" {
-  value       = "https://${local.fqdn}/"
+  value       = "https://${local.fqdn}"
   description = "The URL to the TFE application."
 }
 
@@ -80,4 +80,10 @@ output "tfe_autoscaling_group" {
   description = "The autoscaling group which hosts the TFE EC2 instance(s)."
   # This output is marked as sensitive to work around a bug in Terraform 0.14
   sensitive = true
+}
+
+output "replicated_dashboard_password" {
+  value       = module.user_data.replicated_dashboard_password
+  description = "The password for the TFE console"
+  sensitive   = true
 }
