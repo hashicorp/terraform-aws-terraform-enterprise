@@ -1,6 +1,7 @@
 output "replicated_console_password" {
   value       = module.tfe.replicated_dashboard_password
   description = "The password for the TFE console"
+  sensitive   = true
 }
 
 output "replicated_console_url" {
