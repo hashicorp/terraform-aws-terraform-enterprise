@@ -1,4 +1,4 @@
-# Test: Active/Active Terraform Enterprise on RHEL with Proxy
+# Test: Active/Active on RHEL 7 with Proxy
 
 ## About this test
 
