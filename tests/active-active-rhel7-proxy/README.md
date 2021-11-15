@@ -1,4 +1,4 @@
-# Test: Active/Active Terraform Enterprise on RHEL with Proxy
+# Test: Active/Active on RHEL 7 with Proxy
 
 ## About this test
 
@@ -7,7 +7,7 @@ following traits:
 
 - Active/Active mode
 - a small VM machine type (m5.xlarge)
-- Red Hat 7.8 as the VM image
+- Red Hat 7.9 as the VM image
 - a publicly accessible HTTP load balancer with TLS termination
 - a proxy server with TLS termination
 - an access key for accessing S3
