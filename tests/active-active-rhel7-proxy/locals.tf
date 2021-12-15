@@ -3,7 +3,7 @@ locals {
 
   common_tags = {
     Terraform   = "cloud"
-    Environment = "team_tfe_dev"
+    Environment = "tfe_team_dev"
     Description = "Active/Active on RHEL with Proxy scenario deployed from CircleCI"
     Repository  = "hashicorp/terraform-aws-terraform-enterprise"
     Team        = "Terraform Enterprise on Prem"
