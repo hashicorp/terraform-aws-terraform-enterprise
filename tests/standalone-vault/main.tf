@@ -24,7 +24,7 @@ module "standalone_vault" {
   source = "../../"
 
   acm_certificate_arn  = var.acm_certificate_arn
-  domain_name          = "team-tfe-dev.aws.ptfedev.com"
+  domain_name          = "tfe-team-dev.aws.ptfedev.com"
   friendly_name_prefix = local.friendly_name_prefix
   tfe_license_secret   = aws_secretsmanager_secret.tfe_license
 
