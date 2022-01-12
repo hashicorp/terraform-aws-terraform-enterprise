@@ -537,6 +537,7 @@ jobs:
         run: |
           echo "Curling \`health_check_url\` for a return status of 200..."
           while ! curl \
+            --insecure \
             --connect-timeout 10 \
             -sfS --max-time 5 --proxy socks5://localhost:5000 \
             --verbose \
@@ -562,6 +563,7 @@ jobs:
         run: |
           token=$( \
             curl --fail --retry 5 --verbose \
+            --insecure \
             --connect-timeout 10 \
             --proxy socks5://localhost:5000 "$IACT_URL")
           echo "::set-output name=token::$token"
@@ -584,6 +586,7 @@ jobs:
             > ./payload.json
           response=$( \
             curl \
+            --insecure \
             --connect-timeout 10 \
             --fail \
             --retry 5 \
@@ -610,6 +613,7 @@ jobs:
           TFE_URL: "${{ steps.retrieve-tfe-url.outputs.stdout }}"
           TFE_API_TOKEN: "${{ steps.retrieve-admin-token.outputs.token }}"
           TFE_EMAIL: tf-onprem-team@hashicorp.com
+          TFE_SKIP_TLS_VERIFY: "true"
           http_proxy: socks5://localhost:5000/
           https_proxy: socks5://localhost:5000/
         run: |
