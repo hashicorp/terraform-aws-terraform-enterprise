@@ -4,33 +4,10 @@ resource "random_string" "friendly_name" {
   number  = false
   special = false
 }
-
-resource "aws_secretsmanager_secret" "tfe_license" {
-  description = "The TFE license."
-}
-
-resource "aws_secretsmanager_secret_version" "tfe_license" {
-  secret_binary = filebase64(var.license_file)
-  secret_id     = aws_secretsmanager_secret.tfe_license.id
-}
-
-resource "tls_private_key" "main" {
-  algorithm = "RSA"
-}
-
-resource "local_file" "private_key_pem" {
-  filename = "${path.module}/work/private-key.pem"
-
-  content         = tls_private_key.main.private_key_pem
-  file_permission = "0600"
-}
-
 resource "aws_key_pair" "main" {
   public_key = tls_private_key.main.public_key_openssh
-
   key_name = "${local.friendly_name_prefix}-ssh"
 }
-
 module "tfe" {
   source = "../../"
 
