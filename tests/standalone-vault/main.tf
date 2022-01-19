@@ -9,11 +9,14 @@ resource "random_string" "friendly_name" {
 
 # Store TFE License as secret
 # ---------------------------
-module "secrets" {
-  source       = "../../fixtures/secrets"
-  license_file = var.license_file
-}
 
+module "secrets" {
+  source = "../../fixtures/secrets"
+  tfe_license = {
+    name = "my-tfe-license"
+    path = var.tfe_license.path
+  }
+}
 # Standalone, external services with external (HCP) Vault scenario
 # ---------------------------------------------------------------- 
 module "standalone_vault" {

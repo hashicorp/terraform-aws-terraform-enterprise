@@ -8,7 +8,12 @@ variable "acm_certificate_arn" {
   description = "The ARN of an existing ACM certificate."
 }
 
-variable "license_file" {
-  type        = string
-  description = "The local path to the Terraform Enterprise license to be provided by CI."
+variable "tfe_license" {
+  default = null
+  type = object({
+    name = string
+    path = string
+  })
+  description = "A map that consists of the newly created secret name and the local path to the Terraform Enterprise license."
 }
+

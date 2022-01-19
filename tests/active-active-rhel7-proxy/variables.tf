@@ -23,7 +23,11 @@ variable "object_storage_iam_user_name" {
   description = "The name of the IAM user which will be authorized to access the S3 storage bucket."
 }
 
-variable "license_file" {
-  type        = string
-  description = "The local path to the Terraform Enterprise license to be provided by CI."
+variable "tfe_license" {
+  default = null
+  type = object({
+    name = string
+    path = string
+  })
+  description = "A map that consists of the newly created secret name and the local path to the Terraform Enterprise license."
 }

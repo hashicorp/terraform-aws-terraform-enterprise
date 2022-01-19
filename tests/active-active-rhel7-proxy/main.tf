@@ -6,8 +6,11 @@ resource "random_string" "friendly_name" {
 }
 
 module "secrets" {
-  source       = "../../fixtures/secrets"
-  license_file = var.license_file
+  source = "../../fixtures/secrets"
+  tfe_license = {
+    name = "my-tfe-license"
+    path = var.tfe_license.path
+  }
 }
 
 resource "tls_private_key" "main" {
