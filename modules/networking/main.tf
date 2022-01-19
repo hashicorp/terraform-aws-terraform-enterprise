@@ -29,6 +29,10 @@ module "vpc" {
   single_nat_gateway             = false
 
   # Prefixes removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
+  default_security_group_tags = {
+    # Name = "${var.friendly_name_prefix}-tfe-dsg"
+    Name = "tfe-dsg"
+  }
   igw_tags = {
     # Name = "${var.friendly_name_prefix}-tfe-igw"
     Name = "tfe-igw"
