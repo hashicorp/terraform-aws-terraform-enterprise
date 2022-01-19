@@ -9,13 +9,9 @@ resource "random_string" "friendly_name" {
 
 # Store TFE License as secret
 # ---------------------------
-resource "aws_secretsmanager_secret" "tfe_license" {
-  description = "TFE license."
-}
-
-resource "aws_secretsmanager_secret_version" "tfe_license" {
-  secret_binary = filebase64(var.license_file)
-  secret_id     = aws_secretsmanager_secret.tfe_license.id
+module "secrets" {
+  source = "../../fixtures/secrets"
+  license_file = var.license_file
 }
 
 # Standalone, external services with external (HCP) Vault scenario
@@ -26,7 +22,7 @@ module "standalone_vault" {
   acm_certificate_arn  = var.acm_certificate_arn
   domain_name          = "tfe-team-dev.aws.ptfedev.com"
   friendly_name_prefix = local.friendly_name_prefix
-  tfe_license_secret   = aws_secretsmanager_secret.tfe_license
+  tfe_license_secret   = module.secrets.tfe_license
 
   iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   iact_subnet_list            = ["0.0.0.0/0"]

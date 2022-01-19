@@ -7,7 +7,7 @@ data "aws_secretsmanager_secret" "ca_private_key" {
 }
 
 data "aws_secretsmanager_secret" "tfe_license" {
-  name = var.tfe_license_secret_name
+  name = module.secrets.tfe_license
 }
 
 data "aws_ami" "rhel" {

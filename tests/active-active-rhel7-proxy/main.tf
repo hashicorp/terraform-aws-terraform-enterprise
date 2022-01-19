@@ -4,17 +4,36 @@ resource "random_string" "friendly_name" {
   number  = false
   special = false
 }
+
+module "secrets" {
+  source = "../../fixtures/secrets"
+  license_file = var.license_file
+}
+
+resource "tls_private_key" "main" {
+  algorithm = "RSA"
+}
+
+resource "local_file" "private_key_pem" {
+  filename = "${path.module}/work/private-key.pem"
+
+  content         = tls_private_key.main.private_key_pem
+  file_permission = "0600"
+}
+
 resource "aws_key_pair" "main" {
   public_key = tls_private_key.main.public_key_openssh
+
   key_name = "${local.friendly_name_prefix}-ssh"
 }
+
 module "tfe" {
   source = "../../"
 
   acm_certificate_arn  = var.acm_certificate_arn
   domain_name          = "tfe-team-dev.aws.ptfedev.com"
   friendly_name_prefix = local.friendly_name_prefix
-  tfe_license_secret   = aws_secretsmanager_secret.tfe_license
+  tfe_license_secret   = module.secrets.tfe_license
 
   ami_id                  = data.aws_ami.rhel.id
   aws_access_key_id       = var.aws_access_key_id

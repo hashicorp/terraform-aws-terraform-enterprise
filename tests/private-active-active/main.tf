@@ -19,6 +19,11 @@ locals {
   http_proxy_port = 3128
 }
 
+module "secrets" {
+  source = "../../fixtures/secrets"
+  license_file = var.license_file
+}
+
 module "private_active_active" {
   source = "../../"
 

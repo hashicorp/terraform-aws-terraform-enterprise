@@ -18,9 +18,7 @@ variable "key_name" {
   type        = string
 }
 
-variable "tfe_license_secret_name" {
+variable "license_file" {
   type        = string
-  description = <<-EOD
-  The name of the Secrets Manager secret under which the Base64 encoded Terraform Enterprise license is stored.
-  EOD
+  description = "The local path to the Terraform Enterprise license to be provided by CI."
 }

@@ -15,6 +15,11 @@ resource "random_string" "friendly_name" {
   special = false
 }
 
+module "secrets" {
+  source = "../../fixtures/secrets"
+  license_file = var.license_file
+}
+
 module "private_tcp_active_active" {
   source = "../../"
 
