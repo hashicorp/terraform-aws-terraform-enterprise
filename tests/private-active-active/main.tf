@@ -20,7 +20,7 @@ locals {
 }
 
 module "secrets" {
-  source = "../../fixtures/secrets"
+  source       = "../../fixtures/secrets"
   license_file = var.license_file
 }
 

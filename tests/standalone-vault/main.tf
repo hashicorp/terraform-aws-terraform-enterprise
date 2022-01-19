@@ -10,7 +10,7 @@ resource "random_string" "friendly_name" {
 # Store TFE License as secret
 # ---------------------------
 module "secrets" {
-  source = "../../fixtures/secrets"
+  source       = "../../fixtures/secrets"
   license_file = var.license_file
 }
 
