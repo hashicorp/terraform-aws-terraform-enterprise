@@ -223,16 +223,6 @@ variable "kms_key_deletion_window" {
 # Secrets Manager
 # ---------------
 
-variable "tfe_license" {
-  default = null
-  type = object({
-    name = string
-    path = string
-  })
-  description = "A map that consists of the newly created secret name and the local path to the Terraform Enterprise license."
-}
-
-
 variable "ca_certificate_secret" {
   default = null
   type = object({
