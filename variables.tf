@@ -223,6 +223,13 @@ variable "kms_key_deletion_window" {
 # Secrets Manager
 # ---------------
 
+variable "tfe_license_secret" {
+  type = object({
+    arn = string
+  })
+  description = "The Secrets Manager secret under which the Base64 encoded Terraform Enterprise license is stored."
+}
+
 variable "ca_certificate_secret" {
   default = null
   type = object({

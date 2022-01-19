@@ -18,6 +18,13 @@ variable "key_name" {
   type        = string
 }
 
+variable "tfe_license_secret_name" {
+  type        = string
+  description = <<-EOD
+  The name of the Secrets Manager secret under which the Base64 encoded Terraform Enterprise license is stored.
+  EOD
+}
+
 variable "ca_certificate_secret_name" {
   type        = string
   description = <<-EOD
@@ -31,13 +38,3 @@ variable "ca_private_key_secret_name" {
   The name of the Secrets Manager secret under which the Base64 encoded CA private key is stored.
   EOD
 }
-
-variable "tfe_license" {
-  default = null
-  type = object({
-    name = string
-    path = string
-  })
-  description = "A map that consists of the newly created secret name and the local path to the Terraform Enterprise license."
-}
-

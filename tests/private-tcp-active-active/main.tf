@@ -15,15 +15,6 @@ resource "random_string" "friendly_name" {
   special = false
 }
 
-
-module "secrets" {
-  source = "../../fixtures/secrets"
-  tfe_license = {
-    name = "my-tfe-license"
-    path = var.tfe_license.path
-  }
-}
-
 module "private_tcp_active_active" {
   source = "../../"
 

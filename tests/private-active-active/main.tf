@@ -19,14 +19,6 @@ locals {
   http_proxy_port = 3128
 }
 
-
-module "secrets" {
-  source = "../../fixtures/secrets"
-  tfe_license = {
-    name = "my-tfe-license"
-    path = var.tfe_license.path
-  }
-}
 module "private_active_active" {
   source = "../../"
 
