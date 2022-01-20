@@ -9,15 +9,15 @@ resource "aws_secretsmanager_secret_version" "tfe_license" {
   secret_id     = aws_secretsmanager_secret.tfe_license[count.index].id
 }
 
-resource "aws_secretsmanager_secret" "ca_certificate" {
-  count       = var.ca_certificate == null ? 0 : 1
+resource "aws_secretsmanager_secret" "ca_certificate_secret" {
+  count       = var.ca_certificate_secret == null ? 0 : 1
   description = "The CA certificate"
 }
 
-resource "aws_secretsmanager_secret_version" "ca_certificate" {
-  count         = var.ca_certificate == null ? 0 : 1
-  secret_binary = filebase64(var.ca_certificate.path)
-  secret_id     = aws_secretsmanager_secret.ca_certificate[count.index].id
+resource "aws_secretsmanager_secret_version" "ca_certificate_secret" {
+  count         = var.ca_certificate_secret == null ? 0 : 1
+  secret_binary = filebase64(var.ca_certificate_secret.path)
+  secret_id     = aws_secretsmanager_secret.ca_certificate_secret[count.index].id
 }
 
 
