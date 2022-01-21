@@ -17,8 +17,8 @@ data "aws_ami" "ubuntu" {
 }
 
 module "secrets" {
-  source = "./fixtures/secrets"
-  ca_certificate_secret =  var.ca_certificate_secret
+  source                = "./fixtures/secrets"
+  ca_certificate_secret = var.ca_certificate_secret
 }
 
 module "service_accounts" {
