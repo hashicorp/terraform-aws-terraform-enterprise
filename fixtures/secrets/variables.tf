@@ -9,33 +9,36 @@ variable "tfe_license" {
 
 variable "ca_certificate_secret" {
   default     = null
-  description = "The secret identifier and path of a PEM certificate file for a Certificate Authority."
-  type        = string
+  description = "The secret identifier and data of a PEM certificate file for a Certificate Authority."
+  type = object({
+    id   = string
+    data = string
+  })
 }
 
 variable "ca_private_key" {
   default     = null
-  description = "The secret identifier and path of a PEM private key file for a Certificate Authority."
+  description = "The secret identifier and data of a PEM private key file for a Certificate Authority."
   type = object({
     id   = string
-    path = string
+    data = string
   })
 }
 
 variable "ssl_certificate" {
   default     = null
-  description = "The secret identifier and path of a PEM certificate file."
+  description = "The secret identifier and data of a PEM certificate file."
   type = object({
     id   = string
-    path = string
+    data = string
   })
 }
 
 variable "ssl_private_key" {
   default     = null
-  description = "The secret identifier and path of a PEM private key file."
+  description = "The secret identifier and data of a PEM private key file."
   type = object({
     id   = string
-    path = string
+    data = string
   })
 }

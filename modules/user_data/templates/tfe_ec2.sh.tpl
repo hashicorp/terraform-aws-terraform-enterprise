@@ -34,7 +34,7 @@ configure_ca_certificate() {
 
   mkdir --parents $ca_certificate_directory
   ca_certificate_data_b64=$(\
-    aws secretsmanager get-secret-value --secret-id ${ca_certificate_secret} \
+    aws secretsmanager get-secret-value --secret-id ${ca_certificate_secret.arn} \
     | jq --raw-output '.SecretBinary,.SecretString | select(. != null)')
   echo $ca_certificate_data_b64 | base64 --decode > $ca_certificate_directory/tfe-ca-certificate.crt
   eval $update_ca_certificates

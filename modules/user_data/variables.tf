@@ -88,24 +88,14 @@ variable "pg_password" {
   type        = string
 }
 
-# variable "ca_certificate_secret" {
-#   type = object({
-#     arn = string
-#   })
-#   description = <<-EOD
-#   A Secrets Manager secret which contains the Base64 encoded version of a PEM encoded public certificate of a
-#   certificate authority (CA) to be trusted by the EC2 instance.
-#   EOD
-# }
-
 variable "ca_certificate_secret" {
-  default     = null
+  type = object({
+    arn = string
+  })
   description = <<-EOD
-  Path to file which contains the Base64 encoded version of a PEM encoded public certificate of a
-  certificate authority (CA) to be trusted by the EC2 instance(s). This argument
-  is only required if TLS certificates in the deployment are not issued by a well-known CA.
+  A Secrets Manager secret which contains the Base64 encoded version of a PEM encoded public certificate of a
+  certificate authority (CA) to be trusted by the EC2 instance.
   EOD
-  type        = string
 }
 
 variable "proxy_ip" {

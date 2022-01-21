@@ -230,19 +230,6 @@ variable "tfe_license_secret" {
   description = "The Secrets Manager secret under which the Base64 encoded Terraform Enterprise license is stored."
 }
 
-# variable "ca_certificate_secret" {
-#   default     = null
-#   description = <<-EOD
-#   Path to file which contains the Base64 encoded version of a PEM encoded public certificate of a
-#   certificate authority (CA) to be trusted by the EC2 instance(s). This argument
-#   is only required if TLS certificates in the deployment are not issued by a well-known CA.
-#   EOD
-#   type = object({
-#     id   = string
-#     path = string
-#   })
-# }
-
 variable "ca_certificate_secret" {
   default     = null
   description = <<-EOD
@@ -250,9 +237,11 @@ variable "ca_certificate_secret" {
   certificate authority (CA) to be trusted by the EC2 instance(s). This argument
   is only required if TLS certificates in the deployment are not issued by a well-known CA.
   EOD
-  type        = string
+  type = object({
+    id   = string
+    path = string
+  })
 }
-
 
 # Load Balancer
 # -------------
