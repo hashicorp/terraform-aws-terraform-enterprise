@@ -10,10 +10,7 @@ variable "tfe_license" {
 variable "ca_certificate_secret" {
   default     = null
   description = "The secret identifier and path of a PEM certificate file for a Certificate Authority."
-  type = object({
-    id   = string
-    path = string
-  })
+  type        = string
 }
 
 variable "ca_private_key" {
