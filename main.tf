@@ -17,6 +17,7 @@ data "aws_ami" "ubuntu" {
 }
 
 module "secrets" {
+  count                 = var.ca_certificate_secret == null ? 0 : 1
   source                = "./fixtures/secrets"
   ca_certificate_secret = var.ca_certificate_secret
 }
@@ -24,7 +25,7 @@ module "secrets" {
 module "service_accounts" {
   source = "./modules/service_accounts"
 
-  ca_certificate_secret = module.secrets.ca_certificate_secret
+  ca_certificate_secret = var.ca_certificate_secret == null ? var.ca_certificate_secret : module.secrets.ca_certificate_secret
   friendly_name_prefix  = var.friendly_name_prefix
   iam_role_policy_arns  = var.iam_role_policy_arns
   tfe_license_secret    = var.tfe_license_secret
