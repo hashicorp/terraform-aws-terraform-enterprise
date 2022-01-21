@@ -105,7 +105,7 @@ module "user_data" {
   iact_subnet_list       = var.iact_subnet_list
   iact_subnet_time_limit = var.iact_subnet_time_limit
   kms_key_arn            = module.kms.key.arn
-  ca_certificate_secret  = module.secrets.ca_certificate_secret
+  ca_certificate_secret  = var.ca_certificate_secret == null ? var.ca_certificate_secret : module.secrets.ca_certificate_secret
 
   # Postgres
   pg_dbname   = module.database.db_name
