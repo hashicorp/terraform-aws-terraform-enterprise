@@ -10,13 +10,12 @@ variable "iam_role_policy_arns" {
 }
 
 variable "ca_certificate_secret" {
-  type = object({
-    arn = string
-  })
+  default     = null
   description = <<-EOD
   A Secrets Manager secret which contains the Base64 encoded version of a PEM encoded public certificate of a
   certificate authority (CA) to be trusted by the EC2 instance.
   EOD
+  type        = string
 }
 
 variable "tfe_license_secret" {
