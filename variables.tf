@@ -224,17 +224,13 @@ variable "kms_key_deletion_window" {
 # ---------------
 
 variable "tfe_license_secret" {
-  type = object({
-    arn = string
-  })
+  type        = string
   description = "The Secrets Manager secret under which the Base64 encoded Terraform Enterprise license is stored."
 }
 
 variable "ca_certificate_secret" {
-  default = null
-  type = object({
-    arn = string
-  })
+  default     = null
+  type        = string
   description = <<-EOD
   A Secrets Manager secret which contains the Base64 encoded version of a PEM encoded public certificate of a
   certificate authority (CA) to be trusted by the EC2 instance(s). This argument

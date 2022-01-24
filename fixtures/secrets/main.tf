@@ -12,7 +12,7 @@ resource "aws_secretsmanager_secret_version" "tfe_license" {
 
 resource "aws_secretsmanager_secret" "ca_certificate_secret" {
   count       = var.ca_certificate_secret == null ? 0 : 1
-  name        = var.ca_certificate_secret.name
+  name        = "ca_certificate_secret"
   description = "The CA certificate"
 }
 
@@ -23,13 +23,13 @@ resource "aws_secretsmanager_secret_version" "ca_certificate_secret" {
 }
 
 resource "aws_secretsmanager_secret" "ca_private_key" {
-  name        = var.ca_private_key.name
+  name        = var.ca_private_key.id
   count       = var.ca_private_key == null ? 0 : 1
   description = "CA Certificate private key"
 }
 
 resource "aws_secretsmanager_secret_version" "ca_private_key" {
   count         = var.ca_private_key == null ? 0 : 1
-  secret_binary = base64encode(var.ca_private_key.path)
+  secret_binary = base64encode(var.ca_private_key.data)
   secret_id     = aws_secretsmanager_secret.ca_private_key[count.index].id
 }
