@@ -21,10 +21,10 @@ module "private_tcp_active_active" {
   acm_certificate_arn  = var.acm_certificate_arn
   domain_name          = var.domain_name
   friendly_name_prefix = local.friendly_name_prefix
-  tfe_license_secret   = data.aws_secretsmanager_secret.tfe_license
+  tfe_license_secret   = data.aws_secretsmanager_secret.tfe_license.arn
 
   ami_id                      = data.aws_ami.rhel.id
-  ca_certificate_secret       = data.aws_secretsmanager_secret.ca_certificate
+  ca_certificate_secret       = data.aws_secretsmanager_secret.ca_certificate.arn
   iact_subnet_list            = ["0.0.0.0/0"]
   iam_role_policy_arns        = [local.ssm_policy_arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type               = "m5.8xlarge"

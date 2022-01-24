@@ -41,7 +41,7 @@ module "tfe" {
   ami_id                  = data.aws_ami.rhel.id
   aws_access_key_id       = var.aws_access_key_id
   aws_secret_access_key   = var.aws_secret_access_key
-  ca_certificate_secret   = data.aws_secretsmanager_secret.ca_certificate
+  ca_certificate_secret   = data.aws_secretsmanager_secret.ca_certificate.arn
   iact_subnet_list        = ["0.0.0.0/0"]
   iam_role_policy_arns    = [local.ssm_policy_arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type           = "m5.xlarge"
