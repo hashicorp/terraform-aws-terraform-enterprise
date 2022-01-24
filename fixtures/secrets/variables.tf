@@ -24,21 +24,3 @@ variable "ca_private_key" {
     data = string
   })
 }
-
-variable "ssl_certificate" {
-  default     = null
-  description = "The secret identifier and data of a PEM certificate file."
-  type = object({
-    id   = string
-    data = string
-  })
-}
-
-variable "ssl_private_key" {
-  default     = null
-  description = "The secret identifier and data of a PEM private key file."
-  type = object({
-    id   = string
-    data = string
-  })
-}
