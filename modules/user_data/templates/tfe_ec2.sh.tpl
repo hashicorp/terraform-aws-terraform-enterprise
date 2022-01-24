@@ -34,7 +34,7 @@ configure_ca_certificate() {
 
   mkdir --parents $ca_certificate_directory
   ca_certificate_data_b64=$(\
-    aws secretsmanager get-secret-value --secret-id ${ca_certificate_secret.arn} \
+    aws secretsmanager get-secret-value --secret-id ${ca_certificate_secret} \
     | jq --raw-output '.SecretBinary,.SecretString | select(. != null)')
   echo $ca_certificate_data_b64 | base64 --decode > $ca_certificate_directory/tfe-ca-certificate.crt
   eval $update_ca_certificates
@@ -111,7 +111,7 @@ detect_distribution() {
 retrieve_tfe_license() {
   echo "[$(date +"%FT%T")] [Terraform Enterprise] Retrieving Terraform Enterprise license" | tee -a /var/log/ptfe.log
   license_data_b64=$(\
-    aws secretsmanager get-secret-value --secret-id ${tfe_license_secret.arn} \
+    aws secretsmanager get-secret-value --secret-id ${tfe_license_secret} \
     | jq --raw-output '.SecretBinary,.SecretString | select(. != null)')
   echo $license_data_b64 | base64 --decode > ${license_file_location}
 }

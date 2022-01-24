@@ -5,13 +5,12 @@ resource "random_string" "friendly_name" {
   special = false
 }
 
-resource "aws_secretsmanager_secret" "tfe_license" {
-  description = "The TFE license."
-}
-
-resource "aws_secretsmanager_secret_version" "tfe_license" {
-  secret_binary = filebase64(var.license_file)
-  secret_id     = aws_secretsmanager_secret.tfe_license.id
+module "secrets" {
+  source = "../../fixtures/secrets"
+  tfe_license = {
+    name = "my-tfe-license"
+    path = var.license_file
+  }
 }
 
 resource "tls_private_key" "main" {
@@ -37,12 +36,12 @@ module "tfe" {
   acm_certificate_arn  = var.acm_certificate_arn
   domain_name          = "tfe-team-dev.aws.ptfedev.com"
   friendly_name_prefix = local.friendly_name_prefix
-  tfe_license_secret   = aws_secretsmanager_secret.tfe_license
+  tfe_license_secret   = module.secrets.tfe_license
 
   ami_id                  = data.aws_ami.rhel.id
   aws_access_key_id       = var.aws_access_key_id
   aws_secret_access_key   = var.aws_secret_access_key
-  ca_certificate_secret   = data.aws_secretsmanager_secret.ca_certificate
+  ca_certificate_secret   = data.aws_secretsmanager_secret.ca_certificate.arn
   iact_subnet_list        = ["0.0.0.0/0"]
   iam_role_policy_arns    = [local.ssm_policy_arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type           = "m5.xlarge"
