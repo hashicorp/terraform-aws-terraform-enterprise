@@ -8,7 +8,7 @@ resource "random_string" "friendly_name" {
 module "secrets" {
   source = "../../fixtures/secrets"
   tfe_license = {
-    name = "my-tfe-license"
+    name = "${local.friendly_name_prefix}-tfe-license"
     path = var.license_file
   }
 }
