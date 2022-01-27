@@ -208,7 +208,7 @@ locals {
   lib_directory   = "/var/lib/ptfe"
   airgap_pathname = "${local.lib_directory}/ptfe.airgap"
   airgap_config = {
-  LicenseBootstrapAirgapPackagePath = local.airgap_pathname
+    LicenseBootstrapAirgapPackagePath = local.airgap_pathname
   }
 }
 
@@ -246,8 +246,8 @@ locals {
   tfe_user_data = templatefile(
     "${path.module}/templates/tfe_ec2.sh.tpl",
     {
-      airgap_pathname          = local.airgap_pathname
-      airgap_url               = var.airgap_url
+      airgap_pathname       = local.airgap_pathname
+      airgap_url            = var.airgap_url
       import_settings_from  = local.import_settings_from
       tfe_license_secret    = var.tfe_license_secret
       license_file_location = local.license_file_location
