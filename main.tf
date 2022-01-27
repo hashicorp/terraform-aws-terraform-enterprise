@@ -89,6 +89,7 @@ module "database" {
 module "user_data" {
   source = "./modules/user_data"
 
+  airgap_url             = var.airgap_url
   tfe_license_secret     = var.tfe_license_secret
   active_active          = local.active_active
   aws_access_key_id      = var.aws_access_key_id

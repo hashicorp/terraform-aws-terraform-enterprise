@@ -114,6 +114,11 @@ variable "iact_subnet_time_limit" {
   type        = number
 }
 
+variable "airgap_url" {
+  description = "The URL of a Replicated airgap package for Terraform Enterprise."
+  type        = string
+}
+
 # External Vault
 # --------------
 variable "extern_vault_enable" {

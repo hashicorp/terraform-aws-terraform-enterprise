@@ -205,7 +205,14 @@ locals {
       value = var.extern_vault_namespace
     }
   }
+  lib_directory   = "/var/lib/ptfe"
+  airgap_pathname = "${local.lib_directory}/ptfe.airgap"
+  airgap_config = {
+  LicenseBootstrapAirgapPackagePath = local.airgap_pathname
+  }
 }
+
+
 
 locals {
   import_settings_from  = "/etc/ptfe-settings.json"
@@ -225,8 +232,9 @@ locals {
 locals {
   # take all the partials and merge them into the base configs, if false, merging empty map is noop
   is_redis_configs  = var.active_active ? local.redis_configs : {}
+  is_airgap         = var.airgap_url == null ? {} : local.airgap_config
   is_external_vault = var.extern_vault_enable == 1 ? local.external_vault : {}
-  tfe_configs       = jsonencode(merge(local.base_configs, local.base_external_configs, local.external_aws_configs, local.is_redis_configs, local.is_external_vault))
+  tfe_configs       = jsonencode(merge(local.base_configs, local.base_external_configs, local.is_airgap, local.external_aws_configs, local.is_redis_configs, local.is_external_vault))
 }
 
 ## build replicated config json
@@ -238,6 +246,8 @@ locals {
   tfe_user_data = templatefile(
     "${path.module}/templates/tfe_ec2.sh.tpl",
     {
+      airgap_pathname          = local.airgap_pathname
+      airgap_url               = var.airgap_url
       import_settings_from  = local.import_settings_from
       tfe_license_secret    = var.tfe_license_secret
       license_file_location = local.license_file_location

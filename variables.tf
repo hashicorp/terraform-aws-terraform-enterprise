@@ -107,6 +107,12 @@ variable "instance_type" {
   type        = string
 }
 
+variable "airgap_url" {
+  default     = null
+  description = "The URL of the storage bucket object that comprises an airgap package."
+  type        = string
+}
+
 # Network
 # -------
 variable "network_id" {
