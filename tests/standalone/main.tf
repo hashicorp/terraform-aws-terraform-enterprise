@@ -50,23 +50,23 @@ module "secrets" {
 # ------------------------
 module "standalone" {
   source = "../../"
-  
-  operational_mode     = "disk"
-  acm_certificate_arn  = var.acm_certificate_arn
-  domain_name          = var.domain_name
 
-  friendly_name_prefix = local.friendly_name_prefix
-  tfe_license_secret   = module.secrets.tfe_license
+  operational_mode    = "disk"
+  acm_certificate_arn = var.acm_certificate_arn
+  domain_name         = var.domain_name
+
+  friendly_name_prefix        = local.friendly_name_prefix
+  tfe_license_secret          = module.secrets.tfe_license
   redis_encryption_at_rest    = false
   redis_encryption_in_transit = false
   redis_require_password      = false
-  iam_role_policy_arns  = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
-  iact_subnet_list      = ["0.0.0.0/0"]
-  instance_type         = "m5.xlarge"
-  key_name              = aws_key_pair.main.key_name
-  kms_key_alias         = local.test_name
-  load_balancing_scheme = "PUBLIC"
-  node_count            = 1
-  tfe_subdomain         = local.friendly_name_prefix
-  asg_tags              = local.common_tags
+  iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
+  iact_subnet_list            = ["0.0.0.0/0"]
+  instance_type               = "m5.xlarge"
+  key_name                    = aws_key_pair.main.key_name
+  kms_key_alias               = local.test_name
+  load_balancing_scheme       = "PUBLIC"
+  node_count                  = 1
+  tfe_subdomain               = local.friendly_name_prefix
+  asg_tags                    = local.common_tags
 }
