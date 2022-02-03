@@ -207,33 +207,6 @@ configure_tfe() {
   echo "$settings" | base64 -d > ${import_settings_from}
 }
 
-configure_disk() {
-  %{ if disk_path != null ~}
-  device="/dev/${disk_device_name}"
-  echo "[Terraform Enterprise] Checking disk at '$device' for EXT4 filesystem" | tee -a $log_pathname
-
-  if lsblk --fs $device | grep ext4
-  then
-    echo "[Terraform Enterprise] EXT4 filesystem detected on disk at '$device'" | tee -a $log_pathname
-  else
-    echo "[Terraform Enterprise] Creating EXT4 filesystem on disk at '$device'" | tee -a $log_pathname
-
-    mkfs.ext4 -m 0 -E lazy_itable_init=0,lazy_journal_init=0,discard $device
-  fi
-
-   echo "[Terraform Enterprise] Creating mounted disk directory at '${disk_path}'" | tee -a $log_pathname
-   mkdir --parents ${disk_path}
-
-   echo "[Terraform Enterprise] Mounting disk '$device' to directory at '${disk_path}'" | tee -a $log_pathname
-   mount --options discard,defaults $device ${disk_path}
-   chmod og+rw ${disk_path}
-
-   echo "[Terraform Enterprise] Configuring automatic mounting of '$device' to directory at '${disk_path}' on reboot" | tee -a $log_pathname
-   echo "UUID=$(lsblk --noheadings --output uuid $device) ${disk_path} ext4 discard,defaults 0 2" >> /etc/fstab
-
-  %{ endif ~}
-}
-
 proxy_ip="${proxy_ip}"
 no_proxy="${no_proxy}"
 replicated="${replicated}"
