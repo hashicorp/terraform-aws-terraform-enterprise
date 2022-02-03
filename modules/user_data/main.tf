@@ -243,10 +243,12 @@ locals {
 ## Build tfe config json
 locals {
   # take all the partials and merge them into the base configs, if false, merging empty map is noop
+  is_redis_configs  = var.active_active ? local.redis_configs : {}
   is_airgap         = var.airgap_url == null ? {} : local.airgap_config
   is_external_vault = var.extern_vault_enable == 1 ? local.external_vault : {}
   tfe_configs       = jsonencode(merge(
     local.base_configs, 
+    local.is_redis_configs,
     local.base_external_configs, 
     local.disk_settings,
     local.is_external_vault
