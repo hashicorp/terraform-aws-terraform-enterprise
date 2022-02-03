@@ -18,30 +18,30 @@ locals {
   database = try(
     module.database[0],
     {
-      db_name       = null
-      db_password   = null
-      db_endpoint   = null
-      db_username   = null
+      db_name     = null
+      db_password = null
+      db_endpoint = null
+      db_username = null
     }
   )
 
   object_storage = try(
     module.object_storage[0],
     {
-      s3_bucket  = {
-        id= null
+      s3_bucket = {
+        id = null
       }
     }
   )
-  
+
   redis = try(
     module.redis[0],
     {
-      redis_endpoint              = null
-      redis_password              = null
-      redis_port              = null
-      redis_use_password_auth = null
-      redis_transit_encryption_enabled           = null
+      redis_endpoint                   = null
+      redis_password                   = null
+      redis_port                       = null
+      redis_use_password_auth          = null
+      redis_transit_encryption_enabled = null
     }
   )
 

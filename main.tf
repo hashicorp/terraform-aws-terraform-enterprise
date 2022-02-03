@@ -35,7 +35,7 @@ module "kms" {
 
 module "object_storage" {
 
-  count = local.enable_object_storage_module ? 1 : 0
+  count  = local.enable_object_storage_module ? 1 : 0
   source = "./modules/object_storage"
 
   friendly_name_prefix = var.friendly_name_prefix
@@ -56,7 +56,7 @@ module "networking" {
 
 module "redis" {
   source = "./modules/redis"
-  
+
   count = local.enable_redis_module ? 1 : 0
 
   active_active                = local.active_active
@@ -78,7 +78,7 @@ module "redis" {
 
 module "database" {
   source = "./modules/database"
-  
+
   count = local.enable_database_module ? 1 : 0
 
   db_size                      = var.db_size
@@ -94,7 +94,7 @@ module "database" {
 
 module "user_data" {
   source = "./modules/user_data"
-  
+
   active_active          = local.active_active
   tfe_license_secret     = var.tfe_license_secret
   enable_external        = local.enable_external
@@ -104,19 +104,19 @@ module "user_data" {
   iact_subnet_time_limit = var.iact_subnet_time_limit
   kms_key_arn            = module.kms.key.arn
   ca_certificate_secret  = var.ca_certificate_secret
-  
+
   # mounted disk
-  enable_disk            = local.enable_disk
-  disk_device_name       = local.disk_device_name
-  disk_path              = var.disk_path
-  
-  
+  enable_disk      = local.enable_disk
+  disk_device_name = local.disk_device_name
+  disk_path        = var.disk_path
+
+
   # object store
-  aws_access_key_id      = var.aws_access_key_id
-  aws_bucket_data        = local.object_storage.s3_bucket.id
-  aws_region             = data.aws_region.current.name
-  aws_secret_access_key  = var.aws_secret_access_key
-  
+  aws_access_key_id     = var.aws_access_key_id
+  aws_bucket_data       = local.object_storage.s3_bucket.id
+  aws_region            = data.aws_region.current.name
+  aws_secret_access_key = var.aws_secret_access_key
+
 
   # Postgres
   pg_dbname   = local.database.db_name

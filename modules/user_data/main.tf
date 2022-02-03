@@ -110,8 +110,8 @@ locals {
       value = var.disk_path
     }
   } : {}
-  
-  base_external_configs = var.enable_external ? {  
+
+  base_external_configs = var.enable_external ? {
 
     pg_dbname = {
       value = var.pg_dbname
@@ -160,11 +160,11 @@ locals {
     s3_sse_kms_key_id = {
       value = var.kms_key_arn
     }
-  } :{}
+  } : {}
 
   redis_configs = {
     enable_active_active = {
-      value = "1" 
+      value = "1"
     }
     redis_host = {
       value = var.redis_host
@@ -224,8 +224,8 @@ locals {
 locals {
   import_settings_from  = "/etc/ptfe-settings.json"
   license_file_location = "/etc/ptfe-license.rli"
-  lib_directory   = "/var/lib/ptfe"
-  airgap_pathname = "${local.lib_directory}/ptfe.airgap"
+  lib_directory         = "/var/lib/ptfe"
+  airgap_pathname       = "${local.lib_directory}/ptfe.airgap"
   airgap_config = {
     LicenseBootstrapAirgapPackagePath = local.airgap_pathname
   }
@@ -246,13 +246,13 @@ locals {
   is_redis_configs  = var.active_active ? local.redis_configs : {}
   is_airgap         = var.airgap_url == null ? {} : local.airgap_config
   is_external_vault = var.extern_vault_enable == 1 ? local.external_vault : {}
-  tfe_configs       = jsonencode(merge(
-    local.base_configs, 
+  tfe_configs = jsonencode(merge(
+    local.base_configs,
     local.is_redis_configs,
-    local.base_external_configs, 
+    local.base_external_configs,
     local.disk_settings,
     local.is_external_vault
-    ))
+  ))
 }
 
 ## build replicated config json
@@ -263,7 +263,7 @@ locals {
 locals {
   tfe_user_data = templatefile(
     "${path.module}/templates/tfe_ec2.sh.tpl",
-    { 
+    {
       enable_disk           = var.enable_disk
       disk_device_name      = var.disk_device_name
       disk_path             = var.disk_path
