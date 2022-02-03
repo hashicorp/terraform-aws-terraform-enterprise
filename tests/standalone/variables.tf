@@ -17,9 +17,3 @@ variable "domain_name" {
   type        = string
   description = "Domain for creating the Terraform Enterprise subdomain on."
 }
-
-variable "airgap_url" {
-  default     = null
-  description = "The URL of the storage bucket object that comprises an airgap package."
-  type        = string
-}
