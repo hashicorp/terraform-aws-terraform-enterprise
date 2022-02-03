@@ -195,6 +195,7 @@ install_tfe() {
   %{ endif ~}
   
   chmod +x $install_pathname
+  cd $replicated_directory
   $install_pathname "$${arguments[@]}" | tee -a $log_pathname
 }
 
