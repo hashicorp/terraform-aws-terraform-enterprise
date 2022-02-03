@@ -46,16 +46,20 @@ module "secrets" {
     path = var.license_file
   }
 }
-# Standalone, airgap if enabled
-# -----------------------------
+# Standalone, mounted disk
+# ------------------------
 module "standalone" {
   source = "../../"
-
+  
+  operational_mode     = "disk"
   acm_certificate_arn  = var.acm_certificate_arn
   domain_name          = var.domain_name
+
   friendly_name_prefix = local.friendly_name_prefix
   tfe_license_secret   = module.secrets.tfe_license
-
+  redis_encryption_at_rest    = false
+  redis_encryption_in_transit = false
+  redis_require_password      = false
   iam_role_policy_arns  = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   iact_subnet_list      = ["0.0.0.0/0"]
   instance_type         = "m5.xlarge"

@@ -119,6 +119,26 @@ variable "airgap_url" {
   type        = string
 }
 
+variable "disk_device_name" {
+  description = "The name of the disk device on which Terraform Enterprise will store data in Mounted Disk mode."
+  type        = string
+}
+
+variable "disk_path" {
+  description = "The pathname of the directory in which Terraform Enterprise will store data in Mounted Disk mode."
+  type        = string
+}
+
+variable "enable_disk" {
+  description = "A toggle to control the use of Mounted Disk mode."
+  type        = bool
+}
+
+variable "enable_external" {
+  description = "A toggle to control the use of External Services mode."
+  type        = bool
+}
+
 # External Vault
 # --------------
 variable "extern_vault_enable" {

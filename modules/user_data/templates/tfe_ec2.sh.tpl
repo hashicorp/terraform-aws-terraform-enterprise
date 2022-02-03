@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
+log_pathname="/var/log/ptfe.log"
+echo "[Terraform Enterprise] Setting up" | tee -a $log_pathname
 # General OS management
 install_jq() {
   curl --silent -Lo /bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
@@ -139,51 +141,60 @@ install_tfe() {
   arguments+=("disable-replicated-ui")
   %{ endif ~}
 
+  replicated_directory="/tmp/replicated"
+  install_pathname="$replicated_directory/install.sh"
+
   %{ if airgap_url != null ~}
   arguments+=("airgap")
   echo "[Terraform Enterprise] Installing Docker Engine from Repository" | tee -a $log_pathname
-if [[ $distribution == "ubuntu" ]]
-then
-  apt-get --assume-yes update
-  apt-get --assume-yes install \
-    ca-certificates \
-    curl \
-    gnupg \
-    lsb-release
-  curl --fail --silent --show-error --location https://download.docker.com/linux/ubuntu/gpg \
-    | gpg --dearmor --output /usr/share/keyrings/docker-archive-keyring.gpg
-  echo \
-    "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] \
-    https://download.docker.com/linux/ubuntu $(lsb_release --codename --short) stable" \
-    | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-  apt-get --assume-yes update
-  apt-get --assume-yes install docker-ce docker-ce-cli containerd.io
-  apt-get --assume-yes autoremove
-elif [[ $distribution == "rhel" ]]
-then
-  yum install --assumeyes yum-utils
-  yum-config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
-  yum install --assumeyes docker-ce docker-ce-cli containerd.io
-fi
-replicated_filename="replicated.tar.gz"
-replicated_url="https://s3.amazonaws.com/replicated-airgap-work/$replicated_filename"
-replicated_pathname="$replicated_directory/$replicated_filename"
-echo "[Terraform Enterprise] Downloading Replicated from '$replicated_url' to '$replicated_pathname'" | tee -a $log_pathname
-curl --create-dirs --output "$replicated_pathname" "$replicated_url"
-echo "[Terraform Enterprise] Extracting Replicated in '$replicated_directory'" | tee -a $log_pathname
-tar --directory "$replicated_directory" --extract --file "$replicated_pathname"
 
-echo "[Terraform Enterprise] Copying airgap package '${airgap_url}' to '${airgap_pathname}'" | tee -a $log_pathname
-curl --create-dirs --output "${airgap_pathname}" "${airgap_url}"
-%{ else ~}
-curl -o /tmp/install.sh https://get.replicated.com/docker/terraformenterprise/active-active
-chmod +x /tmp/install.sh
-%{ endif ~}
+  if [[ $distribution == "ubuntu" ]]
+   then
+   apt-get --assume-yes update
+   apt-get --assume-yes install \
+   ca-certificates \
+   curl \
+   gnupg \
+   lsb-release
+   curl --fail --silent --show-error --location https://download.docker.com/linux/ubuntu/gpg \
+     | gpg --dearmor --output /usr/share/keyrings/docker-archive-keyring.gpg
+   echo \
+     "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] \
+     https://download.docker.com/linux/ubuntu $(lsb_release --codename --short) stable" \
+     | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+   apt-get --assume-yes update
+   apt-get --assume-yes install docker-ce docker-ce-cli containerd.io
+   apt-get --assume-yes autoremove
 
-chmod +x $install_pathname
-cd $replicated_directory
-$install_pathname "$${arguments[@]}" | tee -a $log_pathname
+  elif [[ $distribution == "rhel" ]]
+   then
+   yum install --assumeyes yum-utils
+   yum-config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
+   yum install --assumeyes docker-ce docker-ce-cli containerd.io
+  fi
 
+  replicated_filename="replicated.tar.gz"
+  replicated_url="https://s3.amazonaws.com/replicated-airgap-work/$replicated_filename"
+  replicated_pathname="$replicated_directory/$replicated_filename"
+  echo "[Terraform Enterprise] Downloading Replicated from '$replicated_url' to '$replicated_pathname'" | tee -a $log_pathname
+  curl --create-dirs --output "$replicated_pathname" "$replicated_url"
+  echo "[Terraform Enterprise] Extracting Replicated in '$replicated_directory'" | tee -a $log_pathname
+  tar --directory "$replicated_directory" --extract --file "$replicated_pathname"
+
+  echo "[Terraform Enterprise] Copying airgap package '${airgap_url}' to '${airgap_pathname}'" | tee -a $log_pathname
+  curl --create-dirs --output "${airgap_pathname}" "${airgap_url}"
+  chmod +x ${airgap_pathname}
+  ${airgap_pathname} "$${arguments[@]}" | tee -a $log_pathname
+
+  %{ else ~}
+
+  install_url="https://get.replicated.com/docker/terraformenterprise/active-active"
+  echo "[Terraform Enterprise] Downloading Replicated installation script from '$install_url' to '$install_pathname'" | tee -a $log_pathname
+  curl --create-dirs --output $install_pathname $install_url
+  chmod +x $install_pathname
+  $install_pathname "$${arguments[@]}" | tee -a $log_pathname
+
+  %{ endif ~}
 }
 
 configure_tfe() {
@@ -192,6 +203,33 @@ configure_tfe() {
 
   echo "$replicated" | base64 -d > /etc/replicated.conf
   echo "$settings" | base64 -d > ${import_settings_from}
+}
+
+configure_disk() {
+  %{ if disk_path != null ~}
+  device="/dev/${disk_device_name}"
+  echo "[Terraform Enterprise] Checking disk at '$device' for EXT4 filesystem" | tee -a $log_pathname
+
+  if lsblk --fs $device | grep ext4
+  then
+    echo "[Terraform Enterprise] EXT4 filesystem detected on disk at '$device'" | tee -a $log_pathname
+  else
+    echo "[Terraform Enterprise] Creating EXT4 filesystem on disk at '$device'" | tee -a $log_pathname
+
+    mkfs.ext4 -m 0 -E lazy_itable_init=0,lazy_journal_init=0,discard $device
+  fi
+
+   echo "[Terraform Enterprise] Creating mounted disk directory at '${disk_path}'" | tee -a $log_pathname
+   mkdir --parents ${disk_path}
+
+   echo "[Terraform Enterprise] Mounting disk '$device' to directory at '${disk_path}'" | tee -a $log_pathname
+   mount --options discard,defaults $device ${disk_path}
+   chmod og+rw ${disk_path}
+
+   echo "[Terraform Enterprise] Configuring automatic mounting of '$device' to directory at '${disk_path}' on reboot" | tee -a $log_pathname
+   echo "UUID=$(lsblk --noheadings --output uuid $device) ${disk_path} ext4 discard,defaults 0 2" >> /etc/fstab
+
+  %{ endif ~}
 }
 
 proxy_ip="${proxy_ip}"
@@ -207,8 +245,11 @@ install_awscli
 install_jq
 retrieve_tfe_license
 configure_ca_certificate "$distribution"
+
 if [[ $proxy_ip != "" ]]
 then
   configure_proxy "$proxy_ip" "$no_proxy" "$distribution"
 fi
+
+
 install_tfe "$proxy_ip" "$no_proxy" "$active_active" 
