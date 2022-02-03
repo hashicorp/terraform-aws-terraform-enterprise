@@ -183,8 +183,6 @@ install_tfe() {
 
   echo "[Terraform Enterprise] Copying airgap package '${airgap_url}' to '${airgap_pathname}'" | tee -a $log_pathname
   curl --create-dirs --output "${airgap_pathname}" "${airgap_url}"
-  chmod +x ${airgap_pathname}
-  ${airgap_pathname} "$${arguments[@]}" | tee -a $log_pathname
 
   %{ else ~}
 
@@ -195,6 +193,9 @@ install_tfe() {
   $install_pathname "$${arguments[@]}" | tee -a $log_pathname
 
   %{ endif ~}
+  
+  chmod +x $install_pathname
+  $install_pathname "$${arguments[@]}" | tee -a $log_pathname
 }
 
 configure_tfe() {
