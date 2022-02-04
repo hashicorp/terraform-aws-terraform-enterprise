@@ -1,6 +1,6 @@
 # TEST: Standalone - Mounted Disk Terraform Enterprise
 
-## About this test
+## About this Example
 
 This test for Terraform Enterprise creates a TFE
 installation with the following traits.
