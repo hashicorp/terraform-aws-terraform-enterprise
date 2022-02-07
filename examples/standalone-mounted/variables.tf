@@ -28,7 +28,7 @@ variable "tfe_subdomain" {
   description = "Subdomain for TFE"
 }
 
-variable "asg_tags" {
+variable "tags" {
   type        = map(string)
   description = <<DESC
   (Optional) Map of tags only used for the autoscaling group. If you are using the AWS provider's default_tags,

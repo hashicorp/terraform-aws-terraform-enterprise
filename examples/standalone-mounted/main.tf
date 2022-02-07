@@ -4,7 +4,7 @@ provider "aws" {
   }
 
   default_tags {
-    tags = var.asg_tags
+    tags = var.tags
   }
 }
 
@@ -59,5 +59,5 @@ module "standalone" {
   load_balancing_scheme       = "PUBLIC"
   node_count                  = 1
   tfe_subdomain               = var.tfe_subdomain
-  asg_tags                    = var.asg_tags
+  asg_tags                    = var.tags
 }
