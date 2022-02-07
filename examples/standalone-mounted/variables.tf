@@ -17,3 +17,30 @@ variable "domain_name" {
   type        = string
   description = "Domain for creating the Terraform Enterprise subdomain on."
 }
+
+variable "friendly_name_prefix" {
+  type        = string
+  description = "Name prefix used for resources"
+}
+
+variable "tfe_subdomain" {
+  type        = string
+  description = "Subdomain for TFE"
+}
+
+variable "asg_tags" {
+  type        = map(string)
+  description = <<DESC
+  (Optional) Map of tags only used for the autoscaling group. If you are using the AWS provider's default_tags,
+  please note that it tags every taggable resource except for the autoscaling group, therefore this variable may
+  be used to duplicate the key/value pairs in the default_tags if you wish.
+  DESC
+  default = {
+    Terraform   = "False"
+    Environment = "Example"
+    Description = "Standalone"
+    Repository  = "hashicorp/terraform-aws-terraform-enterprise"
+    Team        = "Terraform Enterprise on Prem"
+    OkToDelete  = "True"
+  }
+}

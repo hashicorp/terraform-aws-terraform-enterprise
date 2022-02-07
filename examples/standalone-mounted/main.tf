@@ -4,21 +4,12 @@ provider "aws" {
   }
 
   default_tags {
-    tags = local.common_tags
+    tags = var.asg_tags
   }
 }
 
-# Random string to prepend resources
-# ----------------------------------
-resource "random_string" "friendly_name" {
-  length  = 4
-  upper   = false # Some AWS resources do not accept uppercase characters.
-  number  = false
-  special = false
-}
-
 # Keypair for SSH
-# ----------------------------------
+# ---------------
 resource "tls_private_key" "main" {
   algorithm = "RSA"
 }
@@ -33,7 +24,7 @@ resource "local_file" "private_key_pem" {
 resource "aws_key_pair" "main" {
   public_key = tls_private_key.main.public_key_openssh
 
-  key_name = "${local.friendly_name_prefix}-ssh"
+  key_name = "${var.friendly_name_prefix}-ssh"
 }
 
 # Store TFE License as secret
@@ -42,7 +33,7 @@ resource "aws_key_pair" "main" {
 module "secrets" {
   source = "../../fixtures/secrets"
   tfe_license = {
-    name = "${local.friendly_name_prefix}-tfe-license"
+    name = "${var.friendly_name_prefix}-tfe-license"
     path = var.license_file
   }
 }
@@ -55,7 +46,7 @@ module "standalone" {
   acm_certificate_arn = var.acm_certificate_arn
   domain_name         = var.domain_name
 
-  friendly_name_prefix        = local.friendly_name_prefix
+  friendly_name_prefix        = var.friendly_name_prefix
   tfe_license_secret          = module.secrets.tfe_license
   redis_encryption_at_rest    = false
   redis_encryption_in_transit = false
@@ -64,9 +55,9 @@ module "standalone" {
   iact_subnet_list            = ["0.0.0.0/0"]
   instance_type               = "m5.xlarge"
   key_name                    = aws_key_pair.main.key_name
-  kms_key_alias               = local.test_name
+  kms_key_alias               = var.friendly_name_prefix
   load_balancing_scheme       = "PUBLIC"
   node_count                  = 1
-  tfe_subdomain               = local.friendly_name_prefix
-  asg_tags                    = local.common_tags
+  tfe_subdomain               = var.tfe_subdomain
+  asg_tags                    = var.asg_tags
 }

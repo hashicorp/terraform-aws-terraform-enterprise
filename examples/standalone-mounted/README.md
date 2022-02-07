@@ -1,4 +1,4 @@
-# TEST: Standalone - Mounted Disk Terraform Enterprise
+# EXAMPLE: Standalone - Mounted Disk Terraform Enterprise
 
 ## About this Example
 
