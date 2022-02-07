@@ -5,10 +5,6 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 3.72"
     }
-    random = {
-      source  = "hashicorp/random"
-      version = "~> 3.1"
-    }
     tls = {
       source  = "hashicorp/tls"
       version = "~> 3.1"
