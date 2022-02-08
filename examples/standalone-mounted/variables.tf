@@ -35,12 +35,4 @@ variable "tags" {
   please note that it tags every taggable resource except for the autoscaling group, therefore this variable may
   be used to duplicate the key/value pairs in the default_tags if you wish.
   DESC
-  default = {
-    Terraform   = "False"
-    Environment = "Example"
-    Description = "Standalone"
-    Repository  = "hashicorp/terraform-aws-terraform-enterprise"
-    Team        = "Terraform Enterprise on Prem"
-    OkToDelete  = "True"
-  }
 }
