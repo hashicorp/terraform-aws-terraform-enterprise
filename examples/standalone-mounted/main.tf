@@ -33,7 +33,7 @@ resource "aws_key_pair" "main" {
 module "secrets" {
   source = "../../fixtures/secrets"
   tfe_license = {
-    name = "${var.friendly_name_prefix}-tfe-license"
+    name = "tfe-license"
     path = var.license_file
   }
 }
