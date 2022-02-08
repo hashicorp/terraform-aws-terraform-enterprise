@@ -106,8 +106,8 @@ module "user_data" {
   ca_certificate_secret  = var.ca_certificate_secret
 
   # mounted disk
-  enable_disk      = local.enable_disk
-  disk_path        = var.disk_path
+  enable_disk = local.enable_disk
+  disk_path   = var.disk_path
 
 
   # object store
