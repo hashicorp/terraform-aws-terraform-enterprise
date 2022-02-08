@@ -126,6 +126,7 @@ install_tfe() {
   local active_active="$3"
   local private_ip=""
   local arguments=()
+  mkdir -p /opt/hashicorp/data
 
   private_ip=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
   arguments+=("fast-timeouts" "private-address=$private_ip" "public-address=$private_ip")

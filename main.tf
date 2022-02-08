@@ -107,7 +107,6 @@ module "user_data" {
 
   # mounted disk
   enable_disk      = local.enable_disk
-  disk_device_name = local.disk_device_name
   disk_path        = var.disk_path
 
 
