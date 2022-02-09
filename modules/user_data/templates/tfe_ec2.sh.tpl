@@ -228,7 +228,12 @@ install_awscli
 install_jq
 retrieve_tfe_license
 configure_ca_certificate "$distribution"
-configure_disk
+
+if [[ $disk_path != "" ]]
+then
+  configure_disk
+fi
+
 
 if [[ $proxy_ip != "" ]]
 then
