@@ -114,6 +114,26 @@ variable "iact_subnet_time_limit" {
   type        = number
 }
 
+variable "airgap_url" {
+  description = "The URL of a Replicated airgap package for Terraform Enterprise."
+  type        = string
+}
+
+variable "disk_path" {
+  description = "The pathname of the directory in which Terraform Enterprise will store data in Mounted Disk mode."
+  type        = string
+}
+
+variable "enable_disk" {
+  description = "A toggle to control the use of Mounted Disk mode."
+  type        = bool
+}
+
+variable "enable_external" {
+  description = "A toggle to control the use of External Services mode."
+  type        = bool
+}
+
 # External Vault
 # --------------
 variable "extern_vault_enable" {

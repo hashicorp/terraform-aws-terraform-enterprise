@@ -34,6 +34,8 @@ module "kms" {
 }
 
 module "object_storage" {
+
+  count  = local.enable_object_storage_module ? 1 : 0
   source = "./modules/object_storage"
 
   friendly_name_prefix = var.friendly_name_prefix
@@ -55,6 +57,8 @@ module "networking" {
 module "redis" {
   source = "./modules/redis"
 
+  count = local.enable_redis_module ? 1 : 0
+
   active_active                = local.active_active
   friendly_name_prefix         = var.friendly_name_prefix
   network_id                   = local.network_id
@@ -75,6 +79,8 @@ module "redis" {
 module "database" {
   source = "./modules/database"
 
+  count = local.enable_database_module ? 1 : 0
+
   db_size                      = var.db_size
   db_backup_retention          = var.db_backup_retention
   db_backup_window             = var.db_backup_window
@@ -89,34 +95,44 @@ module "database" {
 module "user_data" {
   source = "./modules/user_data"
 
-  tfe_license_secret     = var.tfe_license_secret
   active_active          = local.active_active
-  aws_access_key_id      = var.aws_access_key_id
-  aws_bucket_data        = module.object_storage.s3_bucket.id
-  aws_region             = data.aws_region.current.name
-  aws_secret_access_key  = var.aws_secret_access_key
+  tfe_license_secret     = var.tfe_license_secret
+  enable_external        = local.enable_external
+  airgap_url             = var.airgap_url
   fqdn                   = local.fqdn
   iact_subnet_list       = var.iact_subnet_list
   iact_subnet_time_limit = var.iact_subnet_time_limit
   kms_key_arn            = module.kms.key.arn
   ca_certificate_secret  = var.ca_certificate_secret
 
+  # mounted disk
+  enable_disk = local.enable_disk
+  disk_path   = var.disk_path
+
+
+  # object store
+  aws_access_key_id     = var.aws_access_key_id
+  aws_bucket_data       = local.object_storage.s3_bucket.id
+  aws_region            = data.aws_region.current.name
+  aws_secret_access_key = var.aws_secret_access_key
+
+
   # Postgres
-  pg_dbname   = module.database.db_name
-  pg_password = module.database.db_password
-  pg_netloc   = module.database.db_endpoint
-  pg_user     = module.database.db_username
+  pg_dbname   = local.database.db_name
+  pg_password = local.database.db_password
+  pg_netloc   = local.database.db_endpoint
+  pg_user     = local.database.db_username
 
   # Proxy
   proxy_ip = var.proxy_ip
   no_proxy = var.no_proxy
 
   # Redis
-  redis_host              = module.redis.redis_endpoint
-  redis_pass              = module.redis.redis_password
-  redis_port              = module.redis.redis_port
-  redis_use_password_auth = module.redis.redis_use_password_auth
-  redis_use_tls           = module.redis.redis_transit_encryption_enabled
+  redis_host              = local.redis.redis_endpoint
+  redis_pass              = local.redis.redis_password
+  redis_port              = local.redis.redis_port
+  redis_use_password_auth = local.redis.redis_use_password_auth
+  redis_use_tls           = local.redis.redis_transit_encryption_enabled
 
   # External Vault
   extern_vault_enable      = var.extern_vault_enable

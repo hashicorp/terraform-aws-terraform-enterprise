@@ -41,6 +41,7 @@ resource "random_id" "user_token" {
 
 locals {
   base_configs = {
+
     installation_type = {
       value = "production"
     }
@@ -91,12 +92,26 @@ locals {
     iact_subnet_time_limit = {
       value = var.iact_subnet_time_limit != null ? tostring(var.iact_subnet_time_limit) : ""
     }
+    enc_password = {
+      value = random_id.enc_password.hex
+    }
   }
 
-  base_external_configs = {
-    enable_active_active = {
-      value = var.active_active ? "1" : "0"
+  disk_settings = var.enable_disk ? {
+    installation_type = {
+      value = "production"
     }
+
+    production_type = {
+      value = "disk"
+    }
+
+    disk_path = {
+      value = var.disk_path
+    }
+  } : {}
+
+  base_external_configs = var.enable_external ? {
 
     pg_dbname = {
       value = var.pg_dbname
@@ -114,12 +129,6 @@ locals {
       value = var.pg_user
     }
 
-    enc_password = {
-      value = random_id.enc_password.hex
-    }
-  }
-
-  external_aws_configs = {
     placement = {
       value = "placement_s3"
     }
@@ -151,9 +160,12 @@ locals {
     s3_sse_kms_key_id = {
       value = var.kms_key_arn
     }
-  }
+  } : {}
 
   redis_configs = {
+    enable_active_active = {
+      value = "1"
+    }
     redis_host = {
       value = var.redis_host
     }
@@ -207,9 +219,16 @@ locals {
   }
 }
 
+
+
 locals {
   import_settings_from  = "/etc/ptfe-settings.json"
   license_file_location = "/etc/ptfe-license.rli"
+  lib_directory         = "/var/lib/ptfe"
+  airgap_pathname       = "${local.lib_directory}/ptfe.airgap"
+  airgap_config = {
+    LicenseBootstrapAirgapPackagePath = local.airgap_pathname
+  }
   replicated_base_config = {
     BypassPreflightChecks        = true
     DaemonAuthenticationPassword = random_string.password.result
@@ -225,19 +244,31 @@ locals {
 locals {
   # take all the partials and merge them into the base configs, if false, merging empty map is noop
   is_redis_configs  = var.active_active ? local.redis_configs : {}
+  is_airgap         = var.airgap_url == null ? {} : local.airgap_config
   is_external_vault = var.extern_vault_enable == 1 ? local.external_vault : {}
-  tfe_configs       = jsonencode(merge(local.base_configs, local.base_external_configs, local.external_aws_configs, local.is_redis_configs, local.is_external_vault))
+  tfe_configs = jsonencode(merge(
+    local.base_configs,
+    local.is_redis_configs,
+    local.base_external_configs,
+    local.disk_settings,
+    local.is_external_vault
+  ))
 }
 
 ## build replicated config json
 locals {
-  repl_configs = jsonencode(merge(local.replicated_base_config))
+  repl_configs = jsonencode(merge(local.replicated_base_config, local.is_airgap))
 }
 
 locals {
   tfe_user_data = templatefile(
     "${path.module}/templates/tfe_ec2.sh.tpl",
     {
+      enable_disk           = var.enable_disk
+      disk_path             = var.enable_disk ? var.disk_path : null
+      airgap_url            = var.airgap_url
+      airgap_pathname       = local.airgap_pathname
+      airgap_url            = var.airgap_url
       import_settings_from  = local.import_settings_from
       tfe_license_secret    = var.tfe_license_secret
       license_file_location = local.license_file_location
