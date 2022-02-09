@@ -46,6 +46,7 @@ module "standalone" {
   acm_certificate_arn = var.acm_certificate_arn
   domain_name         = var.domain_name
 
+  disk_path                   = var.disk_path
   friendly_name_prefix        = var.friendly_name_prefix
   tfe_license_secret          = module.secrets.tfe_license
   redis_encryption_at_rest    = false

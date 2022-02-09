@@ -35,4 +35,11 @@ variable "tags" {
   please note that it tags every taggable resource except for the autoscaling group, therefore this variable may
   be used to duplicate the key/value pairs in the default_tags if you wish.
   DESC
+  default     = {}
+}
+
+variable "disk_path" {
+  default     = "/opt/hashicorp/data"
+  description = "The pathname of the directory in which Terraform Enterprise will store data on the compute instances."
+  type        = string
 }
