@@ -126,7 +126,6 @@ install_tfe() {
   local active_active="$3"
   local private_ip=""
   local arguments=()
-  mkdir -p $disk_path
 
   private_ip=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
   arguments+=("fast-timeouts" "private-address=$private_ip" "public-address=$private_ip")
@@ -181,15 +180,20 @@ install_tfe() {
   curl --create-dirs --output "$replicated_pathname" "$replicated_url"
   echo "[Terraform Enterprise] Extracting Replicated in '$replicated_directory'" | tee -a $log_pathname
   tar --directory "$replicated_directory" --extract --file "$replicated_pathname"
+
   echo "[Terraform Enterprise] Copying airgap package '${airgap_url}' to '${airgap_pathname}'" | tee -a $log_pathname
   curl --create-dirs --output "${airgap_pathname}" "${airgap_url}"
+
   %{ else ~}
+
   install_url="https://get.replicated.com/docker/terraformenterprise/active-active"
   echo "[Terraform Enterprise] Downloading Replicated installation script from '$install_url' to '$install_pathname'" | tee -a $log_pathname
   curl --create-dirs --output $install_pathname $install_url
   chmod +x $install_pathname
   $install_pathname "$${arguments[@]}" | tee -a $log_pathname
+
   %{ endif ~}
+  
   chmod +x $install_pathname
   cd $replicated_directory
   $install_pathname "$${arguments[@]}" | tee -a $log_pathname
@@ -201,6 +205,14 @@ configure_tfe() {
 
   echo "$replicated" | base64 -d > /etc/replicated.conf
   echo "$settings" | base64 -d > ${import_settings_from}
+}
+
+configure_disk() {
+  %{ if disk_path != null ~}
+   echo "[Terraform Enterprise] Creating mounted disk directory at '${disk_path}'" | tee -a $log_pathname
+   mkdir --parents ${disk_path}
+   chmod og+rw ${disk_path}
+  %{ endif ~}
 }
 
 proxy_ip="${proxy_ip}"
@@ -216,6 +228,7 @@ install_awscli
 install_jq
 retrieve_tfe_license
 configure_ca_certificate "$distribution"
+configure_disk
 
 if [[ $proxy_ip != "" ]]
 then
