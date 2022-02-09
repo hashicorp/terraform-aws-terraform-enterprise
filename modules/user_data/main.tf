@@ -265,7 +265,7 @@ locals {
     "${path.module}/templates/tfe_ec2.sh.tpl",
     {
       enable_disk           = var.enable_disk
-      disk_path             = var.disk_path
+      disk_path             = var.enable_disk ? var.disk_path : null    
       airgap_url            = var.airgap_url
       airgap_pathname       = local.airgap_pathname
       airgap_url            = var.airgap_url

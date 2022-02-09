@@ -126,6 +126,11 @@ install_tfe() {
   local active_active="$3"
   local private_ip=""
   local arguments=()
+  %{ if disk_path != null ~}
+  echo "[Terraform Enterprise] Creating mounted disk directory at '${disk_path}'" | tee -a $log_pathname
+  mkdir --parents ${disk_path}
+  chmod og+rw ${disk_path}
+  %{ endif ~}
 
   private_ip=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
   arguments+=("fast-timeouts" "private-address=$private_ip" "public-address=$private_ip")
@@ -207,14 +212,6 @@ configure_tfe() {
   echo "$settings" | base64 -d > ${import_settings_from}
 }
 
-configure_disk() {
-  %{ if disk_path != null ~}
-   echo "[Terraform Enterprise] Creating mounted disk directory at '${disk_path}'" | tee -a $log_pathname
-   mkdir --parents ${disk_path}
-   chmod og+rw ${disk_path}
-  %{ endif ~}
-}
-
 proxy_ip="${proxy_ip}"
 no_proxy="${no_proxy}"
 replicated="${replicated}"
@@ -228,12 +225,6 @@ install_awscli
 install_jq
 retrieve_tfe_license
 configure_ca_certificate "$distribution"
-
-if [[ $disk_path != "" ]]
-then
-  configure_disk
-fi
-
 
 if [[ $proxy_ip != "" ]]
 then
