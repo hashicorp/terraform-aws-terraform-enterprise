@@ -17,35 +17,8 @@ install_awscli() {
 }
 
 configure_ca_certificate() {
-  %{ if ca_certificate_secret != null ~}
-  echo "[$(date +"%FT%T")] [Terraform Enterprise] Configuring CA certificate" | tee -a /var/log/ptfe.log
-
-  local distribution="$1"
-  local ca_certificate_directory="/dev/null"
-  local update_ca_certificates="/dev/null"
-
-  if [[ $distribution == "ubuntu" ]]
-  then
-    ca_certificate_directory="/usr/local/share/ca-certificates/extra"
-    update_ca_certificates="update-ca-certificates"
-  elif [[ $distribution == "rhel" ]]
-  then
-    ca_certificate_directory="/usr/share/pki/ca-trust-source/anchors"
-    update_ca_certificates="update-ca-trust"
-  fi
-
-  mkdir --parents $ca_certificate_directory
-  ca_certificate_data_b64=$(\
-    aws secretsmanager get-secret-value --secret-id ${ca_certificate_secret} \
-    | jq --raw-output '.SecretBinary,.SecretString | select(. != null)')
-  echo $ca_certificate_data_b64 | base64 --decode > $ca_certificate_directory/tfe-ca-certificate.crt
-  eval $update_ca_certificates
-  jq ". + { ca_certs: { value: \"$(echo $ca_certificate_data_b64 | base64 --decode)\" } }" -- ${import_settings_from} > ${import_settings_from}.updated
-  cp ${import_settings_from}.updated ${import_settings_from}
-  %{ else ~}
-  echo "[$(date +"%FT%T")] [Terraform Enterprise] Skipping CA certificate configuration" | tee -a /var/log/ptfe.log
-  %{ endif ~}
-}
+    echo "[$(date +"%FT%T")] [Terraform Enterprise] Skipping CA certificate configuration" | tee -a /var/log/ptfe.log
+  }
 
 configure_proxy() {
   local proxy_ip="$1"
@@ -113,9 +86,9 @@ detect_distribution() {
 retrieve_tfe_license() {
   echo "[$(date +"%FT%T")] [Terraform Enterprise] Retrieving Terraform Enterprise license" | tee -a /var/log/ptfe.log
   license_data_b64=$(\
-    aws secretsmanager get-secret-value --secret-id ${tfe_license_secret} \
+    aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-east-2:873298400219:secret:qwe-ei2Fwd \
     | jq --raw-output '.SecretBinary,.SecretString | select(. != null)')
-  echo $license_data_b64 | base64 --decode > ${license_file_location}
+  echo $license_data_b64 | base64 --decode > /etc/ptfe-license.rli
 }
 
 install_tfe() {
@@ -126,12 +99,10 @@ install_tfe() {
   local active_active="$3"
   local private_ip=""
   local arguments=()
-  %{ if disk_path != null ~}
-  echo "[Terraform Enterprise] Creating mounted disk directory at '${disk_path}'" | tee -a $log_pathname
-  mkdir --parents ${disk_path}
-  chmod og+rw ${disk_path}
-  %{ endif ~}
-
+    echo "[Terraform Enterprise] Creating mounted disk directory at '/opt/hashicorp/data'" | tee -a $log_pathname
+  mkdir --parents /opt/hashicorp/data
+  chmod og+rw /opt/hashicorp/data
+  
   private_ip=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
   arguments+=("fast-timeouts" "private-address=$private_ip" "public-address=$private_ip")
 
@@ -142,59 +113,16 @@ install_tfe() {
     arguments+=("no-proxy")
   fi
 
-  %{if active_active ~}
-  arguments+=("disable-replicated-ui")
-  %{ endif ~}
-
+  
   replicated_directory="/tmp/replicated"
   install_pathname="$replicated_directory/install.sh"
 
-  %{ if airgap_url != null ~}
-  arguments+=("airgap")
-  echo "[Terraform Enterprise] Installing Docker Engine from Repository" | tee -a $log_pathname
-
-  if [[ $distribution == "ubuntu" ]]
-   then
-   apt-get --assume-yes update
-   apt-get --assume-yes install \
-   ca-certificates \
-   curl \
-   gnupg \
-   lsb-release
-   curl --fail --silent --show-error --location https://download.docker.com/linux/ubuntu/gpg \
-     | gpg --dearmor --output /usr/share/keyrings/docker-archive-keyring.gpg
-   echo \
-     "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] \
-     https://download.docker.com/linux/ubuntu $(lsb_release --codename --short) stable" \
-     | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-   apt-get --assume-yes update
-   apt-get --assume-yes install docker-ce docker-ce-cli containerd.io
-   apt-get --assume-yes autoremove
-
-  elif [[ $distribution == "rhel" ]]
-   then
-   yum install --assumeyes yum-utils
-   yum-config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
-   yum install --assumeyes docker-ce docker-ce-cli containerd.io
-  fi
-
-  replicated_filename="replicated.tar.gz"
-  replicated_url="https://s3.amazonaws.com/replicated-airgap-work/$replicated_filename"
-  replicated_pathname="$replicated_directory/$replicated_filename"
-  echo "[Terraform Enterprise] Downloading Replicated from '$replicated_url' to '$replicated_pathname'" | tee -a $log_pathname
-  curl --create-dirs --output "$replicated_pathname" "$replicated_url"
-  echo "[Terraform Enterprise] Extracting Replicated in '$replicated_directory'" | tee -a $log_pathname
-  tar --directory "$replicated_directory" --extract --file "$replicated_pathname"
-  echo "[Terraform Enterprise] Copying airgap package '${airgap_url}' to '${airgap_pathname}'" | tee -a $log_pathname
-  curl --create-dirs --output "${airgap_pathname}" "${airgap_url}"
-  %{ else ~}
-  install_url="https://get.replicated.com/docker/terraformenterprise/active-active"
+    install_url="https://get.replicated.com/docker/terraformenterprise/active-active"
   echo "[Terraform Enterprise] Downloading Replicated installation script from '$install_url' to '$install_pathname'" | tee -a $log_pathname
   curl --create-dirs --output $install_pathname $install_url
-  %{ endif ~}
-  chmod +x $install_pathname
+    chmod +x $install_pathname
   cd $replicated_directory
-  $install_pathname "$${arguments[@]}" | tee -a $log_pathname
+  $install_pathname "${arguments[@]}" | tee -a $log_pathname
 }
 
 configure_tfe() {
@@ -202,14 +130,14 @@ configure_tfe() {
   local settings="$2"
 
   echo "$replicated" | base64 -d > /etc/replicated.conf
-  echo "$settings" | base64 -d > ${import_settings_from}
+  echo "$settings" | base64 -d > /etc/ptfe-settings.json
 }
 
-proxy_ip="${proxy_ip}"
-no_proxy="${no_proxy}"
-replicated="${replicated}"
-settings="${settings}"
-active_active="${active_active}"
+proxy_ip=""
+no_proxy="127.0.0.1,169.254.169.254,.aws.ce.redhat.com"
+replicated="eyJCeXBhc3NQcmVmbGlnaHRDaGVja3MiOnRydWUsIkRhZW1vbkF1dGhlbnRpY2F0aW9uUGFzc3dvcmQiOiI3U2ZWaWRRVlZXMVlPdVhrIiwiRGFlbW9uQXV0aGVudGljYXRpb25UeXBlIjoicGFzc3dvcmQiLCJJbXBvcnRTZXR0aW5nc0Zyb20iOiIvZXRjL3B0ZmUtc2V0dGluZ3MuanNvbiIsIkxpY2Vuc2VGaWxlTG9jYXRpb24iOiIvZXRjL3B0ZmUtbGljZW5zZS5ybGkiLCJUbHNCb290c3RyYXBIb3N0bmFtZSI6InF3ZS50ZmUtbW9kdWxlcy10ZXN0LmF3cy5wdGZlZGV2LmNvbSIsIlRsc0Jvb3RzdHJhcFR5cGUiOiJzZWxmLXNpZ25lZCJ9"
+settings="eyJhcmNoaXZpc3RfdG9rZW4iOnsidmFsdWUiOiI4OTc1YjU3ZmIwMDE1MTdmZTAwOWIzMTBkYTkwYWZjZCJ9LCJjb29raWVfaGFzaCI6eyJ2YWx1ZSI6IjVhZTE5YWNhZjZkNGZkYzc1Y2FhOGZkOTI1NmM1NTc2In0sImRpc2tfcGF0aCI6eyJ2YWx1ZSI6Ii9vcHQvaGFzaGljb3JwL2RhdGEifSwiZW5jX3Bhc3N3b3JkIjp7InZhbHVlIjoiN2NjYmM0NjAyYmM0NTFjZmExNmUwM2JhZDc2NTY5YzUifSwiaG9zdG5hbWUiOnsidmFsdWUiOiJxd2UudGZlLW1vZHVsZXMtdGVzdC5hd3MucHRmZWRldi5jb20ifSwiaWFjdF9zdWJuZXRfbGlzdCI6eyJ2YWx1ZSI6IjAuMC4wLjAvMCJ9LCJpYWN0X3N1Ym5ldF90aW1lX2xpbWl0Ijp7InZhbHVlIjoiNjAifSwiaW5zdGFsbF9pZCI6eyJ2YWx1ZSI6IjI4ZjVkODY4MTQ4OTNhNDVmYWFmYmZmNTJhZDFlZmMwIn0sImluc3RhbGxhdGlvbl90eXBlIjp7InZhbHVlIjoicHJvZHVjdGlvbiJ9LCJpbnRlcm5hbF9hcGlfdG9rZW4iOnsidmFsdWUiOiI4MGZjNjJhMzIwMjQwYjAyZTI4ZGEyNGMzNTU0ZTFjNCJ9LCJwcm9kdWN0aW9uX3R5cGUiOnsidmFsdWUiOiJkaXNrIn0sInJlZ2lzdHJ5X3Nlc3Npb25fZW5jcnlwdGlvbl9rZXkiOnsidmFsdWUiOiI5NzhhNDJjZDM4YTU2N2Q3ZmIxNDU2Yzg5OTFjYjU0MSJ9LCJyZWdpc3RyeV9zZXNzaW9uX3NlY3JldF9rZXkiOnsidmFsdWUiOiI5OTkzNGI4ZDY1YmY3NDNhMzI0YTQyZGU0NDkxZmI5NSJ9LCJyb290X3NlY3JldCI6eyJ2YWx1ZSI6ImU0MTAyODkxNGJiZTYzZjFiYjZmM2M2YTU5YmU3Y2Q1In0sInVzZXJfdG9rZW4iOnsidmFsdWUiOiI4N2MwN2Y5MzRhOTc5ZDllMDcxZGMzMGJkYzU3MGRkNCJ9fQ=="
+active_active="false"
 
 distribution=$(detect_distribution)
 configure_tfe "$replicated" "$settings"
