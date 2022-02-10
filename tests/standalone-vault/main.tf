@@ -17,6 +17,19 @@ module "secrets" {
     path = var.license_file
   }
 }
+
+module "hcp_vault" {
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//fixtures/test_hcp_vault?ref=main"
+
+  hcp_vault_cluster_id              = local.test_name
+  hcp_vault_cluster_hvn_id          = "team-tfe-dev-hvn"
+  hcp_vault_cluster_public_endpoint = true
+  hcp_vault_cluster_tier            = "standard_medium"
+
+  vault_role_name   = "${local.test_name}-role"
+  vault_policy_name = "dev-team"
+}
+
 # Standalone, external services with external (HCP) Vault scenario
 # ----------------------------------------------------------------
 module "standalone_vault" {
@@ -41,9 +54,9 @@ module "standalone_vault" {
 
   # Vault
   extern_vault_enable    = 1
-  extern_vault_addr      = hcp_vault_cluster.test.vault_public_endpoint_url
-  extern_vault_role_id   = vault_approle_auth_backend_role.approle.role_id
-  extern_vault_secret_id = vault_approle_auth_backend_role_secret_id.approle.secret_id
+  extern_vault_addr      = module.hcp_vault.url
+  extern_vault_role_id   = module.hcp_vault.app_role_id
+  extern_vault_secret_id = module.hcp_vault.app_role_secret_id
   extern_vault_namespace = "admin"
 
   asg_tags = local.common_tags
