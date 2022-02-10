@@ -35,7 +35,7 @@ Because the Vault provider is dependent upon output from the HCP resources, we m
 create this infrastructure in two stages:
 
 ```
-$ terraform apply -target=hcp_vault_cluster.test -target=hcp_vault_cluster_admin_token.test
+$ terraform apply -target=module.hcp_vault.hcp_vault_cluster.test -target=module.hcp_vault.hcp_vault_cluster_admin_token.test
 
 $ terraform apply
 ```
