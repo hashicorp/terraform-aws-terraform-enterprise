@@ -19,7 +19,7 @@ module "secrets" {
 }
 
 module "hcp_vault" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/test_hcp_vault?ref=ah-add-hcp-vault-fixture"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//fixtures/test_hcp_vault?ref=ah-add-hcp-vault-fixture"
 
   hcp_vault_cluster_id              = local.test_name
   hcp_vault_cluster_hvn_id          = "team-tfe-dev-hvn"
