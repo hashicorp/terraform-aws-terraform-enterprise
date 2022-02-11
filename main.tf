@@ -107,7 +107,7 @@ module "user_data" {
 
   # mounted disk
   enable_disk = local.enable_disk
-  disk_path   = var.disk_path
+  disk_path   = local.disk_path
 
 
   # object store
