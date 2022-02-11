@@ -37,3 +37,21 @@ variable "tags" {
   DESC
   default     = {}
 }
+
+variable "airgap_url" {
+  description = "The URL of the storage bucket object that comprises an airgap package."
+  type        = string
+}
+
+variable "operational_mode" {
+  description = <<-EOD
+  A special string to control the operational mode of Terraform Enterprise. Valid values are: "external" for External
+  Services mode; "disk" for Mounted Disk mode; "poc" for Demo mode.
+  EOD
+  type        = string
+
+  validation {
+    condition     = contains(["external", "disk", "poc"], var.operational_mode)
+    error_message = "The operational_mode value must be one of: \"external\"; \"disk\"; \"poc\"."
+  }
+}

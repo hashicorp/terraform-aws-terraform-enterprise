@@ -42,10 +42,11 @@ module "secrets" {
 module "standalone" {
   source = "../../"
 
-  operational_mode    = "disk"
+  operational_mode    = var.operational_mode
   acm_certificate_arn = var.acm_certificate_arn
   domain_name         = var.domain_name
-
+  
+  airgap_url                  = var.airgap_url
   friendly_name_prefix        = var.friendly_name_prefix
   tfe_license_secret          = module.secrets.tfe_license
   redis_encryption_at_rest    = false
