@@ -18,4 +18,4 @@ This example assumes the following resources exist:
 - Valid DNS Zone managed in Route53
 - Valid AWS ACM certificate
 - TFE license on a filepath accessible by tests
-- The URL of an airgap package.
+- The URL of an airgap package

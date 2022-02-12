@@ -37,8 +37,8 @@ module "secrets" {
     path = var.license_file
   }
 }
-# Standalone
-# ----------
+# Standalone Airgapped
+# --------------------
 module "standalone" {
   source = "../../"
 
