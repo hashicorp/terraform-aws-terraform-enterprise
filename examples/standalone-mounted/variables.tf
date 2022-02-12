@@ -10,7 +10,7 @@ variable "acm_certificate_arn" {
 
 variable "license_file" {
   type        = string
-  description = "The local path to the Terraform Enterprise license to be provided by CI."
+  description = "The local path to the Terraform Enterprise license."
 }
 
 variable "domain_name" {
@@ -36,4 +36,10 @@ variable "tags" {
   be used to duplicate the key/value pairs in the default_tags if you wish.
   DESC
   default     = {}
+}
+
+variable "disk_path" {
+  default     = "/opt/hashicorp/data"
+  description = "The pathname of the directory in which Terraform Enterprise will store data on the compute instances."
+  type        = string
 }

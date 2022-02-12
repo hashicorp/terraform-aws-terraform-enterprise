@@ -1,13 +1,11 @@
-# EXAMPLE: Standalone Terraform Enterprise
+# EXAMPLE: Standalone Airgap Installation of Terraform Enterprise
 
 ## About this Example
 
-This test for Terraform Enterprise creates a TFE
-installation with the following traits.
+This example deployment of Terraform Enterprise creates a TFE installation with the following traits.
 
 - Standalone mode
-- Airgap
-- Operational mode: External Services/Mounted Disk
+- Airgapped installation
 - a small VM machine type (m5.xlarge)
 - Ubuntu 20.04 as the VM image
 - a publicly accessible HTTP load balancer with TLS termination
@@ -15,8 +13,9 @@ installation with the following traits.
 
 ## Pre-requisites
 
-This test assumes the following resources exist.
+This example assumes the following resources exist:
 
 - Valid DNS Zone managed in Route53
 - Valid AWS ACM certificate
 - TFE license on a filepath accessible by tests
+- The URL of an airgap package.

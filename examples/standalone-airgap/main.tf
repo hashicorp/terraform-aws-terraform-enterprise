@@ -37,12 +37,12 @@ module "secrets" {
     path = var.license_file
   }
 }
-# Standalone, mounted disk
-# ------------------------
+# Standalone
+# ----------
 module "standalone" {
   source = "../../"
 
-  operational_mode    = var.operational_mode
+  operational_mode    = "external"
   acm_certificate_arn = var.acm_certificate_arn
   domain_name         = var.domain_name
 
