@@ -39,7 +39,7 @@ module "secrets" {
 }
 # Standalone Airgapped
 # --------------------
-module "standalone" {
+module "standalone_airgap" {
   source = "../../"
 
   operational_mode    = "external"
