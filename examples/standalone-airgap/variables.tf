@@ -38,8 +38,7 @@ variable "tags" {
   default     = {}
 }
 
-variable "disk_path" {
-  default     = "/opt/hashicorp/data"
-  description = "The pathname of the directory in which Terraform Enterprise will store data on the compute instances."
+variable "airgap_url" {
+  description = "The URL of the storage bucket object that comprises an airgap package."
   type        = string
 }

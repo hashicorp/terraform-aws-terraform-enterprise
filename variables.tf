@@ -116,7 +116,7 @@ variable "airgap_url" {
 }
 
 variable "disk_path" {
-  default     = null
+  default     = "/opt/hashicorp/data"
   description = "The pathname of the directory in which Terraform Enterprise will store data on the compute instances."
   type        = string
 }
