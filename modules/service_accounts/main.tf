@@ -63,6 +63,10 @@ resource "aws_iam_role_policy_attachment" "misc" {
   policy_arn = each.value
 }
 
+resource "aws_iam_role_policy_attachment" "kms_policy" {
+  role       = aws_iam_role.instance_role.name
+  policy_arn = var.kms_key_arn
+}
 
 resource "aws_iam_policy" "kms_policy" {
   name = "${var.friendly_name_prefix}-key"
