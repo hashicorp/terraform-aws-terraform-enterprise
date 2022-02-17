@@ -1,5 +1,5 @@
 resource "aws_kms_key" "main" {
-  deletion_window_in_days = var.key_deletion_window
+  deletion_window_in_days = var.kms_key_deletion_window
   description             = "AWS KMS Customer-managed key to encrypt TFE and other resources"
   enable_key_rotation     = false
   is_enabled              = true
