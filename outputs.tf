@@ -1,10 +1,3 @@
-# KMS
-output "kms_key" {
-  value = module.kms.key
-
-  description = "The KMS key used to encrypt data at rest."
-}
-
 # Network
 output "network_id" {
   value = local.network_id
@@ -92,3 +85,11 @@ output "replicated_dashboard_password" {
   description = "The password for the TFE console"
   sensitive   = true
 }
+
+output "key" {
+  value       = data.aws_kms_key.main.id
+  description = "The KMS key used to encrypt data."
+}
+
+
+

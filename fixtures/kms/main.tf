@@ -10,19 +10,3 @@ resource "aws_kms_alias" "main" {
   name          = "alias/${var.key_alias}"
   target_key_id = aws_kms_key.main.key_id
 }
-
-resource "aws_kms_grant" "main" {
-  grantee_principal = var.iam_principal.arn
-  key_id            = aws_kms_key.main.key_id
-  operations = [
-    "Decrypt",
-    "DescribeKey",
-    "Encrypt",
-    "GenerateDataKey",
-    "GenerateDataKeyPair",
-    "GenerateDataKeyPairWithoutPlaintext",
-    "GenerateDataKeyPairWithoutPlaintext",
-    "ReEncryptFrom",
-    "ReEncryptTo",
-  ]
-}

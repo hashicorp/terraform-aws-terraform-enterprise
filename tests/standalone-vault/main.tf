@@ -18,6 +18,12 @@ module "secrets" {
   }
 }
 
+module "kms" {
+  source              = "../../fixtures/kms"
+  key_alias           = "${local.friendly_name_prefix}-key"
+  key_deletion_window = var.key_deletion_window
+}
+
 module "hcp_vault" {
   source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//fixtures/test_hcp_vault?ref=main"
 
@@ -44,7 +50,7 @@ module "standalone_vault" {
   iact_subnet_list            = ["0.0.0.0/0"]
   instance_type               = "m5.xlarge"
   key_name                    = "standalone-vault"
-  kms_key_alias               = local.test_name
+  kms_key_alias               = module.kms.key
   load_balancing_scheme       = "PUBLIC"
   node_count                  = 1
   redis_encryption_at_rest    = false
