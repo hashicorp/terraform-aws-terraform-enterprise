@@ -27,7 +27,7 @@ module "service_accounts" {
   friendly_name_prefix  = var.friendly_name_prefix
   iam_role_policy_arns  = var.iam_role_policy_arns
   tfe_license_secret    = var.tfe_license_secret
-  kms_key_alias         = local.kms_key
+  kms_key_arn           = local.kms_key
 }
 
 module "object_storage" {
