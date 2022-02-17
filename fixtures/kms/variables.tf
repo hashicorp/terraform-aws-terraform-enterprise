@@ -3,8 +3,8 @@ variable "key_alias" {
   type        = string
 }
 
-variable "kms_key_deletion_window" {
+variable "key_deletion_window" {
+  description = "Duration in days to destroy the key after it is deleted. Must be between 7 and 30 days."
   type        = number
-  description = "(Optional) Duration in days to destroy the key after it is deleted. Must be between 7 and 30 days."
   default     = 7
 }
