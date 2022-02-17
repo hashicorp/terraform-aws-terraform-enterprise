@@ -65,21 +65,21 @@ resource "aws_iam_role_policy_attachment" "misc" {
 
 
 resource "aws_iam_policy" "kms-policy" {
-  name        = "${var.friendly_name_prefix}-key"
+  name = "${var.friendly_name_prefix}-key"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
         Action = [
-            "kms:Decrypt",
-            "kms:DescribeKey",
-            "kms:Encrypt",
-            "kms:GenerateDataKey",
-            "kms:GenerateDataKeyPair",
-            "kms:GenerateDataKeyPairWithoutPlaintext",
-            "kms:GenerateDataKeyPairWithoutPlaintext",
-            "kms:ReEncryptFrom",
-            "kms:ReEncryptTo",
+          "kms:Decrypt",
+          "kms:DescribeKey",
+          "kms:Encrypt",
+          "kms:GenerateDataKey",
+          "kms:GenerateDataKeyPair",
+          "kms:GenerateDataKeyPairWithoutPlaintext",
+          "kms:GenerateDataKeyPairWithoutPlaintext",
+          "kms:ReEncryptFrom",
+          "kms:ReEncryptTo",
         ]
         Effect   = "Allow"
         Resource = "${var.kms_key_alias}"
