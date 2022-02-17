@@ -52,7 +52,7 @@ module "tfe" {
   iam_role_policy_arns    = [local.ssm_policy_arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type           = "m5.xlarge"
   key_name                = aws_key_pair.main.key_name
-  kms_key_alias           = module.kms.key
+  kms_key_arn             = module.kms.key
   load_balancing_scheme   = "PUBLIC"
   object_storage_iam_user = data.aws_iam_user.object_storage
   node_count              = 2

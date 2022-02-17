@@ -37,7 +37,7 @@ module "private_active_active" {
   iam_role_policy_arns        = [local.ssm_policy_arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type               = "m5.4xlarge"
   key_name                    = var.key_name
-  kms_key_alias               = module.kms.key
+  kms_key_arn                 = module.kms.key
   load_balancing_scheme       = "PRIVATE"
   node_count                  = 2
   proxy_ip                    = "${aws_instance.proxy.private_ip}:${local.http_proxy_port}"

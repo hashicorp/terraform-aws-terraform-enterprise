@@ -52,3 +52,11 @@ variable "network_private_subnet_cidrs" {
   description = "(Optional) List of private subnet CIDR ranges to create in VPC."
   default     = ["10.0.32.0/20", "10.0.48.0/20"]
 }
+
+variable "kms_key_arn" {
+  description = <<-EOD
+  The Amazon Resource Name of the KMS key which will be used by the Redis Elasticache replication group to encrypt data 
+  at rest.
+  EOD
+  type        = string
+}

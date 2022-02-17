@@ -49,7 +49,7 @@ module "standalone_vault" {
   iact_subnet_list            = ["0.0.0.0/0"]
   instance_type               = "m5.xlarge"
   key_name                    = "standalone-vault"
-  kms_key_alias               = module.kms.key
+  kms_key_arn                 = module.kms.key
   load_balancing_scheme       = "PUBLIC"
   node_count                  = 1
   redis_encryption_at_rest    = false
