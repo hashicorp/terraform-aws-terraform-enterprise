@@ -16,8 +16,8 @@ resource "random_string" "friendly_name" {
 }
 
 module "kms" {
-  source              = "../../fixtures/kms"
-  key_alias           = "${local.friendly_name_prefix}-key"
+  source    = "../../fixtures/kms"
+  key_alias = "${local.friendly_name_prefix}-key"
 }
 
 module "public_active_active" {

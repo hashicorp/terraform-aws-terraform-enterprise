@@ -242,12 +242,6 @@ variable "kms_key_alias" {
   default     = "tfe-managed-kms"
 }
 
-variable "kms_key_deletion_window" {
-  type        = number
-  description = "(Optional) Duration in days to destroy the key after it is deleted. Must be between 7 and 30 days."
-  default     = 7
-}
-
 # Secrets Manager
 # ---------------
 
