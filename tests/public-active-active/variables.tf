@@ -30,11 +30,3 @@ variable "tfe_license_secret_name" {
   The name of the Secrets Manager secret under which the Base64 encoded Terraform Enterprise license is stored.
   EOD
 }
-
-# KMS
-# ---
-variable "key_deletion_window" {
-  description = "Duration in days to destroy the key after it is deleted. Must be between 7 and 30 days."
-  type        = number
-  default     = 7
-}

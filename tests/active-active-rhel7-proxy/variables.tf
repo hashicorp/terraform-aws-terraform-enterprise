@@ -27,9 +27,3 @@ variable "object_storage_iam_user_name" {
   type        = string
   description = "The name of the IAM user which will be authorized to access the S3 storage bucket."
 }
-
-variable "key_deletion_window" {
-  description = "Duration in days to destroy the key after it is deleted. Must be between 7 and 30 days."
-  type        = number
-}
-

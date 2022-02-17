@@ -12,11 +12,3 @@ variable "license_file" {
   type        = string
   description = "The local path to the Terraform Enterprise license to be provided by CI."
 }
-
-# KMS
-# ---
-variable "key_deletion_window" {
-  description = "Duration in days to destroy the key after it is deleted. Must be between 7 and 30 days."
-  type        = number
-  default     = 7
-}

@@ -21,7 +21,6 @@ module "secrets" {
 module "kms" {
   source              = "../../fixtures/kms"
   key_alias           = "${local.friendly_name_prefix}-key"
-  key_deletion_window = var.key_deletion_window
 }
 
 module "hcp_vault" {
