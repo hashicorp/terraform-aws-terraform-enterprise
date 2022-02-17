@@ -64,7 +64,7 @@ resource "aws_iam_role_policy_attachment" "misc" {
 }
 
 
-resource "aws_iam_policy" "kms-policy" {
+resource "aws_iam_policy" "kms_policy" {
   name = "${var.friendly_name_prefix}-key"
   policy = jsonencode({
     Version = "2012-10-17"
