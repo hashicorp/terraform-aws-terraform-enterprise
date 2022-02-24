@@ -46,7 +46,7 @@ locals {
     }
 
     hairpin_addressing = {
-      value = true
+      value = "1"
     }
 
     production_type = {
