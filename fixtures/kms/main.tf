@@ -10,3 +10,23 @@ resource "aws_kms_alias" "main" {
   name          = "alias/${var.key_alias}"
   target_key_id = aws_kms_key.main.key_id
 }
+
+data "aws_iam_user" "ci_s3" {
+  user_name = "TFE-S3"
+}
+
+resource "aws_kms_grant" "main" {
+  grantee_principal = data.aws_iam_user.ci_s3.arn
+  key_id            = aws_kms_key.main.key_id
+  operations = [
+    "Decrypt",
+    "DescribeKey",
+    "Encrypt",
+    "GenerateDataKey",
+    "GenerateDataKeyPair",
+    "GenerateDataKeyPairWithoutPlaintext",
+    "GenerateDataKeyPairWithoutPlaintext",
+    "ReEncryptFrom",
+    "ReEncryptTo",
+  ]
+}
