@@ -26,6 +26,12 @@ variable "asg_tags" {
   default     = {}
 }
 
+variable "db_tags" {
+  type = map(string)
+  description = "(Optional) Map of tags used only for the database instance"
+  default = {}
+}
+
 variable "health_check_grace_period" {
   default     = 900
   description = "Number of seconds grace period before health-checks are run while spinning up TFE instances"

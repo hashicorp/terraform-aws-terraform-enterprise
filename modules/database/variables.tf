@@ -69,3 +69,9 @@ variable "enabled_cloudwatch_logs" {
     error_message = "Allowed cloudwatch log export types don't match allowed. Must be: postgresql, upgrade."
   }
 }
+
+variable "tags" {
+  type        = map(string)
+  description = "(Optional) Map of tags used only for the database instance"
+  default     = {}
+}

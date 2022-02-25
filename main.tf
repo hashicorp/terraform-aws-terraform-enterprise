@@ -94,6 +94,7 @@ module "database" {
   network_subnets_private      = local.network_private_subnets
   tfe_instance_sg              = module.vm.tfe_instance_sg
   enabled_cloudwatch_logs      = var.db_enabled_cloudwatch_logs
+  tags = var.db_tags
 }
 
 module "user_data" {

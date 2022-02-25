@@ -86,4 +86,5 @@ resource "aws_db_instance" "postgresql" {
   storage_type                    = "gp2"
   vpc_security_group_ids          = [aws_security_group.postgresql.id]
   enabled_cloudwatch_logs_exports = var.enabled_cloudwatch_logs
+  tags                            = var.tags
 }
