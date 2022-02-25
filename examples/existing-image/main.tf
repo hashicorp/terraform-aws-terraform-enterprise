@@ -38,7 +38,7 @@ module "existing_image_example" {
   domain_name          = var.domain_name
   friendly_name_prefix = var.friendly_name_prefix
   tfe_subdomain        = var.tfe_subdomain
-  tfe_license_secret          = module.secrets.tfe_license
+  tfe_license_secret   = module.secrets.tfe_license
 
   ami_id                = local.ami_id
   iact_subnet_list      = var.iact_subnet_list
