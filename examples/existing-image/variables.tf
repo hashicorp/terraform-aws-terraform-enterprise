@@ -22,15 +22,9 @@ variable "tfe_subdomain" {
   description = "Subdomain for TFE"
 }
 
-variable "tfe_license_name" {
+variable "license_file" {
   type        = string
-  default     = "ptfe-license.rli"
-  description = "The name to use when copying the TFE license file to the EC2 instance."
-}
-
-variable "tfe_license_filepath" {
-  type        = string
-  description = "The absolute path to the TFE license file on the system running Terraform."
+  description = "The local path to the Terraform Enterprise license."
 }
 
 variable "iact_subnet_list" {
@@ -56,7 +50,6 @@ variable "load_balancing_scheme" {
 
 variable "ami_id" {
   type        = string
-  default     = null
   description = "AMI ID of the custom image to use for TFE instances. If this value is provided, you do not need any of the following ami variable values."
 }
 
