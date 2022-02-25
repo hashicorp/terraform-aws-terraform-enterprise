@@ -11,12 +11,9 @@ resource "aws_kms_alias" "main" {
   target_key_id = aws_kms_key.main.key_id
 }
 
-data "aws_iam_user" "ci_s3" {
-  user_name = "TFE-S3"
-}
-
 resource "aws_kms_grant" "main" {
-  grantee_principal = data.aws_iam_user.ci_s3.arn
+  count             = var.iam_principal != null ? 1 : 0
+  grantee_principal = var.iam_principal
   key_id            = aws_kms_key.main.key_id
   operations = [
     "Decrypt",

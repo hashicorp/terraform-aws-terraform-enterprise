@@ -8,3 +8,9 @@ variable "key_deletion_window" {
   type        = number
   default     = 7
 }
+
+variable "iam_principal" {
+  description = "The IAM principal (role or user) that will be authorized to use the key."
+  type        = string
+  default     = null
+}
