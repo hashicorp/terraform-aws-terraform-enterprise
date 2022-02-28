@@ -15,6 +15,11 @@ resource "random_string" "friendly_name" {
   special = false
 }
 
+module "kms" {
+  source    = "../../fixtures/kms"
+  key_alias = "${local.friendly_name_prefix}-key"
+}
+
 module "private_tcp_active_active" {
   source = "../../"
 
@@ -28,7 +33,7 @@ module "private_tcp_active_active" {
   iact_subnet_list            = ["0.0.0.0/0"]
   iam_role_policy_arns        = [local.ssm_policy_arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type               = "m5.8xlarge"
-  kms_key_alias               = local.test_name
+  kms_key_arn                 = module.kms.key
   load_balancing_scheme       = "PRIVATE_TCP"
   node_count                  = 2
   proxy_ip                    = "${aws_instance.proxy.private_ip}:${local.http_proxy_port}"

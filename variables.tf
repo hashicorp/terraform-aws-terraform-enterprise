@@ -236,16 +236,9 @@ variable "key_name" {
 
 # KMS
 # ---
-variable "kms_key_alias" {
+variable "kms_key_arn" {
   type        = string
-  description = "KMS key alias for AWS KMS Customer managed key."
-  default     = "tfe-managed-kms"
-}
-
-variable "kms_key_deletion_window" {
-  type        = number
-  description = "(Optional) Duration in days to destroy the key after it is deleted. Must be between 7 and 30 days."
-  default     = 7
+  description = "KMS key arn for AWS KMS Customer managed key."
 }
 
 # Secrets Manager

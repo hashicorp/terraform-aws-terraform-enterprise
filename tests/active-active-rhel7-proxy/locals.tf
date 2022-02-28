@@ -14,4 +14,5 @@ locals {
   ssh_user             = "ec2-user"
   ssm_policy_arn       = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
   test_name            = "${local.friendly_name_prefix}-test-active-active-rhel-proxy"
+  iam_principal        = data.aws_iam_user.ci_s3.arn
 }

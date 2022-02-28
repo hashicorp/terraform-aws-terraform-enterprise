@@ -13,6 +13,16 @@ module "secrets" {
   }
 }
 
+data "aws_iam_user" "ci_s3" {
+  user_name = "TFE-S3"
+}
+
+module "kms" {
+  source        = "../../fixtures/kms"
+  key_alias     = "${local.friendly_name_prefix}-key"
+  iam_principal = local.iam_principal
+}
+
 resource "tls_private_key" "main" {
   algorithm = "RSA"
 }
@@ -46,7 +56,7 @@ module "tfe" {
   iam_role_policy_arns    = [local.ssm_policy_arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type           = "m5.xlarge"
   key_name                = aws_key_pair.main.key_name
-  kms_key_alias           = local.test_name
+  kms_key_arn             = module.kms.key
   load_balancing_scheme   = "PUBLIC"
   object_storage_iam_user = data.aws_iam_user.object_storage
   node_count              = 2
