@@ -16,6 +16,10 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
+data "aws_kms_key" "main" {
+  key_id = var.kms_key_arn
+}
+
 module "service_accounts" {
   source = "./modules/service_accounts"
 
@@ -23,14 +27,7 @@ module "service_accounts" {
   friendly_name_prefix  = var.friendly_name_prefix
   iam_role_policy_arns  = var.iam_role_policy_arns
   tfe_license_secret    = var.tfe_license_secret
-}
-
-module "kms" {
-  source = "./modules/kms"
-
-  iam_principal       = local.iam_principal
-  key_alias           = var.kms_key_alias
-  key_deletion_window = var.kms_key_deletion_window
+  kms_key_arn           = local.kms_key_arn
 }
 
 module "object_storage" {
@@ -40,7 +37,7 @@ module "object_storage" {
 
   friendly_name_prefix = var.friendly_name_prefix
   iam_principal        = local.iam_principal
-  kms_key_arn          = module.kms.key.arn
+  kms_key_arn          = local.kms_key_arn
 }
 
 module "networking" {
@@ -70,7 +67,7 @@ module "redis" {
   engine_version       = var.redis_engine_version
   parameter_group_name = var.redis_parameter_group_name
 
-  kms_key_arn                 = module.kms.key.arn
+  kms_key_arn                 = local.kms_key_arn
   redis_encryption_in_transit = var.redis_encryption_in_transit
   redis_encryption_at_rest    = var.redis_encryption_at_rest
   redis_require_password      = var.redis_require_password
@@ -90,6 +87,7 @@ module "database" {
   network_private_subnet_cidrs = var.network_private_subnet_cidrs
   network_subnets_private      = local.network_private_subnets
   tfe_instance_sg              = module.vm.tfe_instance_sg
+  kms_key_arn                  = local.kms_key_arn
 }
 
 module "user_data" {
@@ -102,7 +100,7 @@ module "user_data" {
   fqdn                   = local.fqdn
   iact_subnet_list       = var.iact_subnet_list
   iact_subnet_time_limit = var.iact_subnet_time_limit
-  kms_key_arn            = module.kms.key.arn
+  kms_key_arn            = local.kms_key_arn
   ca_certificate_secret  = var.ca_certificate_secret
 
   # mounted disk

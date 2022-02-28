@@ -15,6 +15,11 @@ resource "random_string" "friendly_name" {
   special = false
 }
 
+module "kms" {
+  source    = "../../fixtures/kms"
+  key_alias = "${local.friendly_name_prefix}-key"
+}
+
 module "public_active_active" {
   source = "../../"
 
@@ -27,7 +32,7 @@ module "public_active_active" {
   iact_subnet_list            = var.iact_subnet_list
   instance_type               = "m5.xlarge"
   key_name                    = var.key_name
-  kms_key_alias               = local.test_name
+  kms_key_arn                 = module.kms.key
   load_balancing_scheme       = "PUBLIC"
   node_count                  = 2
   redis_encryption_at_rest    = false

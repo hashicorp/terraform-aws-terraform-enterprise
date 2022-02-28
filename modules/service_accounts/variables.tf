@@ -21,3 +21,8 @@ variable "tfe_license_secret" {
   type        = string
   description = "The Secrets Manager secret under which the Base64 encoded Terraform Enterprise license is stored."
 }
+
+variable "kms_key_arn" {
+  type        = string
+  description = "KMS key arn for AWS KMS Customer managed key."
+}

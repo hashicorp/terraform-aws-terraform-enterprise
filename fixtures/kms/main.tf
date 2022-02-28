@@ -12,7 +12,8 @@ resource "aws_kms_alias" "main" {
 }
 
 resource "aws_kms_grant" "main" {
-  grantee_principal = var.iam_principal.arn
+  count             = var.iam_principal != null ? 1 : 0
+  grantee_principal = var.iam_principal
   key_id            = aws_kms_key.main.key_id
   operations = [
     "Decrypt",
