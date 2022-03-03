@@ -1,0 +1,8 @@
+acm_certificate_arn=""
+license_file=""
+domain_name=""
+airgap_url=""
+aws_role_arn=""
+friendly_name_prefix=""
+tfe_subdomain=""
+ami_id=""
