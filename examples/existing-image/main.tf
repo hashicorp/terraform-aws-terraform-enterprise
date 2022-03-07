@@ -20,6 +20,17 @@ data "aws_ami" "existing" {
   }
 }
 
+# Store TFE License as secret
+# ---------------------------
+
+module "secrets" {
+  source = "../../fixtures/secrets"
+  tfe_license = {
+    name = "${var.friendly_name_prefix}-license"
+    path = var.license_file
+  }
+}
+
 module "existing_image_example" {
   source = "../../"
 
@@ -27,8 +38,7 @@ module "existing_image_example" {
   domain_name          = var.domain_name
   friendly_name_prefix = var.friendly_name_prefix
   tfe_subdomain        = var.tfe_subdomain
-  tfe_license_name     = var.tfe_license_name
-  tfe_license_filepath = var.tfe_license_filepath
+  tfe_license_secret   = module.secrets.tfe_license
 
   ami_id                = local.ami_id
   iact_subnet_list      = var.iact_subnet_list
