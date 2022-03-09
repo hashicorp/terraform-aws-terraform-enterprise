@@ -27,9 +27,9 @@ variable "asg_tags" {
 }
 
 variable "db_tags" {
-  type = map(string)
+  type        = map(string)
   description = "(Optional) Map of tags used only for the database instance"
-  default = {}
+  default     = {}
 }
 
 variable "health_check_grace_period" {

@@ -29,6 +29,8 @@ module "object_storage" {
 
   friendly_name_prefix = var.friendly_name_prefix
   kms_key_arn          = aws_kms_key.tfe_key.arn
+  logging_bucket       = var.logging_bucket
+  logging_prefix       = var.logging_prefix
 }
 
 module "service_accounts" {
@@ -94,7 +96,7 @@ module "database" {
   network_subnets_private      = local.network_private_subnets
   tfe_instance_sg              = module.vm.tfe_instance_sg
   enabled_cloudwatch_logs      = var.db_enabled_cloudwatch_logs
-  tags = var.db_tags
+  tags                         = var.db_tags
 }
 
 module "user_data" {
