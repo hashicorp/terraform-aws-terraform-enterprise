@@ -37,9 +37,3 @@ variable "tags" {
   DESC
   default     = {}
 }
-
-variable "disk_path" {
-  default     = null
-  description = "The pathname of the directory in which Terraform Enterprise will store data on the compute instances."
-  type        = string
-}
