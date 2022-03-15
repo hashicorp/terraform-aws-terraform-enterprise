@@ -60,7 +60,7 @@ module "standalone_vault" {
   tfe_subdomain               = local.friendly_name_prefix
 
   # Vault
-  extern_vault_enable    = 1
+  extern_vault_enable    = true
   extern_vault_addr      = module.hcp_vault.url
   extern_vault_role_id   = module.hcp_vault.app_role_id
   extern_vault_secret_id = module.hcp_vault.app_role_secret_id

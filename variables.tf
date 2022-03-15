@@ -14,10 +14,7 @@ variable "acm_certificate_arn" {
 # TODO: Get this value from the acm_certificate_arn
 variable "vm_certificate_secret_id" {
   default = null
-  type = object({
-    key_vault_id = string
-    id           = string
-  })
+  type = string
   description = <<-EOD
   A Secrets Manager secret ARN which contains the Base64 encoded version of a PEM encoded public certificate for the Virtual
   Machine Scale Set.
@@ -27,10 +24,7 @@ variable "vm_certificate_secret_id" {
 # TODO: Get this value from the acm_certificate_arn
 variable "vm_key_secret_id" {
   default = null
-  type = object({
-    key_vault_id = string
-    id           = string
-  })
+  type = string
   description = <<-EOD
   A Secrets Manager secret ARN which contains the Base64 encoded version of a PEM encoded private key for the Virtual Machine
   Scale Set.
@@ -201,7 +195,7 @@ variable "airgap_url" {
 # Network
 # -------
 variable "network_id" {
-  default     = ""
+  default     = null
   description = "The identity of the VPC in which resources will be deployed."
   type        = string
 }
@@ -358,7 +352,13 @@ variable "load_balancing_scheme" {
 variable "proxy_ip" {
   type        = string
   description = "(Optional) IP address of existing web proxy to route TFE traffic through."
-  default     = ""
+  default     = null
+}
+
+variable "proxy_port" {
+  default     = null
+  type        = string
+  description = "Port that the proxy server will use"
 }
 
 variable "no_proxy" {
@@ -399,43 +399,43 @@ variable "redis_use_password_auth" {
 # External Vault
 # --------------
 variable "extern_vault_enable" {
-  default     = 0
-  type        = number
+  default     = false
+  type        = bool
   description = "(Optional) Indicate if an external Vault cluster is being used. Set to 1 if so."
 }
 
 variable "extern_vault_addr" {
   default     = null
   type        = string
-  description = "(Required if var.extern_vault_enable = 1) URL of external Vault cluster."
+  description = "(Required if var.extern_vault_enable = true) URL of external Vault cluster."
 }
 
 variable "extern_vault_role_id" {
   default     = null
   type        = string
-  description = "(Required if var.extern_vault_enable = 1) AppRole RoleId to use to authenticate with the Vault cluster."
+  description = "(Required if var.extern_vault_enable = true) AppRole RoleId to use to authenticate with the Vault cluster."
 }
 
 variable "extern_vault_secret_id" {
   default     = null
   type        = string
-  description = "(Required if var.extern_vault_enable = 1) AppRole SecretId to use to authenticate with the Vault cluster."
+  description = "(Required if var.extern_vault_enable = true) AppRole SecretId to use to authenticate with the Vault cluster."
 }
 
 variable "extern_vault_path" {
   default     = "auth/approle"
   type        = string
-  description = "(Optional) Path on the Vault server for the AppRole auth. Defaults to auth/approle."
+  description = "(Optional if var.extern_vault_enable = true) Path on the Vault server for the AppRole auth. Defaults to auth/approle."
 }
 
 variable "extern_vault_token_renew" {
   default     = 3600
   type        = number
-  description = "(Optional) How often (in seconds) to renew the Vault token."
+  description = "(Optional if var.extern_vault_enable = true) How often (in seconds) to renew the Vault token."
 }
 
 variable "extern_vault_namespace" {
   default     = null
   type        = string
-  description = "(Optional) The Vault namespace"
+  description = "(Optional if var.extern_vault_enable = true) The Vault namespace"
 }
