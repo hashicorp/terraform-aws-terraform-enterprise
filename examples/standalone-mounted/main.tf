@@ -1,4 +1,7 @@
 provider "aws" {
+
+  region = "us-west-2"
+
   assume_role {
     role_arn = var.aws_role_arn
   }
@@ -29,7 +32,6 @@ resource "aws_key_pair" "main" {
 
 # Store TFE License as secret
 # ---------------------------
-
 module "secrets" {
   source = "../../fixtures/secrets"
   tfe_license = {
@@ -37,6 +39,12 @@ module "secrets" {
     path = var.license_file
   }
 }
+
+module "kms" {
+  source    = "../../fixtures/kms"
+  key_alias = "${var.friendly_name_prefix}-key"
+}
+
 # Standalone, mounted disk
 # ------------------------
 module "standalone" {
@@ -58,7 +66,7 @@ module "standalone" {
   iact_subnet_list            = ["0.0.0.0/0"]
   instance_type               = "m5.xlarge"
   key_name                    = aws_key_pair.main.key_name
-  kms_key_alias               = var.friendly_name_prefix
+  kms_key_arn                 = module.kms.key
   load_balancing_scheme       = "PUBLIC"
   node_count                  = 1
   tfe_subdomain               = var.tfe_subdomain

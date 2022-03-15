@@ -1,4 +1,7 @@
 provider "aws" {
+
+  region = "us-west-2"
+
   assume_role {
     role_arn = var.aws_role_arn
   }
@@ -59,7 +62,6 @@ module "standalone_airgap" {
   iact_subnet_list                          = ["0.0.0.0/0"]
   instance_type                             = "m5.xlarge"
   key_name                                  = aws_key_pair.main.key_name
-  kms_key_alias                             = var.friendly_name_prefix
   load_balancing_scheme                     = "PUBLIC"
   node_count                                = 1
   tfe_subdomain                             = var.tfe_subdomain
