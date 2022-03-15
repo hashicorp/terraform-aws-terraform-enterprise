@@ -156,7 +156,7 @@ module "settings" {
   s3_region             = data.aws_region.current.name
   aws_secret_access_key = var.aws_secret_access_key
   s3_sse                = "aws:kms"
-  s3_sse_kms_key_id     = var.kms_key_arn
+  s3_sse_kms_key_id     = local.kms_key_arn
 
   # External Vault
   extern_vault_enable      = var.extern_vault_enable

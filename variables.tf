@@ -137,7 +137,7 @@ variable "bypass_preflight_checks" {
 }
 
 variable "disk_path" {
-  default     = "/opt/hashicorp/data"
+  default     = null
   description = "The pathname of the directory in which Terraform Enterprise will store data on the compute instances."
   type        = string
 }
