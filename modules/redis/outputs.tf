@@ -28,7 +28,7 @@ output "password" {
   description = "The password which is required to create connections with the Redis Elasticache replication group."
 }
 
-output "redis_use_password_auth" {
+output "use_password_auth" {
   value = (var.active_active == true && var.redis_use_password_auth == true) ? true : false
 
   description = <<-EOD
@@ -36,7 +36,7 @@ output "redis_use_password_auth" {
   EOD
 }
 
-output "redis_use_tls" {
+output "use_tls" {
   value = (var.active_active == true) ? aws_elasticache_replication_group.redis[0].transit_encryption_enabled : false
 
   description = <<-EOD
