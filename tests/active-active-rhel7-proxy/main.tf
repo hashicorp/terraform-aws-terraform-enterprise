@@ -43,10 +43,10 @@ resource "aws_key_pair" "main" {
 module "tfe" {
   source = "../../"
 
-  acm_certificate_arn         = var.acm_certificate_arn
-  domain_name                 = "tfe-team-dev.aws.ptfedev.com"
-  friendly_name_prefix        = local.friendly_name_prefix
-  tfe_license_secret_id       = module.secrets.tfe_license_secret_id
+  acm_certificate_arn   = var.acm_certificate_arn
+  domain_name           = "tfe-team-dev.aws.ptfedev.com"
+  friendly_name_prefix  = local.friendly_name_prefix
+  tfe_license_secret_id = module.secrets.tfe_license_secret_id
 
   ami_id                   = data.aws_ami.rhel.id
   aws_access_key_id        = var.aws_access_key_id

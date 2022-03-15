@@ -40,10 +40,10 @@ module "hcp_vault" {
 module "standalone_vault" {
   source = "../../"
 
-  acm_certificate_arn         = var.acm_certificate_arn
-  domain_name                 = "tfe-team-dev.aws.ptfedev.com"
-  friendly_name_prefix        = local.friendly_name_prefix
-  tfe_license_secret_id       = module.secrets.tfe_license_secret_id
+  acm_certificate_arn   = var.acm_certificate_arn
+  domain_name           = "tfe-team-dev.aws.ptfedev.com"
+  friendly_name_prefix  = local.friendly_name_prefix
+  tfe_license_secret_id = module.secrets.tfe_license_secret_id
 
   iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   iact_subnet_list            = ["0.0.0.0/0"]

@@ -23,12 +23,12 @@ module "kms" {
 module "public_active_active" {
   source = "../../"
 
-  acm_certificate_arn         = var.acm_certificate_arn
-  domain_name                 = var.domain_name
-  friendly_name_prefix        = local.friendly_name_prefix
-  tfe_license_secret_id       = data.aws_secretsmanager_secret.tfe_license.arn
-#  tls_bootstrap_cert_pathname = "/var/lib/terraform-enterprise/certificate.pem"
-#  tls_bootstrap_key_pathname  = "/var/lib/terraform-enterprise/key.pem"
+  acm_certificate_arn   = var.acm_certificate_arn
+  domain_name           = var.domain_name
+  friendly_name_prefix  = local.friendly_name_prefix
+  tfe_license_secret_id = data.aws_secretsmanager_secret.tfe_license.arn
+  #  tls_bootstrap_cert_pathname = "/var/lib/terraform-enterprise/certificate.pem"
+  #  tls_bootstrap_key_pathname  = "/var/lib/terraform-enterprise/key.pem"
 
   iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   iact_subnet_list            = var.iact_subnet_list

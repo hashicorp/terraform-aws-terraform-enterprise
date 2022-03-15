@@ -23,10 +23,10 @@ module "kms" {
 module "private_tcp_active_active" {
   source = "../../"
 
-  acm_certificate_arn         = var.acm_certificate_arn
-  domain_name                 = var.domain_name
-  friendly_name_prefix        = local.friendly_name_prefix
-  tfe_license_secret_id       = data.aws_secretsmanager_secret.tfe_license.arn
+  acm_certificate_arn   = var.acm_certificate_arn
+  domain_name           = var.domain_name
+  friendly_name_prefix  = local.friendly_name_prefix
+  tfe_license_secret_id = data.aws_secretsmanager_secret.tfe_license.arn
 
   ami_id                      = data.aws_ami.rhel.id
   ca_certificate_secret_id    = data.aws_secretsmanager_secret.ca_certificate.arn
