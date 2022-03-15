@@ -13,8 +13,8 @@ variable "acm_certificate_arn" {
 
 # TODO: Get this value from the acm_certificate_arn
 variable "vm_certificate_secret_id" {
-  default = null
-  type = string
+  default     = null
+  type        = string
   description = <<-EOD
   A Secrets Manager secret ARN which contains the Base64 encoded version of a PEM encoded public certificate for the Virtual
   Machine Scale Set.
@@ -23,8 +23,8 @@ variable "vm_certificate_secret_id" {
 
 # TODO: Get this value from the acm_certificate_arn
 variable "vm_key_secret_id" {
-  default = null
-  type = string
+  default     = null
+  type        = string
   description = <<-EOD
   A Secrets Manager secret ARN which contains the Base64 encoded version of a PEM encoded private key for the Virtual Machine
   Scale Set.

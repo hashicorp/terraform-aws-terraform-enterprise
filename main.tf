@@ -110,7 +110,7 @@ module "database" {
 # -----------------------------------------------------------------------------
 module "settings" {
   source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=ah-add-aws-func"
-  
+
   # TFE Base Configuration
   installation_type      = "production"
   production_type        = var.operational_mode
@@ -127,7 +127,7 @@ module "settings" {
     ".aws.ce.redhat.com",
     local.fqdn,
     var.network_cidr
-  ],var.no_proxy)
+  ], var.no_proxy)
 
   # Replicated Base Configuration
   hostname                                  = local.fqdn
