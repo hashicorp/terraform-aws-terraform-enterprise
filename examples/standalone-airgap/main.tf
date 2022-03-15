@@ -51,8 +51,6 @@ module "standalone_airgap" {
 
   airgap_url                                = var.airgap_url
   tfe_license_bootstrap_airgap_package_path = "/var/lib/ptfe/ptfe.airgap"
-  tls_bootstrap_cert_pathname               = "/var/lib/terraform-enterprise/certificate.pem"
-  tls_bootstrap_key_pathname                = "/var/lib/terraform-enterprise/key.pem"
   friendly_name_prefix                      = var.friendly_name_prefix
   tfe_license_secret_id                     = module.secrets.tfe_license_secret_id
   redis_encryption_at_rest                  = false

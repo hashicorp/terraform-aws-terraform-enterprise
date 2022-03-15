@@ -44,8 +44,6 @@ module "standalone_vault" {
   domain_name                 = "tfe-team-dev.aws.ptfedev.com"
   friendly_name_prefix        = local.friendly_name_prefix
   tfe_license_secret_id       = module.secrets.tfe_license_secret_id
-  tls_bootstrap_cert_pathname = "/var/lib/terraform-enterprise/certificate.pem"
-  tls_bootstrap_key_pathname  = "/var/lib/terraform-enterprise/key.pem"
 
   iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   iact_subnet_list            = ["0.0.0.0/0"]

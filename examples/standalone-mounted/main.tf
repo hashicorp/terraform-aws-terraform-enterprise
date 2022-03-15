@@ -57,8 +57,6 @@ module "standalone" {
   disk_path                   = "/opt/hashicorp/data"
   friendly_name_prefix        = var.friendly_name_prefix
   tfe_license_secret_id       = module.secrets.tfe_license_secret_id
-  tls_bootstrap_cert_pathname = "/var/lib/terraform-enterprise/certificate.pem"
-  tls_bootstrap_key_pathname  = "/var/lib/terraform-enterprise/key.pem"
   redis_encryption_at_rest    = false
   redis_encryption_in_transit = false
   redis_use_password_auth     = false

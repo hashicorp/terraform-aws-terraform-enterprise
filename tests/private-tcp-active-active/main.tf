@@ -27,8 +27,6 @@ module "private_tcp_active_active" {
   domain_name                 = var.domain_name
   friendly_name_prefix        = local.friendly_name_prefix
   tfe_license_secret_id       = data.aws_secretsmanager_secret.tfe_license.arn
-  tls_bootstrap_cert_pathname = "/var/lib/terraform-enterprise/certificate.pem"
-  tls_bootstrap_key_pathname  = "/var/lib/terraform-enterprise/key.pem"
 
   ami_id                      = data.aws_ami.rhel.id
   ca_certificate_secret_id    = data.aws_secretsmanager_secret.ca_certificate.arn

@@ -47,8 +47,6 @@ module "tfe" {
   domain_name                 = "tfe-team-dev.aws.ptfedev.com"
   friendly_name_prefix        = local.friendly_name_prefix
   tfe_license_secret_id       = module.secrets.tfe_license_secret_id
-  tls_bootstrap_cert_pathname = "/var/lib/terraform-enterprise/certificate.pem"
-  tls_bootstrap_key_pathname  = "/var/lib/terraform-enterprise/key.pem"
 
   ami_id                   = data.aws_ami.rhel.id
   aws_access_key_id        = var.aws_access_key_id

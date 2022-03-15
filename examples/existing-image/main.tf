@@ -39,8 +39,6 @@ module "existing_image_example" {
   friendly_name_prefix        = var.friendly_name_prefix
   tfe_subdomain               = var.tfe_subdomain
   tfe_license_secret_id       = module.secrets.tfe_license_secret_id
-  tls_bootstrap_cert_pathname = "/var/lib/terraform-enterprise/certificate.pem"
-  tls_bootstrap_key_pathname  = "/var/lib/terraform-enterprise/key.pem"
 
   ami_id                = local.ami_id
   iact_subnet_list      = var.iact_subnet_list
