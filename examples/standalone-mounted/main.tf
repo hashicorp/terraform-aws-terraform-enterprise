@@ -54,7 +54,7 @@ module "standalone" {
   acm_certificate_arn = var.acm_certificate_arn
   domain_name         = var.domain_name
 
-  disk_path                   = var.disk_path
+  disk_path                   = "/opt/hashicorp/data"
   friendly_name_prefix        = var.friendly_name_prefix
   tfe_license_secret_id       = module.secrets.tfe_license_secret_id
   tls_bootstrap_cert_pathname = "/var/lib/terraform-enterprise/certificate.pem"
