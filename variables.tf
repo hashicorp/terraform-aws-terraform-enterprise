@@ -11,6 +11,32 @@ variable "acm_certificate_arn" {
   description = "ACM certificate ARN to use with load balancer"
 }
 
+# TODO: Get this value from the acm_certificate_arn
+variable "vm_certificate_secret_id" {
+  default = null
+  type = object({
+    key_vault_id = string
+    id           = string
+  })
+  description = <<-EOD
+  A Secrets Manager secret ARN which contains the Base64 encoded version of a PEM encoded public certificate for the Virtual
+  Machine Scale Set.
+  EOD
+}
+
+# TODO: Get this value from the acm_certificate_arn
+variable "vm_key_secret_id" {
+  default = null
+  type = object({
+    key_vault_id = string
+    id           = string
+  })
+  description = <<-EOD
+  A Secrets Manager secret ARN which contains the Base64 encoded version of a PEM encoded private key for the Virtual Machine
+  Scale Set.
+  EOD
+}
+
 variable "asg_tags" {
   type        = map(string)
   description = <<DESC
@@ -109,10 +135,11 @@ variable "instance_type" {
 
 # Userdata
 # -------
-variable "airgap_url" {
-  default     = null
-  description = "The URL of the storage bucket object that comprises an airgap package."
-  type        = string
+
+variable "bypass_preflight_checks" {
+  default     = false
+  type        = bool
+  description = "Allow the TFE application to start without preflight checks."
 }
 
 variable "disk_path" {
@@ -134,6 +161,42 @@ variable "operational_mode" {
     error_message = "The operational_mode value must be one of: \"external\"; \"disk\"; \"poc\"."
   }
 }
+
+variable "tfe_license_file_location" {
+  default     = "/etc/terraform-enterprise.rli"
+  type        = string
+  description = "The path on the TFE instance to put the TFE license."
+}
+
+variable "tls_bootstrap_cert_pathname" {
+  default     = null
+  type        = string
+  description = "The path on the TFE instance to put the certificate. ex. '/var/lib/terraform-enterprise/certificate.pem'"
+}
+
+variable "tls_bootstrap_key_pathname" {
+  default     = null
+  type        = string
+  description = "The path on the TFE instance to put the key. ex. '/var/lib/terraform-enterprise/key.pem'"
+}
+
+# Air-gapped Installations ONLY
+# -----------------------------
+variable "tfe_license_bootstrap_airgap_package_path" {
+  default     = null
+  type        = string
+  description = <<-EOD
+  (Required if air-gapped installation) The URL of a Replicated airgap package for Terraform
+  Enterprise. The suggested path is "/var/lib/ptfe/ptfe.airgap".
+  EOD
+}
+
+variable "airgap_url" {
+  default     = null
+  description = "The URL of the storage bucket object that comprises an airgap package."
+  type        = string
+}
+
 
 # Network
 # -------
@@ -234,6 +297,23 @@ variable "key_name" {
   type        = string
 }
 
+variable "release_sequence" {
+  default     = null
+  type        = number
+  description = "Terraform Enterprise release sequence"
+}
+
+variable "pg_extra_params" {
+  default     = null
+  type        = string
+  description = <<-EOF
+  Parameter keywords of the form param1=value1&param2=value2 to support additional options that
+  may be necessary for your specific PostgreSQL server. Allowed values are documented on the
+  PostgreSQL site. An additional restriction on the sslmode parameter is that only the require,
+  verify-full, verify-ca, and disable values are allowed.
+  EOF
+}
+
 # KMS
 # ---
 variable "kms_key_arn" {
@@ -244,18 +324,19 @@ variable "kms_key_arn" {
 # Secrets Manager
 # ---------------
 
-variable "tfe_license_secret" {
+variable "tfe_license_secret_id" {
   type        = string
-  description = "The Secrets Manager secret under which the Base64 encoded Terraform Enterprise license is stored."
+  description = "The Secrets Manager secret ARN under which the Base64 encoded Terraform Enterprise license is stored."
 }
 
-variable "ca_certificate_secret" {
+variable "ca_certificate_secret_id" {
   default     = null
   type        = string
   description = <<-EOD
-  A Secrets Manager secret which contains the Base64 encoded version of a PEM encoded public certificate of a
-  certificate authority (CA) to be trusted by the EC2 instance(s). This argument
-  is only required if TLS certificates in the deployment are not issued by a well-known CA.
+  A Secrets Manager secret ARN to the secret which contains the Base64 encoded version of
+  a PEM encoded public certificate of a certificate authority (CA) to be trusted by the EC2
+  instance(s). This argument is only required if TLS certificates in the deployment are not
+  issued by a well-known CA.
   EOD
 }
 
@@ -286,6 +367,15 @@ variable "no_proxy" {
   default     = []
 }
 
+variable "trusted_proxies" {
+  default     = []
+  description = <<-EOD
+  A list of IP address ranges which will be considered safe to ignore when evaluating the IP addresses of requests like
+  those made to the IACT endpoint.
+  EOD
+  type        = list(string)
+}
+
 # Redis
 # -----
 variable "redis_encryption_in_transit" {
@@ -300,7 +390,7 @@ variable "redis_encryption_at_rest" {
   default     = false
 }
 
-variable "redis_require_password" {
+variable "redis_use_password_auth" {
   type        = bool
   description = "Determine if a password is required for Redis."
   default     = false

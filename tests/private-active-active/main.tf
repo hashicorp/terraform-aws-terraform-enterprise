@@ -27,10 +27,12 @@ locals {
 module "private_active_active" {
   source = "../../"
 
-  acm_certificate_arn  = var.acm_certificate_arn
-  domain_name          = var.domain_name
-  friendly_name_prefix = local.friendly_name_prefix
-  tfe_license_secret   = data.aws_secretsmanager_secret.tfe_license.arn
+  acm_certificate_arn         = var.acm_certificate_arn
+  domain_name                 = var.domain_name
+  friendly_name_prefix        = local.friendly_name_prefix
+  tfe_license_secret_id       = data.aws_secretsmanager_secret.tfe_license.arn
+  tls_bootstrap_cert_pathname = "/var/lib/terraform-enterprise/certificate.pem"
+  tls_bootstrap_key_pathname  = "/var/lib/terraform-enterprise/key.pem"
 
   ami_id                      = data.aws_ami.rhel.id
   iact_subnet_list            = ["0.0.0.0/0"]
@@ -40,10 +42,11 @@ module "private_active_active" {
   kms_key_arn                 = module.kms.key
   load_balancing_scheme       = "PRIVATE"
   node_count                  = 2
-  proxy_ip                    = "${aws_instance.proxy.private_ip}:${local.http_proxy_port}"
+  proxy_ip                    = aws_instance.proxy.private_ip
+  proxy_port                  = local.http_proxy_port
   redis_encryption_at_rest    = false
   redis_encryption_in_transit = true
-  redis_require_password      = true
+  redis_use_password_auth     = true
   tfe_subdomain               = local.test_name
 
   asg_tags = local.common_tags

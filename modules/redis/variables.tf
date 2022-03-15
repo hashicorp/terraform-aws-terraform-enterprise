@@ -82,7 +82,7 @@ variable "redis_encryption_at_rest" {
   default     = false
 }
 
-variable "redis_require_password" {
+variable "redis_use_password_auth" {
   type        = bool
   description = "Determine if a password is required for Redis."
   default     = false

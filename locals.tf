@@ -19,10 +19,10 @@ locals {
   database = try(
     module.database[0],
     {
-      db_name     = null
-      db_password = null
-      db_endpoint = null
-      db_username = null
+      name     = null
+      password = null
+      endpoint = null
+      username = null
     }
   )
 
@@ -38,11 +38,11 @@ locals {
   redis = try(
     module.redis[0],
     {
-      redis_endpoint                   = null
-      redis_password                   = null
-      redis_port                       = null
-      redis_use_password_auth          = null
-      redis_transit_encryption_enabled = null
+      hostname          = null
+      password          = null
+      redis_port        = null
+      use_password_auth = null
+      use_tls           = null
     }
   )
 

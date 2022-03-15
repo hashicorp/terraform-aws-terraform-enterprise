@@ -48,10 +48,12 @@ module "standalone" {
 
   disk_path                   = var.disk_path
   friendly_name_prefix        = var.friendly_name_prefix
-  tfe_license_secret          = module.secrets.tfe_license
+  tfe_license_secret_id       = module.secrets.tfe_license_secret_id
+  tls_bootstrap_cert_pathname = "/var/lib/terraform-enterprise/certificate.pem"
+  tls_bootstrap_key_pathname  = "/var/lib/terraform-enterprise/key.pem"
   redis_encryption_at_rest    = false
   redis_encryption_in_transit = false
-  redis_require_password      = false
+  redis_use_password_auth     = false
   iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   iact_subnet_list            = ["0.0.0.0/0"]
   instance_type               = "m5.xlarge"
