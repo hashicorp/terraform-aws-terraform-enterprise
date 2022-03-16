@@ -125,6 +125,7 @@ module "settings" {
     "127.0.0.1",
     "169.254.169.254",
     ".aws.ce.redhat.com",
+    ".amazonaws.com",
     local.fqdn,
     var.network_cidr
   ], var.no_proxy)
