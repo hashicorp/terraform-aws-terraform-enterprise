@@ -83,6 +83,7 @@ module "redis" {
   redis_encryption_in_transit = var.redis_encryption_in_transit
   redis_encryption_at_rest    = var.redis_encryption_at_rest
   redis_use_password_auth     = var.redis_use_password_auth
+  redis_port                  = var.redis_encryption_in_transit ? "6380" : "6379"
 }
 
 # -----------------------------------------------------------------------------

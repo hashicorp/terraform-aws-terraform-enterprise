@@ -48,7 +48,6 @@ variable "network_private_subnet_cidrs" {
 variable "redis_port" {
   type        = number
   description = "Set port for Redis. Defaults to 6379 default port"
-  default     = 6379
 }
 
 variable "cache_size" {
