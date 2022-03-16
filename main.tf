@@ -176,6 +176,7 @@ module "tfe_init" {
 
   # TFE & Replicated Configuration data
   cloud                    = "aws"
+  distribution             = var.distribution
   tfe_configuration        = module.settings.tfe_configuration
   replicated_configuration = module.settings.replicated_configuration
   airgap_url               = var.airgap_url
