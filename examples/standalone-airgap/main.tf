@@ -48,6 +48,7 @@ module "standalone_airgap" {
   operational_mode    = "external"
   acm_certificate_arn = var.acm_certificate_arn
   domain_name         = var.domain_name
+  distribution        = "ubuntu"
 
   airgap_url                                = var.airgap_url
   tfe_license_bootstrap_airgap_package_path = "/var/lib/ptfe/ptfe.airgap"

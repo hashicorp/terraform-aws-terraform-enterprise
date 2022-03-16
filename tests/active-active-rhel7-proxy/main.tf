@@ -49,6 +49,7 @@ module "tfe" {
   tfe_license_secret_id = module.secrets.tfe_license_secret_id
 
   ami_id                   = data.aws_ami.rhel.id
+  distribution             = "rhel"
   aws_access_key_id        = var.aws_access_key_id
   aws_secret_access_key    = var.aws_secret_access_key
   ca_certificate_secret_id = data.aws_secretsmanager_secret.ca_certificate.arn

@@ -2,13 +2,22 @@
 # ------
 variable "ami_id" {
   type        = string
-  default     = ""
+  default     = null
   description = "AMI ID to use for TFE instances"
 }
 
 variable "acm_certificate_arn" {
   type        = string
   description = "ACM certificate ARN to use with load balancer"
+}
+
+variable "distribution" {
+  type        = string
+  description = "(Required) What is the OS distribution of the instance on which Terraoform Enterprise will be deployed?"
+  validation {
+    condition     = contains(["rhel", "ubuntu"], var.distribution)
+    error_message = "Supported values for distribution are 'rhel' or 'ubuntu'."
+  }
 }
 
 # TODO: Get this value from the acm_certificate_arn
