@@ -27,7 +27,6 @@ module "public_active_active" {
   domain_name           = var.domain_name
   friendly_name_prefix  = local.friendly_name_prefix
   tfe_license_secret_id = data.aws_secretsmanager_secret.tfe_license.arn
-  distribution          = "ubuntu"
 
   iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   iact_subnet_list            = var.iact_subnet_list

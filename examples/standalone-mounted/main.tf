@@ -53,7 +53,6 @@ module "standalone" {
   operational_mode    = "disk"
   acm_certificate_arn = var.acm_certificate_arn
   domain_name         = var.domain_name
-  distribution        = "ubuntu"
 
   disk_path                   = "/opt/hashicorp/data"
   friendly_name_prefix        = var.friendly_name_prefix

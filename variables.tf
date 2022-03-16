@@ -11,15 +11,6 @@ variable "acm_certificate_arn" {
   description = "ACM certificate ARN to use with load balancer"
 }
 
-variable "distribution" {
-  type        = string
-  description = "(Required) What is the OS distribution of the instance on which Terraoform Enterprise will be deployed?"
-  validation {
-    condition     = contains(["rhel", "ubuntu"], var.distribution)
-    error_message = "Supported values for distribution are 'rhel' or 'ubuntu'."
-  }
-}
-
 # TODO: Get this value from the acm_certificate_arn
 variable "vm_certificate_secret_id" {
   default     = null
