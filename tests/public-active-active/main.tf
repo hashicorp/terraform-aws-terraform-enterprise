@@ -29,6 +29,7 @@ module "public_active_active" {
   tfe_license_secret_id = data.aws_secretsmanager_secret.tfe_license.arn
   distribution          = "ubuntu"
 
+  ami_id                      = data.aws_ami.ubuntu.id
   iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   iact_subnet_list            = var.iact_subnet_list
   instance_type               = "m5.xlarge"
