@@ -25,8 +25,8 @@ module "test_proxy" {
   key_name                        = var.key_name
   subnet_id                       = module.private_active_active.private_subnet_ids[0]
   name                            = local.friendly_name_prefix
-  mitmproxy_ca_certificate_secret = data.aws_secretsmanager_secret.ca_certificate
-  mitmproxy_ca_private_key_secret = data.aws_secretsmanager_secret.ca_private_key
+  mitmproxy_ca_certificate_secret = data.aws_secretsmanager_secret.ca_certificate.arn
+  mitmproxy_ca_private_key_secret = data.aws_secretsmanager_secret.ca_private_key.arn
 }
 
 module "private_active_active" {
