@@ -21,12 +21,12 @@ module "kms" {
 }
 
 module "test_proxy" {
-  source                           = "../../fixtures/test_proxy"
-  subnet_id                        = module.private_tcp_active_active.private_subnet_ids[0]
-  name                             = "${local.friendly_name_prefix}"
-  key_name                         = var.key_name
-  mitmproxy_ca_certificate_secret  = data.aws_secretsmanager_secret.ca_certificate
-  mitmproxy_ca_private_key_secret  = data.aws_secretsmanager_secret.ca_private_key
+  source                          = "../../fixtures/test_proxy"
+  subnet_id                       = module.private_tcp_active_active.private_subnet_ids[0]
+  name                            = local.friendly_name_prefix
+  key_name                        = var.key_name
+  mitmproxy_ca_certificate_secret = data.aws_secretsmanager_secret.ca_certificate
+  mitmproxy_ca_private_key_secret = data.aws_secretsmanager_secret.ca_private_key
 
 }
 

@@ -41,13 +41,13 @@ resource "aws_key_pair" "main" {
 }
 
 module "test_proxy" {
-  source                           = "../../fixtures/test_proxy"
-  subnet_id                        = module.tfe.private_subnet_ids[0]
-  key_name                         = var.key_name
-  name                             = "${local.friendly_name_prefix}"
-  http_proxy_port                  = local.http_proxy_port
-  mitmproxy_ca_certificate_secret  = data.aws_secretsmanager_secret.ca_certificate
-  mitmproxy_ca_private_key_secret  = data.aws_secretsmanager_secret.ca_private_key
+  source                          = "../../fixtures/test_proxy"
+  subnet_id                       = module.tfe.private_subnet_ids[0]
+  key_name                        = var.key_name
+  name                            = local.friendly_name_prefix
+  http_proxy_port                 = local.http_proxy_port
+  mitmproxy_ca_certificate_secret = data.aws_secretsmanager_secret.ca_certificate
+  mitmproxy_ca_private_key_secret = data.aws_secretsmanager_secret.ca_private_key
 
 }
 
