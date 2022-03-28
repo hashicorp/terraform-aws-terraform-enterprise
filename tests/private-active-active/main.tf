@@ -20,8 +20,13 @@ module "kms" {
   key_alias = "${local.friendly_name_prefix}-key"
 }
 
-locals {
-  http_proxy_port = 3128
+module "test_proxy" {
+  source                           = "../../fixtures/test_proxy"
+  key_name                         = var.key_name
+  subnet_id                        = module.private_active_active.private_subnet_ids[0]
+  name                             = "${local.friendly_name_prefix}"
+  mitmproxy_ca_certificate_secret  = data.aws_secretsmanager_secret.ca_certificate
+  mitmproxy_ca_private_key_secret  = data.aws_secretsmanager_secret.ca_private_key
 }
 
 module "private_active_active" {
@@ -38,7 +43,7 @@ module "private_active_active" {
   instance_type               = "m5.4xlarge"
   key_name                    = var.key_name
   kms_key_arn                 = module.kms.key
-  load_balancing_scheme       = "PRIVATE"
+  load_balancing_scheme       = local.load_balancing_scheme
   node_count                  = 2
   proxy_ip                    = "${aws_instance.proxy.private_ip}:${local.http_proxy_port}"
   redis_encryption_at_rest    = false

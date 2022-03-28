@@ -27,3 +27,8 @@ variable "object_storage_iam_user_name" {
   type        = string
   description = "The name of the IAM user which will be authorized to access the S3 storage bucket."
 }
+
+variable "key_name" {
+  description = "The name of the key pair to be used for SSH access to the EC2 instance(s)."
+  type        = string
+}

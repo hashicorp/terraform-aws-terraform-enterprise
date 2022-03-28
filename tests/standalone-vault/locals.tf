@@ -8,7 +8,8 @@ locals {
     OkToDelete  = "True"
   }
 
-  region               = "us-west-2"
-  friendly_name_prefix = random_string.friendly_name.id
-  test_name            = "${local.friendly_name_prefix}-test-standalone-vault"
+  region                = "us-west-2"
+  friendly_name_prefix  = random_string.friendly_name.id
+  test_name             = "${local.friendly_name_prefix}-test-standalone-vault"
+  load_balancing_scheme = "PUBLIC"
 }

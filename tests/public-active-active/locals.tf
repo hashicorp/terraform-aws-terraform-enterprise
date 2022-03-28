@@ -8,6 +8,7 @@ locals {
     OkToDelete  = "True"
   }
 
-  friendly_name_prefix = random_string.friendly_name.id
-  test_name            = "${local.friendly_name_prefix}-test-public-active-active"
+  friendly_name_prefix  = random_string.friendly_name.id
+  test_name             = "${local.friendly_name_prefix}-test-public-active-active"
+  load_balancing_scheme = "PUBLIC"
 }
