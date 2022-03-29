@@ -6,7 +6,7 @@ locals {
   enable_object_storage_module = local.enable_external
   enable_redis_module          = local.active_active
   ami_id                       = local.default_ami_id ? data.aws_ami.ubuntu.id : var.ami_id
-  default_ami_id               = var.ami_id == ""
+  default_ami_id               = var.ami_id == null
   fqdn                         = "${var.tfe_subdomain}.${var.domain_name}"
   iam_principal                = { arn = try(var.object_storage_iam_user.arn, module.service_accounts.iam_role.arn) }
   network_id                   = var.deploy_vpc ? module.networking[0].network_id : var.network_id

@@ -47,7 +47,7 @@ resource "aws_security_group_rule" "tfe_dashboard" {
 
 resource "aws_launch_configuration" "tfe" {
   name_prefix      = "${var.friendly_name_prefix}-tfe-ec2-asg-lt-"
-  image_id         = var.ami_id
+  image_id         = local.ami_id
   instance_type    = var.instance_type
   user_data_base64 = var.user_data_base64
 
