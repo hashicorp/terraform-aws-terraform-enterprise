@@ -37,3 +37,9 @@ output "tfe_autoscaling_group_name" {
   # This output is marked as sensitive to work around a bug in Terraform 0.14
   sensitive = true
 }
+
+output "proxy_instance_id" {
+  value = module.test_proxy.proxy_instance_id
+
+  description = "The ID of the proxy EC2 instance."
+}

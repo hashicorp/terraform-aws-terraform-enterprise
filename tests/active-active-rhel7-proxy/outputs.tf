@@ -30,3 +30,9 @@ output "ssh_private_key" {
 
   description = "The pathname of the private SSH key."
 }
+
+output "proxy_instance_id" {
+  value = module.test_proxy.proxy_instance_id
+
+  description = "The ID of the proxy EC2 instance."
+}

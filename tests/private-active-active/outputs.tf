@@ -29,3 +29,9 @@ output "initial_admin_user_url" {
 
   description = "The URL with path to access the TFE instance Initial Admin User."
 }
+
+output "proxy_instance_id" {
+  value = module.test_proxy.proxy_instance_id
+
+  description = "The ID of the proxy EC2 instance."
+}
