@@ -4,6 +4,6 @@ output "proxy_ip" {
 }
 
 output "proxy_instance_id" {
-  value = aws_instance.proxy.id
+  value       = aws_instance.proxy.id
   description = "The ID of the proxy EC2 instance."
 }
