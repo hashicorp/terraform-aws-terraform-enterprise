@@ -27,6 +27,7 @@ module "test_proxy" {
   key_name                        = var.key_name
   mitmproxy_ca_certificate_secret = data.aws_secretsmanager_secret.ca_certificate.arn
   mitmproxy_ca_private_key_secret = data.aws_secretsmanager_secret.ca_private_key.arn
+  vpc_id                          = module.private_tcp_active_active.network_id
 
 }
 
@@ -46,7 +47,7 @@ module "private_tcp_active_active" {
   kms_key_arn                 = module.kms.key
   load_balancing_scheme       = local.load_balancing_scheme
   node_count                  = 2
-  proxy_ip                    = "${aws_instance.proxy.private_ip}:${local.http_proxy_port}"
+  proxy_ip                    = "${module.test_proxy.proxy_ip}:${local.http_proxy_port}"
   redis_encryption_at_rest    = true
   redis_encryption_in_transit = true
   redis_require_password      = true

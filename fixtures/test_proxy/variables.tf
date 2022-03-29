@@ -2,6 +2,7 @@
 # -------------------------
 
 variable "mitmproxy_ca_certificate_secret" {
+  default     = null
   description = <<-EOD
   The identifier of a secret comprising a Base64 encoded PEM certificate file for the mitmproxy Certificate Authority.
   EOD
@@ -9,6 +10,7 @@ variable "mitmproxy_ca_certificate_secret" {
 }
 
 variable "mitmproxy_ca_private_key_secret" {
+  default     = null
   description = <<-EOD
   The identifier of a secret comprising a Base64 encoded PEM private key file for the mitmproxy Certificate Authority.
   EOD
@@ -19,6 +21,12 @@ variable "mitmproxy_ca_private_key_secret" {
 # -------
 
 variable "subnet_id" {
+  default     = ""
+  description = "The identity of the VPC in which resources will be deployed."
+  type        = string
+}
+
+variable "vpc_id" {
   default     = ""
   description = "The identity of the VPC in which resources will be deployed."
   type        = string

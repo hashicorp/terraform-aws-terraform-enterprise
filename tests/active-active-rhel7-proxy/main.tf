@@ -46,6 +46,7 @@ module "test_proxy" {
   key_name                        = var.key_name
   name                            = local.friendly_name_prefix
   http_proxy_port                 = local.http_proxy_port
+  vpc_id                          = module.tfe.network_id
   mitmproxy_ca_certificate_secret = data.aws_secretsmanager_secret.ca_certificate.arn
   mitmproxy_ca_private_key_secret = data.aws_secretsmanager_secret.ca_private_key.arn
 

@@ -13,4 +13,5 @@ locals {
   ssm_policy_arn        = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
   test_name             = "${local.friendly_name_prefix}-test-private-tcp-active-active"
   load_balancing_scheme = "PRIVATE_TCP"
+  http_proxy_port       = 3128
 }

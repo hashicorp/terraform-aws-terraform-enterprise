@@ -29,19 +29,22 @@ data "aws_iam_policy_document" "instance_role" {
 }
 
 data "aws_iam_policy_document" "secretsmanager" {
+  count = local.mitmproxy_selected ? 1 : 0
   statement {
     actions   = ["secretsmanager:GetSecretValue"]
     effect    = "Allow"
-    resources = [data.aws_secretsmanager_secret.ca_certificate.arn, data.aws_secretsmanager_secret.ca_private_key.arn]
+    resources = [data.aws_secretsmanager_secret.ca_certificate[count.index].arn, data.aws_secretsmanager_secret.ca_private_key[count.index].arn]
     sid       = "AllowSecretsManagerSecretAccess"
   }
 }
 
 
 data "aws_secretsmanager_secret" "ca_certificate" {
+  count = local.mitmproxy_selected ? 1 : 0
   name = var.mitmproxy_ca_certificate_secret
 }
 
 data "aws_secretsmanager_secret" "ca_private_key" {
+  count = local.mitmproxy_selected ? 1 : 0
   name = var.mitmproxy_ca_private_key_secret
 }

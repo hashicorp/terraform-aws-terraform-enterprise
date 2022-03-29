@@ -1,7 +1,7 @@
 ###### security group for proxy ######
 resource "aws_security_group" "proxy" {
   name   = "${var.name}-sg-proxy-allow"
-  vpc_id = var.subnet_id
+  vpc_id = var.vpc_id
 
   # Prefix removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
   tags = {
@@ -52,7 +52,8 @@ resource "aws_iam_role_policy_attachment" "ssm" {
 ##### proxy instance #####
 
 resource "aws_iam_role_policy" "secretsmanager" {
-  policy = data.aws_iam_policy_document.secretsmanager.json
+  count = local.mitmproxy_selected ? 1 : 0
+  policy = data.aws_iam_policy_document.secretsmanager[count.index].json
   role   = aws_iam_role.instance_role.id
 
   name = "${var.name}-proxy-secretsmanager"
@@ -83,7 +84,7 @@ resource "aws_instance" "proxy" {
 module "test_proxy_init" {
   source = "github.com/hashicorp/terraform-random-tfe-utility//fixtures/test_proxy_init?ref=main"
 
-  mitmproxy_ca_certificate_secret = var.mitmproxy_ca_certificate_secret
-  mitmproxy_ca_private_key_secret = var.mitmproxy_ca_private_key_secret
+  mitmproxy_ca_certificate_secret = var.mitmproxy_ca_certificate_secret != null ? var.mitmproxy_ca_certificate_secret : ""
+  mitmproxy_ca_private_key_secret = var.mitmproxy_ca_private_key_secret != null ? var.mitmproxy_ca_private_key_secret : ""
   cloud                           = "aws"
 }
