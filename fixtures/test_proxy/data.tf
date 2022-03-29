@@ -41,10 +41,10 @@ data "aws_iam_policy_document" "secretsmanager" {
 
 data "aws_secretsmanager_secret" "ca_certificate" {
   count = local.mitmproxy_selected ? 1 : 0
-  name = var.mitmproxy_ca_certificate_secret
+  name  = var.mitmproxy_ca_certificate_secret
 }
 
 data "aws_secretsmanager_secret" "ca_private_key" {
   count = local.mitmproxy_selected ? 1 : 0
-  name = var.mitmproxy_ca_private_key_secret
+  name  = var.mitmproxy_ca_private_key_secret
 }

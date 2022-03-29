@@ -52,7 +52,7 @@ resource "aws_iam_role_policy_attachment" "ssm" {
 ##### proxy instance #####
 
 resource "aws_iam_role_policy" "secretsmanager" {
-  count = local.mitmproxy_selected ? 1 : 0
+  count  = local.mitmproxy_selected ? 1 : 0
   policy = data.aws_iam_policy_document.secretsmanager[count.index].json
   role   = aws_iam_role.instance_role.id
 
