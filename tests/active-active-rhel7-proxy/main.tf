@@ -70,7 +70,7 @@ module "tfe" {
   instance_type            = "m5.xlarge"
   key_name                 = aws_key_pair.main.key_name
   kms_key_arn              = module.kms.key
-  load_balancing_scheme    = "PUBLIC"
+  load_balancing_scheme    = local.load_balancing_scheme
   object_storage_iam_user  = data.aws_iam_user.object_storage
   node_count               = 2
   proxy_ip                = "${module.test_proxy.proxy_ip}:${local.http_proxy_port}"
