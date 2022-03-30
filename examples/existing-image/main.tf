@@ -34,13 +34,14 @@ module "secrets" {
 module "existing_image_example" {
   source = "../../"
 
-  acm_certificate_arn  = var.acm_certificate_arn
-  domain_name          = var.domain_name
-  friendly_name_prefix = var.friendly_name_prefix
-  tfe_subdomain        = var.tfe_subdomain
-  tfe_license_secret   = module.secrets.tfe_license
+  acm_certificate_arn   = var.acm_certificate_arn
+  domain_name           = var.domain_name
+  friendly_name_prefix  = var.friendly_name_prefix
+  tfe_subdomain         = var.tfe_subdomain
+  tfe_license_secret_id = module.secrets.tfe_license_secret_id
 
   ami_id                = local.ami_id
+  distribution          = "ubuntu"
   iact_subnet_list      = var.iact_subnet_list
   load_balancing_scheme = var.load_balancing_scheme
 }

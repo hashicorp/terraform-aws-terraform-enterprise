@@ -1,8 +1,8 @@
-output "tfe_license" {
+output "tfe_license_secret_id" {
   value = var.tfe_license == null ? null : aws_secretsmanager_secret_version.tfe_license[0].secret_id
 }
 
-output "ca_certificate_secret" {
+output "ca_certificate_secret_id" {
   value = var.ca_certificate_secret == null ? null : aws_secretsmanager_secret_version.ca_certificate_secret[0].secret_id
 }
 

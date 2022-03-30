@@ -20,16 +20,22 @@ data "aws_kms_key" "main" {
   key_id = var.kms_key_arn
 }
 
+# -----------------------------------------------------------------------------
+# AWS Service Accounts 
+# -----------------------------------------------------------------------------
 module "service_accounts" {
   source = "./modules/service_accounts"
 
-  ca_certificate_secret = var.ca_certificate_secret
-  friendly_name_prefix  = var.friendly_name_prefix
-  iam_role_policy_arns  = var.iam_role_policy_arns
-  tfe_license_secret    = var.tfe_license_secret
-  kms_key_arn           = local.kms_key_arn
+  ca_certificate_secret_id = var.ca_certificate_secret_id
+  friendly_name_prefix     = var.friendly_name_prefix
+  iam_role_policy_arns     = var.iam_role_policy_arns
+  tfe_license_secret_id    = var.tfe_license_secret_id
+  kms_key_arn              = local.kms_key_arn
 }
 
+# -----------------------------------------------------------------------------
+# AWS S3 Bucket Object Storage
+# -----------------------------------------------------------------------------
 module "object_storage" {
 
   count  = local.enable_object_storage_module ? 1 : 0
@@ -40,6 +46,9 @@ module "object_storage" {
   kms_key_arn          = local.kms_key_arn
 }
 
+# -----------------------------------------------------------------------------
+# AWS Virtual Private Cloud Networking
+# -----------------------------------------------------------------------------
 module "networking" {
   count = var.deploy_vpc ? 1 : 0
 
@@ -51,6 +60,9 @@ module "networking" {
   network_public_subnet_cidrs  = var.network_public_subnet_cidrs
 }
 
+# -----------------------------------------------------------------------------
+# AWS Redis - Elasticache Replication Group
+# -----------------------------------------------------------------------------
 module "redis" {
   source = "./modules/redis"
 
@@ -70,9 +82,13 @@ module "redis" {
   kms_key_arn                 = local.kms_key_arn
   redis_encryption_in_transit = var.redis_encryption_in_transit
   redis_encryption_at_rest    = var.redis_encryption_at_rest
-  redis_require_password      = var.redis_require_password
+  redis_use_password_auth     = var.redis_use_password_auth
+  redis_port                  = var.redis_encryption_in_transit ? "6380" : "6379"
 }
 
+# -----------------------------------------------------------------------------
+# AWS PostreSQL Database
+# -----------------------------------------------------------------------------
 module "database" {
   source = "./modules/database"
 
@@ -90,47 +106,59 @@ module "database" {
   kms_key_arn                  = local.kms_key_arn
 }
 
-module "user_data" {
-  source = "./modules/user_data"
+# -----------------------------------------------------------------------------
+# TFE and Replicated settings to pass to the tfe_init module
+# -----------------------------------------------------------------------------
+module "settings" {
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=main"
 
-  active_active          = local.active_active
-  tfe_license_secret     = var.tfe_license_secret
-  enable_external        = local.enable_external
-  airgap_url             = var.airgap_url
-  fqdn                   = local.fqdn
+  # TFE Base Configuration
+  installation_type      = "production"
+  production_type        = var.operational_mode
+  disk_path              = var.disk_path
   iact_subnet_list       = var.iact_subnet_list
   iact_subnet_time_limit = var.iact_subnet_time_limit
-  kms_key_arn            = local.kms_key_arn
-  ca_certificate_secret  = var.ca_certificate_secret
+  trusted_proxies        = var.trusted_proxies
+  release_sequence       = var.release_sequence
+  pg_extra_params        = var.pg_extra_params
 
-  # mounted disk
-  enable_disk = local.enable_disk
-  disk_path   = local.disk_path
+  extra_no_proxy = concat([
+    "127.0.0.1",
+    "169.254.169.254",
+    ".aws.ce.redhat.com",
+    "secretsmanager.${data.aws_region.current.name}.amazonaws.com",
+    local.fqdn,
+    var.network_cidr
+  ], var.no_proxy)
 
+  # Replicated Base Configuration
+  hostname                                  = local.fqdn
+  enable_active_active                      = local.active_active
+  tfe_license_bootstrap_airgap_package_path = var.tfe_license_bootstrap_airgap_package_path
+  tfe_license_file_location                 = var.tfe_license_file_location
+  tls_bootstrap_cert_pathname               = var.tls_bootstrap_cert_pathname
+  tls_bootstrap_key_pathname                = var.tls_bootstrap_key_pathname
+  bypass_preflight_checks                   = var.bypass_preflight_checks
 
-  # object store
-  aws_access_key_id     = var.aws_access_key_id
-  aws_bucket_data       = local.object_storage.s3_bucket.id
-  aws_region            = data.aws_region.current.name
-  aws_secret_access_key = var.aws_secret_access_key
-
-
-  # Postgres
-  pg_dbname   = local.database.db_name
-  pg_password = local.database.db_password
-  pg_netloc   = local.database.db_endpoint
-  pg_user     = local.database.db_username
-
-  # Proxy
-  proxy_ip = var.proxy_ip
-  no_proxy = var.no_proxy
+  # Database
+  pg_dbname   = local.database.name
+  pg_netloc   = local.database.endpoint
+  pg_user     = local.database.username
+  pg_password = local.database.password
 
   # Redis
-  redis_host              = local.redis.redis_endpoint
-  redis_pass              = local.redis.redis_password
-  redis_port              = local.redis.redis_port
-  redis_use_password_auth = local.redis.redis_use_password_auth
-  redis_use_tls           = local.redis.redis_transit_encryption_enabled
+  redis_host              = local.redis.hostname
+  redis_pass              = local.redis.password
+  redis_use_tls           = local.redis.use_tls
+  redis_use_password_auth = local.redis.use_password_auth
+
+  # AWS Object Store
+  aws_access_key_id     = var.aws_access_key_id
+  s3_bucket             = local.object_storage.s3_bucket.id
+  s3_region             = data.aws_region.current.name
+  aws_secret_access_key = var.aws_secret_access_key
+  s3_sse                = "aws:kms"
+  s3_sse_kms_key_id     = local.kms_key_arn
 
   # External Vault
   extern_vault_enable      = var.extern_vault_enable
@@ -140,6 +168,30 @@ module "user_data" {
   extern_vault_path        = var.extern_vault_path
   extern_vault_token_renew = var.extern_vault_token_renew
   extern_vault_namespace   = var.extern_vault_namespace
+}
+
+# -----------------------------------------------------------------------------
+# AWS user data / cloud init used to install and configure TFE on instance(s)
+# -----------------------------------------------------------------------------
+module "tfe_init" {
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
+
+  # TFE & Replicated Configuration data
+  cloud                    = "aws"
+  distribution             = var.distribution
+  tfe_configuration        = module.settings.tfe_configuration
+  replicated_configuration = module.settings.replicated_configuration
+  airgap_url               = var.airgap_url
+
+  # Secrets
+  ca_certificate_secret_id = var.ca_certificate_secret_id == null ? null : var.ca_certificate_secret_id
+  certificate_secret_id    = var.vm_certificate_secret_id == null ? null : var.vm_certificate_secret_id
+  key_secret_id            = var.vm_key_secret_id == null ? null : var.vm_key_secret_id
+  tfe_license_secret_id    = var.tfe_license_secret_id
+
+  # Proxy information
+  proxy_ip   = var.proxy_ip
+  proxy_port = var.proxy_port
 }
 
 module "load_balancer" {
@@ -191,5 +243,5 @@ module "vm" {
   network_subnets_private             = local.network_private_subnets
   network_private_subnet_cidrs        = local.network_private_subnet_cidrs
   node_count                          = var.node_count
-  user_data_base64                    = module.user_data.tfe_user_data_base64
+  user_data_base64                    = module.tfe_init.tfe_userdata_base64_encoded
 }

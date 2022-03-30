@@ -40,10 +40,11 @@ module "hcp_vault" {
 module "standalone_vault" {
   source = "../../"
 
-  acm_certificate_arn  = var.acm_certificate_arn
-  domain_name          = "tfe-team-dev.aws.ptfedev.com"
-  friendly_name_prefix = local.friendly_name_prefix
-  tfe_license_secret   = module.secrets.tfe_license
+  acm_certificate_arn   = var.acm_certificate_arn
+  domain_name           = "tfe-team-dev.aws.ptfedev.com"
+  friendly_name_prefix  = local.friendly_name_prefix
+  tfe_license_secret_id = module.secrets.tfe_license_secret_id
+  distribution          = "ubuntu"
 
   iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   iact_subnet_list            = ["0.0.0.0/0"]
@@ -54,11 +55,11 @@ module "standalone_vault" {
   node_count                  = 1
   redis_encryption_at_rest    = false
   redis_encryption_in_transit = false
-  redis_require_password      = false
+  redis_use_password_auth     = false
   tfe_subdomain               = local.friendly_name_prefix
 
   # Vault
-  extern_vault_enable    = 1
+  extern_vault_enable    = true
   extern_vault_addr      = module.hcp_vault.url
   extern_vault_role_id   = module.hcp_vault.app_role_id
   extern_vault_secret_id = module.hcp_vault.app_role_secret_id

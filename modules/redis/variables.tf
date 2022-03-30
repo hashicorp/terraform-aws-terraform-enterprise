@@ -48,7 +48,6 @@ variable "network_private_subnet_cidrs" {
 variable "redis_port" {
   type        = number
   description = "Set port for Redis. Defaults to 6379 default port"
-  default     = 6379
 }
 
 variable "cache_size" {
@@ -82,7 +81,7 @@ variable "redis_encryption_at_rest" {
   default     = false
 }
 
-variable "redis_require_password" {
+variable "redis_use_password_auth" {
   type        = bool
   description = "Determine if a password is required for Redis."
   default     = false

@@ -31,12 +31,13 @@ module "test_proxy" {
 module "private_active_active" {
   source = "../../"
 
-  acm_certificate_arn  = var.acm_certificate_arn
-  domain_name          = var.domain_name
-  friendly_name_prefix = local.friendly_name_prefix
-  tfe_license_secret   = data.aws_secretsmanager_secret.tfe_license.arn
+  acm_certificate_arn   = var.acm_certificate_arn
+  domain_name           = var.domain_name
+  friendly_name_prefix  = local.friendly_name_prefix
+  tfe_license_secret_id = data.aws_secretsmanager_secret.tfe_license.arn
 
   ami_id                      = data.aws_ami.rhel.id
+  distribution                = "rhel"
   iact_subnet_list            = ["0.0.0.0/0"]
   iam_role_policy_arns        = [local.ssm_policy_arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type               = "m5.4xlarge"
@@ -45,9 +46,10 @@ module "private_active_active" {
   load_balancing_scheme       = local.load_balancing_scheme
   node_count                  = 2
   proxy_ip                    = "${module.test_proxy.proxy_ip}:${local.http_proxy_port}"
+  proxy_port                  = local.http_proxy_port
   redis_encryption_at_rest    = false
   redis_encryption_in_transit = true
-  redis_require_password      = true
+  redis_use_password_auth     = true
   tfe_subdomain               = local.test_name
 
   asg_tags = local.common_tags

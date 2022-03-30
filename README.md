@@ -71,7 +71,7 @@ module "tfe_node" {
   source                 = "<filepath to cloned module directory>"
   friendly_name_prefix   = "<prefix for naming AWS resources>"
   domain_name            = "<domain for creating the Terraform Enterprise subdomain on. >"
-  tfe_license_secret     = data.aws_secretsmanager.tfe_license
+  tfe_license_secret_id  = data.aws_secretsmanager_secret_version.tfe_license.secret_id
   acm_certificate_arn    = "<ARN for ACM cert to be used with load balancer>"
 }
 ```
