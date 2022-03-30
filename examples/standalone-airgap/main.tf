@@ -1,4 +1,7 @@
 provider "aws" {
+
+  region = "us-west-2"
+
   assume_role {
     role_arn = var.aws_role_arn
   }
@@ -45,20 +48,21 @@ module "standalone_airgap" {
   operational_mode    = "external"
   acm_certificate_arn = var.acm_certificate_arn
   domain_name         = var.domain_name
+  distribution        = "ubuntu"
 
-  airgap_url                  = var.airgap_url
-  friendly_name_prefix        = var.friendly_name_prefix
-  tfe_license_secret          = module.secrets.tfe_license
-  redis_encryption_at_rest    = false
-  redis_encryption_in_transit = false
-  redis_require_password      = false
-  iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
-  iact_subnet_list            = ["0.0.0.0/0"]
-  instance_type               = "m5.xlarge"
-  key_name                    = aws_key_pair.main.key_name
-  kms_key_alias               = var.friendly_name_prefix
-  load_balancing_scheme       = "PUBLIC"
-  node_count                  = 1
-  tfe_subdomain               = var.tfe_subdomain
-  asg_tags                    = var.tags
+  airgap_url                                = var.airgap_url
+  tfe_license_bootstrap_airgap_package_path = "/var/lib/ptfe/ptfe.airgap"
+  friendly_name_prefix                      = var.friendly_name_prefix
+  tfe_license_secret_id                     = module.secrets.tfe_license_secret_id
+  redis_encryption_at_rest                  = false
+  redis_encryption_in_transit               = false
+  redis_use_password_auth                   = false
+  iam_role_policy_arns                      = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
+  iact_subnet_list                          = ["0.0.0.0/0"]
+  instance_type                             = "m5.xlarge"
+  key_name                                  = aws_key_pair.main.key_name
+  load_balancing_scheme                     = "PUBLIC"
+  node_count                                = 1
+  tfe_subdomain                             = var.tfe_subdomain
+  asg_tags                                  = var.tags
 }

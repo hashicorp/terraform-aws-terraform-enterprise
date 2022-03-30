@@ -23,23 +23,25 @@ module "kms" {
 module "private_tcp_active_active" {
   source = "../../"
 
-  acm_certificate_arn  = var.acm_certificate_arn
-  domain_name          = var.domain_name
-  friendly_name_prefix = local.friendly_name_prefix
-  tfe_license_secret   = data.aws_secretsmanager_secret.tfe_license.arn
+  acm_certificate_arn   = var.acm_certificate_arn
+  domain_name           = var.domain_name
+  friendly_name_prefix  = local.friendly_name_prefix
+  tfe_license_secret_id = data.aws_secretsmanager_secret.tfe_license.arn
 
   ami_id                      = data.aws_ami.rhel.id
-  ca_certificate_secret       = data.aws_secretsmanager_secret.ca_certificate.arn
+  distribution                = "rhel"
+  ca_certificate_secret_id    = data.aws_secretsmanager_secret.ca_certificate.arn
   iact_subnet_list            = ["0.0.0.0/0"]
   iam_role_policy_arns        = [local.ssm_policy_arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type               = "m5.8xlarge"
   kms_key_arn                 = module.kms.key
   load_balancing_scheme       = "PRIVATE_TCP"
   node_count                  = 2
-  proxy_ip                    = "${aws_instance.proxy.private_ip}:${local.http_proxy_port}"
+  proxy_ip                    = aws_instance.proxy.private_ip
+  proxy_port                  = local.http_proxy_port
   redis_encryption_at_rest    = true
   redis_encryption_in_transit = true
-  redis_require_password      = true
+  redis_use_password_auth     = true
   tfe_subdomain               = local.test_name
 
   asg_tags = local.common_tags

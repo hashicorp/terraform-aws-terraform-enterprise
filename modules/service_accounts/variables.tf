@@ -9,7 +9,7 @@ variable "iam_role_policy_arns" {
   type        = set(string)
 }
 
-variable "ca_certificate_secret" {
+variable "ca_certificate_secret_id" {
   type        = string
   description = <<-EOD
   A Secrets Manager secret which contains the Base64 encoded version of a PEM encoded public certificate of a
@@ -17,7 +17,7 @@ variable "ca_certificate_secret" {
   EOD
 }
 
-variable "tfe_license_secret" {
+variable "tfe_license_secret_id" {
   type        = string
   description = "The Secrets Manager secret under which the Base64 encoded Terraform Enterprise license is stored."
 }

@@ -1,4 +1,7 @@
 provider "aws" {
+
+  region = "us-west-2"
+
   assume_role {
     role_arn = var.aws_role_arn
   }
@@ -29,7 +32,6 @@ resource "aws_key_pair" "main" {
 
 # Store TFE License as secret
 # ---------------------------
-
 module "secrets" {
   source = "../../fixtures/secrets"
   tfe_license = {
@@ -37,6 +39,12 @@ module "secrets" {
     path = var.license_file
   }
 }
+
+module "kms" {
+  source    = "../../fixtures/kms"
+  key_alias = "${var.friendly_name_prefix}-key"
+}
+
 # Standalone, mounted disk
 # ------------------------
 module "standalone" {
@@ -45,18 +53,19 @@ module "standalone" {
   operational_mode    = "disk"
   acm_certificate_arn = var.acm_certificate_arn
   domain_name         = var.domain_name
+  distribution        = "ubuntu"
 
-  disk_path                   = var.disk_path
+  disk_path                   = "/opt/hashicorp/data"
   friendly_name_prefix        = var.friendly_name_prefix
-  tfe_license_secret          = module.secrets.tfe_license
+  tfe_license_secret_id       = module.secrets.tfe_license_secret_id
   redis_encryption_at_rest    = false
   redis_encryption_in_transit = false
-  redis_require_password      = false
+  redis_use_password_auth     = false
   iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   iact_subnet_list            = ["0.0.0.0/0"]
   instance_type               = "m5.xlarge"
   key_name                    = aws_key_pair.main.key_name
-  kms_key_alias               = var.friendly_name_prefix
+  kms_key_arn                 = module.kms.key
   load_balancing_scheme       = "PUBLIC"
   node_count                  = 1
   tfe_subdomain               = var.tfe_subdomain

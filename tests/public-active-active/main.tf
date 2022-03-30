@@ -23,11 +23,13 @@ module "kms" {
 module "public_active_active" {
   source = "../../"
 
-  acm_certificate_arn  = var.acm_certificate_arn
-  domain_name          = var.domain_name
-  friendly_name_prefix = local.friendly_name_prefix
-  tfe_license_secret   = data.aws_secretsmanager_secret.tfe_license.arn
+  acm_certificate_arn   = var.acm_certificate_arn
+  domain_name           = var.domain_name
+  friendly_name_prefix  = local.friendly_name_prefix
+  tfe_license_secret_id = data.aws_secretsmanager_secret.tfe_license.arn
+  distribution          = "ubuntu"
 
+  ami_id                      = data.aws_ami.ubuntu.id
   iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   iact_subnet_list            = var.iact_subnet_list
   instance_type               = "m5.xlarge"
@@ -37,7 +39,7 @@ module "public_active_active" {
   node_count                  = 2
   redis_encryption_at_rest    = false
   redis_encryption_in_transit = false
-  redis_require_password      = false
+  redis_use_password_auth     = false
   tfe_subdomain               = local.test_name
 
   asg_tags = local.common_tags

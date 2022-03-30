@@ -10,7 +10,7 @@ output "aws_security_group_redis" {
   description = "The identity of the security group attached to the Redis Elasticache replication group."
 }
 
-output "redis_endpoint" {
+output "hostname" {
   value = var.active_active ? aws_elasticache_replication_group.redis[0].primary_endpoint_address : ""
 
   description = "The IP address of the primary node in the Redis Elasticache replication group."
@@ -22,21 +22,21 @@ output "redis_port" {
   description = "The port number on which the Redis Elasticache replication group accepts connections."
 }
 
-output "redis_password" {
-  value = (var.active_active == true && var.redis_require_password == true) ? random_id.redis_password[0].hex : ""
+output "password" {
+  value = (var.active_active == true && var.redis_use_password_auth == true) ? random_id.redis_password[0].hex : ""
 
   description = "The password which is required to create connections with the Redis Elasticache replication group."
 }
 
-output "redis_use_password_auth" {
-  value = (var.active_active == true && var.redis_require_password == true) ? true : false
+output "use_password_auth" {
+  value = (var.active_active == true && var.redis_use_password_auth == true) ? true : false
 
   description = <<-EOD
   A boolean which indicates if password authentication is required by the Redis Elasticache replication group.
   EOD
 }
 
-output "redis_transit_encryption_enabled" {
+output "use_tls" {
   value = (var.active_active == true) ? aws_elasticache_replication_group.redis[0].transit_encryption_enabled : false
 
   description = <<-EOD
