@@ -110,7 +110,7 @@ module "database" {
 # TFE and Replicated settings to pass to the tfe_init module
 # -----------------------------------------------------------------------------
 module "settings" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=ah-add-aws-func"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=main"
 
   # TFE Base Configuration
   installation_type      = "production"
@@ -174,7 +174,7 @@ module "settings" {
 # AWS user data / cloud init used to install and configure TFE on instance(s)
 # -----------------------------------------------------------------------------
 module "tfe_init" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=ah-add-aws-func"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
 
   # TFE & Replicated Configuration data
   cloud                    = "aws"
