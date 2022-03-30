@@ -12,7 +12,11 @@ non-null values.
 
 module "secrets" {
   source = "./fixtures/secrets"
-  license_file = var.license_file
+
+  tfe_license = {
+    name = "${var.friendly_name_prefix}-license"
+    path = var.license_file
+  }
 }
 
 ```
