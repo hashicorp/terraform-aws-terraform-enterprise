@@ -22,7 +22,7 @@ output "ca_private_key_secret" {
     name      = aws_secretsmanager_secret_version.ca_private_key_secret[0].name
     secret_id = aws_secretsmanager_secret_version.ca_private_key_secret[0].secret_id
   }
-  description = "The AWS Secrets Manager secret which will be used for the ca_private_key_secret variable in the test modules."
+  description = "The AWS Secrets Manager secret which will be used for the ca_private_key_secret_id variable in the test modules."
   sensitive   = true
 }
 
