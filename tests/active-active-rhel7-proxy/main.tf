@@ -43,7 +43,7 @@ resource "aws_key_pair" "main" {
 module "test_proxy" {
   source                          = "../../fixtures/test_proxy"
   subnet_id                       = module.tfe.private_subnet_ids[0]
-  key_name                        = var.key_name
+  key_name                        = aws_key_pair.main.key_name
   name                            = local.friendly_name_prefix
   http_proxy_port                 = local.http_proxy_port
   vpc_id                          = module.tfe.network_id
