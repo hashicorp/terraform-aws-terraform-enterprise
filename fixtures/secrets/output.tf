@@ -7,7 +7,7 @@ output "ca_certificate_secret" {
     name      = null
     secret_id = null
     } : {
-    name      = aws_secretsmanager_secret_version.ca_certificate_secret[0].name
+    name      = var.ca_certificate_secret.name
     secret_id = aws_secretsmanager_secret_version.ca_certificate_secret[0].secret_id
   }
   description = "The AWS Secrets Manager secret which will be used for the ca_certificate_secret_id variable in the root module."
@@ -15,11 +15,11 @@ output "ca_certificate_secret" {
 }
 
 output "ca_private_key_secret" {
-  value = var.private_key_pem == null ? {
+  value = var.ca_private_key_secret == null ? {
     name      = null
     secret_id = null
     } : {
-    name      = aws_secretsmanager_secret_version.ca_private_key_secret[0].name
+    name      = var.ca_private_key_secret.name
     secret_id = aws_secretsmanager_secret_version.ca_private_key_secret[0].secret_id
   }
   description = "The AWS Secrets Manager secret which will be used for the ca_private_key_secret_id variable in the test modules."
@@ -27,11 +27,11 @@ output "ca_private_key_secret" {
 }
 
 output "certificate_pem_secret" {
-  value = var.private_key_pem == null ? {
+  value = var.certificate_pem_secret == null ? {
     name      = null
     secret_id = null
     } : {
-    name      = aws_secretsmanager_secret_version.certificate_pem_secret[0].name
+    name      = var.certificate_pem_secret.name
     secret_id = aws_secretsmanager_secret_version.certificate_pem_secret[0].secret_id
   }
   description = "The AWS Secrets Manager secret which will be used for the certificate_pem_secret_id variable in the root module."
@@ -39,11 +39,11 @@ output "certificate_pem_secret" {
 }
 
 output "private_key_pem_secret" {
-  value = var.private_key_pem == null ? {
+  value = var.private_key_pem_secret == null ? {
     name      = null
     secret_id = null
     } : {
-    name      = aws_secretsmanager_secret_version.private_key_pem_secret[0].name
+    name      = var.private_key_pem_secret.name
     secret_id = aws_secretsmanager_secret_version.private_key_pem_secret[0].secret_id
   }
   description = "The AWS Secrets Manager secret which will be used for the private_key_pem_secret_id variable in the root module."
