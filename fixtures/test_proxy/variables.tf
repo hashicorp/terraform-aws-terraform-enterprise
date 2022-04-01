@@ -21,13 +21,13 @@ variable "mitmproxy_ca_private_key_secret" {
 # -------
 
 variable "subnet_id" {
-  default     = ""
+  default     = null
   description = "The identity of the VPC in which resources will be deployed."
   type        = string
 }
 
 variable "vpc_id" {
-  default     = ""
+  default     = null
   description = "The identity of the VPC in which resources will be deployed."
   type        = string
 }
@@ -38,7 +38,7 @@ variable "vpc_id" {
 variable "name" {
   type        = string
   description = "Name of the proxy server."
-  default     = ""
+  default     = null
 }
 
 variable "http_proxy_port" {
