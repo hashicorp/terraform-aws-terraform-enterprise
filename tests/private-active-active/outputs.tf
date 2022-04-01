@@ -31,7 +31,7 @@ output "initial_admin_user_url" {
 }
 
 output "proxy_instance_id" {
-  value = aws_instance.proxy.id
+  value = module.test_proxy.proxy_instance_id
 
   description = "The ID of the proxy EC2 instance."
 }

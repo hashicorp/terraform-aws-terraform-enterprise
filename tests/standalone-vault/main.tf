@@ -51,7 +51,7 @@ module "standalone_vault" {
   instance_type               = "m5.xlarge"
   key_name                    = "standalone-vault"
   kms_key_arn                 = module.kms.key
-  load_balancing_scheme       = "PUBLIC"
+  load_balancing_scheme       = local.load_balancing_scheme
   node_count                  = 1
   redis_encryption_at_rest    = false
   redis_encryption_in_transit = false

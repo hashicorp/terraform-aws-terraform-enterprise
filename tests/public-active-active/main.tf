@@ -35,7 +35,7 @@ module "public_active_active" {
   instance_type               = "m5.xlarge"
   key_name                    = var.key_name
   kms_key_arn                 = module.kms.key
-  load_balancing_scheme       = "PUBLIC"
+  load_balancing_scheme       = local.load_balancing_scheme
   node_count                  = 2
   redis_encryption_at_rest    = false
   redis_encryption_in_transit = false

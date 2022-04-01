@@ -1,18 +1,19 @@
+###### security group for proxy ######
 resource "aws_security_group" "proxy" {
-  name   = "${local.friendly_name_prefix}-sg-proxy-allow"
-  vpc_id = module.private_tcp_active_active.network_id
+  name   = "${var.name}-sg-proxy-allow"
+  vpc_id = var.vpc_id
 
   # Prefix removed until https://github.com/hashicorp/terraform-provider-aws/issues/19583 is resolved
   tags = {
-    # Name = "${local.friendly_name_prefix}-sg-proxy-allow"
+    # Name = "${var.name}-sg-proxy-allow"
     Name = "sg-proxy-allow"
   }
 }
 
 resource "aws_security_group_rule" "proxy_ingress_mitmproxy" {
   type        = "ingress"
-  from_port   = local.http_proxy_port
-  to_port     = local.http_proxy_port
+  from_port   = var.http_proxy_port
+  to_port     = var.http_proxy_port
   protocol    = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
   description = "Allow TFE traffic to proxy instance"
@@ -31,13 +32,15 @@ resource "aws_security_group_rule" "proxy_egress" {
   security_group_id = aws_security_group.proxy.id
 }
 
+##### IAM role for proxy #####
+
 resource "aws_iam_instance_profile" "proxy" {
-  name_prefix = "${local.friendly_name_prefix}-proxy"
+  name_prefix = "${var.name}-proxy"
   role        = aws_iam_role.instance_role.name
 }
 
 resource "aws_iam_role" "instance_role" {
-  name_prefix        = "${local.friendly_name_prefix}-proxy"
+  name_prefix        = "${var.name}-proxy"
   assume_role_policy = data.aws_iam_policy_document.instance_role.json
 }
 
@@ -46,11 +49,14 @@ resource "aws_iam_role_policy_attachment" "ssm" {
   policy_arn = local.ssm_policy_arn
 }
 
+##### proxy instance #####
+
 resource "aws_iam_role_policy" "secretsmanager" {
-  policy = data.aws_iam_policy_document.secretsmanager.json
+  count  = local.mitmproxy_selected ? 1 : 0
+  policy = data.aws_iam_policy_document.secretsmanager[count.index].json
   role   = aws_iam_role.instance_role.id
 
-  name = "${local.friendly_name_prefix}-proxy-secretsmanager"
+  name = "${var.name}-proxy-secretsmanager"
 }
 
 resource "aws_instance" "proxy" {
@@ -59,25 +65,26 @@ resource "aws_instance" "proxy" {
 
   iam_instance_profile = aws_iam_instance_profile.proxy.name
   key_name             = var.key_name
-  subnet_id            = module.private_tcp_active_active.private_subnet_ids[0]
+  subnet_id            = var.subnet_id
 
   vpc_security_group_ids = [
     aws_security_group.proxy.id
   ]
 
-  user_data = base64encode(
-    templatefile(
-      "${path.module}/templates/mitmproxy.sh.tpl",
-      {
-        certificate_secret = data.aws_secretsmanager_secret.ca_certificate
-        http_proxy_port    = local.http_proxy_port
-        private_key_secret = data.aws_secretsmanager_secret.ca_private_key
-      }
-    )
-  )
+  user_data = base64encode(local.mitmproxy_selected ? (
+    module.test_proxy_init.mitmproxy.user_data_script
+  ) : module.test_proxy_init.squid.user_data_script)
 
   root_block_device {
     volume_type = "gp2"
     volume_size = "100"
   }
+}
+
+module "test_proxy_init" {
+  source = "github.com/hashicorp/terraform-random-tfe-utility//fixtures/test_proxy_init?ref=main"
+
+  mitmproxy_ca_certificate_secret = var.mitmproxy_ca_certificate_secret != null ? var.mitmproxy_ca_certificate_secret : null
+  mitmproxy_ca_private_key_secret = var.mitmproxy_ca_private_key_secret != null ? var.mitmproxy_ca_private_key_secret : null
+  cloud                           = "aws"
 }
