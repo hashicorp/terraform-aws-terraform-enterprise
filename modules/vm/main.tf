@@ -7,6 +7,17 @@ resource "aws_security_group" "tfe_instance" {
   vpc_id      = var.network_id
 }
 
+resource "aws_security_group_rule" "tfe_redirect_port" {
+  security_group_id        = aws_security_group.tfe_instance.id
+  description              = "Allow ingress HTTP traffic to TFE from the load-balancers for redirect to HTTPS"
+  type                     = "ingress"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
+  source_security_group_id = var.aws_lb
+  cidr_blocks              = var.aws_lb == null ? var.network_private_subnet_cidrs : null
+}
+
 resource "aws_security_group_rule" "tfe_ui" {
   security_group_id        = aws_security_group.tfe_instance.id
   description              = "Allow ingress traffic to TFE from the load-balancers"
@@ -100,7 +111,7 @@ resource "aws_autoscaling_group" "tfe_asg" {
   max_size            = var.node_count
   desired_capacity    = var.node_count
   vpc_zone_identifier = var.network_subnets_private
-  target_group_arns = var.active_active ? [var.aws_lb_target_group_tfe_tg_443_arn] : [
+  target_group_arns = var.active_active ? compact([var.aws_lb_target_group_tfe_tg_80_arn, var.aws_lb_target_group_tfe_tg_443_arn]) : [
     var.aws_lb_target_group_tfe_tg_8800_arn,
     var.aws_lb_target_group_tfe_tg_443_arn,
   ]

@@ -11,6 +11,15 @@ variable "aws_lb" {
   type        = string
 }
 
+variable "aws_lb_target_group_tfe_tg_80_arn" {
+  description = <<-EOD
+  The Amazon Resource Name of the load balancer target group for traffic on port
+  80 which will be backed by the TFE EC2 autoscaling group.
+  EOD
+  default     = null
+  type        = string
+}
+
 variable "aws_lb_target_group_tfe_tg_443_arn" {
   description = <<-EOD
   The Amazon Resource Name of the load balancer target group for traffic on port

@@ -16,6 +16,17 @@ resource "aws_lb" "tfe_lb" {
   }
 }
 
+resource "aws_lb_listener" "tfe_listener_80" {
+  load_balancer_arn = aws_lb.tfe_lb.arn
+  port              = 80
+  protocol          = "TCP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tfe_tg_80.arn
+  }
+}
+
 resource "aws_lb_listener" "tfe_listener_443" {
   load_balancer_arn = aws_lb.tfe_lb.arn
   port              = 443
@@ -26,6 +37,19 @@ resource "aws_lb_listener" "tfe_listener_443" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.tfe_tg_443.arn
+  }
+}
+
+resource "aws_lb_target_group" "tfe_tg_80" {
+  name     = "${var.friendly_name_prefix}-tfe-nlb-tg-80"
+  port     = 80
+  protocol = "TCP"
+  vpc_id   = var.network_id
+
+  health_check {
+    protocol = "HTTP"
+    path     = "/_health_check"
+    matcher  = "200-399"
   }
 }
 

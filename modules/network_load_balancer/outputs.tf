@@ -1,3 +1,10 @@
+
+output "aws_lb_target_group_tfe_tg_80_arn" {
+  value = aws_lb_target_group.tfe_tg_80.arn
+
+  description = "The Amazon Resource Name of the load balancer target group for traffic on port 80."
+}
+
 output "aws_lb_target_group_tfe_tg_443_arn" {
   value = aws_lb_target_group.tfe_tg_443.arn
 
