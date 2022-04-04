@@ -30,3 +30,13 @@ variable "tfe_license_secret_name" {
   The name of the Secrets Manager secret under which the Base64 encoded Terraform Enterprise license is stored.
   EOD
 }
+
+variable "certificate_pem_secret_name" {
+  type        = string
+  description = "The secrets manager secret name of the Base64 & PEM encoded TLS certificate."
+}
+
+variable "private_key_pem_secret_name" {
+  type        = string
+  description = "The secrets manager secret name under which the Base64 & PEM encoded TLS private key."
+}

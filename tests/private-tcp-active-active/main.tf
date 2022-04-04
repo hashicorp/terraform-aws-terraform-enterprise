@@ -54,6 +54,10 @@ module "private_tcp_active_active" {
   redis_encryption_in_transit = true
   redis_use_password_auth     = true
   tfe_subdomain               = local.test_name
+  tls_bootstrap_cert_pathname = "/var/lib/terraform-enterprise/certificate.pem"
+  tls_bootstrap_key_pathname  = "/var/lib/terraform-enterprise/key.pem"
+  vm_certificate_secret_id    = data.aws_secretsmanager_secret.certificate_pem.arn
+  vm_key_secret_id            = data.aws_secretsmanager_secret.private_key_pem.arn
 
   asg_tags = local.common_tags
 }
