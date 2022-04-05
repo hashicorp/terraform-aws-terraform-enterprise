@@ -43,8 +43,8 @@ module "public_active_active" {
   tfe_subdomain               = local.test_name
   tls_bootstrap_cert_pathname = "/var/lib/terraform-enterprise/certificate.pem"
   tls_bootstrap_key_pathname  = "/var/lib/terraform-enterprise/key.pem"
-  vm_certificate_secret_id    = var.certificate_secret_id
-  vm_key_secret_id            = var.key_secret_id
+  vm_certificate_secret_id    = var.certificate_pem_secret_id
+  vm_key_secret_id            = var.private_key_pem_secret_id
 
   asg_tags = local.common_tags
 }
