@@ -41,7 +41,7 @@ module "private_tcp_active_active" {
 
   ami_id                      = data.aws_ami.rhel.id
   distribution                = "rhel"
-  ca_certificate_secret_id    = var.ca_certificate_secret_id
+  ca_certificate_secret_id    = data.aws_secretsmanager_secret.ca_certificate.arn
   iact_subnet_list            = ["0.0.0.0/0"]
   iam_role_policy_arns        = [local.ssm_policy_arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type               = "m5.8xlarge"
