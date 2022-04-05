@@ -23,14 +23,14 @@ variable "tfe_license_secret_id" {
   description = "The secrets manager secret ID of the Base64 encoded Terraform Enterprise license."
 }
 
-variable "ca_certificate_secret_id" {
+variable "ca_certificate_secret_name" {
   type        = string
-  description = "The secrets manager secret ID of the Base64 encoded CA certificate."
+  description = "The secrets manager secret name of the Base64 encoded CA certificate."
 }
 
-variable "ca_private_key_secret_id" {
+variable "ca_private_key_secret_name" {
   type        = string
-  description = "The secrets manager secret ID of the Base64 encoded CA private key."
+  description = "The secrets manager secret name of the Base64 encoded CA private key."
 }
 
 variable "certificate_pem_secret_id" {
