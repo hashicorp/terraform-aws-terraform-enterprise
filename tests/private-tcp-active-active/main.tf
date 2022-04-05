@@ -25,8 +25,8 @@ module "test_proxy" {
   subnet_id                       = module.private_tcp_active_active.private_subnet_ids[0]
   name                            = local.friendly_name_prefix
   key_name                        = var.key_name
-  mitmproxy_ca_certificate_secret = data.aws_secretsmanager_secret.ca_certificate.arn
-  mitmproxy_ca_private_key_secret = data.aws_secretsmanager_secret.ca_private_key.arn
+  mitmproxy_ca_certificate_secret = var.ca_certificate_secret_id
+  mitmproxy_ca_private_key_secret = var.ca_private_key_secret_id
   vpc_id                          = module.private_tcp_active_active.network_id
 
 }
@@ -37,11 +37,11 @@ module "private_tcp_active_active" {
   acm_certificate_arn   = var.acm_certificate_arn
   domain_name           = var.domain_name
   friendly_name_prefix  = local.friendly_name_prefix
-  tfe_license_secret_id = data.aws_secretsmanager_secret.tfe_license.arn
+  tfe_license_secret_id = var.tfe_license_secret_id
 
   ami_id                      = data.aws_ami.rhel.id
   distribution                = "rhel"
-  ca_certificate_secret_id    = data.aws_secretsmanager_secret.ca_certificate.arn
+  ca_certificate_secret_id    = var.ca_certificate_secret_id
   iact_subnet_list            = ["0.0.0.0/0"]
   iam_role_policy_arns        = [local.ssm_policy_arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type               = "m5.8xlarge"
