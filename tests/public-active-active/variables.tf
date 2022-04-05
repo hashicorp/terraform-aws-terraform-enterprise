@@ -30,13 +30,3 @@ variable "tfe_license_secret_id" {
   The name of the Secrets Manager secret ID of the Base64 encoded Terraform Enterprise license.
   EOD
 }
-
-variable "certificate_pem_secret_id" {
-  type        = string
-  description = "The secrets manager secret ID of the Base64 & PEM encoded TLS certificate."
-}
-
-variable "private_key_pem_secret_id" {
-  type        = string
-  description = "The secrets manager secret ID of the Base64 & PEM encoded TLS private key."
-}
