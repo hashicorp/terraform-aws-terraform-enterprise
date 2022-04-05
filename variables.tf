@@ -20,7 +20,6 @@ variable "distribution" {
   }
 }
 
-# TODO: Get this value from the acm_certificate_arn
 variable "vm_certificate_secret_id" {
   default     = null
   type        = string
@@ -30,7 +29,6 @@ variable "vm_certificate_secret_id" {
   EOD
 }
 
-# TODO: Get this value from the acm_certificate_arn
 variable "vm_key_secret_id" {
   default     = null
   type        = string

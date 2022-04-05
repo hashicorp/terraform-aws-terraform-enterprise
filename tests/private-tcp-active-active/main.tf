@@ -37,7 +37,7 @@ module "private_tcp_active_active" {
   acm_certificate_arn   = var.acm_certificate_arn
   domain_name           = var.domain_name
   friendly_name_prefix  = local.friendly_name_prefix
-  tfe_license_secret_id = data.aws_secretsmanager_secret.tfe_license.arn
+  tfe_license_secret_id = var.tfe_license_secret_id
 
   ami_id                      = data.aws_ami.rhel.id
   distribution                = "rhel"
@@ -54,6 +54,10 @@ module "private_tcp_active_active" {
   redis_encryption_in_transit = true
   redis_use_password_auth     = true
   tfe_subdomain               = local.test_name
+  tls_bootstrap_cert_pathname = "/var/lib/terraform-enterprise/certificate.pem"
+  tls_bootstrap_key_pathname  = "/var/lib/terraform-enterprise/key.pem"
+  vm_certificate_secret_id    = var.certificate_pem_secret_id
+  vm_key_secret_id            = var.private_key_pem_secret_id
 
   asg_tags = local.common_tags
 }

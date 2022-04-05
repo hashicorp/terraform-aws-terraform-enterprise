@@ -6,10 +6,6 @@ data "aws_secretsmanager_secret" "ca_private_key" {
   name = var.ca_private_key_secret_name
 }
 
-data "aws_secretsmanager_secret" "tfe_license" {
-  name = var.tfe_license_secret_name
-}
-
 data "aws_ami" "rhel" {
   owners = ["309956199498"] # RedHat
 

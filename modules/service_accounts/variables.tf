@@ -26,3 +26,21 @@ variable "kms_key_arn" {
   type        = string
   description = "KMS key arn for AWS KMS Customer managed key."
 }
+
+variable "vm_certificate_secret_id" {
+  default     = null
+  type        = string
+  description = <<-EOD
+  A Secrets Manager secret ARN which contains the Base64 encoded version of a PEM encoded public certificate for the Virtual
+  Machine Scale Set.
+  EOD
+}
+
+variable "vm_key_secret_id" {
+  default     = null
+  type        = string
+  description = <<-EOD
+  A Secrets Manager secret ARN which contains the Base64 encoded version of a PEM encoded private key for the Virtual Machine
+  Scale Set.
+  EOD
+}

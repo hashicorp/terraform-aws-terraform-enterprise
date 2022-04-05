@@ -31,6 +31,8 @@ module "service_accounts" {
   iam_role_policy_arns     = var.iam_role_policy_arns
   tfe_license_secret_id    = var.tfe_license_secret_id
   kms_key_arn              = local.kms_key_arn
+  vm_certificate_secret_id = var.vm_certificate_secret_id
+  vm_key_secret_id         = var.vm_key_secret_id
 }
 
 # -----------------------------------------------------------------------------

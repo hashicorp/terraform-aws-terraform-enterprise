@@ -34,7 +34,7 @@ module "private_active_active" {
   acm_certificate_arn   = var.acm_certificate_arn
   domain_name           = var.domain_name
   friendly_name_prefix  = local.friendly_name_prefix
-  tfe_license_secret_id = data.aws_secretsmanager_secret.tfe_license.arn
+  tfe_license_secret_id = var.tfe_license_secret_id
 
   ami_id                      = data.aws_ami.rhel.id
   distribution                = "rhel"
