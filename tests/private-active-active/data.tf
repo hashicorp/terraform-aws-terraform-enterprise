@@ -1,15 +1,3 @@
-data "aws_secretsmanager_secret" "tfe_license" {
-  name = var.tfe_license_secret_name
-}
-
-data "aws_secretsmanager_secret" "certificate_pem" {
-  name = var.certificate_pem_secret_name
-}
-
-data "aws_secretsmanager_secret" "private_key_pem" {
-  name = var.private_key_pem_secret_name
-}
-
 data "aws_ami" "rhel" {
   owners = ["309956199498"] # RedHat
 
