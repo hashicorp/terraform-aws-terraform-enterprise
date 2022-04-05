@@ -25,8 +25,8 @@ module "test_proxy" {
   subnet_id                       = module.private_tcp_active_active.private_subnet_ids[0]
   name                            = local.friendly_name_prefix
   key_name                        = var.key_name
-  mitmproxy_ca_certificate_secret = var.ca_certificate_secret_name
-  mitmproxy_ca_private_key_secret = var.ca_private_key_secret_name
+  mitmproxy_ca_certificate_secret = data.aws_secretsmanager_secret.ca_certificate.arn
+  mitmproxy_ca_private_key_secret = data.aws_secretsmanager_secret.ca_private_key.arn
   vpc_id                          = module.private_tcp_active_active.network_id
 
 }
