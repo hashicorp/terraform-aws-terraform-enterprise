@@ -181,6 +181,7 @@ module "tfe_init" {
   # TFE & Replicated Configuration data
   cloud                    = "aws"
   disk_path                = var.disk_path
+  disk_device_name         = var.operational_mode == "disk" ? "sdb" : null
   distribution             = var.distribution
   tfe_configuration        = module.settings.tfe_configuration
   replicated_configuration = module.settings.replicated_configuration
