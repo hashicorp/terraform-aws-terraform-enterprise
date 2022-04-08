@@ -180,6 +180,7 @@ module "tfe_init" {
 
   # TFE & Replicated Configuration data
   cloud                    = "aws"
+  production_type          = var.operational_mode
   distribution             = var.distribution
   tfe_configuration        = module.settings.tfe_configuration
   replicated_configuration = module.settings.replicated_configuration
