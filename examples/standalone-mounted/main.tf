@@ -2,9 +2,9 @@ provider "aws" {
 
   region = "us-west-2"
 
-  # assume_role {
-  #   role_arn = var.aws_role_arn
-  # }
+  assume_role {
+    role_arn = var.aws_role_arn
+  }
 
   default_tags {
     tags = var.tags
