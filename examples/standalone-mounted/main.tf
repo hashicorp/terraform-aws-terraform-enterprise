@@ -56,6 +56,11 @@ module "standalone" {
   distribution        = "ubuntu"
 
   disk_path                   = "/opt/hashicorp/data"
+  ebs_device_name             = "/dev/sdf"
+  ebs_volume_size             = 200
+  ebs_volume_type             = "io1"
+  ebs_iops                    = 3000
+  ebs_delete_on_termination   = true
   friendly_name_prefix        = var.friendly_name_prefix
   tfe_license_secret_id       = module.secrets.tfe_license_secret_id
   redis_encryption_at_rest    = false

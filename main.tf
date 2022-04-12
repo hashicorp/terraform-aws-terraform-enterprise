@@ -117,7 +117,7 @@ module "settings" {
   # TFE Base Configuration
   installation_type      = "production"
   production_type        = var.operational_mode
-  disk_path              = var.disk_path
+  disk_path              = local.enable_disk ? var.disk_path : null
   iact_subnet_list       = var.iact_subnet_list
   iact_subnet_time_limit = var.iact_subnet_time_limit
   trusted_proxies        = var.trusted_proxies
@@ -180,8 +180,8 @@ module "tfe_init" {
 
   # TFE & Replicated Configuration data
   cloud                    = "aws"
-  disk_path                = var.disk_path
-  disk_device_name         = var.operational_mode == "disk" ? "sdb" : null
+  disk_path                = local.enable_disk ? var.disk_path : null
+  disk_device_name         = local.enable_disk ? var.ebs_device_name : null
   distribution             = var.distribution
   tfe_configuration        = module.settings.tfe_configuration
   replicated_configuration = module.settings.replicated_configuration
@@ -240,6 +240,11 @@ module "vm" {
   aws_lb_target_group_tfe_tg_8800_arn = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn
   asg_tags                            = var.asg_tags
   default_ami_id                      = local.default_ami_id
+  ebs_device_name                     = local.full_ebs_device_name
+  ebs_volume_size                     = var.ebs_volume_size
+  ebs_volume_type                     = var.ebs_volume_type
+  ebs_iops                            = var.ebs_iops
+  ebs_delete_on_termination           = var.ebs_delete_on_termination
   friendly_name_prefix                = var.friendly_name_prefix
   key_name                            = var.key_name
   instance_type                       = var.instance_type

@@ -135,8 +135,7 @@ variable "instance_type" {
 }
 
 # Userdata
-# -------
-
+# --------
 variable "bypass_preflight_checks" {
   default     = false
   type        = bool
@@ -198,6 +197,42 @@ variable "airgap_url" {
   type        = string
 }
 
+# Mounted Disk Installations ONLY
+# -------------------------------
+variable "ebs_device_name" {
+  type        = string
+  default     = "sdf"
+  description = "(Required if Mounted Disk installation) The name of the device to mount."
+}
+
+variable "ebs_volume_size" {
+  type        = number
+  default     = 200
+  description = "(Optional if Mounted Disk installation) The size of the volume in gigabytes."
+}
+
+variable "ebs_volume_type" {
+  type        = string
+  default     = "io1"
+  description = "(Optional if Mounted Disk installation) The type of volume."
+
+  validation {
+    condition     = contains(["standard", "gp2", "gp3", "st1", "sc1", "io1"], var.ebs_volume_type)
+    error_message = "The ebs_volume_type value must be one of: 'standard', 'gp2', 'gp3', 'st1', 'sc1', 'io1'."
+  }
+}
+
+variable "ebs_iops" {
+  type        = number
+  default     = 3000
+  description = "(Optional if Mounted Disk installation) The amount of provisioned IOPS. This must be set with a volume_type of 'io1'."
+}
+
+variable "ebs_delete_on_termination" {
+  type        = bool
+  default     = true
+  description = "(Optional if Mounted Disk installation) Whether the volume should be destroyed on instance termination."
+}
 
 # Network
 # -------
