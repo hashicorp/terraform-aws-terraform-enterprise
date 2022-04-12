@@ -101,6 +101,15 @@ variable "ebs_device_name" {
   description = "(Required if Mounted Disk installation) The name of the device to mount."
 }
 
+variable "ebs_renamed_device_name" {
+  type        = string
+  default     = "nvme1n1"
+  description = <<-EOD
+  (Required if Mounted Disk installation) The device name that AWS renames the ebs_device_name to.
+  See https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/device_naming.html for more details.
+  EOD
+}
+
 variable "ebs_volume_size" {
   type        = number
   description = "(Optional if Mounted Disk installation) The size of the volume in gigabytes."
@@ -119,4 +128,9 @@ variable "ebs_iops" {
 variable "ebs_delete_on_termination" {
   type        = bool
   description = "(Optional if Mounted Disk installation) Whether the volume should be destroyed on instance termination."
+}
+
+variable "enable_disk" {
+  type        = bool
+  description = "Will you be attaching an EBS block device for a Mounted Disk Installation?"
 }

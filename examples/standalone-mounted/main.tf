@@ -2,9 +2,9 @@ provider "aws" {
 
   region = "us-west-2"
 
-  assume_role {
-    role_arn = var.aws_role_arn
-  }
+  # assume_role {
+  #   role_arn = var.aws_role_arn
+  # }
 
   default_tags {
     tags = var.tags
@@ -56,7 +56,8 @@ module "standalone" {
   distribution        = "ubuntu"
 
   disk_path                   = "/opt/hashicorp/data"
-  ebs_device_name             = "/dev/sdf"
+  ebs_device_name             = "xvdcc"
+  ebs_renamed_device_name     = "nvme1n1"
   ebs_volume_size             = 200
   ebs_volume_type             = "io1"
   ebs_iops                    = 3000

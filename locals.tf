@@ -3,7 +3,6 @@ locals {
   kms_key_arn                  = data.aws_kms_key.main.arn
   enable_external              = var.operational_mode == "external" || local.active_active
   enable_disk                  = var.operational_mode == "disk"
-  full_ebs_device_name         = local.enable_disk ? "/dev/${var.ebs_device_name}" : null
   enable_database_module       = local.enable_external
   enable_object_storage_module = local.enable_external
   enable_redis_module          = local.active_active

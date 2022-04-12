@@ -70,7 +70,7 @@ resource "aws_launch_configuration" "tfe" {
   }
 
   dynamic "ebs_block_device" {
-    for_each = local.enable_disk ? [1] : [0]
+    for_each = var.enable_disk ? [1] : [0]
 
     content {
       device_name           = var.ebs_device_name
