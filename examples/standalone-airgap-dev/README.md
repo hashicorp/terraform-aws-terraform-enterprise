@@ -8,7 +8,7 @@ installation with the following traits.
 - Standalone
 - _Mocked_ Airgapped installation
 - External mode
-- a small VM machine type (Standard_D4_v3)
+- a small VM machine type (m5.xlarge)
 - Ubuntu 20.04 as the VM image
 - a publicly accessible HTTP load balancer with TLS termination
 - no proxy server
