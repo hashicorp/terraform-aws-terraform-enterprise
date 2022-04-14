@@ -115,6 +115,7 @@ module "settings" {
   source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=gcp_init_utilities"
 
   # TFE Base Configuration
+  custom_image_tag       = var.custom_image_tag
   installation_type      = "production"
   production_type        = var.operational_mode
   disk_path              = local.enable_disk ? var.disk_path : null
@@ -123,6 +124,7 @@ module "settings" {
   trusted_proxies        = var.trusted_proxies
   release_sequence       = var.release_sequence
   pg_extra_params        = var.pg_extra_params
+  tbw_image              = var.tbw_image
 
   extra_no_proxy = concat([
     "127.0.0.1",
