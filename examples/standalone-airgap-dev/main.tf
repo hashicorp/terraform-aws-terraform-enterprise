@@ -41,8 +41,8 @@ module "secrets" {
   }
 }
 
-# KMS
-# ---
+# Key Management Service
+# ----------------------
 
 module "kms" {
   source    = "../../fixtures/kms"
