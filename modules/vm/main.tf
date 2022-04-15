@@ -69,6 +69,18 @@ resource "aws_launch_configuration" "tfe" {
     delete_on_termination = true
   }
 
+  dynamic "ebs_block_device" {
+    for_each = var.enable_disk ? [1] : [0]
+
+    content {
+      device_name           = var.ebs_device_name
+      volume_size           = var.ebs_volume_size
+      volume_type           = var.ebs_volume_type
+      iops                  = var.ebs_iops
+      delete_on_termination = var.ebs_delete_on_termination
+    }
+  }
+
   lifecycle {
     create_before_destroy = true
   }

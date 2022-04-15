@@ -87,11 +87,41 @@ variable "asg_tags" {
 variable "network_private_subnet_cidrs" {
   type        = list(string)
   description = "(Optional) List of private subnet CIDR ranges to create in VPC."
-  default     = ["10.0.32.0/20", "10.0.48.0/20"]
 }
 
 variable "key_name" {
-  default     = null
   description = "The name of the key pair to be used for SSH access to the EC2 instance(s)."
   type        = string
+}
+
+# Mounted Disk Installation
+# -------------------------
+variable "ebs_device_name" {
+  type        = string
+  description = "(Required if Mounted Disk installation) The name of the device to mount."
+}
+
+variable "ebs_volume_size" {
+  type        = number
+  description = "(Optional if Mounted Disk installation) The size of the volume in gigabytes."
+}
+
+variable "ebs_volume_type" {
+  type        = string
+  description = "(Optional if Mounted Disk installation) (Optional) The type of volume. Can be 'standard', 'gp2', 'gp3', 'st1', 'sc1' or 'io1'. "
+}
+
+variable "ebs_iops" {
+  type        = number
+  description = "(Optional) The amount of provisioned IOPS. This must be set with a volume_type of 'io1'."
+}
+
+variable "ebs_delete_on_termination" {
+  type        = bool
+  description = "(Optional if Mounted Disk installation) Whether the volume should be destroyed on instance termination."
+}
+
+variable "enable_disk" {
+  type        = bool
+  description = "Will you be attaching an EBS block device for a Mounted Disk Installation?"
 }

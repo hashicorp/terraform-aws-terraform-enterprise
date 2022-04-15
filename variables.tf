@@ -135,12 +135,21 @@ variable "instance_type" {
 }
 
 # Userdata
-# -------
-
+# --------
 variable "bypass_preflight_checks" {
   default     = false
   type        = bool
   description = "Allow the TFE application to start without preflight checks."
+}
+
+variable "custom_image_tag" {
+  default     = null
+  type        = string
+  description = <<-EOD
+  (Required if tbw_image is 'custom_image'.) The name and tag for your alternative Terraform
+  build worker image in the format <name>:<tag>. Default is 'hashicorp/build-worker:now'.
+  If this variable is used, the 'tbw_image' variable must be 'custom_image'.
+  EOD
 }
 
 variable "disk_path" {
@@ -160,6 +169,25 @@ variable "operational_mode" {
   validation {
     condition     = contains(["external", "disk", "poc"], var.operational_mode)
     error_message = "The operational_mode value must be one of: \"external\"; \"disk\"; \"poc\"."
+  }
+}
+
+variable "tbw_image" {
+  default     = null
+  type        = string
+  description = <<-EOD
+  Set this to 'custom_image' if you want to use an alternative Terraform build worker image,
+  and use the 'custom_image_tag' variable to define its name and tag.
+  Default is 'default_image'. 
+  EOD
+
+  validation {
+    condition = (
+      var.tbw_image == "default_image" ||
+      var.tbw_image == "custom_image" ||
+      var.tbw_image == null
+    )
+    error_message = "The tbw_image must be 'default_image', 'custom_image', or null. If left unset, TFE will default to 'default_image'."
   }
 }
 
@@ -198,6 +226,51 @@ variable "airgap_url" {
   type        = string
 }
 
+# Mounted Disk Installations ONLY
+# -------------------------------
+variable "ebs_device_name" {
+  type        = string
+  default     = "xvdcc"
+  description = "(Required if Mounted Disk installation) The name of the device to mount."
+}
+
+variable "ebs_renamed_device_name" {
+  type        = string
+  default     = "nvme1n1"
+  description = <<-EOD
+  (Required if Mounted Disk installation) The device name that AWS renames the ebs_device_name to.
+  See https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/device_naming.html for more details.
+  EOD
+}
+
+variable "ebs_volume_size" {
+  type        = number
+  default     = 200
+  description = "(Optional if Mounted Disk installation) The size of the volume in gigabytes."
+}
+
+variable "ebs_volume_type" {
+  type        = string
+  default     = "io1"
+  description = "(Optional if Mounted Disk installation) The type of volume."
+
+  validation {
+    condition     = contains(["standard", "gp2", "gp3", "st1", "sc1", "io1"], var.ebs_volume_type)
+    error_message = "The ebs_volume_type value must be one of: 'standard', 'gp2', 'gp3', 'st1', 'sc1', 'io1'."
+  }
+}
+
+variable "ebs_iops" {
+  type        = number
+  default     = 3000
+  description = "(Optional if Mounted Disk installation) The amount of provisioned IOPS. This must be set with a volume_type of 'io1'."
+}
+
+variable "ebs_delete_on_termination" {
+  type        = bool
+  default     = true
+  description = "(Optional if Mounted Disk installation) Whether the volume should be destroyed on instance termination."
+}
 
 # Network
 # -------
