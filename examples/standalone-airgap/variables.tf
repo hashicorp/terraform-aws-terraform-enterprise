@@ -20,26 +20,20 @@ variable "tfe_subdomain" {
   description = "Subdomain for TFE"
 }
 
-variable "license_file" {
-  type        = string
-  description = "The local path to the Terraform Enterprise license."
-}
-
 variable "iact_subnet_list" {
   default     = ["0.0.0.0/0"]
   type        = list(string)
   description = "A list of CIDR masks that configure the ability to retrieve the IACT from outside the host."
 }
 
-variable "load_balancing_scheme" {
-  type        = string
-  default     = "PUBLIC"
-  description = "Load Balancing Scheme. Supported values are: \"PRIVATE\"; \"PRIVATE_TCP\"; \"PUBLIC\"."
-
-  validation {
-    condition     = contains(["PRIVATE", "PRIVATE_TCP", "PUBLIC"], var.load_balancing_scheme)
-    error_message = "The load_balancer value must be one of: \"PRIVATE\"; \"PRIVATE_TCP\"; \"PUBLIC\"."
-  }
+variable "tags" {
+  type        = map(string)
+  description = <<DESC
+  (Optional) Map of tags only used for the autoscaling group. If you are using the AWS provider's default_tags,
+  please note that it tags every taggable resource except for the autoscaling group, therefore this variable may
+  be used to duplicate the key/value pairs in the default_tags if you wish.
+  DESC
+  default     = {}
 }
 
 # AMI - Existing Image

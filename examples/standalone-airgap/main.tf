@@ -11,6 +11,26 @@ provider "aws" {
   }
 }
 
+# Random String for unique names
+# ------------------------------
+resource "random_string" "friendly_name" {
+  length  = 4
+  upper   = false
+  number  = false
+  special = false
+}
+
+locals {
+  friendly_name_prefix = random_string.friendly_name.id
+}
+
+# KMS key used to encrypt data
+# ----------------------------
+module "kms" {
+  source    = "../../fixtures/kms"
+  key_alias = "${local.friendly_name_prefix}-key"
+}
+
 # Keypair for SSH
 # ---------------
 resource "tls_private_key" "main" {
@@ -30,42 +50,25 @@ resource "aws_key_pair" "main" {
   key_name = "${var.friendly_name_prefix}-ssh"
 }
 
-# Store TFE License as secret
-# ---------------------------
-module "secrets" {
-  source = "../../fixtures/secrets"
-  tfe_license = {
-    name = "${var.friendly_name_prefix}-license"
-    path = var.license_file
-  }
-}
-
-# Key Management Service
-# ----------------------
-module "kms" {
-  source    = "../../fixtures/kms"
-  key_alias = "${var.friendly_name_prefix}-key"
-}
-
-# Standalone Airgapped - DEV (bootstrap prerequisites)
-# ----------------------------------------------------
-module "standalone_airgap_dev" {
+# Run TFE root module for Standalone Airgapped External Mode
+# ----------------------------------------------------------
+module "standalone_airgap" {
   source = "../../"
 
   acm_certificate_arn  = var.acm_certificate_arn
   domain_name          = var.domain_name
   distribution         = "ubuntu"
-  friendly_name_prefix = var.friendly_name_prefix
+  friendly_name_prefix = local.friendly_name_prefix
 
 
   # Bootstrapping resources
-  airgap_url                                = var.airgap_url
   tfe_license_bootstrap_airgap_package_path = "/var/lib/ptfe/ptfe.airgap"
   tls_bootstrap_cert_pathname               = "/var/lib/terraform-enterprise/certificate.pem"
   tls_bootstrap_key_pathname                = "/var/lib/terraform-enterprise/key.pem"
-  tfe_license_secret_id                     = module.secrets.tfe_license_secret_id
+  tfe_license_secret_id                     = null
 
   # Standalone, External Mode, Airgapped Installation Example
+  ami_id                      = local.ami_id
   asg_tags                    = var.tags
   iact_subnet_list            = var.iact_subnet_list
   iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
@@ -79,6 +82,4 @@ module "standalone_airgap_dev" {
   redis_encryption_in_transit = false
   redis_use_password_auth     = false
   tfe_subdomain               = var.tfe_subdomain
-  vm_certificate_secret_id    = var.certificate_pem_secret_id
-  vm_key_secret_id            = var.private_key_pem_secret_id
 }
