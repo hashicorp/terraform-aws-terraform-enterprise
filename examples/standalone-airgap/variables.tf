@@ -5,16 +5,6 @@ variable "acm_certificate_arn" {
   description = "ACM certificate ARN to use with load balancer"
 }
 
-variable "certificate_pem_secret_id" {
-  type        = string
-  description = "The secrets manager secret ID of the Base64 & PEM encoded TLS certificate."
-}
-
-variable "private_key_pem_secret_id" {
-  type        = string
-  description = "The secrets manager secret ID of the Base64 & PEM encoded TLS private key."
-}
-
 variable "domain_name" {
   type        = string
   description = "Domain to create Terraform Enterprise subdomain within"
@@ -34,17 +24,6 @@ variable "iact_subnet_list" {
   default     = ["0.0.0.0/0"]
   type        = list(string)
   description = "A list of CIDR masks that configure the ability to retrieve the IACT from outside the host."
-}
-
-variable "load_balancing_scheme" {
-  type        = string
-  default     = "PUBLIC"
-  description = "Load Balancing Scheme. Supported values are: \"PRIVATE\"; \"PRIVATE_TCP\"; \"PUBLIC\"."
-
-  validation {
-    condition     = contains(["PRIVATE", "PRIVATE_TCP", "PUBLIC"], var.load_balancing_scheme)
-    error_message = "The load_balancer value must be one of: \"PRIVATE\"; \"PRIVATE_TCP\"; \"PUBLIC\"."
-  }
 }
 
 variable "tags" {
