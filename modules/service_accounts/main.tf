@@ -23,6 +23,7 @@ data "aws_iam_policy_document" "instance_role" {
 }
 
 resource "aws_iam_role_policy" "secretsmanager" {
+  count  = var.enable_airgap ? 0 : 1
   policy = data.aws_iam_policy_document.secretsmanager.json
   role   = aws_iam_role.instance_role.id
 

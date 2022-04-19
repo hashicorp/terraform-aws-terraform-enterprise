@@ -23,6 +23,12 @@ variable "friendly_name_prefix" {
   description = "Name prefix used for resources"
 }
 
+variable "iact_subnet_list" {
+  default     = ["0.0.0.0/0"]
+  type        = list(string)
+  description = "A list of CIDR masks that configure the ability to retrieve the IACT from outside the host."
+}
+
 variable "tfe_subdomain" {
   type        = string
   description = "Subdomain for TFE"

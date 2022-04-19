@@ -1,3 +1,11 @@
+variable "ca_certificate_secret_id" {
+  type        = string
+  description = <<-EOD
+  A Secrets Manager secret which contains the Base64 encoded version of a PEM encoded public certificate of a
+  certificate authority (CA) to be trusted by the EC2 instance.
+  EOD
+}
+
 variable "friendly_name_prefix" {
   type        = string
   description = "(Required) Friendly name prefix used for tagging and naming AWS resources."
@@ -9,22 +17,19 @@ variable "iam_role_policy_arns" {
   type        = set(string)
 }
 
-variable "ca_certificate_secret_id" {
-  type        = string
-  description = <<-EOD
-  A Secrets Manager secret which contains the Base64 encoded version of a PEM encoded public certificate of a
-  certificate authority (CA) to be trusted by the EC2 instance.
-  EOD
-}
-
-variable "tfe_license_secret_id" {
-  type        = string
-  description = "The Secrets Manager secret under which the Base64 encoded Terraform Enterprise license is stored."
+variable "enable_airgap" {
+  type        = bool
+  description = "If this is an airgapped installation, then the virtual machine will not need to have a role policy that allows it to access the secrets manager."
 }
 
 variable "kms_key_arn" {
   type        = string
   description = "KMS key arn for AWS KMS Customer managed key."
+}
+
+variable "tfe_license_secret_id" {
+  type        = string
+  description = "The Secrets Manager secret under which the Base64 encoded Terraform Enterprise license is stored."
 }
 
 variable "vm_certificate_secret_id" {

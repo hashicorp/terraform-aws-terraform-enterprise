@@ -222,8 +222,12 @@ variable "tfe_license_bootstrap_airgap_package_path" {
 
 variable "airgap_url" {
   default     = null
-  description = "The URL of the storage bucket object that comprises an airgap package."
   type        = string
+  description = <<-EOD
+  The URL of the storage bucket object that comprises an airgap package. This is only used in development
+  environments when bootstapping the TFE instance with the airgap package. You would not use this for an
+  actual airgapped environment.
+  EOD
 }
 
 # Mounted Disk Installations ONLY

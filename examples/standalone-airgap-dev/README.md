@@ -24,4 +24,3 @@ resources exist:
 - Valid AWS ACM certificate
 - TFE license on a filepath accessible by tests
 - The URL of an airgap package
-

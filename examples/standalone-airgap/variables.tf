@@ -5,6 +5,16 @@ variable "acm_certificate_arn" {
   description = "ACM certificate ARN to use with load balancer"
 }
 
+variable "certificate_pem_secret_id" {
+  type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded TLS certificate."
+}
+
+variable "private_key_pem_secret_id" {
+  type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded TLS private key."
+}
+
 variable "domain_name" {
   type        = string
   description = "Domain to create Terraform Enterprise subdomain within"
@@ -18,11 +28,6 @@ variable "friendly_name_prefix" {
 variable "tfe_subdomain" {
   type        = string
   description = "Subdomain for TFE"
-}
-
-variable "license_file" {
-  type        = string
-  description = "The local path to the Terraform Enterprise license."
 }
 
 variable "iact_subnet_list" {
@@ -40,6 +45,16 @@ variable "load_balancing_scheme" {
     condition     = contains(["PRIVATE", "PRIVATE_TCP", "PUBLIC"], var.load_balancing_scheme)
     error_message = "The load_balancer value must be one of: \"PRIVATE\"; \"PRIVATE_TCP\"; \"PUBLIC\"."
   }
+}
+
+variable "tags" {
+  type        = map(string)
+  description = <<DESC
+  (Optional) Map of tags only used for the autoscaling group. If you are using the AWS provider's default_tags,
+  please note that it tags every taggable resource except for the autoscaling group, therefore this variable may
+  be used to duplicate the key/value pairs in the default_tags if you wish.
+  DESC
+  default     = {}
 }
 
 # AMI - Existing Image

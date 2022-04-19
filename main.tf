@@ -29,6 +29,7 @@ module "service_accounts" {
   ca_certificate_secret_id = var.ca_certificate_secret_id
   friendly_name_prefix     = var.friendly_name_prefix
   iam_role_policy_arns     = var.iam_role_policy_arns
+  enable_airgap            = local.enable_airgap
   tfe_license_secret_id    = var.tfe_license_secret_id
   kms_key_arn              = local.kms_key_arn
   vm_certificate_secret_id = var.vm_certificate_secret_id
@@ -178,7 +179,7 @@ module "settings" {
 # AWS user data / cloud init used to install and configure TFE on instance(s)
 # -----------------------------------------------------------------------------
 module "tfe_init" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=ah-airgap-conditional"
 
   # TFE & Replicated Configuration data
   cloud                    = "aws"
