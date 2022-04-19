@@ -179,7 +179,7 @@ module "settings" {
 # AWS user data / cloud init used to install and configure TFE on instance(s)
 # -----------------------------------------------------------------------------
 module "tfe_init" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=ah-airgap-conditional"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
 
   # TFE & Replicated Configuration data
   cloud                    = "aws"
