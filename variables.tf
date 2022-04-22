@@ -162,13 +162,13 @@ variable "operational_mode" {
   default     = "external"
   description = <<-EOD
   A special string to control the operational mode of Terraform Enterprise. Valid values are: "external" for External
-  Services mode; "disk" for Mounted Disk mode; "poc" for Demo mode.
+  Services mode; "disk" for Mounted Disk mode.
   EOD
   type        = string
 
   validation {
-    condition     = contains(["external", "disk", "poc"], var.operational_mode)
-    error_message = "The operational_mode value must be one of: \"external\"; \"disk\"; \"poc\"."
+    condition     = contains(["external", "disk"], var.operational_mode)
+    error_message = "The operational_mode value must be one of: \"external\"; \"disk\"."
   }
 }
 
@@ -523,3 +523,4 @@ variable "extern_vault_namespace" {
   type        = string
   description = "(Optional if var.extern_vault_enable = true) The Vault namespace"
 }
+

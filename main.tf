@@ -117,7 +117,6 @@ module "settings" {
 
   # TFE Base Configuration
   custom_image_tag       = var.custom_image_tag
-  installation_type      = "production"
   production_type        = var.operational_mode
   disk_path              = local.enable_disk ? var.disk_path : null
   iact_subnet_list       = var.iact_subnet_list
