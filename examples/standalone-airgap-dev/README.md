@@ -6,7 +6,8 @@ This example for Terraform Enterprise creates a TFE installation with the follow
 
 -  Standalone
 -  External Services production type
--  Airgapped
+-  Airgapped (mocked)
+-  This example merely tests that the `airgap_url` package is able to install TFE. It does not, however, assume that the environment is air-gapped, and it therefore installs the prerequisites for an air-gapped installation too. 
 -  m5.xlarge virtual machine type
 -  Ubuntu 20.04
 -  A publicly accessible HTTP load balancer with TLS termination
