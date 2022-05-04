@@ -1,14 +1,19 @@
 provider "aws" {
-
-  region = "us-west-2"
-
   assume_role {
     role_arn = var.aws_role_arn
   }
-
   default_tags {
     tags = var.tags
   }
+}
+
+# Random String for unique names
+# ------------------------------
+resource "random_string" "friendly_name" {
+  length  = 4
+  upper   = false
+  number  = false
+  special = false
 }
 
 # Keypair for SSH
@@ -27,7 +32,7 @@ resource "local_file" "private_key_pem" {
 resource "aws_key_pair" "main" {
   public_key = tls_private_key.main.public_key_openssh
 
-  key_name = "${var.friendly_name_prefix}-ssh"
+  key_name = "${local.friendly_name_prefix}-ssh"
 }
 
 # Store TFE License as secret
@@ -35,14 +40,16 @@ resource "aws_key_pair" "main" {
 module "secrets" {
   source = "../../fixtures/secrets"
   tfe_license = {
-    name = "${var.friendly_name_prefix}-license"
+    name = "${local.friendly_name_prefix}-license"
     path = var.license_file
   }
 }
 
+# Key Management Service
+# ----------------------
 module "kms" {
   source    = "../../fixtures/kms"
-  key_alias = "${var.friendly_name_prefix}-key"
+  key_alias = "${local.friendly_name_prefix}-key"
 }
 
 # Standalone, mounted disk
@@ -55,6 +62,7 @@ module "standalone" {
   domain_name         = var.domain_name
   distribution        = "ubuntu"
 
+  asg_tags                    = var.tags
   disk_path                   = "/opt/hashicorp/data"
   ebs_device_name             = "xvdcc"
   ebs_renamed_device_name     = "nvme1n1"
@@ -62,7 +70,7 @@ module "standalone" {
   ebs_volume_type             = "io1"
   ebs_iops                    = 3000
   ebs_delete_on_termination   = true
-  friendly_name_prefix        = var.friendly_name_prefix
+  friendly_name_prefix        = local.friendly_name_prefix
   tfe_license_secret_id       = module.secrets.tfe_license_secret_id
   redis_encryption_at_rest    = false
   redis_encryption_in_transit = false
@@ -75,5 +83,4 @@ module "standalone" {
   load_balancing_scheme       = "PUBLIC"
   node_count                  = 1
   tfe_subdomain               = var.tfe_subdomain
-  asg_tags                    = var.tags
 }
