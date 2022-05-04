@@ -55,11 +55,9 @@ Unless amended, this example will not create an initial admin user using the IAC
    - Scroll down to the bottom of the display. Click on "Show advanced settings".
    - Scroll down to “System” and choose "Open your computer’s proxy settings".
    - Set Chrome proxy server settings.
-   
 2. Next, follow the instructions for your operating system to set up your proxy server settings:
    - [macOS](https://support.apple.com/en-ca/guide/mac-help/mchlp2591/mac)
    - [Windows](https://www.dummies.com/article/technology/computers/operating-systems/windows/windows-10/how-to-set-up-a-proxy-in-windows-10-140262/#tab2)
-   
 3. SSH to proxy via: `$ ssh -N -p 22 -D localhost:5000 <proxyuser>@<proxyserver> -i ../path/to/id_rsa`
 4. The TFE URL is now aacessible via proxy.
 
