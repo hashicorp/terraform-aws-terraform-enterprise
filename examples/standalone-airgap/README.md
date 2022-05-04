@@ -16,7 +16,7 @@ This example for Terraform Enterprise creates a TFE installation with the follow
 This example assumes that the following resources exist:
 
 - Airgap prerequisites:
-  - The vm image is prepared according to the [documentation](https://www.terraform.io/enterprise/install/interactive/installer#prepare-the-instance)
+  - The vm image is prepared according to the [documentation](https://www.terraform.io/enterprise/install/interactive/installer#prepare-the-instance).
   - Certificate and key data is present on the vm image at the following paths:
       - The value of the secret represented by the root module's `key_secret_id` variable is present at the path defined by `var.tls_bootstrap_cert_pathname` (0600 access permissions).
       - The value of the secret represented by the root module's `certificate_secret_id` variable is present at the path defined by `var.tls_bootstrap_key_pathname` (0600 access permissions).
