@@ -6,7 +6,7 @@ This example for Terraform Enterprise creates a TFE installation with the follow
 
 -  Standalone
 -  External Services production type
--  Airgapped
+-  Airgapped (mocked)
 -  m5.xlarge virtual machine type
 -  Ubuntu 20.04
 -  A publicly accessible HTTP load balancer with TLS termination
