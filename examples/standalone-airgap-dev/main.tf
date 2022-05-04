@@ -62,7 +62,6 @@ module "standalone_airgap_dev" {
   distribution         = "ubuntu"
   friendly_name_prefix = local.friendly_name_prefix
 
-
   # Bootstrapping resources
   airgap_url                                = var.airgap_url
   tfe_license_bootstrap_airgap_package_path = "/var/lib/ptfe/ptfe.airgap"

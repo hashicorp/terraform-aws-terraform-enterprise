@@ -18,8 +18,6 @@ This example assumes that the following resources exist:
 - TFE license is on a file path defined by `var.license_file` 
 - Airgap prerequisites:
   - The URL of an airgap package
-  - The airgap package is on a filepath defined by var.tfe_license_bootstrap_airgap_package_path
-  - The extracted Replicated package from https://install.terraform.io/airgap/latest.tar.gz is at `/tmp/replicated/replicated.tar.gz`
 - A DNS zone
 - Valid managed SSL certificate to use with load balancer:
   - Create/Import a managed SSL Certificate using AWS ACM to serve as the certificate for the DNS A Record.

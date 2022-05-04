@@ -52,7 +52,6 @@ module "standalone_airgap" {
   distribution         = "ubuntu"
   friendly_name_prefix = local.friendly_name_prefix
 
-
   # Bootstrapping resources
   tfe_license_bootstrap_airgap_package_path = "/var/lib/ptfe/ptfe.airgap"
   tls_bootstrap_cert_pathname               = "/var/lib/terraform-enterprise/certificate.pem"

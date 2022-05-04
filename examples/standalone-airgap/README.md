@@ -17,13 +17,11 @@ This example assumes that the following resources exist:
 
 - Airgap prerequisites:
   - The vm image is prepared according to the [documentation](https://www.terraform.io/enterprise/install/interactive/installer#prepare-the-instance)
-    - Certificate and key data is present on the vm image at the following paths (when applicable):
-      - The value of the secret represented by the root module's key_secret_id variable is present at the  path defined by var.tls_bootstrap_cert_pathname (0600 access permissions).
+  - Certificate and key data is present on the vm image at the following paths:
+      - The value of the secret represented by the root module's key_secret_id variable is present at the path defined by var.tls_bootstrap_cert_pathname (0600 access permissions).
       - The value of the secret represented by the root module's certificate_secret_id variable is present at the path defined by var.tls_bootstrap_key_pathname (0600 access permissions).
       - The value of the secret represented by the root module's ca_certificate_secret_id variable is present at the path:
-        - RHEL   - /usr/share/pki/ca-trust-source/anchors/tfe-ca-certificate.crt
-        - Ubuntu - /usr/local/share/ca-certificates/extra/tfe-ca-certificate.crt
-  - The URL of an airgap package
+        - /usr/local/share/ca-certificates/extra/tfe-ca-certificate.crt
   - The airgap package is on a filepath defined by var.tfe_license_bootstrap_airgap_package_path
   - The extracted Replicated package from https://install.terraform.io/airgap/latest.tar.gz is at `/tmp/replicated/replicated.tar.gz`
 - A DNS zone
