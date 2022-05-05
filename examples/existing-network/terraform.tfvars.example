@@ -1,0 +1,18 @@
+acm_certificate_arn          = "arn:aws:acm:<region>:<account_id>:certificate/<certificate_name>"
+aws_role_arn                 = "arn:aws:iam::<account_id>:role/<role_name>"
+ca_certificate_secret_name   = "<proxy_certificate_name>"
+ca_private_key_secret_name   = "<proxy_private_key_name>"
+certificate_pem_secret_id    = "arn:aws:secretsmanager:<region>:<account_id>:secret:<secret_name>"
+domain_name                  = "my.domain.com"
+license_file                 = "/files/license.rli"
+node_count                   = "2" # value must be either 1 or 2
+network_private_subnet_cidrs = ["10.0.0.0/20", "10.0.0.0/20"]
+network_id                   = "vpc-1a2b3c4d5e6f7g8h9i0j1"
+network_private_subnets      = ["subnet-1a2b3c4d5e6f7g8h9", "subnet-1a2b3c4d5e6f7g8h9",]
+network_public_subnets       = ["subnet-1a2b3c4d5e6f7g8h9", "subnet-1a2b3c4d5e6f7g8h9",]
+private_key_pem_secret_id    = "arn:aws:secretsmanager:<region>:<account_id>:secret:<secret_name>"
+tags                         = {
+                                Owner       = "My Name"
+                                Environment = "existing-network"
+                               }
+tfe_subdomain                = "tfe.my.domain.com"

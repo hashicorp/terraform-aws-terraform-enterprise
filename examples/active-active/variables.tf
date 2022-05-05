@@ -1,21 +1,11 @@
-variable "aws_role_arn" {
-  type        = string
-  description = "The AWS Role ARN to assume for this module."
-}
-
-variable "domain_name" {
-  type        = string
-  description = "Domain for creating the Terraform Enterprise subdomain on."
-}
-
 variable "acm_certificate_arn" {
   type        = string
   description = "The ARN of an existing ACM certificate."
 }
 
-variable "license_file" {
+variable "aws_role_arn" {
   type        = string
-  description = "The local path to the Terraform Enterprise license."
+  description = "The AWS Role ARN to assume for this module."
 }
 
 variable "ca_certificate_secret_name" {
@@ -33,14 +23,19 @@ variable "certificate_pem_secret_id" {
   description = "The secrets manager secret ID of the Base64 & PEM encoded TLS certificate for tfe"
 }
 
+variable "domain_name" {
+  type        = string
+  description = "Domain for creating the Terraform Enterprise subdomain on."
+}
+
+variable "license_file" {
+  type        = string
+  description = "The local path to the Terraform Enterprise license."
+}
+
 variable "private_key_pem_secret_id" {
   type        = string
   description = "The secrets manager secret ID of the Base64 & PEM encoded TLS private key for tfe"
-}
-
-variable "tfe_subdomain" {
-  type        = string
-  description = "Subdomain for TFE"
 }
 
 variable "tags" {
@@ -50,4 +45,9 @@ variable "tags" {
   please note that it tags every taggable resource except for the autoscaling group, therefore this variable may
   be used to duplicate the key/value pairs in the default_tags if you wish.
   DESC
+}
+
+variable "tfe_subdomain" {
+  type        = string
+  description = "Subdomain for TFE"
 }
