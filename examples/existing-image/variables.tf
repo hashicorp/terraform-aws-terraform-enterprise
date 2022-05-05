@@ -1,6 +1,6 @@
 variable "ami_id" {
   type        = string
-description = <<DESC
+  description = <<DESC
   AMI ID of the custom image to use for TFE instances. If this value is provided, you do not need any of the following 
   ami variable values.
   DESC
