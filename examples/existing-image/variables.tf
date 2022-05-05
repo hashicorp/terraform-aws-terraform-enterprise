@@ -15,7 +15,10 @@ variable "ami_owners" {
 variable "ami_filter_name" {
   type        = string
   default     = null
-  description = "The name of a key off of which to filter with a key/value pair. Example: \"tag:Distro\" (Not needed if providing ami_id value.)"
+  description = <<DESC
+  The name of a key off of which to filter with a key/value pair. Example: \"tag:Distro\" (Not needed if providing
+  ami_id value.)
+  DESC
 }
 
 variable "ami_filter_value" {
