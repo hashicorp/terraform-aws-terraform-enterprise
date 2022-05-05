@@ -1,6 +1,9 @@
 variable "ami_id" {
   type        = string
-  description = "AMI ID of the custom image to use for TFE instances. If this value is provided, you do not need any of the following ami variable values."
+  description = <<DESC
+  AMI ID of the custom image to use for TFE instances. If this value is provided, you do not need any of the following 
+  ami variable values.
+  DESC
 }
 
 variable "ami_owners" {
