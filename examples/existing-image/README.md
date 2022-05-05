@@ -1,109 +1,71 @@
-# EXAMPLE: Deploying Terraform Enterprise in Active/Active mode with a custom image
+# EXAMPLE: Active-Active, External Services Installation of Terraform Enterprise with a Custom Image
 
 ## About This Example
 
-This example functions as a reference for how to use this module to install 
-Terraform Enterprise with a custom image (AMI) in AWS.
+This example for Terraform Enterprise creates a TFE installation with the following traits:
 
-## Module Prerequisites
+-  [Active/Active](https://www.terraform.io/enterprise/install/automated/active-active) architecture defined by `var.node_count`
+-  External Services production type
+-  m5.xlarge virtual machine type
+-  Ubuntu 20.04
+-  A publicly accessible HTTP load balancer with TLS termination
 
-As with the main version of this module, this example assumes the following
-resources already exist:
+## Prerequisites
 
-- Valid DNS Zone managed in Route53
-- Valid AWS ACM certificate
-- Valid TFE license
+This example assumes that the following resources exist:
 
+- TFE license is on a file path defined by `var.license_file` 
+- A DNS zone
+- Valid managed SSL certificate to use with load balancer:
+  - Create/Import a managed SSL Certificate using AWS ACM to serve as the certificate for the DNS A Record.
+- Existing Amazon Machine Image defined by `var.ami_id`
+
+  NOTE: The base image used for the custom image should be Ubuntu or RHEL to work with the root
+  module as-is.
+
+  This example will either use the `ami_id` directly, or you may use a data source to filter
+  on the specific AMI to use.
+
+  In the `ami_id` data source, you will notice that this example filters on three criteria, a
+  unique key/value pair, the virtualization type, and whether or not to use the latest image
+  in which this search results. Because it is important that Terraform is only able to find
+  one AMI based on the search of this [data source](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami),
+  you may decide to add more filters in order to narrow down your search.
+
+  Otherwise, you may decide to provide the `ami_id` variable directly, instead of using the
+  data source. To do this, simply provide a value for the `ami_id` variable with the specific
+  AMI ID that you wish to use. If you choose to do this, you do not need to provide values for
+  the other variables that begin with `ami_`.
+  
 ## How to Use This Module
 
-Refer to the root module's instructions for [setup instructions](../../README.md#How-to-Use-This-Module).
+### Deployment
 
-- Any variables not defined in this example will use the default values of the
-root module, which defaults to a node count of 2, creating an Active/Active configuration.
-- Ensure account meets module pre-requisites from above.
-- Create a Terraform configuration that pulls in this module and specifies values
-  of the required variables (you may do this in a `terraform.tfvars` file):
+ 1. Read the entire [README.md](../../README.md) of the root module.
+ 2. Ensure account meets module prerequisites from above.
+ 3. Clone repository.
+ 4. Change directory into desired example folder.
+ 5. Create a local `terraform.auto.tfvars` file and instantiate the required inputs as required in the respective `./examples/existing-image/variables.tf` including the path to the license under the `license_file` variable value.
+ 6. Authenticate against the AWS provider. See [instructions](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#authentication-and-configuration).
+ 7. Initialize terraform and apply the module configurations using the commands below:
 
-```hcl
-locals {
-  ami_search = var.ami_id == null ? true : false
-  ami_id     = local.ami_search ? data.aws_ami.existing[0].id : var.ami_id
-}
+    NOTE: `terraform plan` will print out the execution plan which describes the actions Terraform will take in order to build your infrastructure to match the module configuration. If anything in the plan seems incorrect or dangerous, it is safe to abort here and not proceed to `terraform apply`.
 
-data "aws_ami" "existing" {
-  count = local.ami_search ? 1 : 0
+    ```
+    terraform init
+    terraform plan
+    terraform apply
+    ```
 
-  owners      = var.ami_owners
-  most_recent = var.ami_most_recent
+## Post-deployment Tasks
 
-  filter {
-    name   = var.ami_filter_name
-    values = [var.ami_filter_value]
-  }
+The build should take approximately 10-15 minutes to deploy. Once the module has completed, give the platform another 10 minutes or so prior to attempting to interact with it in order for all containers to start up.
 
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
+Unless amended, this example will not create an initial admin user using the IACT, but it does output the URL for your convenience. Follow the advice in this document to create the initial admin user, and log into the system using this user in order to configure it for use.
 
-module "existing_image_example" {
-  source = "../../"
+### Connecting to the TFE Application
 
-  acm_certificate_arn  = var.acm_certificate_arn
-  domain_name          = var.domain_name
-  friendly_name_prefix = var.friendly_name_prefix
-  tfe_subdomain        = var.tfe_subdomain
-  tfe_license_name     = var.tfe_license_name
-  tfe_license_filepath = var.tfe_license_filepath
-
-  ami_id                = local.ami_id
-  iact_subnet_list      = var.iact_subnet_list
-  load_balancing_scheme = var.load_balancing_scheme
-}
-```
-
-With authentication configured, run `terraform init` and `terraform apply` to provision
-the example infrastructure.
-
-
-## Variable Input
-
-The variable inputs described in this document serve as a reference configuration for this specific example. The root module provides many other optional variable inputs.
-
-### Inputs For This Example
-
-| Name | Description | Type | Example Value |
-|------|-------------|------| ------------- |
-| `acm_certificate_arn` | ACM certificate ARN to use with load balancer | string | `arn:aws:acm:us-east-2:123456:certificate/123abc`
-| `domain_name` | Name of existing DNS Zone in which a record set will be created | string | `example.com` |
-| `friendly_name_prefix` | Name prefix used for resources | string | `somename` |
-| `tfe_subdomain` | Desired DNS record subdomain | string | `tfe` |
-| `tfe_license_name` | The name to use when copying the TFE license file to the EC2 instance. | string | `license.rli` |
-| `tfe_license_filepath` | The absolute path to the TFE license file on the system running Terraform. | string | `Users/yourname/license.rli` |
-| `iact_subnet_list` | A list of CIDR masks that configure the ability to retrieve the IACT from outside the host. | list(string) | `["0.0.0.0/0"]` |
-| `load_balancing_scheme` | Load Balancing Scheme. Supported values are: "PRIVATE"; "PRIVATE_TCP"; "PUBLIC". | string | `PUBLIC` |
-| `ami_id` | AMI ID of the custom image to use for TFE instances. If this value is provided, you do not need any of the following ami variable values. | string | `ami-12345` |
-| `ami_owners` | List of AMI owners to limit search. (Not needed if providing ami_id value.) | list(string) | `["self"]` |
-| `ami_filter_name` | The name of a key off of which to filter with a key/value pair. (Not needed if providing ami_id value.) | string | `"tag:Distro"` |
-| `ami_filter_value` | The value off of which to filter with a key/value pair. (Not needed if providing ami_id value.) | string | `"Ubuntu"` |
-| `ami_most_recent` | If more than one result is returned, use the most recent AMI. (Not needed if providing ami_id value.) | bool | `true` |
-
-### ami_id
-
-The base image used for the custom image should be Ubuntu or RHEL to work with the root
-module as-is.
-
-This example will either use the `ami_id` directly, or you may use a data source to filter
-on the specific AMI to use.
-
-In the `ami_id` data source, you will notice that this example filters on three criteria, a
-unique key/value pair, the virtualization type, and whether or not to use the latest image
-in which this search results. Because it is important that Terraform is only able to find
-one AMI based on the search of this [data source](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami),
-you may decide to add more filters in order to narrow down your search.
-
-Otherwise, you may decide to provide the `ami_id` variable directly, instead of using the
-data source. To do this, simply provide a value for the `ami_id` variable with the specific
-AMI ID that you wish to use. If you choose to do this, you do not need to provide values for
-the other variables that begin with `ami_`.
+1. Navigate to the URL supplied via the `login_url` Terraform output. (It may take several minutes for this to be available after initial deployment. You may monitor the progress of cloud init if desired on one of the instances)
+2. Enter a `username`, `email`, and `password` for the initial user.
+3. Click `Create an account`.
+4. After the initial user is created you may access the TFE Application normally using the URL supplied via `login_url` Terraform output.
