@@ -73,6 +73,7 @@ module "active_active" {
   tfe_license_secret_id = module.secrets.tfe_license_secret_id
 
   ami_id                      = data.aws_ami.rhel.id
+  asg_tags                    = var.tags
   distribution                = "rhel"
   ca_certificate_secret_id    = data.aws_secretsmanager_secret.ca_certificate.arn
   iact_subnet_list            = ["0.0.0.0/0"]
@@ -91,5 +92,4 @@ module "active_active" {
   tls_bootstrap_key_pathname  = "/var/lib/terraform-enterprise/key.pem"
   vm_certificate_secret_id    = var.certificate_pem_secret_id
   vm_key_secret_id            = var.private_key_pem_secret_id
-  asg_tags                    = var.tags
 }
