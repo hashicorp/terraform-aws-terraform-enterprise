@@ -1,4 +1,4 @@
-# EXAMPLE: Active-Active], External Services Installation of Terraform Enterprise
+# EXAMPLE: Active-Active, External Services Installation of Terraform Enterprise with a Custom Image
 
 ## About This Example
 
