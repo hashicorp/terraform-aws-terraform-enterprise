@@ -1,14 +1,14 @@
-# EXAMPLE: Standalone / Active-Active, External Services Installation of Terraform Enterprise
+# EXAMPLE: Active-Active, External Services Installation of Terraform Enterprise into an Existing Network
 
 ## About This Example
 
 This example for Terraform Enterprise creates a TFE installation with the following traits:
 
--  Standalone / Active/Active architecture defined by `var.node_count` 
--  External Services production type
--  m5.xlarge virtual machine type
--  Ubuntu 20.04
--  A publicly accessible HTTP load balancer with TLS termination
+- Active/Active architecture
+- External Services production type
+- m5.xlarge virtual machine type
+- Ubuntu 20.04
+- A publicly accessible HTTP load balancer with TLS termination
 
 ## Prerequisites
 
