@@ -71,7 +71,7 @@ module "active_active" {
   domain_name           = var.domain_name
   friendly_name_prefix  = local.friendly_name_prefix
   tfe_license_secret_id = module.secrets.tfe_license_secret_id
-
+ 
   ami_id                      = data.aws_ami.rhel.id
   asg_tags                    = var.tags
   distribution                = "rhel"
