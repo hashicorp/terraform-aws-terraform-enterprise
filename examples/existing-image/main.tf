@@ -50,8 +50,8 @@ module "secrets" {
   }
 }
 
-# existing_image
-# --------------
+# TFE installation into an existing vm image
+# ------------------------------------------
 module "existing_image" {
   source = "../../"
 
