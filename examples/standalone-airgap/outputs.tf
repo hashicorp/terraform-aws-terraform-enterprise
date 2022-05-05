@@ -1,9 +1,9 @@
-output "ptfe_endpoint" {
+output "login_url" {
   value       = module.standalone_airgap.tfe_url
   description = "The URL to the TFE application."
 }
 
-output "replicated_console_url" {
+output "tfe_console_url" {
   value       = "${module.standalone_airgap.tfe_url}:8800"
   description = "Terraform Enterprise Console URL"
 }

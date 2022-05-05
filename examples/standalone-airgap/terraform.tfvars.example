@@ -1,11 +1,9 @@
 acm_certificate_arn  = "arn:aws:acm:region:<account_id>:certificate/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx"
-domain_name          = "my.domain.com"
-aws_role_arn         = "arn:aws:iam::<account_id>:role/<role_name>"
-friendly_name_prefix = "user-friendly-name"
-tfe_subdomain        = "tfe-subdomain"
 ami_id               = "ami-012345678abcdefghi"
-
-tags = {
-  Owner       = "My Name"
-  Environment = "standalone-airgap"
-}
+aws_role_arn         = "arn:aws:iam::<account_id>:role/<role_name>"
+domain_name          = "my.domain.com"
+tags                 = {
+                        Owner       = "My Name"
+                        Environment = "standalone-airgap"
+                       }
+tfe_subdomain        = "tfe-subdomain"
