@@ -63,7 +63,7 @@ Unless amended, this example will not create an initial admin user using the IAC
 
 ### Connecting to the TFE Application
 
-1. Navigate to the URL supplied via the `login_url` Terraform output. (It may take several minutes for this to be available after initial deployment. You may monitor the progress of cloud init if desired on one of the instances)
+1. Navigate to the URL supplied via the `login_url` Terraform output. (It may take several minutes for this to be available after initial deployment. You may monitor the progress of cloud init if desired on one of the instances.)
 2. Enter a `username`, `email`, and `password` for the initial user.
 3. Click `Create an account`.
 4. After the initial user is created you may access the TFE Application normally using the URL supplied via `login_url` Terraform output.
