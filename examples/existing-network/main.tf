@@ -50,8 +50,8 @@ module "secrets" {
   }
 }
 
-# existing_network
-# ----------------
+# TFE installation into an existing network
+# -----------------------------------------
 module "existing_network" {
   source = "../../"
 
