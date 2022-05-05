@@ -18,7 +18,14 @@ This example assumes that the following resources exist:
 - A DNS zone
 - Valid managed SSL certificate to use with load balancer:
   - Create/Import a managed SSL Certificate using AWS ACM to serve as the certificate for the DNS A Record.
-- Existing Virtual Machine Image
+- Existing Amazon Machine Image defined by `var.ami_id`
+
+  NOTE: The base image used for the custom image should be Ubuntu or RHEL to work with the root module as-is.
+  This example will either use the ami_id directly, or you may use a data source to filter on the specific AMI to use.
+
+  In the ami_id data source, you will notice that this example filters on three criteria, a unique key/value pair, the virtualization type, and whether or not to use the latest image in which this search results. Because it is important that Terraform is only able to find one AMI based on the search of this data source, you may decide to add more filters in order to narrow down your search.
+
+  Otherwise, you may decide to provide the ami_id variable directly, instead of using the data source. To do this, simply provide a value for the ami_id variable with the specific AMI ID that you wish to use. If you choose to do this, you do not need to provide values for the other variables that begin with ami_.
   
 ## How to Use This Module
 

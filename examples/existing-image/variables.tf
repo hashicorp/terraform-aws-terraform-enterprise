@@ -1,6 +1,9 @@
 variable "ami_id" {
   type        = string
-  description = "AMI ID of the custom image to use for TFE instances. If this value is provided, you do not need any of the following ami variable values."
+description = <<DESC
+  AMI ID of the custom image to use for TFE instances. If this value is provided, you do not need any of the following 
+  ami variable values.
+  DESC
 }
 
 variable "ami_owners" {
@@ -12,7 +15,10 @@ variable "ami_owners" {
 variable "ami_filter_name" {
   type        = string
   default     = null
-  description = "The name of a key off of which to filter with a key/value pair. Example: \"tag:Distro\" (Not needed if providing ami_id value.)"
+  description = <<DESC
+  The name of a key off of which to filter with a key/value pair. Example: \"tag:Distro\" (Not needed if providing
+  ami_id value.)
+  DESC
 }
 
 variable "ami_filter_value" {
