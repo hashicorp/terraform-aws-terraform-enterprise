@@ -1,14 +1,19 @@
 provider "aws" {
-
-  region = "us-east-2"
-
   assume_role {
     role_arn = var.aws_role_arn
   }
-
   default_tags {
     tags = var.tags
   }
+}
+
+# Random String for unique names
+# ------------------------------
+resource "random_string" "friendly_name" {
+  length  = 4
+  upper   = false
+  number  = false
+  special = false
 }
 
 # Keypair for SSH
@@ -27,7 +32,7 @@ resource "local_file" "private_key_pem" {
 resource "aws_key_pair" "main" {
   public_key = tls_private_key.main.public_key_openssh
 
-  key_name = "${var.friendly_name_prefix}-ssh"
+  key_name = "${local.friendly_name_prefix}-ssh"
 }
 
 # Store TFE License as secret
@@ -35,7 +40,7 @@ resource "aws_key_pair" "main" {
 module "secrets" {
   source = "../../fixtures/secrets"
   tfe_license = {
-    name = "${var.friendly_name_prefix}-license"
+    name = "${local.friendly_name_prefix}-license"
     path = var.license_file
   }
 }
@@ -44,7 +49,7 @@ module "secrets" {
 # ----------------------
 module "kms" {
   source    = "../../fixtures/kms"
-  key_alias = "${var.friendly_name_prefix}-key"
+  key_alias = "${local.friendly_name_prefix}-key"
 }
 
 # Standalone Airgapped - DEV (bootstrap prerequisites)
@@ -55,8 +60,7 @@ module "standalone_airgap_dev" {
   acm_certificate_arn  = var.acm_certificate_arn
   domain_name          = var.domain_name
   distribution         = "ubuntu"
-  friendly_name_prefix = var.friendly_name_prefix
-
+  friendly_name_prefix = local.friendly_name_prefix
 
   # Bootstrapping resources
   airgap_url                                = var.airgap_url

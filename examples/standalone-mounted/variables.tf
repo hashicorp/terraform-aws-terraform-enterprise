@@ -1,16 +1,11 @@
-variable "aws_role_arn" {
-  type        = string
-  description = "The AWS Role ARN to assume for this module."
-}
-
 variable "acm_certificate_arn" {
   type        = string
   description = "The ARN of an existing ACM certificate."
 }
 
-variable "license_file" {
+variable "aws_role_arn" {
   type        = string
-  description = "The local path to the Terraform Enterprise license."
+  description = "The AWS Role ARN to assume for this module."
 }
 
 variable "domain_name" {
@@ -18,14 +13,9 @@ variable "domain_name" {
   description = "Domain for creating the Terraform Enterprise subdomain on."
 }
 
-variable "friendly_name_prefix" {
+variable "license_file" {
   type        = string
-  description = "Name prefix used for resources"
-}
-
-variable "tfe_subdomain" {
-  type        = string
-  description = "Subdomain for TFE"
+  description = "The local path to the Terraform Enterprise license."
 }
 
 variable "tags" {
@@ -36,4 +26,9 @@ variable "tags" {
   be used to duplicate the key/value pairs in the default_tags if you wish.
   DESC
   default     = {}
+}
+
+variable "tfe_subdomain" {
+  type        = string
+  description = "Subdomain for TFE"
 }
