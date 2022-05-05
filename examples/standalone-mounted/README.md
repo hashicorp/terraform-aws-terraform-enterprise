@@ -4,11 +4,11 @@
 
 This example for Terraform Enterprise creates a TFE installation with the following traits:
 
--  Standalone
--  Mounted Disk production type
--  m5.xlarge virtual machine type
--  Ubuntu 20.04
--  A publicly accessible HTTP load balancer with TLS termination
+- Standalone
+- Mounted Disk production type
+- m5.xlarge virtual machine type
+- Ubuntu 20.04
+- A publicly accessible HTTP load balancer with TLS termination
 
 
 ## Prerequisites

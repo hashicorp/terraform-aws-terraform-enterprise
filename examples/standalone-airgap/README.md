@@ -4,18 +4,18 @@
 
 This example for Terraform Enterprise creates a TFE installation with the following traits:
 
--  Standalone
--  External Services production type
--  Airgapped
--  m5.xlarge virtual machine type
--  Ubuntu 20.04
--  A publicly accessible HTTP load balancer with TLS termination
+- Standalone
+- External Services production type
+- Air gapped
+- m5.xlarge virtual machine type
+- Ubuntu 20.04
+- A publicly accessible HTTP load balancer with TLS termination
 
 ## Prerequisites
 
 This example assumes that the following resources exist:
 
-- Airgap prerequisites:
+- Air gap prerequisites:
   - The vm image is prepared according to the [documentation](https://www.terraform.io/enterprise/install/interactive/installer#prepare-the-instance).
   - Certificate and key data is present on the vm image at the following paths:
       - The value of the secret represented by the root module's `key_secret_id` variable is present at the path defined by `var.tls_bootstrap_cert_pathname` (0600 access permissions).
