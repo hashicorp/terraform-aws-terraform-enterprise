@@ -44,16 +44,6 @@ variable "network_private_subnet_cidrs" {
   description = "(Optional) List of private subnet CIDR ranges to create in VPC."
 }
 
-variable "node_count" {
-  type        = number
-  description = "The number of nodes you want in your autoscaling group (1 for standalone, 2 for active-active configuration)"
-
-  validation {
-    condition     = var.node_count <= 5
-    error_message = "The node_count value must be less than or equal to 5."
-  }
-}
-
 variable "tags" {
   type        = map(string)
   description = <<DESC

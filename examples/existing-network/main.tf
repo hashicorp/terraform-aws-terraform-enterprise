@@ -73,7 +73,7 @@ module "existing_network" {
   key_name                    = aws_key_pair.main.key_name
   kms_key_arn                 = module.kms.key
   load_balancing_scheme       = "PUBLIC"
-  node_count                  = var.node_count
+  node_count                  = 2
   deploy_vpc                  = false
   redis_encryption_at_rest    = false
   redis_encryption_in_transit = false
