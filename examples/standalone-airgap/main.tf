@@ -1,11 +1,7 @@
 provider "aws" {
-
-  region = "us-east-2"
-
   assume_role {
     role_arn = var.aws_role_arn
   }
-
   default_tags {
     tags = var.tags
   }
@@ -18,10 +14,6 @@ resource "random_string" "friendly_name" {
   upper   = false
   number  = false
   special = false
-}
-
-locals {
-  friendly_name_prefix = random_string.friendly_name.id
 }
 
 # KMS key used to encrypt data
@@ -47,7 +39,7 @@ resource "local_file" "private_key_pem" {
 resource "aws_key_pair" "main" {
   public_key = tls_private_key.main.public_key_openssh
 
-  key_name = "${var.friendly_name_prefix}-ssh"
+  key_name = "${local.friendly_name_prefix}-ssh"
 }
 
 # Run TFE root module for Standalone Airgapped External Mode
@@ -59,7 +51,6 @@ module "standalone_airgap" {
   domain_name          = var.domain_name
   distribution         = "ubuntu"
   friendly_name_prefix = local.friendly_name_prefix
-
 
   # Bootstrapping resources
   tfe_license_bootstrap_airgap_package_path = "/var/lib/ptfe/ptfe.airgap"

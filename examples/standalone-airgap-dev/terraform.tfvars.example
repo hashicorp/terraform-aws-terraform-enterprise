@@ -1,7 +1,10 @@
 acm_certificate_arn  = "arn:aws:acm:region:<account_id>:certificate/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx"
-license_file         = "/files/license.rli"
-domain_name          = "my.domain.com"
 airgap_url           = "https://airgap-url/"
 aws_role_arn         = "arn:aws:iam::<account_id>:role/<role_name>"
-friendly_name_prefix = "user-friendly-name"
+domain_name          = "my.domain.com"
+license_file         = "/files/license.rli"
+tags                 = {
+                        Owner       = "My Name"
+                        Environment = "standalone-airgap-dev"
+                       }
 tfe_subdomain        = "tfe-subdomain"
