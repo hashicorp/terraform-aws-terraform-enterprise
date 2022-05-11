@@ -15,6 +15,7 @@ variable "license_file" {
 }
 
 variable "tfe_license_secret_id" {
+  default     = null
   type        = string
   description = "The Secrets Manager secret ARN under which the Base64 encoded Terraform Enterprise license is stored."
 }
