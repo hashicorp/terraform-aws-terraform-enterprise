@@ -243,73 +243,6 @@ variable "tls_bootstrap_key_pathname" {
   description = "The path on the TFE instance to put the key. ex. '/var/lib/terraform-enterprise/key.pem'"
 }
 
-# Air-gapped Installations ONLY
-# -----------------------------
-variable "airgap_url" {
-  default     = null
-  type        = string
-  description = <<-EOD
-  The URL of the storage bucket object that comprises an airgap package. This is only used in development
-  environments when bootstapping the TFE instance with the airgap package. You would not use this for an
-  actual airgapped environment.
-  EOD
-}
-
-variable "tfe_license_bootstrap_airgap_package_path" {
-  default     = null
-  type        = string
-  description = <<-EOD
-  (Required if air-gapped installation) The URL of a Replicated airgap package for Terraform
-  Enterprise. The suggested path is "/var/lib/ptfe/ptfe.airgap".
-  EOD
-}
-
-# Mounted Disk Installations ONLY
-# -------------------------------
-variable "ebs_delete_on_termination" {
-  type        = bool
-  default     = true
-  description = "(Optional if Mounted Disk installation) Whether the volume should be destroyed on instance termination."
-}
-
-variable "ebs_device_name" {
-  type        = string
-  default     = "xvdcc"
-  description = "(Required if Mounted Disk installation) The name of the device to mount."
-}
-
-variable "ebs_iops" {
-  type        = number
-  default     = 3000
-  description = "(Optional if Mounted Disk installation) The amount of provisioned IOPS. This must be set with a volume_type of 'io1'."
-}
-
-variable "ebs_renamed_device_name" {
-  type        = string
-  default     = "nvme1n1"
-  description = <<-EOD
-  (Required if Mounted Disk installation) The device name that AWS renames the ebs_device_name to.
-  See https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/device_naming.html for more details.
-  EOD
-}
-
-variable "ebs_volume_size" {
-  type        = number
-  default     = 200
-  description = "(Optional if Mounted Disk installation) The size of the volume in gigabytes."
-}
-
-variable "ebs_volume_type" {
-  type        = string
-  default     = "io1"
-  description = "(Optional if Mounted Disk installation) The type of volume."
-
-  validation {
-    condition     = contains(["standard", "gp2", "gp3", "st1", "sc1", "io1"], var.ebs_volume_type)
-    error_message = "The ebs_volume_type value must be one of: 'standard', 'gp2', 'gp3', 'st1', 'sc1', 'io1'."
-  }
-}
-
 # Network
 # -------
 variable "admin_dashboard_ingress_ranges" {
@@ -361,7 +294,6 @@ variable "network_public_subnets" {
   description = "A list of the identities of the public subnetworks in which resources will be deployed."
   type        = list(string)
 }
-
 
 # TFE Instance(s)
 # ---------------
@@ -488,8 +420,75 @@ variable "trusted_proxies" {
   type        = list(string)
 }
 
-# External Vault
-# --------------
+# Air-gapped Installations ONLY
+# -----------------------------
+variable "airgap_url" {
+  default     = null
+  type        = string
+  description = <<-EOD
+  The URL of the storage bucket object that comprises an airgap package. This is only used in development
+  environments when bootstapping the TFE instance with the airgap package. You would not use this for an
+  actual airgapped environment.
+  EOD
+}
+
+variable "tfe_license_bootstrap_airgap_package_path" {
+  default     = null
+  type        = string
+  description = <<-EOD
+  (Required if air-gapped installation) The URL of a Replicated airgap package for Terraform
+  Enterprise. The suggested path is "/var/lib/ptfe/ptfe.airgap".
+  EOD
+}
+
+# Mounted Disk Installations ONLY
+# -------------------------------
+variable "ebs_delete_on_termination" {
+  type        = bool
+  default     = true
+  description = "(Optional if Mounted Disk installation) Whether the volume should be destroyed on instance termination."
+}
+
+variable "ebs_device_name" {
+  type        = string
+  default     = "xvdcc"
+  description = "(Required if Mounted Disk installation) The name of the device to mount."
+}
+
+variable "ebs_iops" {
+  type        = number
+  default     = 3000
+  description = "(Optional if Mounted Disk installation) The amount of provisioned IOPS. This must be set with a volume_type of 'io1'."
+}
+
+variable "ebs_renamed_device_name" {
+  type        = string
+  default     = "nvme1n1"
+  description = <<-EOD
+  (Required if Mounted Disk installation) The device name that AWS renames the ebs_device_name to.
+  See https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/device_naming.html for more details.
+  EOD
+}
+
+variable "ebs_volume_size" {
+  type        = number
+  default     = 200
+  description = "(Optional if Mounted Disk installation) The size of the volume in gigabytes."
+}
+
+variable "ebs_volume_type" {
+  type        = string
+  default     = "io1"
+  description = "(Optional if Mounted Disk installation) The type of volume."
+
+  validation {
+    condition     = contains(["standard", "gp2", "gp3", "st1", "sc1", "io1"], var.ebs_volume_type)
+    error_message = "The ebs_volume_type value must be one of: 'standard', 'gp2', 'gp3', 'st1', 'sc1', 'io1'."
+  }
+}
+
+# External Vault ONLY
+# -------------------
 variable "extern_vault_addr" {
   default     = null
   type        = string
