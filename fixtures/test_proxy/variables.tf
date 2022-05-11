@@ -1,6 +1,5 @@
 # Secret Manager and Certificate
-# -------------------------
-
+# ------------------------------
 variable "mitmproxy_ca_certificate_secret" {
   default     = null
   description = <<-EOD
@@ -19,7 +18,6 @@ variable "mitmproxy_ca_private_key_secret" {
 
 # Network
 # -------
-
 variable "subnet_id" {
   default     = null
   description = "The identity of the VPC in which resources will be deployed."
@@ -32,9 +30,8 @@ variable "vpc_id" {
   type        = string
 }
 
-# PROXY SETTINGS
+# Proxy Settings
 # --------------
-
 variable "name" {
   type        = string
   description = "Name of the proxy server."
@@ -51,4 +48,10 @@ variable "key_name" {
   default     = null
   description = "The name of the key pair to be used for SSH access to the EC2 instance(s)."
   type        = string
+}
+
+variable "proxy_init_module_source" {
+  type        = string
+  default     = "git::https://github.com/hashicorp/terraform-random-tfe-utility//fixtures/test_proxy_init?ref=main"
+  description = "The value of the source argument for the proxy_init module block."
 }

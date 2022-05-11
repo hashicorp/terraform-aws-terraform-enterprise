@@ -24,7 +24,7 @@ module "kms" {
 }
 
 module "hcp_vault" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//fixtures/test_hcp_vault?ref=main"
+  source = var.hcp_vault_module_source
 
   hcp_vault_cluster_id              = local.test_name
   hcp_vault_cluster_hvn_id          = "team-tfe-dev-hvn"

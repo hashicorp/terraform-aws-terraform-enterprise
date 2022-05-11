@@ -1,41 +1,14 @@
 # Common
 # ------
-variable "ami_id" {
-  type        = string
-  default     = null
-  description = "AMI ID to use for TFE instances"
-}
-
 variable "acm_certificate_arn" {
   type        = string
   description = "ACM certificate ARN to use with load balancer"
 }
 
-variable "distribution" {
+variable "ami_id" {
   type        = string
-  description = "(Required) What is the OS distribution of the instance on which Terraoform Enterprise will be deployed?"
-  validation {
-    condition     = contains(["rhel", "ubuntu"], var.distribution)
-    error_message = "Supported values for distribution are 'rhel' or 'ubuntu'."
-  }
-}
-
-variable "vm_certificate_secret_id" {
   default     = null
-  type        = string
-  description = <<-EOD
-  A Secrets Manager secret ARN which contains the Base64 encoded version of a PEM encoded public certificate for the Virtual
-  Machine Scale Set.
-  EOD
-}
-
-variable "vm_key_secret_id" {
-  default     = null
-  type        = string
-  description = <<-EOD
-  A Secrets Manager secret ARN which contains the Base64 encoded version of a PEM encoded private key for the Virtual Machine
-  Scale Set.
-  EOD
+  description = "AMI ID to use for TFE instances"
 }
 
 variable "asg_tags" {
@@ -66,56 +39,13 @@ variable "aws_secret_access_key" {
   type        = string
 }
 
-variable "object_storage_iam_user" {
-  default     = null
-  description = <<-EOD
-  The IAM user that will be authorized to access the S3 storage bucket which holds Terraform Enterprise runtime data.
-  This value requires var.aws_access_key_id and var.aws_secret_access_key to also be set. The values of those variables
-  must represent an access key that is associated with this user.
-  EOD
-  type        = object({ arn = string })
-}
-
-variable "redis_cache_size" {
+variable "distribution" {
   type        = string
-  default     = "cache.m4.large"
-  description = "Redis instance size."
-}
-
-variable "redis_engine_version" {
-  type        = string
-  default     = "5.0.6"
-  description = "Redis enginer version."
-}
-
-variable "redis_parameter_group_name" {
-  type        = string
-  default     = "default.redis5.0"
-  description = "Redis parameter group name."
-}
-
-variable "db_size" {
-  type        = string
-  default     = "db.m4.xlarge"
-  description = "PostgreSQL instance size."
-}
-
-variable "db_backup_retention" {
-  type        = number
-  description = "The days to retain backups for. Must be between 0 and 35"
-  default     = 0
-}
-
-variable "db_backup_window" {
-  type        = string
-  description = "The daily time range (in UTC) during which automated backups are created if they are enabled"
-  default     = null
-}
-
-variable "postgres_engine_version" {
-  type        = string
-  default     = "12.8"
-  description = "PostgreSQL version."
+  description = "(Required) What is the OS distribution of the instance on which Terraoform Enterprise will be deployed?"
+  validation {
+    condition     = contains(["rhel", "ubuntu"], var.distribution)
+    error_message = "Supported values for distribution are 'rhel' or 'ubuntu'."
+  }
 }
 
 variable "domain_name" {
@@ -132,6 +62,98 @@ variable "instance_type" {
   default     = "m5.xlarge"
   description = "The instance type of EC2 instance(s) to create."
   type        = string
+}
+
+variable "object_storage_iam_user" {
+  default     = null
+  description = <<-EOD
+  The IAM user that will be authorized to access the S3 storage bucket which holds Terraform Enterprise runtime data.
+  This value requires var.aws_access_key_id and var.aws_secret_access_key to also be set. The values of those variables
+  must represent an access key that is associated with this user.
+  EOD
+  type        = object({ arn = string })
+}
+
+variable "vm_certificate_secret_id" {
+  default     = null
+  type        = string
+  description = <<-EOD
+  A Secrets Manager secret ARN which contains the Base64 encoded version of a PEM encoded public certificate for the Virtual
+  Machine Scale Set.
+  EOD
+}
+
+variable "vm_key_secret_id" {
+  default     = null
+  type        = string
+  description = <<-EOD
+  A Secrets Manager secret ARN which contains the Base64 encoded version of a PEM encoded private key for the Virtual Machine
+  Scale Set.
+  EOD
+}
+
+# Redis
+# -----
+variable "redis_cache_size" {
+  type        = string
+  default     = "cache.m4.large"
+  description = "Redis instance size."
+}
+
+variable "redis_encryption_in_transit" {
+  type        = bool
+  description = "Determine whether Redis traffic is encrypted in transit."
+  default     = false
+}
+
+variable "redis_encryption_at_rest" {
+  type        = bool
+  description = "Determine whether Redis data is encrypted at rest."
+  default     = false
+}
+
+variable "redis_engine_version" {
+  type        = string
+  default     = "5.0.6"
+  description = "Redis enginer version."
+}
+
+variable "redis_parameter_group_name" {
+  type        = string
+  default     = "default.redis5.0"
+  description = "Redis parameter group name."
+}
+
+variable "redis_use_password_auth" {
+  type        = bool
+  description = "Determine if a password is required for Redis."
+  default     = false
+}
+
+# Postgres
+# --------
+variable "db_backup_retention" {
+  type        = number
+  description = "The days to retain backups for. Must be between 0 and 35"
+  default     = 0
+}
+
+variable "db_backup_window" {
+  type        = string
+  description = "The daily time range (in UTC) during which automated backups are created if they are enabled"
+  default     = null
+}
+
+variable "db_size" {
+  type        = string
+  default     = "db.m4.xlarge"
+  description = "PostgreSQL instance size."
+}
+
+variable "postgres_engine_version" {
+  type        = string
+  default     = "12.8"
+  description = "PostgreSQL version."
 }
 
 # Userdata
@@ -172,6 +194,12 @@ variable "operational_mode" {
   }
 }
 
+variable "settings_module_source" {
+  type        = string
+  default     = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=main"
+  description = "The value of the source argument for the settings module block."
+}
+
 variable "tbw_image" {
   default     = null
   type        = string
@@ -189,6 +217,12 @@ variable "tbw_image" {
     )
     error_message = "The tbw_image must be 'default_image', 'custom_image', or null. If left unset, TFE will default to 'default_image'."
   }
+}
+
+variable "tfe_init_module_source" {
+  type        = string
+  default     = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
+  description = "The value of the source argument for the tfe_init module block."
 }
 
 variable "tfe_license_file_location" {
@@ -211,15 +245,6 @@ variable "tls_bootstrap_key_pathname" {
 
 # Air-gapped Installations ONLY
 # -----------------------------
-variable "tfe_license_bootstrap_airgap_package_path" {
-  default     = null
-  type        = string
-  description = <<-EOD
-  (Required if air-gapped installation) The URL of a Replicated airgap package for Terraform
-  Enterprise. The suggested path is "/var/lib/ptfe/ptfe.airgap".
-  EOD
-}
-
 variable "airgap_url" {
   default     = null
   type        = string
@@ -230,12 +255,33 @@ variable "airgap_url" {
   EOD
 }
 
+variable "tfe_license_bootstrap_airgap_package_path" {
+  default     = null
+  type        = string
+  description = <<-EOD
+  (Required if air-gapped installation) The URL of a Replicated airgap package for Terraform
+  Enterprise. The suggested path is "/var/lib/ptfe/ptfe.airgap".
+  EOD
+}
+
 # Mounted Disk Installations ONLY
 # -------------------------------
+variable "ebs_delete_on_termination" {
+  type        = bool
+  default     = true
+  description = "(Optional if Mounted Disk installation) Whether the volume should be destroyed on instance termination."
+}
+
 variable "ebs_device_name" {
   type        = string
   default     = "xvdcc"
   description = "(Required if Mounted Disk installation) The name of the device to mount."
+}
+
+variable "ebs_iops" {
+  type        = number
+  default     = 3000
+  description = "(Optional if Mounted Disk installation) The amount of provisioned IOPS. This must be set with a volume_type of 'io1'."
 }
 
 variable "ebs_renamed_device_name" {
@@ -264,36 +310,12 @@ variable "ebs_volume_type" {
   }
 }
 
-variable "ebs_iops" {
-  type        = number
-  default     = 3000
-  description = "(Optional if Mounted Disk installation) The amount of provisioned IOPS. This must be set with a volume_type of 'io1'."
-}
-
-variable "ebs_delete_on_termination" {
-  type        = bool
-  default     = true
-  description = "(Optional if Mounted Disk installation) Whether the volume should be destroyed on instance termination."
-}
-
 # Network
 # -------
-variable "network_id" {
-  default     = null
-  description = "The identity of the VPC in which resources will be deployed."
-  type        = string
-}
-
-variable "network_private_subnets" {
-  default     = []
-  description = "A list of the identities of the private subnetworks in which resources will be deployed."
+variable "admin_dashboard_ingress_ranges" {
   type        = list(string)
-}
-
-variable "network_public_subnets" {
-  default     = []
-  description = "A list of the identities of the public subnetworks in which resources will be deployed."
-  type        = list(string)
+  description = "(Optional) List of CIDR ranges that are allowed to acces the admin dashboard. Only used for standalone installations."
+  default     = ["0.0.0.0/0"]
 }
 
 variable "deploy_vpc" {
@@ -308,11 +330,24 @@ variable "network_cidr" {
   default     = "10.0.0.0/16"
 }
 
+variable "network_id" {
+  default     = null
+  description = "The identity of the VPC in which resources will be deployed."
+  type        = string
+}
+
 variable "network_private_subnet_cidrs" {
   type        = list(string)
   description = "(Optional) List of private subnet CIDR ranges to create in VPC."
   default     = ["10.0.32.0/20", "10.0.48.0/20"]
 }
+
+variable "network_private_subnets" {
+  default     = []
+  description = "A list of the identities of the private subnetworks in which resources will be deployed."
+  type        = list(string)
+}
+
 
 variable "network_public_subnet_cidrs" {
   type        = list(string)
@@ -320,43 +355,16 @@ variable "network_public_subnet_cidrs" {
   default     = ["10.0.0.0/20", "10.0.16.0/20"]
 }
 
-variable "admin_dashboard_ingress_ranges" {
+
+variable "network_public_subnets" {
+  default     = []
+  description = "A list of the identities of the public subnetworks in which resources will be deployed."
   type        = list(string)
-  description = "(Optional) List of CIDR ranges that are allowed to acces the admin dashboard. Only used for standalone installations."
-  default     = ["0.0.0.0/0"]
 }
+
 
 # TFE Instance(s)
 # ---------------
-variable "node_count" {
-  type        = number
-  default     = 2
-  description = "The number of nodes you want in your autoscaling group (1 for standalone, 2 for active-active configuration)"
-
-  validation {
-    condition     = var.node_count <= 5
-    error_message = "The node_count value must be less than or equal to 5."
-  }
-}
-
-variable "ssl_policy" {
-  type        = string
-  default     = "ELBSecurityPolicy-2016-08"
-  description = "SSL policy to use on ALB listener"
-}
-
-variable "tfe_subdomain" {
-  type        = string
-  default     = "tfe"
-  description = "Subdomain for accessing the Terraform Enterprise UI."
-}
-
-variable "iact_subnet_list" {
-  default     = []
-  description = "A list of CIDR masks that configure the ability to retrieve the IACT from outside the host."
-  type        = list(string)
-}
-
 variable "iact_subnet_time_limit" {
   default     = 60
   description = "The time limit that requests from the subnets listed can request the IACT, as measured from the instance creation in minutes."
@@ -375,10 +383,15 @@ variable "key_name" {
   type        = string
 }
 
-variable "release_sequence" {
-  default     = null
+variable "node_count" {
   type        = number
-  description = "Terraform Enterprise release sequence"
+  default     = 2
+  description = "The number of nodes you want in your autoscaling group (1 for standalone, 2 for active-active configuration)"
+
+  validation {
+    condition     = var.node_count <= 5
+    error_message = "The node_count value must be less than or equal to 5."
+  }
 }
 
 variable "pg_extra_params" {
@@ -392,21 +405,26 @@ variable "pg_extra_params" {
   EOF
 }
 
-# KMS
-# ---
-variable "kms_key_arn" {
-  type        = string
-  description = "KMS key arn for AWS KMS Customer managed key."
+variable "release_sequence" {
+  default     = null
+  type        = number
+  description = "Terraform Enterprise release sequence"
 }
 
-# Secrets Manager
-# ---------------
-
-variable "tfe_license_secret_id" {
+variable "ssl_policy" {
   type        = string
-  description = "The Secrets Manager secret ARN under which the Base64 encoded Terraform Enterprise license is stored."
+  default     = "ELBSecurityPolicy-2016-08"
+  description = "SSL policy to use on ALB listener"
 }
 
+variable "tfe_subdomain" {
+  type        = string
+  default     = "tfe"
+  description = "Subdomain for accessing the Terraform Enterprise UI."
+}
+
+# KMS & Secrets Manager
+# ---------------------
 variable "ca_certificate_secret_id" {
   default     = null
   type        = string
@@ -416,6 +434,16 @@ variable "ca_certificate_secret_id" {
   instance(s). This argument is only required if TLS certificates in the deployment are not
   issued by a well-known CA.
   EOD
+}
+
+variable "kms_key_arn" {
+  type        = string
+  description = "KMS key arn for AWS KMS Customer managed key."
+}
+
+variable "tfe_license_secret_id" {
+  type        = string
+  description = "The Secrets Manager secret ARN under which the Base64 encoded Terraform Enterprise license is stored."
 }
 
 # Load Balancer
@@ -431,8 +459,14 @@ variable "load_balancing_scheme" {
   }
 }
 
-# PROXY SETTINGS
+# Proxy Settings
 # --------------
+variable "no_proxy" {
+  type        = list(string)
+  description = "(Optional) List of IP addresses to not proxy"
+  default     = []
+}
+
 variable "proxy_ip" {
   type        = string
   description = "(Optional) IP address of existing web proxy to route TFE traffic through."
@@ -445,12 +479,6 @@ variable "proxy_port" {
   description = "Port that the proxy server will use"
 }
 
-variable "no_proxy" {
-  type        = list(string)
-  description = "(Optional) List of IP addresses to not proxy"
-  default     = []
-}
-
 variable "trusted_proxies" {
   default     = []
   description = <<-EOD
@@ -460,38 +488,30 @@ variable "trusted_proxies" {
   type        = list(string)
 }
 
-# Redis
-# -----
-variable "redis_encryption_in_transit" {
-  type        = bool
-  description = "Determine whether Redis traffic is encrypted in transit."
-  default     = false
-}
-
-variable "redis_encryption_at_rest" {
-  type        = bool
-  description = "Determine whether Redis data is encrypted at rest."
-  default     = false
-}
-
-variable "redis_use_password_auth" {
-  type        = bool
-  description = "Determine if a password is required for Redis."
-  default     = false
-}
-
 # External Vault
 # --------------
+variable "extern_vault_addr" {
+  default     = null
+  type        = string
+  description = "(Required if var.extern_vault_enable = true) URL of external Vault cluster."
+}
+
 variable "extern_vault_enable" {
   default     = false
   type        = bool
   description = "(Optional) Indicate if an external Vault cluster is being used. Set to 1 if so."
 }
 
-variable "extern_vault_addr" {
+variable "extern_vault_namespace" {
   default     = null
   type        = string
-  description = "(Required if var.extern_vault_enable = true) URL of external Vault cluster."
+  description = "(Optional if var.extern_vault_enable = true) The Vault namespace"
+}
+
+variable "extern_vault_path" {
+  default     = "auth/approle"
+  type        = string
+  description = "(Optional if var.extern_vault_enable = true) Path on the Vault server for the AppRole auth. Defaults to auth/approle."
 }
 
 variable "extern_vault_role_id" {
@@ -506,21 +526,9 @@ variable "extern_vault_secret_id" {
   description = "(Required if var.extern_vault_enable = true) AppRole SecretId to use to authenticate with the Vault cluster."
 }
 
-variable "extern_vault_path" {
-  default     = "auth/approle"
-  type        = string
-  description = "(Optional if var.extern_vault_enable = true) Path on the Vault server for the AppRole auth. Defaults to auth/approle."
-}
 
 variable "extern_vault_token_renew" {
   default     = 3600
   type        = number
   description = "(Optional if var.extern_vault_enable = true) How often (in seconds) to renew the Vault token."
 }
-
-variable "extern_vault_namespace" {
-  default     = null
-  type        = string
-  description = "(Optional if var.extern_vault_enable = true) The Vault namespace"
-}
-
