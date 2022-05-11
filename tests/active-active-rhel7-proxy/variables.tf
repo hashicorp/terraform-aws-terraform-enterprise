@@ -28,3 +28,8 @@ variable "object_storage_iam_user_name" {
   type        = string
   description = "The name of the IAM user which will be authorized to access the S3 storage bucket."
 }
+
+variable "tfe_license_secret_id" {
+  type        = string
+  description = "The Secrets Manager secret ARN under which the Base64 encoded Terraform Enterprise license is stored."
+}

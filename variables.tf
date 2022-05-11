@@ -180,6 +180,18 @@ variable "disk_path" {
   type        = string
 }
 
+variable "iact_subnet_list" {
+  default     = []
+  description = "A list of CIDR masks that configure the ability to retrieve the IACT from outside the host."
+  type        = list(string)
+}
+
+variable "iact_subnet_time_limit" {
+  default     = 60
+  description = "The time limit that requests from the subnets listed can request the IACT, as measured from the instance creation in minutes."
+  type        = number
+}
+
 variable "operational_mode" {
   default     = "external"
   description = <<-EOD
@@ -297,12 +309,6 @@ variable "network_public_subnets" {
 
 # TFE Instance(s)
 # ---------------
-variable "iact_subnet_time_limit" {
-  default     = 60
-  description = "The time limit that requests from the subnets listed can request the IACT, as measured from the instance creation in minutes."
-  type        = number
-}
-
 variable "iam_role_policy_arns" {
   default     = []
   description = "A set of Amazon Resource Names of IAM role policies to be attached to the TFE IAM role."
