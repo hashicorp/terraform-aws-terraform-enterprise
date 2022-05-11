@@ -19,6 +19,7 @@ variable "acm_certificate_arn" {
 }
 
 variable "license_file" {
+  default     = null
   type        = string
   description = "The local path to the Terraform Enterprise license to be provided by CI."
 }

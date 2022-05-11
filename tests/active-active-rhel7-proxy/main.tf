@@ -5,8 +5,12 @@ resource "random_string" "friendly_name" {
   special = false
 }
 
+# Store TFE License as secret
+# ---------------------------
 module "secrets" {
+  count  = var.license_file == null ? 0 : 1
   source = "../../fixtures/secrets"
+
   tfe_license = {
     name = "${local.friendly_name_prefix}-tfe-license"
     path = var.license_file
@@ -58,7 +62,7 @@ module "tfe" {
   acm_certificate_arn   = var.acm_certificate_arn
   domain_name           = "tfe-team-dev.aws.ptfedev.com"
   friendly_name_prefix  = local.friendly_name_prefix
-  tfe_license_secret_id = module.secrets.tfe_license_secret_id
+  tfe_license_secret_id = try(module.secrets[0].tfe_license_secret_id, var.tfe_license_secret_id)
 
   ami_id                   = data.aws_ami.rhel.id
   distribution             = "rhel"
