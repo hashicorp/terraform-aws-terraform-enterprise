@@ -206,12 +206,6 @@ variable "operational_mode" {
   }
 }
 
-variable "settings_module_source" {
-  type        = string
-  default     = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=main"
-  description = "The value of the source argument for the settings module block."
-}
-
 variable "tbw_image" {
   default     = null
   type        = string
