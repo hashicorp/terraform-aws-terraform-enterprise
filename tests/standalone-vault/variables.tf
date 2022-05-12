@@ -8,6 +8,11 @@ variable "acm_certificate_arn" {
   description = "The ARN of an existing ACM certificate."
 }
 
+variable "domain_name" {
+  type        = string
+  description = "Domain for creating the Terraform Enterprise subdomain on."
+}
+
 variable "license_file" {
   default     = null
   type        = string
