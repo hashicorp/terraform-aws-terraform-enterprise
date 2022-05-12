@@ -231,12 +231,6 @@ variable "tbw_image" {
   }
 }
 
-variable "tfe_init_module_source" {
-  type        = string
-  default     = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
-  description = "The value of the source argument for the tfe_init module block."
-}
-
 variable "tfe_license_file_location" {
   default     = "/etc/terraform-enterprise.rli"
   type        = string
