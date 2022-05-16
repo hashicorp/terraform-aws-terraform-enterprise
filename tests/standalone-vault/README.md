@@ -28,7 +28,9 @@ This test assumes the following resources exist.
 
 ## How this test is used
 
-This test is leveraged by the integration tests in the [`ptfe-replicated`](https://github.com/hashicorp/ptfe-replicated/blob/master/.circleci/config.yml)
+This test is used in two different CI pipelines.
+
+1. This test is leveraged by the integration tests in the [`ptfe-replicated`](https://github.com/hashicorp/ptfe-replicated/blob/master/.circleci/config.yml)
 repository.
 
 Because the Vault provider is dependent upon output from the HCP resources, we must
@@ -39,3 +41,5 @@ $ terraform apply -target=module.hcp_vault.hcp_vault_cluster.test -target=module
 
 $ terraform apply
 ```
+
+2. This test is used to test changes made to the fixture and utility modules in the [terraform-random-tfe-utility](https://github.com/hashicorp/terraform-random-tfe-utility) repository.
