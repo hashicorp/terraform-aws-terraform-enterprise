@@ -10,7 +10,7 @@ resource "random_string" "friendly_name" {
 # Store TFE License as secret
 # ---------------------------
 module "secrets" {
-  count  = var.license_file == null ? 0 : 1
+  count  = local.utility_module_test ? 0 : 1
   source = "../../fixtures/secrets"
 
   tfe_license = {
@@ -50,7 +50,7 @@ module "standalone_vault" {
   iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   iact_subnet_list            = ["0.0.0.0/0"]
   instance_type               = "m5.xlarge"
-  key_name                    = "standalone-vault"
+  key_name                    = local.utility_module_test ? var.key_name : "standalone-vault"
   kms_key_arn                 = module.kms.key
   load_balancing_scheme       = local.load_balancing_scheme
   node_count                  = 1
