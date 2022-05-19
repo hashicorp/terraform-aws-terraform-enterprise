@@ -2,7 +2,7 @@ locals {
 
   common_tags = {
     Terraform   = "cloud"
-    Environment = "tfe_team_dev"
+    Environment = local.utility_module_test ? "tfe_modules_test" : "tfe_team_dev"
     Description = "Active/Active on RHEL with Proxy scenario deployed from CircleCI"
     Repository  = "hashicorp/terraform-aws-terraform-enterprise"
     Team        = "Terraform Enterprise on Prem"
@@ -16,4 +16,5 @@ locals {
   iam_principal         = data.aws_iam_user.ci_s3.arn
   load_balancing_scheme = "PUBLIC"
   http_proxy_port       = "3128"
+  utility_module_test   = var.license_file == null
 }

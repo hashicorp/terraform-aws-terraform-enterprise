@@ -1,9 +1,9 @@
 data "aws_secretsmanager_secret" "ca_certificate" {
-  name = "terraform-20211022160427310700000001"
+  name = var.ca_certificate_secret_name
 }
 
 data "aws_secretsmanager_secret" "ca_private_key" {
-  name = "terraform-20211022160427312200000003"
+  name = var.ca_private_key_secret_name
 }
 
 data "aws_ami" "rhel" {
