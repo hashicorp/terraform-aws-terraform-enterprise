@@ -18,6 +18,21 @@ variable "acm_certificate_arn" {
   description = "The ARN of an existing ACM certificate."
 }
 
+variable "ca_certificate_secret_name" {
+  type        = string
+  description = "The secrets manager secret name of the Base64 encoded CA certificate."
+}
+
+variable "ca_private_key_secret_name" {
+  type        = string
+  description = "The secrets manager secret name of the Base64 encoded CA private key."
+}
+
+variable "domain_name" {
+  type        = string
+  description = "Domain for creating the Terraform Enterprise subdomain on."
+}
+
 variable "license_file" {
   default     = null
   type        = string

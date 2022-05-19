@@ -8,7 +8,7 @@ resource "random_string" "friendly_name" {
 # Store TFE License as secret
 # ---------------------------
 module "secrets" {
-  count  = var.license_file == null ? 0 : 1
+  count  = local.utility_module_test ? 0 : 1
   source = "../../fixtures/secrets"
 
   tfe_license = {
@@ -18,7 +18,7 @@ module "secrets" {
 }
 
 data "aws_iam_user" "ci_s3" {
-  user_name = "TFE-S3"
+  user_name = var.object_storage_iam_user_name
 }
 
 module "kms" {
@@ -60,7 +60,7 @@ module "tfe" {
   source = "../../"
 
   acm_certificate_arn   = var.acm_certificate_arn
-  domain_name           = "tfe-team-dev.aws.ptfedev.com"
+  domain_name           = var.domain_name
   friendly_name_prefix  = local.friendly_name_prefix
   tfe_license_secret_id = try(module.secrets[0].tfe_license_secret_id, var.tfe_license_secret_id)
 
