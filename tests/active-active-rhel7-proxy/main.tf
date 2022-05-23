@@ -28,26 +28,28 @@ module "kms" {
 }
 
 resource "tls_private_key" "main" {
+  count     = local.utility_module_test ? 0 : 1
   algorithm = "RSA"
 }
 
 resource "local_file" "private_key_pem" {
+  count    = local.utility_module_test ? 0 : 1
   filename = "${path.module}/work/private-key.pem"
 
-  content         = tls_private_key.main.private_key_pem
+  content         = tls_private_key.main[0].private_key_pem
   file_permission = "0600"
 }
 
 resource "aws_key_pair" "main" {
-  public_key = tls_private_key.main.public_key_openssh
-
-  key_name = "${local.friendly_name_prefix}-ssh"
+  count      = local.utility_module_test ? 0 : 1
+  public_key = tls_private_key.main[0].public_key_openssh
+  key_name   = "${local.friendly_name_prefix}-ssh"
 }
 
 module "test_proxy" {
   source                          = "../../fixtures/test_proxy"
   subnet_id                       = module.tfe.private_subnet_ids[0]
-  key_name                        = aws_key_pair.main.key_name
+  key_name                        = local.utility_module_test ? var.key_name : aws_key_pair.main[0].key_name
   name                            = local.friendly_name_prefix
   http_proxy_port                 = local.http_proxy_port
   vpc_id                          = module.tfe.network_id
@@ -72,7 +74,7 @@ module "tfe" {
   iact_subnet_list         = ["0.0.0.0/0"]
   iam_role_policy_arns     = [local.ssm_policy_arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type            = "m5.xlarge"
-  key_name                 = aws_key_pair.main.key_name
+  key_name                 = local.utility_module_test ? var.key_name : aws_key_pair.main[0].key_name
   kms_key_arn              = module.kms.key
   load_balancing_scheme    = local.load_balancing_scheme
   object_storage_iam_user  = data.aws_iam_user.object_storage
@@ -95,13 +97,14 @@ resource "null_resource" "wait_for_instances" {
 }
 
 resource "local_file" "ssh_config" {
+  count    = local.utility_module_test ? 0 : 1
   filename = "${path.module}/work/ssh-config"
 
   content = templatefile(
     "${path.module}/templates/ssh-config.tpl",
     {
       instance      = data.null_data_source.instance.outputs
-      identity_file = local_file.private_key_pem.filename
+      identity_file = local_file.private_key_pem[0].filename
       user          = local.ssh_user
     }
   )

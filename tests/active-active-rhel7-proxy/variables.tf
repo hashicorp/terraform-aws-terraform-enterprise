@@ -33,6 +33,12 @@ variable "domain_name" {
   description = "Domain for creating the Terraform Enterprise subdomain on."
 }
 
+variable "key_name" {
+  default     = null
+  description = "The name of the key pair to be used for SSH access to the EC2 instance(s)."
+  type        = string
+}
+
 variable "license_file" {
   default     = null
   type        = string

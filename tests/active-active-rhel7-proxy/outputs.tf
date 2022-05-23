@@ -20,13 +20,13 @@ output "ptfe_health_check" {
 }
 
 output "ssh_config_file" {
-  value = local_file.ssh_config.filename
+  value = local.utility_module_test ? "use AWS SSH key define by var.key_name" : local_file.ssh_config[0].filename
 
   description = "The pathname of the SSH configuration file that grants access to the compute instance."
 }
 
 output "ssh_private_key" {
-  value = local_file.private_key_pem.filename
+  value = local.utility_module_test ? "use AWS SSH key define by var.key_name" : local_file.private_key_pem[0].filename
 
   description = "The pathname of the private SSH key."
 }
