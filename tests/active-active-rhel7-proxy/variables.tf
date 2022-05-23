@@ -34,6 +34,7 @@ variable "domain_name" {
 }
 
 variable "key_name" {
+  default     = null
   description = "The name of the key pair to be used for SSH access to the EC2 instance(s)."
   type        = string
 }
