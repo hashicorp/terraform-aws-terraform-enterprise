@@ -51,7 +51,7 @@ module "private_active_active" {
   redis_encryption_in_transit = true
   redis_use_password_auth     = true
   tfe_subdomain               = local.test_name
-  database_version            = 13
+  postgres_engine_version     = 13
 
   asg_tags = local.common_tags
 }
