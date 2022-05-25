@@ -52,6 +52,7 @@ module "private_active_active" {
   redis_use_password_auth     = true
   tfe_subdomain               = local.test_name
   postgres_engine_version     = 13
+  db_size                     = "db.m5.xlarge"
 
   asg_tags = local.common_tags
 }
