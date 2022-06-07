@@ -4,12 +4,12 @@
 
 This example for Terraform Enterprise creates a TFE installation with the following traits:
 
--  Active/Active architecture
--  External Services production type
--  m5.xlarge virtual machine type
--  RHEL 7.9
--  A privately accessible TCP load balancer with TLS pass-through
--  An ubuntu based mitm proxy server with TLS termination 
+- Active/Active architecture
+- External Services production type
+- m5.xlarge virtual machine type
+- RHEL 7.9
+- A privately accessible TCP load balancer with TLS pass-through
+- An ubuntu based mitm proxy server with TLS termination 
 
 ## Prerequisites
 
@@ -25,21 +25,21 @@ This example assumes that the following resources exist:
 
 ### Deployment
 
- 1. Read the entire [README.md](../../README.md) of the root module.
- 2. Ensure account meets module prerequisites from above.
- 3. Clone repository.
- 4. Change directory into desired example folder.
- 5. Create a local `terraform.auto.tfvars` file and instantiate the required inputs as required in the respective `./examples/active-active/variables.tf` including the path to the license under the `license_file` variable value.
- 6. Authenticate against the AWS provider. See [instructions](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#authentication-and-configuration).
- 7. Initialize terraform and apply the module configurations using the commands below:
+1. Read the entire [README.md](../../README.md) of the root module.
+2. Ensure account meets module prerequisites from above.
+3. Clone repository.
+4. Change directory into desired example folder.
+5. Create a local `terraform.auto.tfvars` file and instantiate the required inputs as required in the respective `./examples/active-active/variables.tf` including the path to the license under the `license_file` variable value.
+6. Authenticate against the AWS provider. See [instructions](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#authentication-and-configuration).
+7. Initialize terraform and apply the module configurations using the commands below:
 
-    NOTE: `terraform plan` will print out the execution plan which describes the actions Terraform will take in order to build your infrastructure to match the module configuration. If anything in the plan seems incorrect or dangerous, it is safe to abort here and not proceed to `terraform apply`.
+   NOTE: `terraform plan` will print out the execution plan which describes the actions Terraform will take in order to build your infrastructure to match the module configuration. If anything in the plan seems incorrect or dangerous, it is safe to abort here and not proceed to `terraform apply`.
 
-    ```
-    terraform init
-    terraform plan
-    terraform apply
-    ```
+   ```
+   terraform init
+   terraform plan
+   terraform apply
+   ```
 
 ## Post-deployment Tasks
 
