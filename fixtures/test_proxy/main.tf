@@ -82,9 +82,10 @@ resource "aws_instance" "proxy" {
 }
 
 module "test_proxy_init" {
-  source = "github.com/hashicorp/terraform-random-tfe-utility//fixtures/test_proxy_init?ref=main"
+  source = "github.com/hashicorp/terraform-random-tfe-utility//fixtures/test_proxy_init?ref=remove-template-provider"
 
   mitmproxy_ca_certificate_secret = var.mitmproxy_ca_certificate_secret != null ? var.mitmproxy_ca_certificate_secret : null
   mitmproxy_ca_private_key_secret = var.mitmproxy_ca_private_key_secret != null ? var.mitmproxy_ca_private_key_secret : null
   cloud                           = "aws"
 }
+

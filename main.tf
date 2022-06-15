@@ -113,7 +113,7 @@ module "database" {
 # TFE and Replicated settings to pass to the tfe_init module
 # -----------------------------------------------------------------------------
 module "settings" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=remove-template-provider"
 
   # TFE Base Configuration
   custom_image_tag       = var.custom_image_tag
@@ -178,7 +178,7 @@ module "settings" {
 # AWS user data / cloud init used to install and configure TFE on instance(s)
 # -----------------------------------------------------------------------------
 module "tfe_init" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=remove-template-provider"
 
   # TFE & Replicated Configuration data
   cloud                    = "aws"
