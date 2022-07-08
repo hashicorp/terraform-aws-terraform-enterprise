@@ -71,7 +71,7 @@ resource "aws_db_instance" "postgresql" {
   max_allocated_storage       = 0
   multi_az                    = true
   # no special characters allowed
-  name                   = "espdtfe"
+  db_name                = "espdtfe"
   port                   = 5432
   publicly_accessible    = false
   skip_final_snapshot    = true
