@@ -9,7 +9,7 @@ resource "aws_s3_bucket_acl" "tfe_data_bucket_acl" {
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "tfe_data_bucket_encryption" {
-  bucket = aws_s3_bucket.tfe_data_bucket[aws_s3_bucket.tfe_data_bucket.bucket]
+  bucket = aws_s3_bucket.tfe_data_bucket.bucket
 
   rule {
     apply_server_side_encryption_by_default {
