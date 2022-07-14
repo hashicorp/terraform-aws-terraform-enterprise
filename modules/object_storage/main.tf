@@ -1,21 +1,29 @@
 resource "aws_s3_bucket" "tfe_data_bucket" {
   bucket = "${var.friendly_name_prefix}-tfe-data"
+  force_destroy = true
+}
+
+resource "aws_s3_bucket_acl" "tfe_data_bucket" {
+  bucket = aws_s3_bucket.tfe_data_bucket.id
   acl    = "private"
+}
 
-  versioning {
-    enabled = true
+resource "aws_s3_bucket_versioning" "tfe_data_bucket" {
+  bucket = aws_s3_bucket.tfe_data_bucket.id
+  versioning_configuration {
+    status = "Enabled"
   }
+}
 
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        kms_master_key_id = var.kms_key_arn
-        sse_algorithm     = "aws:kms"
-      }
+resource "aws_s3_bucket_server_side_encryption_configuration" "tfe_data_bucket" {
+  bucket = aws_s3_bucket.tfe_data_bucket.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = var.kms_key_arn
+      sse_algorithm     = "aws:kms"
     }
   }
-
-  force_destroy = true
 }
 
 resource "aws_s3_bucket_public_access_block" "tfe_data" {
@@ -27,7 +35,7 @@ resource "aws_s3_bucket_public_access_block" "tfe_data" {
   ignore_public_acls      = true
 }
 
-data "aws_iam_policy_document" "tfe_data" {
+data "aws_iam_policy_document" "tfe_data_bucket" {
   statement {
     actions = [
       "s3:GetBucketLocation",
@@ -58,7 +66,7 @@ data "aws_iam_policy_document" "tfe_data" {
   }
 }
 
-resource "aws_s3_bucket_policy" "tfe_data" {
+resource "aws_s3_bucket_policy" "tfe_data_bucket" {
   # Depending on aws_s3_bucket_public_access_block.tfe_data avoids an error due to conflicting, simultaneous operations
   # against the bucket.
   bucket = aws_s3_bucket_public_access_block.tfe_data.bucket
