@@ -26,7 +26,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "tfe_data_bucket" 
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "tfe_data" {
+resource "aws_s3_bucket_public_access_block" "tfe_data_bucket" {
   bucket = aws_s3_bucket.tfe_data_bucket.id
 
   block_public_acls       = true
