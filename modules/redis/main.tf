@@ -57,11 +57,11 @@ resource "aws_elasticache_subnet_group" "tfe" {
 }
 
 resource "aws_elasticache_replication_group" "redis" {
-  count                         = var.active_active ? 1 : 0
-  node_type                     = var.cache_size
-  number_cache_clusters         = 1
-  replication_group_description = "The replication group of the Redis deployment for TFE."
-  replication_group_id          = "${var.friendly_name_prefix}-tfe"
+  count                = var.active_active ? 1 : 0
+  node_type            = var.cache_size
+  num_cache_clusters   = 1
+  description          = "The replication group of the Redis deployment for TFE."
+  replication_group_id = "${var.friendly_name_prefix}-tfe"
 
   apply_immediately          = true
   automatic_failover_enabled = false

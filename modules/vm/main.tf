@@ -102,22 +102,15 @@ resource "aws_autoscaling_group" "tfe_asg" {
   health_check_type         = "ELB"
   launch_configuration      = aws_launch_configuration.tfe.name
 
-  tags = concat(
-    [
-      {
-        key                 = "Name"
-        value               = "${var.friendly_name_prefix}-tfe"
-        propagate_at_launch = true
-      },
-    ],
-    [
-      for k, v in var.asg_tags : {
-        key                 = k
-        value               = v
-        propagate_at_launch = true
-      }
-    ]
-  )
+  dynamic "tag" {
+    for_each = local.tags
+
+    content {
+      key                 = tag.value["key"]
+      value               = tag.value["value"]
+      propagate_at_launch = tag.value["propagate_at_launch"]
+    }
+  }
 
   lifecycle {
     create_before_destroy = true

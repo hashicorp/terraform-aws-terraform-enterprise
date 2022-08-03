@@ -1,21 +1,29 @@
 resource "aws_s3_bucket" "tfe_data_bucket" {
-  bucket = "${var.friendly_name_prefix}-tfe-data"
+  bucket        = "${var.friendly_name_prefix}-tfe-data"
+  force_destroy = true
+}
+
+resource "aws_s3_bucket_acl" "tfe_data_bucket_acl" {
+  bucket = aws_s3_bucket.tfe_data_bucket.id
   acl    = "private"
+}
 
-  versioning {
-    enabled = true
-  }
+resource "aws_s3_bucket_server_side_encryption_configuration" "tfe_data_bucket_encryption" {
+  bucket = aws_s3_bucket.tfe_data_bucket.bucket
 
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        kms_master_key_id = var.kms_key_arn
-        sse_algorithm     = "aws:kms"
-      }
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = var.kms_key_arn
+      sse_algorithm     = "aws:kms"
     }
   }
+}
 
-  force_destroy = true
+resource "aws_s3_bucket_versioning" "tfe_data_bucket_versioning" {
+  bucket = aws_s3_bucket.tfe_data_bucket.id
+  versioning_configuration {
+    status = "Enabled"
+  }
 }
 
 resource "aws_s3_bucket_public_access_block" "tfe_data" {
