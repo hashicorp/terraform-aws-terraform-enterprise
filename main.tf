@@ -350,6 +350,7 @@ module "vm" {
   ebs_iops                            = var.ebs_iops
   ebs_delete_on_termination           = var.ebs_delete_on_termination
   friendly_name_prefix                = var.friendly_name_prefix
+  health_check_grace_period           = var.health_check_grace_period
   key_name                            = var.key_name
   instance_type                       = var.instance_type
   is_replicated_deployment            = var.is_replicated_deployment

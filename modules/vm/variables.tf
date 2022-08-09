@@ -31,6 +31,11 @@ variable "aws_iam_instance_profile" {
   type        = string
 }
 
+variable "health_check_grace_period" {
+  description = "The health grace period aws provides to allow for an instance to pass it's health check."
+  type        = number
+}
+
 variable "network_id" {
   description = "The identity of the VPC in which the security group attached to the TFE EC2 instance will be delpoyed."
   type        = string

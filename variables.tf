@@ -57,6 +57,12 @@ variable "friendly_name_prefix" {
   description = "(Required) Friendly name prefix used for tagging and naming AWS resources."
 }
 
+variable "health_check_grace_period" {
+  default     = null
+  description = "The health grace period aws provides to allow for an instance to pass it's health check."
+  type        = number
+}
+
 variable "instance_type" {
   default     = "m5.xlarge"
   description = "The instance type of EC2 instance(s) to create."
