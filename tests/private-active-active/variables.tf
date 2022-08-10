@@ -18,6 +18,12 @@ variable "key_name" {
   type        = string
 }
 
+variable "license_file" {
+  default     = null
+  type        = string
+  description = "The local path to the Terraform Enterprise license to be provided by CI."
+}
+
 variable "tfe_license_secret_id" {
   type        = string
   description = "The secrets manager secret ID of the Base64 encoded Terraform Enterprise license."

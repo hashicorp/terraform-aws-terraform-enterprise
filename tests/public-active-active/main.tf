@@ -26,8 +26,8 @@ module "public_active_active" {
   acm_certificate_arn   = var.acm_certificate_arn
   domain_name           = var.domain_name
   friendly_name_prefix  = local.friendly_name_prefix
-  tfe_license_secret_id = var.tfe_license_secret_id
   distribution          = "ubuntu"
+  tfe_license_secret_id = try(module.secrets[0].tfe_license_secret_id, var.tfe_license_secret_id)
 
   ami_id                      = data.aws_ami.ubuntu.id
   iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
