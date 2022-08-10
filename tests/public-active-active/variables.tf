@@ -31,6 +31,7 @@ variable "license_file" {
 }
 
 variable "tfe_license_secret_id" {
+  default     = null
   type        = string
   description = <<-EOD
   The name of the Secrets Manager secret ID of the Base64 encoded Terraform Enterprise license.

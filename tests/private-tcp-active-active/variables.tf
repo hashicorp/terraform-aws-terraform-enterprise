@@ -45,6 +45,7 @@ variable "private_key_pem_secret_id" {
 }
 
 variable "tfe_license_secret_id" {
+  default     = null
   type        = string
   description = "The secrets manager secret ID of the Base64 encoded Terraform Enterprise license."
 }
