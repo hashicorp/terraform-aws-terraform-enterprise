@@ -15,6 +15,16 @@ resource "random_string" "friendly_name" {
   special = false
 }
 
+module "secrets" {
+  count  = local.utility_module_test ? 0 : 1
+  source = "../../fixtures/secrets"
+
+  tfe_license = {
+    name = "${local.friendly_name_prefix}-tfe-license"
+    path = var.license_file
+  }
+}
+
 module "kms" {
   source    = "../../fixtures/kms"
   key_alias = "${local.friendly_name_prefix}-key"
