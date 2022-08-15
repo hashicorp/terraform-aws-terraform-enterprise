@@ -7,3 +7,8 @@ provider "aws" {
     tags = local.common_tags
   }
 }
+
+provider "vault" {
+  address = try (var.vault_address, module.hcp_vault.url)
+  token   = try (var.vault_token, module.hcp_vault.token)
+}
