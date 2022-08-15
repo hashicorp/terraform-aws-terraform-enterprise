@@ -40,7 +40,7 @@ module "hcp_vault" {
 # ----------------------------------------------------------------
 module "standalone_vault" {
   source = "../../"
-  
+
   acm_certificate_arn   = var.acm_certificate_arn
   domain_name           = var.domain_name
   friendly_name_prefix  = local.friendly_name_prefix
