@@ -9,6 +9,6 @@ provider "aws" {
 }
 
 provider "vault" {
-  address = try (var.vault_address, module.hcp_vault.url)
-  token   = try (var.vault_token, module.hcp_vault.token)
+  address = hcp_vault_cluster.test.vault_public_endpoint_url
+  token   = hcp_vault_cluster_admin_token.test.token
 }
