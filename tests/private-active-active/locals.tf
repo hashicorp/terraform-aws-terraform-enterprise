@@ -13,4 +13,5 @@ locals {
   test_name             = "${local.friendly_name_prefix}-test-private-active-active"
   load_balancing_scheme = "PRIVATE"
   http_proxy_port       = 3128
+  utility_module_test   = var.license_file == null
 }

@@ -1,3 +1,8 @@
+variable "acm_certificate_arn" {
+  type        = string
+  description = "The ARN of an existing ACM certificate."
+}
+
 variable "aws_role_arn" {
   type        = string
   description = "The AWS Role ARN to assume for this module."
@@ -14,17 +19,19 @@ variable "iact_subnet_list" {
   type        = list(string)
 }
 
-variable "acm_certificate_arn" {
-  type        = string
-  description = "The ARN of an existing ACM certificate."
-}
-
 variable "key_name" {
   description = "The name of the key pair to be used for SSH access to the EC2 instance(s)."
   type        = string
 }
 
+variable "license_file" {
+  default     = null
+  type        = string
+  description = "The local path to the Terraform Enterprise license to be provided by CI."
+}
+
 variable "tfe_license_secret_id" {
+  default     = null
   type        = string
   description = <<-EOD
   The name of the Secrets Manager secret ID of the Base64 encoded Terraform Enterprise license.

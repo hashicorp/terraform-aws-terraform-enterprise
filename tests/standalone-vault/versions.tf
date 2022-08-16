@@ -9,10 +9,6 @@ terraform {
       source  = "hashicorp/random"
       version = "~> 3.1"
     }
-    hcp = {
-      source  = "hashicorp/hcp"
-      version = "~> 0.33.0"
-    }
     vault = {
       source  = "hashicorp/vault"
       version = "~> 3.1"
