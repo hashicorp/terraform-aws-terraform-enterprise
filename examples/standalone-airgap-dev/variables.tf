@@ -13,6 +13,11 @@ variable "aws_role_arn" {
   description = "The AWS Role ARN to assume for this module."
 }
 
+variable "certificate_pem_secret_id" {
+  type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded TLS certificate for tfe"
+}
+
 variable "domain_name" {
   type        = string
   description = "Domain for creating the Terraform Enterprise subdomain on."
@@ -27,6 +32,11 @@ variable "iact_subnet_list" {
 variable "license_file" {
   type        = string
   description = "The local path to the Terraform Enterprise license."
+}
+
+variable "private_key_pem_secret_id" {
+  type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded TLS private key for tfe"
 }
 
 variable "tags" {
