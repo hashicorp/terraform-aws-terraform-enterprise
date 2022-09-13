@@ -4,7 +4,6 @@ variable "acm_certificate_arn" {
 }
 
 variable "aws_role_arn" {
-  default     = null
   type        = string
   description = "The AWS Role ARN to assume for this module."
 }
