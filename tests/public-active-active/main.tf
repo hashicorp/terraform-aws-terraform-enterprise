@@ -24,7 +24,6 @@ module "public_active_active" {
   source = "../../"
 
   acm_certificate_arn   = var.acm_certificate_arn
-  aws_role_arn          = var.aws_role_arn
   domain_name           = var.domain_name
   friendly_name_prefix  = local.friendly_name_prefix
   distribution          = "ubuntu"
