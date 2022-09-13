@@ -39,6 +39,11 @@ variable "aws_secret_access_key" {
   type        = string
 }
 
+variable "aws_role_arn" {
+  type        = string
+  description = "The AWS Role ARN to assume for this module."
+}
+
 variable "distribution" {
   type        = string
   description = "(Required) What is the OS distribution of the instance on which Terraoform Enterprise will be deployed?"
