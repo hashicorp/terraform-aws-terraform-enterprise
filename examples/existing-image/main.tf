@@ -58,4 +58,6 @@ module "existing_image" {
   key_name              = aws_key_pair.main.key_name
   kms_key_arn           = module.kms.key
   load_balancing_scheme = "PUBLIC"
+
+  asg_tags = var.tags
 }
