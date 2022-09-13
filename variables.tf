@@ -41,6 +41,7 @@ variable "aws_secret_access_key" {
 
 variable "aws_role_arn" {
   type        = string
+  default     = null
   description = "The AWS Role ARN to assume for this module."
 }
 
