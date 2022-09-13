@@ -3,8 +3,4 @@ provider "vault" {
   token   = hcp_vault_cluster_admin_token.test.token
 }
 
-provider "aws" {
-  assume_role {
-    role_arn = var.aws_role_arn
-  }
-}
+provider "aws" {}
