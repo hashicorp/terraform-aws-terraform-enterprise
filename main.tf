@@ -116,15 +116,18 @@ module "settings" {
   source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=main"
 
   # TFE Base Configuration
-  custom_image_tag       = var.custom_image_tag
-  production_type        = var.operational_mode
-  disk_path              = local.enable_disk ? var.disk_path : null
-  iact_subnet_list       = var.iact_subnet_list
-  iact_subnet_time_limit = var.iact_subnet_time_limit
-  trusted_proxies        = var.trusted_proxies
-  release_sequence       = var.release_sequence
-  pg_extra_params        = var.pg_extra_params
-  tbw_image              = var.tbw_image
+  custom_image_tag            = var.custom_image_tag
+  production_type             = var.operational_mode
+  disk_path                   = local.enable_disk ? var.disk_path : null
+  iact_subnet_list            = var.iact_subnet_list
+  iact_subnet_time_limit      = var.iact_subnet_time_limit
+  metrics_endpoint_enabled    = var.metrics_endpoint_enabled
+  metrics_endpoint_port_http  = var.metrics_endpoint_port_http
+  metrics_endpoint_port_https = var.metrics_endpoint_port_https
+  trusted_proxies             = var.trusted_proxies
+  release_sequence            = var.release_sequence
+  pg_extra_params             = var.pg_extra_params
+  tbw_image                   = var.tbw_image
 
   extra_no_proxy = concat([
     "127.0.0.1",
