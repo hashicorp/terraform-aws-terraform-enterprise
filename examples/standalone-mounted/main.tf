@@ -1,12 +1,3 @@
-provider "aws" {
-  assume_role {
-    role_arn = var.aws_role_arn
-  }
-  default_tags {
-    tags = var.tags
-  }
-}
-
 # Random String for unique names
 # ------------------------------
 resource "random_string" "friendly_name" {

@@ -8,11 +8,6 @@ variable "airgap_url" {
   type        = string
 }
 
-variable "aws_role_arn" {
-  type        = string
-  description = "The AWS Role ARN to assume for this module."
-}
-
 variable "certificate_pem_secret_id" {
   type        = string
   description = "The secrets manager secret ID of the Base64 & PEM encoded TLS certificate for tfe"

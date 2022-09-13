@@ -1,5 +1,4 @@
 acm_certificate_arn  = "arn:aws:acm:region:<account_id>:certificate/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx"
-aws_role_arn         = "arn:aws:iam::<account_id>:role/<role_name>"
 domain_name          = "my.domain.com"
 license_file         = "/files/license.rli"
 tags                 = {

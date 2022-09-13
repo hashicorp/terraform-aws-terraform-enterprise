@@ -38,11 +38,6 @@ variable "acm_certificate_arn" {
   description = "ACM certificate ARN to use with load balancer"
 }
 
-variable "aws_role_arn" {
-  type        = string
-  description = "The AWS Role ARN to assume for this module."
-}
-
 variable "domain_name" {
   type        = string
   description = "Domain to create Terraform Enterprise subdomain within"

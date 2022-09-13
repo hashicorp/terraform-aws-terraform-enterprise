@@ -1,12 +1,3 @@
-provider "aws" {
-  default_tags {
-    tags = var.tags
-  }
-  assume_role {
-    role_arn = var.aws_role_arn
-  }
-}
-
 resource "random_string" "friendly_name" {
   length  = 4
   upper   = false # Some AWS resources do not accept uppercase characters.

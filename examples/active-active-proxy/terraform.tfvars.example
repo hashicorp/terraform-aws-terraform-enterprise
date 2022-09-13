@@ -1,5 +1,4 @@
 acm_certificate_arn        = "arn:aws:acm:<region>:<account_id>:certificate/<certificate_name>"
-aws_role_arn               = "arn:aws:iam::<account_id>:role/<role_name>"
 ca_certificate_secret_name = "<proxy_certificate_name>"
 ca_private_key_secret_name = "<proxy_private_key_name>"
 certificate_pem_secret_id  = "arn:aws:secretsmanager:<region>:<account_id>:secret:<secret_name>"
