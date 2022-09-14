@@ -3,11 +3,6 @@ variable "acm_certificate_arn" {
   description = "The ARN of an existing ACM certificate."
 }
 
-variable "aws_role_arn" {
-  type        = string
-  description = "The AWS Role ARN to assume for this module."
-}
-
 variable "ca_certificate_secret_name" {
   type        = string
   description = "The secrets manager secret name of the Base64 encoded CA certificate for mitm"

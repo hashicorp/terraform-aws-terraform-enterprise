@@ -1,12 +1,3 @@
-provider "aws" {
-  default_tags {
-    tags = var.tags
-  }
-  assume_role {
-    role_arn = var.aws_role_arn
-  }
-}
-
 resource "random_string" "friendly_name" {
   length  = 4
   upper   = false # Some AWS resources do not accept uppercase characters.
@@ -67,4 +58,6 @@ module "existing_image" {
   key_name              = aws_key_pair.main.key_name
   kms_key_arn           = module.kms.key
   load_balancing_scheme = "PUBLIC"
+
+  asg_tags = var.tags
 }
