@@ -1,5 +1,5 @@
 data "aws_ami" "rhel" {
-  owners = ["309956199498"] # RedHat
+  owners = ["679593333241"] # Amazon RHEL
 
   most_recent = true
 
