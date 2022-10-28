@@ -1,0 +1,9 @@
+acm_certificate_arn        = "arn:aws:acm:<region>:<account_id>:certificate/<certificate_name>"
+domain_name                = "my.domain.com"
+license_file               = "/files/license.rli"
+private_key_pem_secret_id  = "arn:aws:secretsmanager:<region>:<account_id>:secret:<secret_name>"
+tags                       = {
+                              Owner       = "My Name"
+                              Environment = "active-active"
+                             }
+tfe_subdomain              = "tfe.my.domain.com"
