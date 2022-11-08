@@ -67,4 +67,8 @@ module "standalone_vault" {
   extern_vault_namespace = "admin"
 
   asg_tags = local.common_tags
+
+  ### database ###
+  db_size                 = var.db_size
+  postgres_engine_version = var.postgres_engine_version
 }
