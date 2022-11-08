@@ -55,3 +55,17 @@ variable "tfe_license_secret_id" {
   type        = string
   description = "The Secrets Manager secret ARN under which the Base64 encoded Terraform Enterprise license is stored."
 }
+
+#database
+
+variable "db_size" {
+  type        = string
+  default     = "db.m4.xlarge"
+  description = "PostgreSQL instance size."
+}
+
+variable "postgres_engine_version" {
+  type        = string
+  default     = "10.1"
+  description = "PostgreSQL version."
+}

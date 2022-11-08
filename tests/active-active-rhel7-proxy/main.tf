@@ -92,6 +92,10 @@ module "tfe" {
   proxy_ip                 = module.test_proxy.proxy_ip
   proxy_port               = local.http_proxy_port
   tfe_subdomain            = local.test_name
+  
+  ### database ###
+  db_size                 = var.db_size
+  postgres_engine_version = var.postgres_engine_version
 
   asg_tags = local.common_tags
 }
