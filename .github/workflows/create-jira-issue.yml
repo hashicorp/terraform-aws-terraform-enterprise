@@ -1,0 +1,12 @@
+name: Create Jira Issue
+
+on:
+  issues:
+    types: [opened, closed, deleted, reopened]
+  issue_comment:
+    types: [created]
+
+jobs:
+  create-jira-issue:
+    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/create-jira-issue.yml@main
+    secrets: inherit
