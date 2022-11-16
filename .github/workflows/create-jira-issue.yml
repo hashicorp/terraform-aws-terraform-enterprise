@@ -10,7 +10,7 @@ on:
 
 jobs:
   call-workflow:
-    uses: ./.github/workflows/create-jira-issue.yml
+    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/create-jira-issue.yml@main
     with:
       github-team: Terraform-Enterprise
       project: TFE
