@@ -57,7 +57,17 @@ jobs:
           terraform_wrapper: true
 
       # Run Terraform commands between these comments vvv
-
+      - id: doormat-action
+        uses: hashicorp/doormat-action@v1
+        with:
+          aws-role-arn: arn:aws:iam::873298400219:role/gha_doormat_role
+      - name: Configure Provider
+        id: config
+        working-directory: ${{ env.WORK_DIR_PATH }}
+        run: |
+          echo "aws_access_key_id=\"$AWS_ACCESS_KEY_ID\"" > ./terraform.auto.tfvars
+          echo "aws_secret_access_key=\"$AWS_SECRET_ACCESS_KEY\"" >> ./terraform.auto.tfvars
+          echo "aws_session_token=\"$AWS_SESSION_TOKEN\"" >> ./terraform.auto.tfvars
       - name: Terraform Init
         id: init
         working-directory: ${{ env.WORK_DIR_PATH }}
