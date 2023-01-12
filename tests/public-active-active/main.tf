@@ -1,7 +1,7 @@
 provider "aws" {
-  assume_role {
-    role_arn = var.aws_role_arn
-  }
+  access_key = var.aws_access_key_id
+  secret_key = var.aws_secret_access_key
+  token      = var.aws_session_token
 
   default_tags {
     tags = local.common_tags

@@ -1,3 +1,18 @@
+variable "aws_access_key_id" {
+  type        = string
+  description = "The identity of the access key which TFE will use to provision resources and authenticate with S3."
+}
+
+variable "aws_secret_access_key" {
+  type        = string
+  description = "The secret access key which TFE will use to provision resources and authenticate with S3."
+}
+
+variable "aws_session_token" {
+  type        = string
+  description = "The session token which TFE will used to provision resources."
+}
+
 variable "acm_certificate_arn" {
   type        = string
   description = "The ARN of an existing ACM certificate."
