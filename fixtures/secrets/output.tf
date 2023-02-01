@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 output "tfe_license_secret_id" {
   value = var.tfe_license == null ? null : aws_secretsmanager_secret_version.tfe_license[0].secret_id
 }

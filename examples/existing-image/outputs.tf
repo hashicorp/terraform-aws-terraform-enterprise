@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 output "existing_image" {
   value       = module.existing_image
   description = "The output of all the existing_image module."

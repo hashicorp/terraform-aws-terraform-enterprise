@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 output "endpoint" {
   value = aws_db_instance.postgresql.endpoint
 

@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 locals {
   active_active                = var.node_count >= 2
   kms_key_arn                  = data.aws_kms_key.main.arn

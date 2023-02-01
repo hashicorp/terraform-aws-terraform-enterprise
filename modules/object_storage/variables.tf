@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 variable "kms_key_arn" {
   description = "The Amazon Resource Name of the KMS key with which S3 storage bucket objects will be encrypted."
   type        = string

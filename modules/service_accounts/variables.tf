@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 variable "ca_certificate_secret_id" {
   type        = string
   description = <<-EOD

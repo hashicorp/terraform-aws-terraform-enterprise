@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 output "login_url" {
   value       = module.standalone_airgap_dev.tfe_url
   description = "The URL to the TFE application."

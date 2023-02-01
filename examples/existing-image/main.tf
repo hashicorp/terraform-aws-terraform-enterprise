@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 resource "random_string" "friendly_name" {
   length  = 4
   upper   = false # Some AWS resources do not accept uppercase characters.

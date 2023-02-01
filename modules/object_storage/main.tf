@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 resource "aws_s3_bucket" "tfe_data_bucket" {
   bucket        = "${var.friendly_name_prefix}-tfe-data"
   force_destroy = true

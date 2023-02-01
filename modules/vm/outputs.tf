@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 output "tfe_instance_sg" {
   value = aws_security_group.tfe_instance.id
 

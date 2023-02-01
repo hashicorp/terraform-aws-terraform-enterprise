@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 resource "aws_kms_key" "main" {
   deletion_window_in_days = var.key_deletion_window
   description             = "AWS KMS Customer-managed key to encrypt TFE and other resources"

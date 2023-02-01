@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 output "public_active_active" {
   value       = module.public_active_active
   description = "The output of all the public_active_active module."

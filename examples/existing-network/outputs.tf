@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 output "existing_network" {
   value       = module.existing_network
   description = "The output of all the existing_network module."

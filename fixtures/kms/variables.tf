@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 variable "key_alias" {
   description = "The key alias for AWS KMS Customer managed key."
   type        = string
