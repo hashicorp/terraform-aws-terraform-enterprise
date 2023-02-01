@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 variable "acm_certificate_arn" {
   type        = string
   description = "ACM certificate ARN to use with load balancer"

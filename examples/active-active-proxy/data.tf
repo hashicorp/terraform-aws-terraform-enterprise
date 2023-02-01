@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 data "aws_secretsmanager_secret" "ca_certificate" {
   name = var.ca_certificate_secret_name
 }

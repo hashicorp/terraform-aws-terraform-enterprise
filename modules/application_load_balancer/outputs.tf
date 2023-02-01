@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 output "aws_lb_security_group" {
   value = aws_security_group.tfe_lb_allow.id
 

@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 output "aws_elasticache_subnet_group_name" {
   value = var.active_active ? aws_elasticache_subnet_group.tfe[0].name : ""
 

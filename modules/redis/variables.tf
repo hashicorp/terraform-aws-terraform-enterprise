@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 variable "active_active" {
   type        = bool
   description = "Flag for active-active configuation: true for active-active, false for standalone"

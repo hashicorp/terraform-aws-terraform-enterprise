@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 output "aws_lb_target_group_tfe_tg_443_arn" {
   value = aws_lb_target_group.tfe_tg_443.arn
 

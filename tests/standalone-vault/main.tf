@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # Random string to prepend resources
 # ----------------------------------
 resource "random_string" "friendly_name" {

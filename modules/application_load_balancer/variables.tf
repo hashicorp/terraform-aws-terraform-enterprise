@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 variable "domain_name" {
   description = "The name of the Route 53 Hosted Zone in which a record will be created."
   type        = string

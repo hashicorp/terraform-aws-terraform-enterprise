@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 ###### security group for proxy ######
 resource "aws_security_group" "proxy" {
   name   = "${var.name}-sg-proxy-allow"

@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 resource "aws_security_group" "tfe_lb_allow" {
   name   = "${var.friendly_name_prefix}-tfe-lb-allow"
   vpc_id = var.network_id

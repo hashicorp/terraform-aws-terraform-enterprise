@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 resource "aws_iam_instance_profile" "tfe" {
   name_prefix = "${var.friendly_name_prefix}-tfe"
   role        = aws_iam_role.instance_role.name

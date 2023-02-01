@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 variable "default_ami_id" {
   description = "The identity of the AMI which will be used to provision the TFE EC2 instance(s)."
   type        = string

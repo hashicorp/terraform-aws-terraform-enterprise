@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 resource "random_id" "redis_password" {
   count       = var.active_active ? 1 : 0
   byte_length = 16

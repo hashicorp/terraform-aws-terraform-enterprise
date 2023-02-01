@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 output "private_tcp_active_active" {
   value = module.private_tcp_active_active
 

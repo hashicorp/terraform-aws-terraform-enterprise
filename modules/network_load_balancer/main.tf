@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 resource "aws_lb" "tfe_lb" {
   name               = "${var.friendly_name_prefix}-tfe-nlb"
   internal           = true

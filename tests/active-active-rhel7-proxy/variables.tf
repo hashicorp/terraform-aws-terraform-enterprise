@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 variable "aws_access_key_id" {
   type        = string
   description = "The identity of the access key which TFE will use to authenticate with S3."

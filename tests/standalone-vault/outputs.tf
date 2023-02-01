@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 output "ptfe_endpoint" {
   value       = module.standalone_vault.tfe_url
   description = "The URL to the TFE application."

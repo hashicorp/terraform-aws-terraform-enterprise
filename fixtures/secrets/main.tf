@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 resource "aws_secretsmanager_secret" "tfe_license" {
   count       = var.tfe_license == null ? 0 : 1
   name        = var.tfe_license.name
