@@ -167,21 +167,22 @@ variable "bypass_preflight_checks" {
   description = "Allow the TFE application to start without preflight checks."
 }
 
+variable "custom_agent_image_tag" {
+  default     = null
+  type        = string
+  description = <<-EOD
+  Configure the docker image for handling job execution within TFE. This can either be the
+  standard image that ships with TFE or a custom image that includes extra tools not present
+  in the default one.
+  EOD
+}
+
 variable "custom_image_tag" {
   default     = null
   type        = string
   description = <<-EOD
   The name and tag for your alternative Terraform build worker image in the format <name>:<tag>.
   Default is 'hashicorp/build-worker:now'.
-  EOD
-}
-
-variable "custom_agent_image_tag" {
-  type        = string
-  description = <<-EOD
-  Configure the docker image for handling job execution within TFE. This can either be the
-  standard image that ships with TFE or a custom image that includes extra tools not present
-  in the default one.
   EOD
 }
 
