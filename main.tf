@@ -241,6 +241,7 @@ module "vm" {
   source = "./modules/vm"
 
   active_active                       = local.active_active
+  is_dev                              = var.is_dev 
   aws_iam_instance_profile            = module.service_accounts.iam_instance_profile.name
   ami_id                              = local.ami_id
   aws_lb                              = var.load_balancing_scheme == "PRIVATE_TCP" ? null : module.load_balancer[0].aws_lb_security_group

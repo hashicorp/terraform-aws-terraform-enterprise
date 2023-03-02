@@ -48,6 +48,19 @@ resource "aws_security_group_rule" "tfe_dashboard" {
   cidr_blocks              = var.aws_lb == null ? var.network_private_subnet_cidrs : null
 }
 
+# WARNING: This is NOT for production. ** DEV ONLY **
+resource "aws_security_group_rule" "tfe_lb_allow_inbound_ssh" {
+  count = var.is_dev ? 1 : 0
+
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "DEV ONLY - Allow SSH (port 22) traffic inbound to TFE LB"
+  security_group_id = aws_security_group.tfe_instance.id
+}
+
 resource "aws_launch_configuration" "tfe" {
   name_prefix      = "${var.friendly_name_prefix}-tfe-ec2-asg-lt-"
   image_id         = var.ami_id

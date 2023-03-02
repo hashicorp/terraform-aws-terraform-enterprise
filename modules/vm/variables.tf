@@ -97,6 +97,11 @@ variable "key_name" {
   type        = string
 }
 
+variable "is_dev" {
+  type        = bool
+  description = "True if this is a development instance to which you would like SSH access. **NOT RECOMMENDED FOR PROD**"
+}
+
 # Mounted Disk Installation
 # -------------------------
 variable "ebs_device_name" {

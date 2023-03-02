@@ -372,6 +372,12 @@ variable "tfe_subdomain" {
   description = "Subdomain for accessing the Terraform Enterprise UI."
 }
 
+variable "is_dev" {
+  default     = false
+  type        = bool
+  description = "True if this is a development instance to which you would like SSH access. **NOT RECOMMENDED FOR PROD**"
+}
+
 # KMS & Secrets Manager
 # ---------------------
 variable "ca_certificate_secret_id" {
