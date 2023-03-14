@@ -104,7 +104,7 @@ variable "db_enabled_cloudwatch_logs" {
 
 variable "postgres_engine_version" {
   type        = string
-  default     = "12.8"
+  default     = "12.11"
   description = "PostgreSQL version."
 }
 
