@@ -49,6 +49,10 @@ locals {
       value = "1"
     }
 
+    run_pipeline_mode = {
+      value = "legacy"
+    }
+
     production_type = {
       value = "external"
     }
