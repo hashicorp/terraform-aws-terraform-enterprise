@@ -45,6 +45,10 @@ locals {
       value = "production"
     }
 
+    hairpin_addressing = {
+      value = "1"
+    }
+
     production_type = {
       value = "external"
     }
