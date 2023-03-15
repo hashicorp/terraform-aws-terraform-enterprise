@@ -167,6 +167,12 @@ variable "bypass_preflight_checks" {
   description = "Allow the TFE application to start without preflight checks."
 }
 
+variable "consolidated_services" {
+  default     = true
+  type        = bool
+  description = "(Required) True if TFE uses consolidated services."
+}
+
 variable "custom_agent_image_tag" {
   default     = null
   type        = string
