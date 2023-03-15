@@ -119,6 +119,7 @@ module "settings" {
   source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=TF-4732-consolidated_services"
 
   # TFE Base Configuration
+  consolidated_services       = var.consolidated_services
   custom_image_tag            = var.custom_image_tag
   custom_agent_image_tag      = var.custom_agent_image_tag
   production_type             = var.operational_mode
