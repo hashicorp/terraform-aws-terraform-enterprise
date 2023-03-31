@@ -320,6 +320,18 @@ variable "network_public_subnets" {
 
 # TFE Instance(s)
 # ---------------
+variable "existing_iam_instance_profile_name" {
+  default     = null
+  description = "The IAM instance profile to be attached to the TFE EC2 instance(s). Leave the value null to create a new one."
+  type        = string
+}
+
+variable "existing_iam_instance_role_name" {
+  default     = null
+  description = "The IAM role to associate with the instance profile. Leave the value null to create a new one."
+  type        = string
+}
+
 variable "iam_role_policy_arns" {
   default     = []
   description = "A set of Amazon Resource Names of IAM role policies to be attached to the TFE IAM role."
