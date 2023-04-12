@@ -9,6 +9,16 @@ variable "ca_certificate_secret_id" {
   EOD
 }
 
+variable "existing_iam_instance_profile_name" {
+  description = "The IAM instance profile to be attached to the TFE EC2 instance(s). Leave the value null to create a new one."
+  type        = string
+}
+
+variable "existing_iam_instance_role_name" {
+  type        = string
+  description = "The IAM role to associate with the instance profile. To create a new role, this value should be null."
+}
+
 variable "friendly_name_prefix" {
   type        = string
   description = "(Required) Friendly name prefix used for tagging and naming AWS resources."
@@ -16,7 +26,7 @@ variable "friendly_name_prefix" {
 
 variable "iam_role_policy_arns" {
   default     = []
-  description = "A set of Amazon Resource Names of IAM role policys to be attached to the TFE IAM role."
+  description = "A set of Amazon Resource Names of IAM role policies to be attached to the TFE IAM role."
   type        = set(string)
 }
 
