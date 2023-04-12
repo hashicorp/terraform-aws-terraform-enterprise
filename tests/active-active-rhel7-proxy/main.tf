@@ -95,6 +95,7 @@ module "tfe" {
   proxy_ip                 = module.test_proxy.proxy_ip
   proxy_port               = local.http_proxy_port
   tfe_subdomain            = local.test_name
+  consolidated_services    = var.consolidated_services
 
   asg_tags = local.common_tags
 }
