@@ -33,3 +33,9 @@ variable "tfe_license_secret_id" {
   type        = string
   description = "The Secrets Manager secret ARN under which the Base64 encoded Terraform Enterprise license is stored."
 }
+
+variable "consolidated_services" {
+  default     = false
+  type        = bool
+  description = "(Required) True if TFE uses consolidated services."
+}

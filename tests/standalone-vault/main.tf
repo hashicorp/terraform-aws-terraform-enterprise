@@ -61,6 +61,7 @@ module "standalone_vault" {
   redis_encryption_in_transit = false
   redis_use_password_auth     = false
   tfe_subdomain               = local.friendly_name_prefix
+  consolidated_services       = var.consolidated_services
 
   # Vault
   extern_vault_enable    = true
