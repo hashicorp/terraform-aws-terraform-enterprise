@@ -5,8 +5,17 @@ resource "aws_s3_bucket" "tfe_data_bucket" {
   bucket        = "${var.friendly_name_prefix}-tfe-data"
   force_destroy = true
 }
+resource "aws_s3_bucket_ownership_controls" "tfe_data_bucket_ownership_controls" {
+  bucket = aws_s3_bucket.tfe_data_bucket.id
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
 
 resource "aws_s3_bucket_acl" "tfe_data_bucket_acl" {
+  depends_on = [aws_s3_bucket_ownership_controls.tfe_data_bucket_ownership_controls]
+
   bucket = aws_s3_bucket.tfe_data_bucket.id
   acl    = "private"
 }
