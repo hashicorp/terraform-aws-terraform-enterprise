@@ -18,7 +18,7 @@ jobs:
       contents: read
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         persist-credentials: false
@@ -40,13 +40,13 @@ jobs:
       contents: read
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         persist-credentials: false
 
     - name: Setup Terraform Lint
-      uses: terraform-linters/setup-tflint@v1
+      uses: terraform-linters/setup-tflint@v1 # TSCCR: no entry for repository "terraform-linters/setup-tflint"
       with:
         tflint_version: v0.26.0
 
