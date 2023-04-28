@@ -13,7 +13,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Slash Command Dispatch
-        uses: peter-evans/slash-command-dispatch@v2
+        uses: peter-evans/slash-command-dispatch@a28ee6cd74d5200f99e247ebc7b365c03ae0ef3c # v3.0.1
         with:
           # The `public_repo` scope is required by this token to create repository_dispatch and workflow_dispatch
           # events on public repositories. The default GITHUB_TOKEN does not support the `public_repo` scope.
