@@ -51,6 +51,7 @@ module "private_active_active" {
 
   ami_id                      = data.aws_ami.rhel.id
   distribution                = "rhel"
+  consolidated_services       = var.consolidated_services
   iact_subnet_list            = ["0.0.0.0/0"]
   iam_role_policy_arns        = [local.ssm_policy_arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type               = "m5.4xlarge"
