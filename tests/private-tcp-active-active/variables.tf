@@ -26,6 +26,12 @@ variable "certificate_pem_secret_id" {
   description = "The secrets manager secret ID of the Base64 & PEM encoded TLS certificate."
 }
 
+variable "consolidated_services" {
+  default     = false
+  type        = bool
+  description = "(Required) True if TFE uses consolidated services."
+}
+
 variable "domain_name" {
   type        = string
   description = "Domain for creating the Terraform Enterprise subdomain on."

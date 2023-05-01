@@ -11,6 +11,12 @@ variable "aws_role_arn" {
   description = "The AWS Role ARN to assume for this module."
 }
 
+variable "consolidated_services" {
+  default     = false
+  type        = bool
+  description = "(Required) True if TFE uses consolidated services."
+}
+
 variable "domain_name" {
   type        = string
   description = "Domain for creating the Terraform Enterprise subdomain on."

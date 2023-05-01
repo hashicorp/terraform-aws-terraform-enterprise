@@ -80,10 +80,11 @@ module "tfe" {
   tfe_license_secret_id = try(module.secrets[0].tfe_license_secret_id, var.tfe_license_secret_id)
 
   ami_id                   = data.aws_ami.rhel.id
-  distribution             = "rhel"
   aws_access_key_id        = var.aws_access_key_id
   aws_secret_access_key    = var.aws_secret_access_key
   ca_certificate_secret_id = data.aws_secretsmanager_secret.ca_certificate.arn
+  consolidated_services    = var.consolidated_services
+  distribution             = "rhel"
   iact_subnet_list         = ["0.0.0.0/0"]
   iam_role_policy_arns     = [local.ssm_policy_arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type            = "m5.xlarge"
@@ -95,7 +96,6 @@ module "tfe" {
   proxy_ip                 = module.test_proxy.proxy_ip
   proxy_port               = local.http_proxy_port
   tfe_subdomain            = local.test_name
-  consolidated_services    = var.consolidated_services
 
   asg_tags = local.common_tags
 }
