@@ -204,7 +204,7 @@ variable "hairpin_addressing" {
   description = <<-EOD
   In some cloud environments, HTTP clients running on instances behind a loadbalancer cannot send
   requests to the public hostname of that load balancer. Use this setting to configure TFE services
-  to redirect requests for the installation's FQDN to the instance'sinternal IP address.
+  to redirect requests for the installation's FQDN to the instance's internal IP address.
   Defaults to false.
   EOD
 }
