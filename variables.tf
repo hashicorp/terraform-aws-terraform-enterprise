@@ -198,6 +198,17 @@ variable "disk_path" {
   type        = string
 }
 
+variable "hairpin_addressing" {
+  default     = null
+  type        = bool
+  description = <<-EOD
+  In some cloud environments, HTTP clients running on instances behind a loadbalancer cannot send
+  requests to the public hostname of that load balancer. Use this setting to configure TFE services
+  to redirect requests for the installation's FQDN to the instance'sinternal IP address.
+  Defaults to false.
+  EOD
+}
+
 variable "iact_subnet_list" {
   default     = []
   description = "A list of CIDR masks that configure the ability to retrieve the IACT from outside the host."
