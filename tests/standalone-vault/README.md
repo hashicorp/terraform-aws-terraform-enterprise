@@ -30,7 +30,7 @@ This test assumes the following resources exist.
 
 This test is used in two different CI pipelines.
 
-1. This test is leveraged by the integration tests in the [`ptfe-replicated`](https://github.com/hashicorp/ptfe-replicated/blob/master/.circleci/config.yml)
+1. This test is leveraged by the integration tests in the [`ptfe-replicated`](https://github.com/hashicorp/ptfe-replicated/blob/main/.github/workflows/ci.yml)
 repository.
 
 Because the Vault provider is dependent upon output from the HCP resources, we must

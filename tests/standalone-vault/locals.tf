@@ -5,7 +5,7 @@ locals {
   common_tags = {
     Terraform   = "False"
     Environment = var.license_file == null ? "tfe_utilities_test" : "ptfe-replicated CI"
-    Description = "Standalone Vault"
+    Description = local.test_name
     Repository  = "hashicorp/terraform-aws-terraform-enterprise"
     Team        = "Terraform Enterprise on Prem"
     OkToDelete  = "True"
