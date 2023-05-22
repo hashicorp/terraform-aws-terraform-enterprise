@@ -6,7 +6,7 @@ locals {
   common_tags = {
     Terraform   = "cloud"
     Environment = "tfe_modules_test"
-    Description = "Private TCP Active/Active"
+    Description = local.test_name
     Repository  = "hashicorp/terraform-aws-terraform-enterprise"
     Team        = "Terraform Enterprise on Prem"
     OkToDelete  = "True"

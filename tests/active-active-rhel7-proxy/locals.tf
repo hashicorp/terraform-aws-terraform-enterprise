@@ -6,7 +6,7 @@ locals {
   common_tags = {
     Terraform   = "cloud"
     Environment = local.utility_module_test ? "tfe_modules_test" : "tfe_team_dev"
-    Description = "Active/Active on RHEL with Proxy scenario deployed from CircleCI"
+    Description = local.test_name
     Repository  = "hashicorp/terraform-aws-terraform-enterprise"
     Team        = "Terraform Enterprise on Prem"
     OkToDelete  = "True"
