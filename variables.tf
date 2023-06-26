@@ -95,6 +95,30 @@ variable "vm_key_secret_id" {
   EOD
 }
 
+variable "capacity_concurrency" {
+  default     = null
+  type        = number
+  description = "Number of concurrent plans and applies; defaults to 10."
+}
+
+variable "capacity_cpus" {
+  default     = null
+  type        = number
+  description = <<-EOD
+  The maximum number of CPU cores that a Terraform plan or apply can use on the system;
+  defaults to 0 (unlimited).
+  EOD
+}
+
+variable "capacity_memory" {
+  default     = null
+  type        = number
+  description = <<-EOD
+  The maximum amount of memory (in megabytes) that a Terraform plan or apply can use on the system;
+  defaults to 512.
+  EOD
+}
+
 # Redis
 # -----
 variable "redis_cache_size" {
