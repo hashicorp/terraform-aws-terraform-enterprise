@@ -121,7 +121,7 @@ module "settings" {
   source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=main"
 
   # TFE Base Configuration
-  capacity_concurrency        = var.capacity_concurrency
+  capacity_concurency         = var.capacity_concurency
   capacity_cpus               = var.capacity_cpus
   capacity_memory             = var.capacity_memory
   consolidated_services       = var.consolidated_services
