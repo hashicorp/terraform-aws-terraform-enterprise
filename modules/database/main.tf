@@ -54,6 +54,8 @@ resource "aws_db_subnet_group" "tfe" {
 }
 
 resource "aws_db_instance" "postgresql" {
+  performance_insights_enabled = var.performance_insights_enabled
+  performance_insights_retention_period = var.performance_insights_retention_period
   allocated_storage = 20
   engine            = "postgres"
   instance_class    = var.db_size

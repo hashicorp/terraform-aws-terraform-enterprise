@@ -112,6 +112,8 @@ module "database" {
   network_subnets_private      = local.network_private_subnets
   tfe_instance_sg              = module.vm.tfe_instance_sg
   kms_key_arn                  = local.kms_key_arn
+  performance_insights_enabled = var.db_performance_insights_enabled
+  performance_insights_retention_period = var.db_performance_insights_retention_period
 }
 
 # -----------------------------------------------------------------------------

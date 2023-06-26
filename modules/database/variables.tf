@@ -63,3 +63,15 @@ variable "kms_key_arn" {
   EOD
   type        = string
 }
+
+variable "performance_insights_enabled" {
+  type = bool
+  default = false
+  description = "Should database performance insights be enabled?"
+}
+
+variable "performance_insights_retention_period" {
+  type = number
+  default = null
+  description = "The number of days to retain performance insights data"
+}

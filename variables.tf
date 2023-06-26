@@ -183,6 +183,17 @@ variable "postgres_engine_version" {
   description = "PostgreSQL version."
 }
 
+variable "db_performance_insights_enabled" {
+  type = bool
+  default = false
+  description = "Should database performance insights be enabled?"
+}
+
+variable "db_performance_insights_retention_period" {
+  type = number
+  default = null
+  description = "The number of days to retain performance insights data"
+}
 # Userdata
 # --------
 variable "bypass_preflight_checks" {
