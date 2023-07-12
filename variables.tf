@@ -155,7 +155,7 @@ variable "db_size" {
 
 variable "postgres_engine_version" {
   type        = string
-  default     = "12.8"
+  default     = "12.15"
   description = "PostgreSQL version."
 }
 
