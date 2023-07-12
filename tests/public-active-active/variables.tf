@@ -39,10 +39,10 @@ variable "license_file" {
   description = "The local path to the Terraform Enterprise license to be provided by CI."
 }
 
-variable "tfe_license_secret_id" {
-  default     = null
-  type        = string
-  description = <<-EOD
-  The name of the Secrets Manager secret ID of the Base64 encoded Terraform Enterprise license.
-  EOD
-}
+# variable "tfe_license_secret_id" {
+#   default     = null
+#   type        = string
+#   description = <<-EOD
+#   The name of the Secrets Manager secret ID of the Base64 encoded Terraform Enterprise license.
+#   EOD
+# }
