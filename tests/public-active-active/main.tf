@@ -40,7 +40,7 @@ module "public_active_active" {
   domain_name           = var.domain_name
   friendly_name_prefix  = local.friendly_name_prefix
   distribution          = "ubuntu"
-  tfe_license_secret_id = try(module.secrets[0].tfe_license_secret_id, var.tfe_license_secret_id)
+  tfe_license_secret_id = var.tfe_license_secret_id
 
   ami_id                      = data.aws_ami.ubuntu.id
   consolidated_services       = var.consolidated_services
@@ -50,11 +50,14 @@ module "public_active_active" {
   key_name                    = var.key_name
   kms_key_arn                 = module.kms.key
   load_balancing_scheme       = local.load_balancing_scheme
-  node_count                  = 2
+  node_count                  = 1
   redis_encryption_at_rest    = false
   redis_encryption_in_transit = false
   redis_use_password_auth     = false
   tfe_subdomain               = local.test_name
+
+  release_sequence = 713
+  operational_mode = "external"
 
   asg_tags = local.common_tags
 }

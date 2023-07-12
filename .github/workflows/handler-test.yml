@@ -72,6 +72,7 @@ jobs:
         working-directory: ${{ env.WORK_DIR_PATH }}
         run: |
           echo "iact_subnet_list = [\"$( dig +short @resolver1.opendns.com myip.opendns.com )/32\"]" > github.auto.tfvars
+          echo "tfe_license_secret_id = ${{ secrets.RC_SECRET_ID }}" > github.auto.tfvars
 
       - name: Terraform Apply
         id: apply
