@@ -49,3 +49,14 @@ variable "tfe_subdomain" {
   type        = string
   description = "Subdomain for TFE"
 }
+
+variable "node_count" {
+  type        = number
+  default     = 2
+  description = "The number of nodes you want in your autoscaling group (1 for standalone, 2 for active-active configuration)"
+
+  validation {
+    condition     = var.node_count <= 5
+    error_message = "The node_count value must be less than or equal to 5."
+  }
+}
