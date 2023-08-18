@@ -167,6 +167,12 @@ variable "bypass_preflight_checks" {
   description = "Allow the TFE application to start without preflight checks."
 }
 
+variable "capacity_concurrency" {
+  default     = null
+  type        = number
+  description = "Number of concurrent plans and applies; defaults to 10."
+}
+
 variable "consolidated_services" {
   default     = false
   type        = bool
