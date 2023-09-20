@@ -74,4 +74,13 @@ module "private_tcp_active_active" {
   vm_key_secret_id            = var.private_key_pem_secret_id
 
   asg_tags = local.common_tags
+
+  # FDO Specific Values
+  is_legacy_deployment      = var.is_legacy_deployment
+  hc_license                = var.hc_license
+  license_reporting_opt_out = true
+  registry_password         = var.registry_password
+  registry_username         = var.registry_username
+  tfe_image                 = "quay.io/hashicorp/terraform-enterprise:${var.tfe_image_tag}"
+  tls_ca_bundle_file        = "/usr/share/pki/ca-trust-source/anchors/tfe-ca-certificate.crt"
 }

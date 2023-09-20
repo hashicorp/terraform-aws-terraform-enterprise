@@ -11,8 +11,14 @@ output "replicated_console_url" {
   description = "Terraform Enterprise Console URL"
 }
 
+# Change this to health_check_url for consistency. This requires changing it in ptfe-replicated tests.
 output "ptfe_health_check" {
   value       = "${module.standalone_vault.tfe_url}/_health_check"
+  description = "The URL with path to access the TFE instance health check."
+}
+
+output "health_check_url" {
+  value       = module.standalone_vault.health_check_url
   description = "The URL with path to access the TFE instance health check."
 }
 

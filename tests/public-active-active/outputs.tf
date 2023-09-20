@@ -14,7 +14,7 @@ output "tfe_url" {
 }
 
 output "health_check_url" {
-  value       = "${module.public_active_active.tfe_url}/_health_check"
+  value       = module.public_active_active.health_check_url
   description = "The URL with path to access the TFE instance health check."
 }
 

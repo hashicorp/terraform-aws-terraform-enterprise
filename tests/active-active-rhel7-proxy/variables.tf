@@ -42,6 +42,18 @@ variable "domain_name" {
   description = "Domain for creating the Terraform Enterprise subdomain on."
 }
 
+variable "hc_license" {
+  default     = null
+  type        = string
+  description = "(Not needed if is_legacy_deployment is true) The raw TFE license that is validated on application startup."
+}
+
+variable "is_legacy_deployment" {
+  type        = bool
+  description = "TFE will be installed using a Replicated license and deployment method."
+  default     = true
+}
+
 variable "key_name" {
   default     = null
   description = "The name of the key pair to be used for SSH access to the EC2 instance(s)."
@@ -57,6 +69,24 @@ variable "license_file" {
 variable "object_storage_iam_user_name" {
   type        = string
   description = "The name of the IAM user which will be authorized to access the S3 storage bucket."
+}
+
+variable "registry_username" {
+  default     = null
+  type        = string
+  description = "(Not needed if is_legacy_deployment is true) The username for the docker registry from which to source the terraform_enterprise container images."
+}
+
+variable "registry_password" {
+  default     = null
+  type        = string
+  description = "(Not needed if is_legacy_deployment is true) The password for the docker registry from which to source the terraform_enterprise container images."
+}
+
+variable "tfe_image_tag" {
+  default     = "latest"
+  type        = string
+  description = "(Not needed if is_legacy_deployment is true) The image version of the terraform-enterprise image (e.g. \"1234567\")"
 }
 
 variable "tfe_license_secret_id" {

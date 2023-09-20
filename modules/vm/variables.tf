@@ -12,26 +12,17 @@ variable "user_data_base64" {
 }
 
 variable "aws_lb" {
-  description = <<-EOD
-  The identity of the security group attached to the load balancer which will be
-  authorized to communicate with the TFE EC2 instance(s).
-  EOD
+  description = "The identity of the security group attached to the load balancer which will be authorized to communicate with the TFE EC2 instance(s)."
   type        = string
 }
 
 variable "aws_lb_target_group_tfe_tg_443_arn" {
-  description = <<-EOD
-  The Amazon Resource Name of the load balancer target group for traffic on port
-  443 which will be backed by the TFE EC2 autoscaling group.
-  EOD
+  description = "The Amazon Resource Name of the load balancer target group for traffic on port 443 which will be backed by the TFE EC2 autoscaling group."
   type        = string
 }
 
 variable "aws_lb_target_group_tfe_tg_8800_arn" {
-  description = <<-EOD
-  The Amazon Resource Name of the load balancer target group for traffic on port
-  8800 which will be backed by the TFE EC2 autoscaling group.
-  EOD
+  description = "The Amazon Resource Name of the load balancer target group for traffic on port 8800 which will be backed by the TFE EC2 autoscaling group."
   type        = string
 }
 
@@ -46,9 +37,7 @@ variable "network_id" {
 }
 
 variable "network_subnets_private" {
-  description = <<-EOD
-  A list of the identities of the private subnetworks in which the EC2 autoscaling group will be deployed.
-  EOD
+  description = "A list of the identities of the private subnetworks in which the EC2 autoscaling group will be deployed."
   type        = list(string)
 }
 
@@ -67,9 +56,19 @@ variable "ami_id" {
   description = "AMI ID to use for TFE instances"
 }
 
+variable "enable_ssh" {
+  type        = bool
+  description = "Whether to open port 22 on the TFE instance for SSH access."
+}
+
 variable "friendly_name_prefix" {
   type        = string
   description = "(Required) Friendly name prefix used for tagging and naming AWS resources."
+}
+
+variable "is_legacy_deployment" {
+  type        = bool
+  description = "TFE will be installed using a Replicated license and deployment method."
 }
 
 variable "node_count" {
@@ -79,11 +78,7 @@ variable "node_count" {
 
 variable "asg_tags" {
   type        = map(string)
-  description = <<DESC
-  (Optional) Map of tags only used for the autoscaling group. If you are using the AWS provider's default_tags, 
-  please note that it tags every taggable resource except for the autoscaling group, therefore this variable may
-  be used to duplicate the key/value pairs in the default_tags if you wish.
-  DESC
+  description = "(Optional) Map of tags only used for the autoscaling group. If you are using the AWS provider's default_tags, please note that it tags every taggable resource except for the autoscaling group, therefore this variable may be used to duplicate the key/value pairs in the default_tags if you wish."
   default     = {}
 }
 
