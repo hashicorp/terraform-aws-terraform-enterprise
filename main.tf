@@ -275,6 +275,7 @@ module "settings" {
 # -----------------------------------------------------------------------------
 module "tfe_init_legacy" {
   source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init_legacy?ref=ah/tf-5370"
+  count  = var.is_legacy_deployment ? 1 : 0
 
   # TFE & Replicated Configuration data
   cloud                    = "aws"
