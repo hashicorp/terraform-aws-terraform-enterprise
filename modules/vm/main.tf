@@ -34,11 +34,11 @@ resource "aws_security_group_rule" "vault_cluster" {
 resource "aws_security_group_rule" "ssh_inbound" {
   count = var.enable_ssh ? 1 : 0
 
-  security_group_id = aws_security_group.tfe_instance.id
-  type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
+  security_group_id        = aws_security_group.tfe_instance.id
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
   source_security_group_id = var.aws_lb
   cidr_blocks              = var.aws_lb == null ? var.network_private_subnet_cidrs : null
 }

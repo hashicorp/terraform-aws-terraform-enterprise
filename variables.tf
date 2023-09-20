@@ -70,8 +70,9 @@ variable "object_storage_iam_user" {
 }
 
 variable "s3_endpoint" {
-  default = null
+  default     = null
   description = "S3 endpoint. Useful when using a private S3 endpoint. Leave blank to use the default AWS S3 endpoint. Defaults to \"\"."
+  type        = string
 }
 
 

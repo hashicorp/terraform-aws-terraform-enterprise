@@ -175,9 +175,9 @@ module "tfe_init_fdo" {
   custom_image_tag  = var.custom_image_tag
   enable_monitoring = var.enable_monitoring
 
-  disk_path         = local.enable_disk ? var.disk_path : null
-  disk_device_name  = local.enable_disk ? var.ebs_renamed_device_name : null
-  distribution      = var.distribution
+  disk_path        = local.enable_disk ? var.disk_path : null
+  disk_device_name = local.enable_disk ? var.ebs_renamed_device_name : null
+  distribution     = var.distribution
 
   ca_certificate_secret_id = var.ca_certificate_secret_id == null ? null : var.ca_certificate_secret_id
   certificate_secret_id    = var.vm_certificate_secret_id == null ? null : var.vm_certificate_secret_id
