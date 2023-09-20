@@ -150,7 +150,6 @@ jobs:
       TFC_token_secret_name: PUBLIC_ACTIVE_ACTIVE_LEGACY_TFC_TOKEN
       TFC_workspace_substitution_pattern: s/aws-public-active-active/aws-public-active-active-legacy/
 
-
   private_active_active_legacy:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@ah/tf-5370
     secrets: inherit
@@ -168,7 +167,6 @@ jobs:
       work_dir: ./tests/private-active-active
       TFC_token_secret_name: PRIVATE_ACTIVE_ACTIVE_LEGACY_TFC_TOKEN
       TFC_workspace_substitution_pattern: s/aws-private-active-active/aws-private-active-active-legacy/
-
 
   private_tcp_active_active_legacy:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@ah/tf-5370
