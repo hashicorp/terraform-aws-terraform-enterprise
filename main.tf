@@ -199,9 +199,9 @@ module "tfe_init_fdo" {
   docker_compose_yaml = module.docker_compose_config[0].docker_compose_yaml
 }
 
-# ----------------------------------------------------------------------------------------
-# TFE and Replicated settings to pass to the tfe_init_legacy module for legacy deployment
-# ----------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------
+# TFE and Replicated settings to pass to the tfe_init_replicated module for replicated deployment
+# --------------------------------------------------------------------------------------------
 module "settings" {
   source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=main"
   count  = var.is_replicated_deployment ? 1 : 0
@@ -273,8 +273,8 @@ module "settings" {
 # -----------------------------------------------------------------------------
 # AWS user data / cloud init used to install and configure TFE on instance(s)
 # -----------------------------------------------------------------------------
-module "tfe_init_legacy" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init_legacy?ref=main"
+module "tfe_init_replicated" {
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init_replicated?ref=main"
   count  = var.is_replicated_deployment ? 1 : 0
 
   # TFE & Replicated Configuration data
@@ -354,5 +354,5 @@ module "vm" {
   network_subnets_private             = local.network_private_subnets
   network_private_subnet_cidrs        = local.network_private_subnet_cidrs
   node_count                          = var.node_count
-  user_data_base64                    = var.is_replicated_deployment ? module.tfe_init_legacy[0].tfe_userdata_base64_encoded : module.tfe_init_fdo[0].tfe_userdata_base64_encoded
+  user_data_base64                    = var.is_replicated_deployment ? module.tfe_init_replicated[0].tfe_userdata_base64_encoded : module.tfe_init_fdo[0].tfe_userdata_base64_encoded
 }

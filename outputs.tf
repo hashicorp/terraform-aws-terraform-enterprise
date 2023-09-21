@@ -84,7 +84,7 @@ output "tfe_autoscaling_group" {
 }
 
 output "replicated_dashboard_password" {
-  value       = var.is_replicated_deployment ? module.settings[0].replicated_configuration.DaemonAuthenticationPassword : "This is only used for legacy deployments."
+  value       = var.is_replicated_deployment ? module.settings[0].replicated_configuration.DaemonAuthenticationPassword : "This is only used for replicated deployments."
   description = "The password for the TFE console"
   sensitive   = true
 }

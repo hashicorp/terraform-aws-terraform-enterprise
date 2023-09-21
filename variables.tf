@@ -175,7 +175,7 @@ variable "capacity_concurrency" {
 variable "capacity_memory" {
   default     = 2048
   type        = number
-  description = "The maximum amount of memory (in megabytes) that a Terraform plan or apply can use on the system; defaults to `512` for legacy mode and `2048` for FDO."
+  description = "The maximum amount of memory (in megabytes) that a Terraform plan or apply can use on the system; defaults to `512` for replicated mode and `2048` for FDO."
 }
 
 variable "consolidated_services" {
