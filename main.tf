@@ -115,7 +115,7 @@ module "database" {
 # ------------------------------------------------------------------------------------
 module "docker_compose_config" {
   source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/docker_compose_config?ref=main"
-  count  = var.is_legacy_deployment ? 0 : 1
+  count  = var.is_replicated_deployment ? 0 : 1
 
   hostname                  = local.fqdn
   tfe_license               = var.hc_license
@@ -168,7 +168,7 @@ module "docker_compose_config" {
 # --------------------------------------------------------------------------------------------------
 module "tfe_init_fdo" {
   source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
-  count  = var.is_legacy_deployment ? 0 : 1
+  count  = var.is_replicated_deployment ? 0 : 1
 
   cloud             = "aws"
   operational_mode  = var.operational_mode
@@ -204,7 +204,7 @@ module "tfe_init_fdo" {
 # ----------------------------------------------------------------------------------------
 module "settings" {
   source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=main"
-  count  = var.is_legacy_deployment ? 1 : 0
+  count  = var.is_replicated_deployment ? 1 : 0
 
   # TFE Base Configuration
   consolidated_services       = var.consolidated_services
@@ -275,7 +275,7 @@ module "settings" {
 # -----------------------------------------------------------------------------
 module "tfe_init_legacy" {
   source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init_legacy?ref=main"
-  count  = var.is_legacy_deployment ? 1 : 0
+  count  = var.is_replicated_deployment ? 1 : 0
 
   # TFE & Replicated Configuration data
   cloud                    = "aws"
@@ -349,10 +349,10 @@ module "vm" {
   friendly_name_prefix                = var.friendly_name_prefix
   key_name                            = var.key_name
   instance_type                       = var.instance_type
-  is_legacy_deployment                = var.is_legacy_deployment
+  is_replicated_deployment            = var.is_replicated_deployment
   network_id                          = local.network_id
   network_subnets_private             = local.network_private_subnets
   network_private_subnet_cidrs        = local.network_private_subnet_cidrs
   node_count                          = var.node_count
-  user_data_base64                    = var.is_legacy_deployment ? module.tfe_init_legacy[0].tfe_userdata_base64_encoded : module.tfe_init_fdo[0].tfe_userdata_base64_encoded
+  user_data_base64                    = var.is_replicated_deployment ? module.tfe_init_legacy[0].tfe_userdata_base64_encoded : module.tfe_init_fdo[0].tfe_userdata_base64_encoded
 }

@@ -61,12 +61,12 @@ output "health_check_url" {
 }
 
 output "login_url" {
-  value       = var.is_legacy_deployment ? "https://${local.fqdn}/admin/account/new?token=${module.settings[0].tfe_configuration.user_token.value}" : "On the TFE instance, retrieve the IACT Token with `docker exec -t terraform-enterprise-tfe-1 /bin/bash -c /usr/local/bin/retrieve-iact` and then navigate to https://${local.fqdn}/admin/account/new?token=<IACT_TOKEN>."
+  value       = var.is_replicated_deployment ? "https://${local.fqdn}/admin/account/new?token=${module.settings[0].tfe_configuration.user_token.value}" : "On the TFE instance, retrieve the IACT Token with `docker exec -t terraform-enterprise-tfe-1 /bin/bash -c /usr/local/bin/retrieve-iact` and then navigate to https://${local.fqdn}/admin/account/new?token=<IACT_TOKEN>."
   description = "Login URL to setup the TFE instance once it is initialized"
 }
 
 output "replicated_console_url" {
-  value       = var.is_legacy_deployment ? "https://${local.fqdn}:8800/" : "FDO deployments do not have a console."
+  value       = var.is_replicated_deployment ? "https://${local.fqdn}:8800/" : "FDO deployments do not have a console."
   description = "The URL of the Terraform Enterprise Replicated administration console."
 }
 
@@ -84,7 +84,7 @@ output "tfe_autoscaling_group" {
 }
 
 output "replicated_dashboard_password" {
-  value       = var.is_legacy_deployment ? module.settings[0].replicated_configuration.DaemonAuthenticationPassword : "This is only used for legacy deployments."
+  value       = var.is_replicated_deployment ? module.settings[0].replicated_configuration.DaemonAuthenticationPassword : "This is only used for legacy deployments."
   description = "The password for the TFE console"
   sensitive   = true
 }

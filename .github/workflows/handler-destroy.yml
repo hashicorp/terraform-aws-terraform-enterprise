@@ -18,7 +18,7 @@ jobs:
       cloud: AWS
       test_name: Active/Active RHEL7 Proxy
       utility_test: false
-      is_legacy_deployment: false
+      is_replicated_deployment: false
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
       pull_request_ref: ${{ github.event.client_payload.pull_request.head.sha }}
@@ -42,7 +42,7 @@ jobs:
       cloud: AWS
       test_name: Public Active/Active
       utility_test: false
-      is_legacy_deployment: false
+      is_replicated_deployment: false
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
       pull_request_ref: ${{ github.event.client_payload.pull_request.head.sha }}
@@ -59,7 +59,7 @@ jobs:
       cloud: AWS
       test_name: Private Active/Active
       utility_test: false
-      is_legacy_deployment: false
+      is_replicated_deployment: false
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
       pull_request_ref: ${{ github.event.client_payload.pull_request.head.sha }}
@@ -76,7 +76,7 @@ jobs:
       cloud: AWS
       test_name: Private TCP Active/Active
       utility_test: false
-      is_legacy_deployment: false
+      is_replicated_deployment: false
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
       pull_request_ref: ${{ github.event.client_payload.pull_request.head.sha }}
@@ -93,7 +93,7 @@ jobs:
       cloud: AWS
       test_name: Standalone Vault
       utility_test: false
-      is_legacy_deployment: false
+      is_replicated_deployment: false
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
       pull_request_ref: ${{ github.event.client_payload.pull_request.head.sha }}
@@ -117,7 +117,7 @@ jobs:
       cloud: AWS
       test_name: Active/Active RHEL7 Proxy (Legacy)
       utility_test: false
-      is_legacy_deployment: true
+      is_replicated_deployment: true
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
       pull_request_ref: ${{ github.event.client_payload.pull_request.head.sha }}
@@ -141,7 +141,7 @@ jobs:
       cloud: AWS
       test_name: Public Active/Active (Legacy)
       utility_test: false
-      is_legacy_deployment: true
+      is_replicated_deployment: true
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
       pull_request_ref: ${{ github.event.client_payload.pull_request.head.sha }}
@@ -159,7 +159,7 @@ jobs:
       cloud: AWS
       test_name: Private Active/Active (Legacy)
       utility_test: false
-      is_legacy_deployment: true
+      is_replicated_deployment: true
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
       pull_request_ref: ${{ github.event.client_payload.pull_request.head.sha }}
@@ -177,7 +177,7 @@ jobs:
       cloud: AWS
       test_name: Private TCP Active/Active (Legacy)
       utility_test: false
-      is_legacy_deployment: true
+      is_replicated_deployment: true
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
       pull_request_ref: ${{ github.event.client_payload.pull_request.head.sha }}
@@ -195,7 +195,7 @@ jobs:
       cloud: AWS
       test_name: Standalone Vault (Legacy)
       utility_test: false
-      is_legacy_deployment: true
+      is_replicated_deployment: true
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
       pull_request_ref: ${{ github.event.client_payload.pull_request.head.sha }}

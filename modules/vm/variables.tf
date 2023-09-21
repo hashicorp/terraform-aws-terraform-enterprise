@@ -66,7 +66,7 @@ variable "friendly_name_prefix" {
   description = "(Required) Friendly name prefix used for tagging and naming AWS resources."
 }
 
-variable "is_legacy_deployment" {
+variable "is_replicated_deployment" {
   type        = bool
   description = "TFE will be installed using a Replicated license and deployment method."
 }

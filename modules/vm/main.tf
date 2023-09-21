@@ -20,7 +20,7 @@ resource "aws_security_group_rule" "tfe_ui" {
 }
 
 resource "aws_security_group_rule" "vault_cluster" {
-  count = var.active_active && !var.is_legacy_deployment ? 1 : 0
+  count = var.active_active && !var.is_replicated_deployment ? 1 : 0
 
   security_group_id        = aws_security_group.tfe_instance.id
   type                     = "ingress"
@@ -62,7 +62,7 @@ resource "aws_security_group_rule" "tfe_outbound" {
 }
 
 resource "aws_security_group_rule" "tfe_dashboard" {
-  count                    = !var.active_active || var.is_legacy_deployment ? 1 : 0
+  count                    = !var.active_active || var.is_replicated_deployment ? 1 : 0
   security_group_id        = aws_security_group.tfe_instance.id
   type                     = "ingress"
   from_port                = 8800
@@ -119,7 +119,7 @@ resource "aws_autoscaling_group" "tfe_asg" {
   max_size            = var.node_count
   desired_capacity    = var.node_count
   vpc_zone_identifier = var.network_subnets_private
-  target_group_arns = var.active_active || !var.is_legacy_deployment ? [var.aws_lb_target_group_tfe_tg_443_arn] : [
+  target_group_arns = var.active_active || !var.is_replicated_deployment ? [var.aws_lb_target_group_tfe_tg_443_arn] : [
     var.aws_lb_target_group_tfe_tg_8800_arn,
     var.aws_lb_target_group_tfe_tg_443_arn,
   ]

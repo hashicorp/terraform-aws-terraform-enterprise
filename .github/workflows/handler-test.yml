@@ -17,7 +17,7 @@ jobs:
     with:
       test_name: Active/Active RHEL7 Proxy
       utility_test: false
-      is_legacy_deployment: false
+      is_replicated_deployment: false
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
       k6_work_dir: ./tests/tfe-load-test
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
@@ -41,7 +41,7 @@ jobs:
     with:
       test_name: Public Active/Active
       utility_test: false
-      is_legacy_deployment: false
+      is_replicated_deployment: false
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
       k6_work_dir: ./tests/tfe-load-test
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
@@ -58,7 +58,7 @@ jobs:
     with:
       test_name: Private Active/Active
       utility_test: false
-      is_legacy_deployment: false
+      is_replicated_deployment: false
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
       k6_work_dir: ./tests/tfe-load-test
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
@@ -75,7 +75,7 @@ jobs:
     with:
       test_name: Private TCP Active/Active
       utility_test: false
-      is_legacy_deployment: false
+      is_replicated_deployment: false
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
       k6_work_dir: ./tests/tfe-load-test
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
@@ -92,7 +92,7 @@ jobs:
     with:
       test_name: Standalone Vault
       utility_test: false
-      is_legacy_deployment: false
+      is_replicated_deployment: false
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
       k6_work_dir: ./tests/tfe-load-test
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
@@ -117,7 +117,7 @@ jobs:
     with:
       test_name: Active/Active RHEL7 Proxy (Legacy)
       utility_test: false
-      is_legacy_deployment: true
+      is_replicated_deployment: true
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
       k6_work_dir: ./tests/tfe-load-test
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
@@ -141,7 +141,7 @@ jobs:
     with:
       test_name: Public Active/Active (Legacy)
       utility_test: false
-      is_legacy_deployment: true
+      is_replicated_deployment: true
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
       k6_work_dir: ./tests/tfe-load-test
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
@@ -159,7 +159,7 @@ jobs:
     with:
       test_name: Private Active/Active (Legacy)
       utility_test: false
-      is_legacy_deployment: true
+      is_replicated_deployment: true
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
       k6_work_dir: ./tests/tfe-load-test
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
@@ -177,7 +177,7 @@ jobs:
     with:
       test_name: Private TCP Active/Active (Legacy)
       utility_test: false
-      is_legacy_deployment: true
+      is_replicated_deployment: true
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
       k6_work_dir: ./tests/tfe-load-test
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
@@ -195,7 +195,7 @@ jobs:
     with:
       test_name: Standalone Vault (Legacy)
       utility_test: false
-      is_legacy_deployment: true
+      is_replicated_deployment: true
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
       k6_work_dir: ./tests/tfe-load-test
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
