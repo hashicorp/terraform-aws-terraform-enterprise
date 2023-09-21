@@ -109,7 +109,7 @@ resource "aws_iam_policy" "kms_policy" {
           "kms:ReEncryptTo",
         ]
         Effect   = "Allow"
-        Resource = "${var.kms_key_arn}"
+        Resource = var.kms_key_arn
       },
     ]
   })

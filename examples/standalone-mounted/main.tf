@@ -6,7 +6,7 @@
 resource "random_string" "friendly_name" {
   length  = 4
   upper   = false
-  number  = false
+  numeric = false
   special = false
 }
 

@@ -26,9 +26,19 @@ jobs:
             > | /help | Shows this help message |
             
             ## Test Case Names
-            
+
+            FDO:
+            * active-active-rhel7-proxy
             * private-active-active
             * private-tcp-active-active
             * public-active-active
+            * standalone-vault
+
+            Replicated:
+            * active-active-rhel7-proxy-replicated
+            * private-active-active-replicated
+            * private-tcp-active-active-replicated
+            * public-active-active-replicated
+            * standalone-vault-replicated
 
           reaction-type: confused

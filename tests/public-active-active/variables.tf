@@ -22,10 +22,22 @@ variable "domain_name" {
   description = "Domain for creating the Terraform Enterprise subdomain on."
 }
 
+variable "hc_license" {
+  default     = null
+  type        = string
+  description = "(Not needed if is_replicated_deployment is true) The raw TFE license that is validated on application startup."
+}
+
 variable "iact_subnet_list" {
   default     = []
   description = "A list of CIDR masks that configure the ability to retrieve the IACT from outside the host."
   type        = list(string)
+}
+
+variable "is_replicated_deployment" {
+  type        = bool
+  description = "TFE will be installed using a Replicated license and deployment method."
+  default     = true
 }
 
 variable "key_name" {
@@ -39,10 +51,26 @@ variable "license_file" {
   description = "The local path to the Terraform Enterprise license to be provided by CI."
 }
 
+variable "registry_username" {
+  default     = null
+  type        = string
+  description = "(Not needed if is_replicated_deployment is true) The username for the docker registry from which to source the terraform_enterprise container images."
+}
+
+variable "registry_password" {
+  default     = null
+  type        = string
+  description = "(Not needed if is_replicated_deployment is true) The password for the docker registry from which to source the terraform_enterprise container images."
+}
+
+variable "tfe_image_tag" {
+  default     = "latest"
+  type        = string
+  description = "(Not needed if is_replicated_deployment is true) The image version of the terraform-enterprise image (e.g. \"1234567\")"
+}
+
 variable "tfe_license_secret_id" {
   default     = null
   type        = string
-  description = <<-EOD
-  The name of the Secrets Manager secret ID of the Base64 encoded Terraform Enterprise license.
-  EOD
+  description = "The name of the Secrets Manager secret ID of the Base64 encoded Terraform Enterprise license."
 }

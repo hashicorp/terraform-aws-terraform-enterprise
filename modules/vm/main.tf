@@ -19,6 +19,30 @@ resource "aws_security_group_rule" "tfe_ui" {
   cidr_blocks              = var.aws_lb == null ? var.network_private_subnet_cidrs : null
 }
 
+resource "aws_security_group_rule" "vault_cluster" {
+  count = var.active_active && !var.is_replicated_deployment ? 1 : 0
+
+  security_group_id        = aws_security_group.tfe_instance.id
+  type                     = "ingress"
+  from_port                = 8201
+  to_port                  = 8201
+  protocol                 = "tcp"
+  source_security_group_id = var.aws_lb
+  cidr_blocks              = var.aws_lb == null ? var.network_private_subnet_cidrs : null
+}
+
+resource "aws_security_group_rule" "ssh_inbound" {
+  count = var.enable_ssh ? 1 : 0
+
+  security_group_id        = aws_security_group.tfe_instance.id
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
+  source_security_group_id = var.aws_lb
+  cidr_blocks              = var.aws_lb == null ? var.network_private_subnet_cidrs : null
+}
+
 resource "aws_security_group_rule" "tfe_inbound" {
   security_group_id = aws_security_group.tfe_instance.id
   type              = "ingress"
@@ -38,7 +62,7 @@ resource "aws_security_group_rule" "tfe_outbound" {
 }
 
 resource "aws_security_group_rule" "tfe_dashboard" {
-  count                    = var.active_active ? 0 : 1
+  count                    = !var.active_active || var.is_replicated_deployment ? 1 : 0
   security_group_id        = aws_security_group.tfe_instance.id
   type                     = "ingress"
   from_port                = 8800
@@ -95,7 +119,7 @@ resource "aws_autoscaling_group" "tfe_asg" {
   max_size            = var.node_count
   desired_capacity    = var.node_count
   vpc_zone_identifier = var.network_subnets_private
-  target_group_arns = var.active_active ? [var.aws_lb_target_group_tfe_tg_443_arn] : [
+  target_group_arns = var.active_active || !var.is_replicated_deployment ? [var.aws_lb_target_group_tfe_tg_443_arn] : [
     var.aws_lb_target_group_tfe_tg_8800_arn,
     var.aws_lb_target_group_tfe_tg_443_arn,
   ]

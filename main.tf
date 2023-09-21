@@ -45,7 +45,6 @@ module "service_accounts" {
 # AWS S3 Bucket Object Storage
 # -----------------------------------------------------------------------------
 module "object_storage" {
-
   count  = local.enable_object_storage_module ? 1 : 0
   source = "./modules/object_storage"
 
@@ -58,8 +57,7 @@ module "object_storage" {
 # AWS Virtual Private Cloud Networking
 # -----------------------------------------------------------------------------
 module "networking" {
-  count = var.deploy_vpc ? 1 : 0
-
+  count  = var.deploy_vpc ? 1 : 0
   source = "./modules/networking"
 
   friendly_name_prefix         = var.friendly_name_prefix
@@ -73,8 +71,7 @@ module "networking" {
 # -----------------------------------------------------------------------------
 module "redis" {
   source = "./modules/redis"
-
-  count = local.enable_redis_module ? 1 : 0
+  count  = local.enable_redis_module ? 1 : 0
 
   active_active                = local.active_active
   friendly_name_prefix         = var.friendly_name_prefix
@@ -99,8 +96,7 @@ module "redis" {
 # -----------------------------------------------------------------------------
 module "database" {
   source = "./modules/database"
-
-  count = local.enable_database_module ? 1 : 0
+  count  = local.enable_database_module ? 1 : 0
 
   db_size                      = var.db_size
   db_backup_retention          = var.db_backup_retention
@@ -114,11 +110,101 @@ module "database" {
   kms_key_arn                  = local.kms_key_arn
 }
 
-# -----------------------------------------------------------------------------
-# TFE and Replicated settings to pass to the tfe_init module
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------
+# Docker Compose File Config for TFE on instance(s) using Flexible Deployment Options
+# ------------------------------------------------------------------------------------
+module "docker_compose_config" {
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/docker_compose_config?ref=main"
+  count  = var.is_replicated_deployment ? 0 : 1
+
+  hostname                  = local.fqdn
+  tfe_license               = var.hc_license
+  license_reporting_opt_out = var.license_reporting_opt_out
+  operational_mode          = var.operational_mode
+  cert_file                 = var.tls_bootstrap_cert_pathname
+  key_file                  = var.tls_bootstrap_key_pathname
+  tfe_image                 = var.tfe_image
+  tls_ca_bundle_file        = var.tls_ca_bundle_file
+  tls_ciphers               = var.tls_ciphers
+  tls_version               = var.tls_version
+  run_pipeline_image        = var.run_pipeline_image
+  capacity_concurrency      = var.capacity_concurrency
+  capacity_cpu              = var.capacity_cpu
+  capacity_memory           = var.capacity_memory
+  iact_subnets              = join(",", var.iact_subnet_list)
+  iact_time_limit           = var.iact_subnet_time_limit
+
+  database_name       = local.database.name
+  database_user       = local.database.user
+  database_password   = local.database.password
+  database_host       = local.database.host
+  database_parameters = local.database.parameters
+
+  storage_type                         = "s3"
+  s3_access_key_id                     = var.aws_access_key_id
+  s3_secret_access_key                 = var.aws_secret_access_key
+  s3_bucket                            = local.object_storage.s3_bucket.id
+  s3_region                            = data.aws_region.current.name
+  s3_endpoint                          = var.s3_endpoint
+  s3_server_side_encryption            = "aws:kms"
+  s3_server_side_encryption_kms_key_id = local.kms_key_arn
+  s3_use_instance_profile              = var.aws_access_key_id == null ? "1" : "0"
+
+  redis_host     = local.redis.hostname
+  redis_user     = ""
+  redis_password = local.redis.password
+  redis_use_tls  = local.redis.use_tls
+  redis_use_auth = local.redis.use_password_auth
+
+  vault_address   = var.extern_vault_addr
+  vault_namespace = var.extern_vault_namespace
+  vault_path      = var.extern_vault_path
+  vault_role_id   = var.extern_vault_role_id
+  vault_secret_id = var.extern_vault_secret_id
+}
+
+# --------------------------------------------------------------------------------------------------
+# AWS cloud init used to install and configure TFE on instance(s) using Flexible Deployment Options
+# --------------------------------------------------------------------------------------------------
+module "tfe_init_fdo" {
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
+  count  = var.is_replicated_deployment ? 0 : 1
+
+  cloud             = "aws"
+  operational_mode  = var.operational_mode
+  custom_image_tag  = var.custom_image_tag
+  enable_monitoring = var.enable_monitoring
+
+  disk_path        = local.enable_disk ? var.disk_path : null
+  disk_device_name = local.enable_disk ? var.ebs_renamed_device_name : null
+  distribution     = var.distribution
+
+  ca_certificate_secret_id = var.ca_certificate_secret_id == null ? null : var.ca_certificate_secret_id
+  certificate_secret_id    = var.vm_certificate_secret_id == null ? null : var.vm_certificate_secret_id
+  key_secret_id            = var.vm_key_secret_id == null ? null : var.vm_key_secret_id
+
+  proxy_ip   = var.proxy_ip
+  proxy_port = var.proxy_port
+  extra_no_proxy = concat([
+    "127.0.0.1",
+    "169.254.169.254",
+    ".aws.ce.redhat.com",
+    "secretsmanager.${data.aws_region.current.name}.amazonaws.com",
+    local.fqdn,
+    var.network_cidr
+  ], var.no_proxy)
+
+  registry_username   = var.registry_username
+  registry_password   = var.registry_password
+  docker_compose_yaml = module.docker_compose_config[0].docker_compose_yaml
+}
+
+# --------------------------------------------------------------------------------------------
+# TFE and Replicated settings to pass to the tfe_init_replicated module for replicated deployment
+# --------------------------------------------------------------------------------------------
 module "settings" {
   source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=main"
+  count  = var.is_replicated_deployment ? 1 : 0
 
   # TFE Base Configuration
   consolidated_services       = var.consolidated_services
@@ -187,16 +273,17 @@ module "settings" {
 # -----------------------------------------------------------------------------
 # AWS user data / cloud init used to install and configure TFE on instance(s)
 # -----------------------------------------------------------------------------
-module "tfe_init" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
+module "tfe_init_replicated" {
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init_replicated?ref=main"
+  count  = var.is_replicated_deployment ? 1 : 0
 
   # TFE & Replicated Configuration data
   cloud                    = "aws"
   disk_path                = local.enable_disk ? var.disk_path : null
   disk_device_name         = local.enable_disk ? var.ebs_renamed_device_name : null
   distribution             = var.distribution
-  tfe_configuration        = module.settings.tfe_configuration
-  replicated_configuration = module.settings.replicated_configuration
+  tfe_configuration        = module.settings[0].tfe_configuration
+  replicated_configuration = module.settings[0].replicated_configuration
   airgap_url               = var.airgap_url
 
   # Secrets
@@ -253,6 +340,7 @@ module "vm" {
   asg_tags                            = var.asg_tags
   default_ami_id                      = local.default_ami_id
   enable_disk                         = local.enable_disk
+  enable_ssh                          = var.enable_ssh
   ebs_device_name                     = var.ebs_device_name
   ebs_volume_size                     = var.ebs_volume_size
   ebs_volume_type                     = var.ebs_volume_type
@@ -261,9 +349,10 @@ module "vm" {
   friendly_name_prefix                = var.friendly_name_prefix
   key_name                            = var.key_name
   instance_type                       = var.instance_type
+  is_replicated_deployment            = var.is_replicated_deployment
   network_id                          = local.network_id
   network_subnets_private             = local.network_private_subnets
   network_private_subnet_cidrs        = local.network_private_subnet_cidrs
   node_count                          = var.node_count
-  user_data_base64                    = module.tfe_init.tfe_userdata_base64_encoded
+  user_data_base64                    = var.is_replicated_deployment ? module.tfe_init_replicated[0].tfe_userdata_base64_encoded : module.tfe_init_fdo[0].tfe_userdata_base64_encoded
 }
