@@ -33,7 +33,8 @@ jobs:
               * private-tcp-active-active
               * public-active-active
               * standalone-vault
-              Legacy:
+
+            Legacy:
               * active-active-rhel7-proxy-legacy
               * private-active-active-legacy
               * private-tcp-active-active-legacy
