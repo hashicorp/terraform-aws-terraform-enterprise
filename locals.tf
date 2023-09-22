@@ -24,8 +24,8 @@ locals {
     {
       name       = null
       password   = null
-      host       = null
-      user       = null
+      endpoint   = null
+      username   = null
       parameters = null
     }
   )

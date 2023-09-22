@@ -128,6 +128,18 @@ variable "redis_use_password_auth" {
 
 # Postgres
 # --------
+variable "db_name" {
+  default     = "hashicorp"
+  type        = string
+  description = "PostgreSQL instance name."
+}
+
+variable "db_username" {
+  default     = "hashicorp"
+  type        = string
+  description = "PostgreSQL instance username. No special characters."
+}
+
 variable "db_backup_retention" {
   type        = number
   description = "The days to retain backups for. Must be between 0 and 35"
@@ -138,6 +150,12 @@ variable "db_backup_window" {
   type        = string
   description = "The daily time range (in UTC) during which automated backups are created if they are enabled"
   default     = null
+}
+
+variable "db_parameters" {
+  type        = string
+  description = "PostgreSQL server parameters for the connection URI. Used to configure the PostgreSQL connection."
+  default     = "sslmode=require"
 }
 
 variable "db_size" {
