@@ -101,6 +101,9 @@ module "database" {
   db_size                      = var.db_size
   db_backup_retention          = var.db_backup_retention
   db_backup_window             = var.db_backup_window
+  db_name                      = var.db_name
+  db_parameters                = var.db_parameters
+  db_username                  = var.db_username
   engine_version               = var.postgres_engine_version
   friendly_name_prefix         = var.friendly_name_prefix
   network_id                   = local.network_id

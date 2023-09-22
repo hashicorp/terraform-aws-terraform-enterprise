@@ -59,7 +59,7 @@ resource "aws_db_instance" "postgresql" {
   instance_class    = var.db_size
   password          = random_string.postgresql_password.result
   # no special characters allowed
-  username = "espdtfe"
+  username = var.db_username
 
   allow_major_version_upgrade = false
   apply_immediately           = true
@@ -74,7 +74,7 @@ resource "aws_db_instance" "postgresql" {
   max_allocated_storage       = 0
   multi_az                    = true
   # no special characters allowed
-  db_name                = "espdtfe"
+  db_name                = var.db_name
   port                   = 5432
   publicly_accessible    = false
   skip_final_snapshot    = true
