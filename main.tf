@@ -138,9 +138,9 @@ module "docker_compose_config" {
   iact_time_limit           = var.iact_subnet_time_limit
 
   database_name       = local.database.name
-  database_user       = local.database.user
+  database_user       = local.database.username
   database_password   = local.database.password
-  database_host       = local.database.host
+  database_host       = local.database.endpoint
   database_parameters = local.database.parameters
 
   storage_type                         = "s3"
