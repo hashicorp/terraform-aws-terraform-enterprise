@@ -64,6 +64,7 @@ jobs:
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
       pull_request_ref: ${{ github.event.client_payload.pull_request.head.sha }}
       pull_request_comment_id: ${{ github.event.client_payload.github.payload.comment.id }}
+      ssh_private_key_secret_name: PRIVATE_ACTIVE_ACTIVE_SSH_KEY_BASE64
       work_dir: ./tests/private-active-active
       TFC_token_secret_name: PRIVATE_ACTIVE_ACTIVE_TFC_TOKEN
 
@@ -81,6 +82,7 @@ jobs:
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
       pull_request_ref: ${{ github.event.client_payload.pull_request.head.sha }}
       pull_request_comment_id: ${{ github.event.client_payload.github.payload.comment.id }}
+      ssh_private_key_secret_name: PRIVATE_TCP_ACTIVE_ACTIVE_SSH_KEY_BASE64
       work_dir: ./tests/private-tcp-active-active
       TFC_token_secret_name: PRIVATE_TCP_ACTIVE_ACTIVE_TFC_TOKEN
 
@@ -165,6 +167,7 @@ jobs:
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
       pull_request_ref: ${{ github.event.client_payload.pull_request.head.sha }}
       pull_request_comment_id: ${{ github.event.client_payload.github.payload.comment.id }}
+      ssh_private_key_secret_name: PRIVATE_ACTIVE_ACTIVE_SSH_KEY_BASE64
       work_dir: ./tests/private-active-active
       TFC_token_secret_name: PRIVATE_ACTIVE_ACTIVE_REPLICATED_TFC_TOKEN
       TFC_workspace_substitution_pattern: s/aws-private-active-active/aws-private-active-active-replicated/
@@ -183,6 +186,7 @@ jobs:
       pull_request_repo_name: ${{ github.event.client_payload.github.payload.repository.full_name }}
       pull_request_ref: ${{ github.event.client_payload.pull_request.head.sha }}
       pull_request_comment_id: ${{ github.event.client_payload.github.payload.comment.id }}
+      ssh_private_key_secret_name: PRIVATE_TCP_ACTIVE_ACTIVE_SSH_KEY_BASE64
       work_dir: ./tests/private-tcp-active-active
       TFC_token_secret_name: PRIVATE_TCP_ACTIVE_ACTIVE_REPLICATED_TFC_TOKEN
       TFC_workspace_substitution_pattern: s/aws-private-tcp-active-active/aws-private-tcp-active-active-replicated/
