@@ -10,6 +10,7 @@ locals {
   enable_database_module       = local.enable_external
   enable_object_storage_module = local.enable_external
   enable_redis_module          = local.active_active
+  fdo_operational_mode         = local.enable_disk ? "disk" : local.active_active ? "active-active" : "external"
   ami_id                       = local.default_ami_id ? data.aws_ami.ubuntu.id : var.ami_id
   default_ami_id               = var.ami_id == null
   fqdn                         = "${var.tfe_subdomain}.${var.domain_name}"

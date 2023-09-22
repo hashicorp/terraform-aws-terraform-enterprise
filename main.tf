@@ -117,13 +117,13 @@ module "database" {
 # Docker Compose File Config for TFE on instance(s) using Flexible Deployment Options
 # ------------------------------------------------------------------------------------
 module "docker_compose_config" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/docker_compose_config?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/docker_compose_config?ref=ah/tf-8609-fdo-6"
   count  = var.is_replicated_deployment ? 0 : 1
 
   hostname                  = local.fqdn
   tfe_license               = var.hc_license
   license_reporting_opt_out = var.license_reporting_opt_out
-  operational_mode          = var.operational_mode
+  operational_mode          = local.fdo_operational_mode
   cert_file                 = var.tls_bootstrap_cert_pathname
   key_file                  = var.tls_bootstrap_key_pathname
   tfe_image                 = var.tfe_image
@@ -170,11 +170,11 @@ module "docker_compose_config" {
 # AWS cloud init used to install and configure TFE on instance(s) using Flexible Deployment Options
 # --------------------------------------------------------------------------------------------------
 module "tfe_init_fdo" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=ah/tf-8609-fdo-6"
   count  = var.is_replicated_deployment ? 0 : 1
 
   cloud             = "aws"
-  operational_mode  = var.operational_mode
+  operational_mode  = local.fdo_operational_mode
   custom_image_tag  = var.custom_image_tag
   enable_monitoring = var.enable_monitoring
 

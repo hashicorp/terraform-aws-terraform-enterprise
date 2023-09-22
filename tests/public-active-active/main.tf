@@ -44,7 +44,7 @@ module "public_active_active" {
 
   ami_id                        = data.aws_ami.ubuntu.id
   consolidated_services_enabled = var.consolidated_services_enabled
-  iam_role_policy_arns          = ["arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
+  iam_role_policy_arns          = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   iact_subnet_list              = var.iact_subnet_list
   instance_type                 = "m5.xlarge"
   key_name                      = var.key_name
@@ -55,6 +55,10 @@ module "public_active_active" {
   redis_encryption_in_transit   = false
   redis_use_password_auth       = false
   tfe_subdomain                 = local.test_name
+  tls_bootstrap_cert_pathname   = "/etc/ssl/private/terraform-enterprise/cert.pem"
+  tls_bootstrap_key_pathname    = "/etc/ssl/private/terraform-enterprise/key.pem"
+  vm_certificate_secret_id      = data.aws_secretsmanager_secret.vm_certificate.id
+  vm_key_secret_id              = data.aws_secretsmanager_secret.vm_key.id
 
   asg_tags = local.common_tags
 
