@@ -22,10 +22,11 @@ locals {
   database = try(
     module.database[0],
     {
-      name     = null
-      password = null
-      endpoint = null
-      username = null
+      name       = null
+      password   = null
+      host       = null
+      user       = null
+      parameters = null
     }
   )
 
