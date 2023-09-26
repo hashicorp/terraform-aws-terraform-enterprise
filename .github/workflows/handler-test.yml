@@ -67,6 +67,9 @@ jobs:
       ssh_private_key_secret_name: PRIVATE_ACTIVE_ACTIVE_SSH_KEY_BASE64
       work_dir: ./tests/private-active-active
       TFC_token_secret_name: PRIVATE_ACTIVE_ACTIVE_TFC_TOKEN
+      aws_access_key_id: PRIVATE_ACTIVE_ACTIVE_AWS_ACCESS_KEY_ID
+      aws_secret_access_key: PRIVATE_ACTIVE_ACTIVE_AWS_SECRET_ACCESS_KEY
+      aws_role_to_assume: PRIVATE_ACTIVE_ACTIVE_AWS_ROLE_TO_ASSUME
 
   private_tcp_active_active:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@ah/tf-8609-fdo-6
@@ -85,6 +88,9 @@ jobs:
       ssh_private_key_secret_name: PRIVATE_TCP_ACTIVE_ACTIVE_SSH_KEY_BASE64
       work_dir: ./tests/private-tcp-active-active
       TFC_token_secret_name: PRIVATE_TCP_ACTIVE_ACTIVE_TFC_TOKEN
+      aws_access_key_id: PRIVATE_TCP_ACTIVE_ACTIVE_AWS_ACCESS_KEY_ID
+      aws_secret_access_key: PRIVATE_TCP_ACTIVE_ACTIVE_AWS_SECRET_ACCESS_KEY
+      aws_role_to_assume: PRIVATE_TCP_ACTIVE_ACTIVE_AWS_ROLE_TO_ASSUME
 
   standalone_vault:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@ah/tf-8609-fdo-6
@@ -195,7 +201,7 @@ jobs:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@ah/tf-8609-fdo-6
     secrets: inherit
     name: Test AWS Standalone Vault (Replicated) Scenario
-    if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, 'all') || contains(github.event.client_payload.slash_command.args.unnamed.all, 'public-active-active-replicated') }}
+    if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, 'all') || contains(github.event.client_payload.slash_command.args.unnamed.all, 'standalone-vault-replicated') }}
     with:
       test_name: Standalone Vault (Replicated)
       utility_test: false
