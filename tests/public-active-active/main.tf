@@ -42,19 +42,19 @@ module "public_active_active" {
   distribution          = "ubuntu"
   tfe_license_secret_id = try(module.secrets[0].tfe_license_secret_id, var.tfe_license_secret_id)
 
-  ami_id                      = data.aws_ami.ubuntu.id
-  consolidated_services       = var.consolidated_services
-  iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
-  iact_subnet_list            = var.iact_subnet_list
-  instance_type               = "m5.xlarge"
-  key_name                    = var.key_name
-  kms_key_arn                 = module.kms.key
-  load_balancing_scheme       = local.load_balancing_scheme
-  node_count                  = 2
-  redis_encryption_at_rest    = false
-  redis_encryption_in_transit = false
-  redis_use_password_auth     = false
-  tfe_subdomain               = local.test_name
+  ami_id                        = data.aws_ami.ubuntu.id
+  consolidated_services_enabled = var.consolidated_services_enabled
+  iam_role_policy_arns          = ["arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
+  iact_subnet_list              = var.iact_subnet_list
+  instance_type                 = "m5.xlarge"
+  key_name                      = var.key_name
+  kms_key_arn                   = module.kms.key
+  load_balancing_scheme         = local.load_balancing_scheme
+  node_count                    = 2
+  redis_encryption_at_rest      = false
+  redis_encryption_in_transit   = false
+  redis_use_password_auth       = false
+  tfe_subdomain                 = local.test_name
 
   asg_tags = local.common_tags
 

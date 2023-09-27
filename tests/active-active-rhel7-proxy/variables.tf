@@ -31,7 +31,7 @@ variable "ca_private_key_secret_name" {
   description = "The secrets manager secret name of the Base64 encoded CA private key."
 }
 
-variable "consolidated_services" {
+variable "consolidated_services_enabled" {
   default     = false
   type        = bool
   description = "(Required) True if TFE uses consolidated services."

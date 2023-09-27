@@ -26,7 +26,7 @@ variable "certificate_pem_secret_id" {
   description = "The secrets manager secret ID of the Base64 & PEM encoded TLS certificate."
 }
 
-variable "consolidated_services" {
+variable "consolidated_services_enabled" {
   default     = false
   type        = bool
   description = "(Required) True if TFE uses consolidated services."

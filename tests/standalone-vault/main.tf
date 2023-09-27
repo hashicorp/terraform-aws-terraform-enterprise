@@ -50,18 +50,18 @@ module "standalone_vault" {
   tfe_license_secret_id = try(module.secrets[0].tfe_license_secret_id, var.tfe_license_secret_id)
   distribution          = "ubuntu"
 
-  consolidated_services       = var.consolidated_services
-  iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
-  iact_subnet_list            = ["0.0.0.0/0"]
-  instance_type               = "m5.xlarge"
-  key_name                    = local.utility_module_test ? var.key_name : "standalone-vault"
-  kms_key_arn                 = module.kms.key
-  load_balancing_scheme       = local.load_balancing_scheme
-  node_count                  = 1
-  redis_encryption_at_rest    = false
-  redis_encryption_in_transit = false
-  redis_use_password_auth     = false
-  tfe_subdomain               = local.friendly_name_prefix
+  consolidated_services_enabled = var.consolidated_services_enabled
+  iam_role_policy_arns          = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
+  iact_subnet_list              = ["0.0.0.0/0"]
+  instance_type                 = "m5.xlarge"
+  key_name                      = local.utility_module_test ? var.key_name : "standalone-vault"
+  kms_key_arn                   = module.kms.key
+  load_balancing_scheme         = local.load_balancing_scheme
+  node_count                    = 1
+  redis_encryption_at_rest      = false
+  redis_encryption_in_transit   = false
+  redis_use_password_auth       = false
+  tfe_subdomain                 = local.friendly_name_prefix
 
   # Vault
   extern_vault_enable    = true
