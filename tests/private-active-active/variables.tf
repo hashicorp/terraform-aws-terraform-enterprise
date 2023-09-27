@@ -11,7 +11,7 @@ variable "aws_role_arn" {
   description = "The AWS Role ARN to assume for this module."
 }
 
-variable "consolidated_services" {
+variable "consolidated_services_enabled" {
   default     = false
   type        = bool
   description = "(Required) True if TFE uses consolidated services."
