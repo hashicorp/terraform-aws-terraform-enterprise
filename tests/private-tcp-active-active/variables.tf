@@ -27,7 +27,7 @@ variable "certificate_pem_secret_id" {
 }
 
 variable "consolidated_services_enabled" {
-  default     = false
+  default     = true
   type        = bool
   description = "(Required) True if TFE uses consolidated services."
 }
