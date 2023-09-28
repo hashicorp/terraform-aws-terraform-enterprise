@@ -95,6 +95,9 @@ module "tfe" {
   node_count                    = 2
   proxy_ip                      = module.test_proxy.proxy_ip
   proxy_port                    = local.http_proxy_port
+  redis_encryption_at_rest      = false
+  redis_encryption_in_transit   = false
+  redis_use_password_auth       = false
   tfe_subdomain                 = local.test_name
 
   asg_tags = local.common_tags
