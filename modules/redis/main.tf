@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MPL-2.0
 
 resource "random_id" "redis_password" {
-  count       = var.active_active ? 1 : 0
+  count       = var.active_active && var.use_password_auth ? 1 : 0
   byte_length = 16
 }
 
