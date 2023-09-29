@@ -52,6 +52,6 @@ locals {
 
   trusted_proxies = concat(
     var.trusted_proxies,
-    [var.network_private_subnet_cidrs]
+    var.network_private_subnet_cidrs
   )
 }
