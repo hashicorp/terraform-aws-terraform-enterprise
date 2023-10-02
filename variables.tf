@@ -111,7 +111,7 @@ variable "redis_encryption_at_rest" {
 variable "redis_engine_version" {
   type        = string
   default     = "7.0"
-  description = "Redis enginer version."
+  description = "Redis engine version."
 }
 
 variable "redis_parameter_group_name" {

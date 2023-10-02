@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MPL-2.0
 
 resource "random_id" "redis_password" {
-  count       = var.active_active ? 1 : 0
+  count       = var.active_active && var.redis_use_password_auth ? 1 : 0
   byte_length = 16
 }
 
@@ -77,9 +77,11 @@ resource "aws_elasticache_replication_group" "redis" {
   snapshot_retention_limit   = 0
   subnet_group_name          = aws_elasticache_subnet_group.tfe[0].name
 
-  auth_token                 = (var.redis_encryption_in_transit == true && var.redis_use_password_auth == true) ? random_id.redis_password[0].hex : null
+  # Password used to access a password protected server.
+  # Can be specified only if transit_encryption_enabled = true.
+  auth_token                 = var.redis_encryption_in_transit && var.redis_use_password_auth ? random_id.redis_password[0].hex : null
   transit_encryption_enabled = var.redis_encryption_in_transit
 
   at_rest_encryption_enabled = var.redis_encryption_at_rest
-  kms_key_id                 = (var.redis_encryption_at_rest == true) ? var.kms_key_arn : null
+  kms_key_id                 = var.redis_encryption_at_rest ? var.kms_key_arn : null
 }

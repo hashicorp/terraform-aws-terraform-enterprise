@@ -20,7 +20,7 @@ resource "aws_security_group_rule" "tfe_ui" {
 }
 
 resource "aws_security_group_rule" "vault_cluster" {
-  count = var.active_active && !var.is_replicated_deployment ? 1 : 0
+  count = var.active_active ? 1 : 0
 
   security_group_id        = aws_security_group.tfe_instance.id
   type                     = "ingress"
