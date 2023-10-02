@@ -12,8 +12,7 @@ variable "kms_key_arn" {
 }
 
 variable "tfe_instance_sg" {
-  description = "The identity of the security group attached to the TFE EC2 instance(s) which will be authorized to communicate with
-  the Redis Elasticache replication group."
+  description = "The identity of the security group attached to the TFE EC2 instance(s) which will be authorized to communicate with the Redis Elasticache replication group."
   type        = string
 }
 
