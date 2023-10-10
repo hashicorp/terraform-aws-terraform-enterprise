@@ -13,7 +13,7 @@ jobs:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@main
     secrets: inherit
     name: Destroy resources from AWS Active/Active RHEL7 Proxy
-    if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, 'all') || contains(github.event.client_payload.slash_command.args.unnamed.all, 'active-active-rhel7-proxy') }}
+    if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'active-active-rhel7-proxy' }}
     with:
       cloud: AWS
       test_name: Active/Active RHEL7 Proxy
@@ -37,7 +37,7 @@ jobs:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@main
     secrets: inherit
     name: Destroy resources from AWS Public Active/Active
-    if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, 'all') || contains(github.event.client_payload.slash_command.args.unnamed.all, 'public-active-active') }}
+    if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'public-active-active' }}
     with:
       cloud: AWS
       test_name: Public Active/Active
@@ -54,7 +54,7 @@ jobs:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@main
     secrets: inherit
     name: Destroy resources from AWS Private Active/Active
-    if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, 'all') || contains(github.event.client_payload.slash_command.args.unnamed.all, 'private-active-active') }}
+    if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'private-active-active' }}
     with:
       cloud: AWS
       test_name: Private Active/Active
@@ -71,7 +71,7 @@ jobs:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@main
     secrets: inherit
     name: Destroy resources from AWS Private TCP Active/Active
-    if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, 'all') || contains(github.event.client_payload.slash_command.args.unnamed.all, 'private-tcp-active-active') }}
+    if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'private-tcp-active-active' }}
     with:
       cloud: AWS
       test_name: Private TCP Active/Active
@@ -88,7 +88,7 @@ jobs:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@main
     secrets: inherit
     name: Destroy resources from AWS Standalone Vault
-    if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, 'all') || contains(github.event.client_payload.slash_command.args.unnamed.all, 'standalone-vault') }}
+    if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'standalone-vault' }}
     with:
       cloud: AWS
       test_name: Standalone Vault
@@ -112,7 +112,7 @@ jobs:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@main
     secrets: inherit
     name: Destroy resources from AWS Active/Active RHEL7 Proxy (Replicated)
-    if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, 'all') || contains(github.event.client_payload.slash_command.args.unnamed.all, 'active-active-rhel7-proxy-replicated') }}
+    if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'active-active-rhel7-proxy-replicated' }}
     with:
       cloud: AWS
       test_name: Active/Active RHEL7 Proxy (Replicated)
@@ -136,7 +136,7 @@ jobs:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@main
     secrets: inherit
     name: Destroy resources from AWS Public Active/Active (Replicated)
-    if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, 'all') || contains(github.event.client_payload.slash_command.args.unnamed.all, 'public-active-active-replicated') }}
+    if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'public-active-active-replicated' }}
     with:
       cloud: AWS
       test_name: Public Active/Active (Replicated)
@@ -154,7 +154,7 @@ jobs:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@main
     secrets: inherit
     name: Destroy resources from AWS Private Active/Active (Replicated)
-    if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, 'all') || contains(github.event.client_payload.slash_command.args.unnamed.all, 'private-active-active-replicated') }}
+    if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'private-active-active-replicated' }}
     with:
       cloud: AWS
       test_name: Private Active/Active (Replicated)
@@ -172,7 +172,7 @@ jobs:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@main
     secrets: inherit
     name: Destroy resources from AWS Private TCP Active/Active (Replicated)
-    if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, 'all') || contains(github.event.client_payload.slash_command.args.unnamed.all, 'private-tcp-active-active-replicated') }}
+    if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'private-tcp-active-active-replicated' }}
     with:
       cloud: AWS
       test_name: Private TCP Active/Active (Replicated)
@@ -190,7 +190,7 @@ jobs:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@main
     secrets: inherit
     name: Destroy resources from AWS Standalone Vault (Replicated)
-    if: ${{ contains(github.event.client_payload.slash_command.args.unnamed.all, 'all') || contains(github.event.client_payload.slash_command.args.unnamed.all, 'public-active-active-replicated') }}
+    if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'public-active-active-replicated' }}
     with:
       cloud: AWS
       test_name: Standalone Vault (Replicated)
