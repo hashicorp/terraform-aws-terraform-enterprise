@@ -196,6 +196,9 @@ jobs:
       work_dir: ./tests/private-tcp-active-active
       TFC_token_secret_name: PRIVATE_TCP_ACTIVE_ACTIVE_REPLICATED_TFC_TOKEN
       TFC_workspace_substitution_pattern: s/aws-private-tcp-active-active/aws-private-tcp-active-active-replicated/
+      aws_access_key_id: PRIVATE_TCP_ACTIVE_ACTIVE_AWS_ACCESS_KEY_ID
+      aws_secret_access_key: PRIVATE_TCP_ACTIVE_ACTIVE_AWS_SECRET_ACCESS_KEY
+      aws_role_to_assume: PRIVATE_TCP_ACTIVE_ACTIVE_AWS_ROLE_TO_ASSUME
 
   standalone_vault_replicated:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@ah/tf-8609-fdo-6

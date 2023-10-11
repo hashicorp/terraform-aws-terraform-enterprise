@@ -41,4 +41,4 @@ jobs:
             * public-active-active-replicated
             * standalone-vault-replicated
 
-          reaction-type: confused
+          reactions: confused
