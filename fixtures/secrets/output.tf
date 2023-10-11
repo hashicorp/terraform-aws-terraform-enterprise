@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: MPL-2.0
 
 output "tfe_license_secret_id" {
-  value = var.tfe_license == null ? {
+  value = var.tfe_license == null ? 
     var.tfe_license_data == null ? null : aws_secretsmanager_secret_version.tfe_license_data[0].secret_id
-    } : aws_secretsmanager_secret_version.tfe_license[0].secret_id
+  : aws_secretsmanager_secret_version.tfe_license[0].secret_id
 }
 
 output "ca_certificate_secret" {
