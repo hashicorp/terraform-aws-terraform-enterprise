@@ -8,15 +8,20 @@ resource "aws_secretsmanager_secret" "tfe_license" {
 }
 
 resource "aws_secretsmanager_secret_version" "tfe_license" {
-  count         = var.tfe_license.path == null ? 0 : 1
+  count         = var.tfe_license == null ? 0 : 1
   secret_binary = filebase64(var.tfe_license.path)
   secret_id     = aws_secretsmanager_secret.tfe_license[count.index].id
 }
 
+resource "aws_secretsmanager_secret" "tfe_license_data" {
+  count       = var.tfe_license_data == null ? 0 : 1
+  name        = var.tfe_license_data.name
+  description = "The TFE license"
+}
 resource "aws_secretsmanager_secret_version" "tfe_license_data" {
-  count         = var.tfe_license.data == null ? 0 : 1
-  secret_binary = base64encode(var.tfe_license.data)
-  secret_id     = aws_secretsmanager_secret.tfe_license[count.index].id
+  count         = var.tfe_license_data.data == null ? 0 : 1
+  secret_binary = base64encode(var.tfe_license_data.data)
+  secret_id     = aws_secretsmanager_secret.tfe_license_data[count.index].id
 }
 
 resource "aws_secretsmanager_secret" "ca_certificate_secret" {
