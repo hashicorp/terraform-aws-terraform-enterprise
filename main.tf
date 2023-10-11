@@ -124,8 +124,8 @@ module "docker_compose_config" {
   tfe_license               = var.hc_license
   license_reporting_opt_out = var.license_reporting_opt_out
   operational_mode          = local.fdo_operational_mode
-  cert_file                 = var.tls_bootstrap_cert_pathname
-  key_file                  = var.tls_bootstrap_key_pathname
+  cert_file                 = "/etc/ssl/private/terraform-enterprise/cert.pem"
+  key_file                  = "/etc/ssl/private/terraform-enterprise/key.pem"
   tfe_image                 = var.tfe_image
   tls_ca_bundle_file        = var.tls_ca_bundle_file
   tls_ciphers               = var.tls_ciphers
