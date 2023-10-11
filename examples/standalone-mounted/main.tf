@@ -35,7 +35,7 @@ module "secrets" {
   source = "../../fixtures/secrets"
   tfe_license = {
     name = "${local.friendly_name_prefix}-license"
-    path = var.license_file
+    data = var.license_content
   }
 }
 
