@@ -29,11 +29,12 @@ resource "aws_key_pair" "main" {
   key_name = "${local.friendly_name_prefix}-ssh"
 }
 
+
 # Store TFE License as secret
 # ---------------------------
 module "secrets" {
   source = "../../fixtures/secrets"
-  tfe_license = {
+  tfe_license_data = {
     name = "${local.friendly_name_prefix}-license"
     data = var.license_content
   }
