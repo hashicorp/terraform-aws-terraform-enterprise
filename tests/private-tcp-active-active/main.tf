@@ -82,5 +82,5 @@ module "private_tcp_active_active" {
   registry_password         = var.registry_password
   registry_username         = var.registry_username
   tfe_image                 = "quay.io/hashicorp/terraform-enterprise:${var.tfe_image_tag}"
-  tls_ca_bundle_file        = "/usr/share/pki/ca-trust-source/anchors/tfe-ca-certificate.crt"
+  # tls_ca_bundle_file        = "/usr/share/pki/ca-trust-source/anchors/tfe-ca-certificate.crt"
 }
