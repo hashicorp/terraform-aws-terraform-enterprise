@@ -274,13 +274,13 @@ variable "tfe_license_file_location" {
 }
 
 variable "tls_bootstrap_cert_pathname" {
-  default     = "/etc/ssl/private/terraform-enterprise/cert.pem"
+  default     = "/etc/tfe/ssl/cert.pem"
   type        = string
   description = "The path on the TFE instance to put the certificate. ex. '/var/lib/terraform-enterprise/certificate.pem'"
 }
 
 variable "tls_bootstrap_key_pathname" {
-  default     = "/etc/ssl/private/terraform-enterprise/key.pem"
+  default     = "/etc/tfe/ssl/key.pem"
   type        = string
   description = "The path on the TFE instance to put the key. ex. '/var/lib/terraform-enterprise/key.pem'"
 }
