@@ -10,6 +10,15 @@ variable "tfe_license" {
   description = "A map that consists of the newly created secret name and the local path to the Terraform Enterprise license."
 }
 
+variable "tfe_license_data" {
+  default = null
+  type = object({
+    name = string
+    data = string
+  })
+  description = "A map that consists of the newly created secret name and the data of the Terraform Enterprise license."
+}
+
 variable "ca_certificate_secret" {
   default     = null
   description = "The secret identifier and data of a PEM certificate file for a Certificate Authority."
