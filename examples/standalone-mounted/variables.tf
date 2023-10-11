@@ -16,6 +16,11 @@ variable "license_file" {
   description = "The local path to the Terraform Enterprise license."
 }
 
+variable "license_content" {
+  type        = string
+  description = "The Terraform Enterprise license."
+}
+
 variable "tags" {
   type        = map(string)
   description = <<DESC
