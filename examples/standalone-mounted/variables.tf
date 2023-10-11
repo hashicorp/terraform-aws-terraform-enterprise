@@ -14,6 +14,7 @@ variable "domain_name" {
 variable "license_file" {
   type        = string
   description = "The local path to the Terraform Enterprise license."
+  default     = ""
 }
 
 variable "license_content" {
