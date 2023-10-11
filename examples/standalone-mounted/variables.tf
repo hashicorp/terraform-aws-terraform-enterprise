@@ -20,6 +20,7 @@ variable "license_file" {
 variable "license_content" {
   type        = string
   description = "The Terraform Enterprise license."
+  default     = ""
 }
 
 variable "tags" {
