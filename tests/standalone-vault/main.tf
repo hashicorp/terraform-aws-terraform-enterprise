@@ -51,6 +51,7 @@ module "standalone_vault" {
   distribution          = "ubuntu"
 
   consolidated_services_enabled = var.consolidated_services_enabled
+  health_check_grace_period     = 3000
   iam_role_policy_arns          = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   iact_subnet_list              = ["0.0.0.0/0"]
   instance_type                 = "m5.xlarge"

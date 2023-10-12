@@ -31,21 +31,6 @@ variable "aws_iam_instance_profile" {
   type        = string
 }
 
-variable "network_id" {
-  description = "The identity of the VPC in which the security group attached to the TFE EC2 instance will be delpoyed."
-  type        = string
-}
-
-variable "network_subnets_private" {
-  description = "A list of the identities of the private subnetworks in which the EC2 autoscaling group will be deployed."
-  type        = list(string)
-}
-
-variable "instance_type" {
-  description = "The instance type of TFE EC2 instance(s) to create."
-  type        = string
-}
-
 variable "active_active" {
   type        = bool
   description = "Flag for active-active configuation: true for active-active, false for standalone"
@@ -66,9 +51,29 @@ variable "friendly_name_prefix" {
   description = "(Required) Friendly name prefix used for tagging and naming AWS resources."
 }
 
+variable "health_check_grace_period" {
+  description = "The health grace period aws provides to allow for an instance to pass it's health check."
+  type        = number
+}
+
+variable "instance_type" {
+  description = "The instance type of TFE EC2 instance(s) to create."
+  type        = string
+}
+
 variable "is_replicated_deployment" {
   type        = bool
   description = "TFE will be installed using a Replicated license and deployment method."
+}
+
+variable "network_id" {
+  description = "The identity of the VPC in which the security group attached to the TFE EC2 instance will be delpoyed."
+  type        = string
+}
+
+variable "network_subnets_private" {
+  description = "A list of the identities of the private subnetworks in which the EC2 autoscaling group will be deployed."
+  type        = list(string)
 }
 
 variable "node_count" {

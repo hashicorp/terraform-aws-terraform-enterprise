@@ -350,9 +350,10 @@ module "vm" {
   ebs_iops                            = var.ebs_iops
   ebs_delete_on_termination           = var.ebs_delete_on_termination
   friendly_name_prefix                = var.friendly_name_prefix
-  key_name                            = var.key_name
+  health_check_grace_period           = var.health_check_grace_period
   instance_type                       = var.instance_type
   is_replicated_deployment            = var.is_replicated_deployment
+  key_name                            = var.key_name
   network_id                          = local.network_id
   network_subnets_private             = local.network_private_subnets
   network_private_subnet_cidrs        = local.network_private_subnet_cidrs

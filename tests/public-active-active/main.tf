@@ -44,6 +44,7 @@ module "public_active_active" {
 
   ami_id                        = data.aws_ami.ubuntu.id
   consolidated_services_enabled = var.consolidated_services_enabled
+  health_check_grace_period     = 3000
   iam_role_policy_arns          = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   iact_subnet_list              = var.iact_subnet_list
   instance_type                 = "m5.xlarge"

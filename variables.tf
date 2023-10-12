@@ -369,6 +369,12 @@ variable "existing_iam_instance_role_name" {
   type        = string
 }
 
+variable "health_check_grace_period" {
+  default     = null
+  description = "The health grace period aws provides to allow for an instance to pass it's health check."
+  type        = number
+}
+
 variable "iam_role_policy_arns" {
   default     = []
   description = "A set of Amazon Resource Names of IAM role policies to be attached to the TFE IAM role."
