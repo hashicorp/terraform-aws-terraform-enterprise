@@ -66,6 +66,8 @@ module "private_active_active" {
   redis_encryption_in_transit   = true
   redis_use_password_auth       = true
   tfe_subdomain                 = local.test_name
+  vm_certificate_secret_id      = data.aws_secretsmanager_secret.vm_certificate.id
+  vm_key_secret_id              = data.aws_secretsmanager_secret.vm_key.id
 
   asg_tags = local.common_tags
 
