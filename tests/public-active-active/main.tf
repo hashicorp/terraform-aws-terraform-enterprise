@@ -19,7 +19,7 @@ resource "random_string" "friendly_name" {
 }
 
 module "secrets" {
-  count  = local.utility_module_test ? 0 : 1
+  count  = local.utility_module_test || !var.is_replicated_deployment ? 0 : 1
   source = "../../fixtures/secrets"
 
   tfe_license = {
