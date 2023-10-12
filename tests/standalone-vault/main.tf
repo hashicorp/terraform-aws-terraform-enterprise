@@ -64,6 +64,8 @@ module "standalone_vault" {
   redis_encryption_in_transit   = false
   redis_use_password_auth       = false
   tfe_subdomain                 = local.friendly_name_prefix
+  vm_certificate_secret_id      = data.aws_secretsmanager_secret.vm_certificate.id
+  vm_key_secret_id              = data.aws_secretsmanager_secret.vm_key.id
 
   # Vault
   extern_vault_enable    = true
