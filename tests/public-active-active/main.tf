@@ -43,6 +43,7 @@ module "public_active_active" {
   tfe_license_secret_id = try(module.secrets[0].tfe_license_secret_id, var.tfe_license_secret_id)
 
   ami_id                        = data.aws_ami.ubuntu.id
+  bypass_preflight_checks       = true
   consolidated_services_enabled = var.consolidated_services_enabled
   health_check_grace_period     = 3000
   iam_role_policy_arns          = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]

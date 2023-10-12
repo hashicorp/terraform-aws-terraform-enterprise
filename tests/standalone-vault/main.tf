@@ -50,6 +50,7 @@ module "standalone_vault" {
   tfe_license_secret_id = try(module.secrets[0].tfe_license_secret_id, var.tfe_license_secret_id)
   distribution          = "ubuntu"
 
+  bypass_preflight_checks       = true
   consolidated_services_enabled = var.consolidated_services_enabled
   health_check_grace_period     = 3000
   iam_role_policy_arns          = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]

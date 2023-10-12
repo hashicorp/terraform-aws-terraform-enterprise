@@ -53,6 +53,7 @@ module "private_tcp_active_active" {
   tfe_license_secret_id = try(module.secrets[0].tfe_license_secret_id, var.tfe_license_secret_id)
 
   ami_id                        = data.aws_ami.rhel.id
+  bypass_preflight_checks       = true
   ca_certificate_secret_id      = data.aws_secretsmanager_secret.ca_certificate.arn
   consolidated_services_enabled = var.consolidated_services_enabled
   distribution                  = "rhel"
@@ -81,5 +82,4 @@ module "private_tcp_active_active" {
   registry_password         = var.registry_password
   registry_username         = var.registry_username
   tfe_image                 = "quay.io/hashicorp/terraform-enterprise:${var.tfe_image_tag}"
-  # tls_ca_bundle_file        = "/usr/share/pki/ca-trust-source/anchors/tfe-ca-certificate.crt"
 }

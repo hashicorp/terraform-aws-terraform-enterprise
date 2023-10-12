@@ -82,6 +82,7 @@ module "tfe" {
   ami_id                        = data.aws_ami.rhel.id
   aws_access_key_id             = var.aws_access_key_id
   aws_secret_access_key         = var.aws_secret_access_key
+  bypass_preflight_checks       = true
   ca_certificate_secret_id      = data.aws_secretsmanager_secret.ca_certificate.arn
   consolidated_services_enabled = var.consolidated_services_enabled
   distribution                  = "rhel"
