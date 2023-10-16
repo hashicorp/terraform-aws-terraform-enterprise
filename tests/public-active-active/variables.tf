@@ -74,3 +74,9 @@ variable "tfe_license_secret_id" {
   type        = string
   description = "The name of the Secrets Manager secret ID of the Base64 encoded Terraform Enterprise license."
 }
+
+variable "instance_node_count" {
+  default     = 2
+  type        = number
+  description = "amount of TFE nodes"
+}
