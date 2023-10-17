@@ -121,6 +121,8 @@ module "docker_compose_config" {
   count  = var.is_replicated_deployment ? 0 : 1
 
   hostname                  = local.fqdn
+  http_port                 = var.http_port
+  https_port                = var.https_port
   tfe_license               = var.hc_license
   license_reporting_opt_out = var.license_reporting_opt_out
   operational_mode          = local.fdo_operational_mode

@@ -226,6 +226,18 @@ variable "hairpin_addressing" {
   description = "In some cloud environments, HTTP clients running on instances behind a loadbalancer cannot send requests to the public hostname of that load balancer. Use this setting to configure TFE services to redirect requests for the installation's FQDN to the instance's internal IP address. Defaults to false."
 }
 
+variable "http_port" {
+  default     = 8080
+  type        = number
+  description = "(Optional if is_replicated_deployment is false) Port application listens on for HTTP. Default is 80."
+}
+
+variable "https_port" {
+  default     = 8443
+  type        = number
+  description = "(Optional if is_replicated_deployment is false) Port application listens on for HTTPS. Default is 443."
+}
+
 variable "iact_subnet_list" {
   default     = []
   description = "A list of CIDR masks that configure the ability to retrieve the IACT from outside the host."
