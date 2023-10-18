@@ -202,7 +202,6 @@ module "tfe_init_fdo" {
   docker_compose_yaml = module.docker_compose_config[0].docker_compose_yaml
 
   fqdn=local.fqdn
-  letsencrypt_email=var.letsencrypt_email
 }
 
 # --------------------------------------------------------------------------------------------
