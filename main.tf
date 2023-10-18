@@ -200,6 +200,9 @@ module "tfe_init_fdo" {
   registry_username   = var.registry_username
   registry_password   = var.registry_password
   docker_compose_yaml = module.docker_compose_config[0].docker_compose_yaml
+
+  fqdn=local.fqdn
+  letsencrypt_email=var.letsencrypt_email
 }
 
 # --------------------------------------------------------------------------------------------
