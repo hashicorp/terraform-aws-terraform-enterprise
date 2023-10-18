@@ -630,3 +630,9 @@ variable "extern_vault_token_renew" {
   type        = number
   description = "(Optional if var.extern_vault_enable = true) How often (in seconds) to renew the Vault token."
 }
+
+variable "letsencrypt_email" {
+  default     = ""
+  description = "The email address for letsencrypt CA cert"
+  type        = string
+}
