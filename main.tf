@@ -161,6 +161,8 @@ module "docker_compose_config" {
   redis_use_tls  = local.redis.use_tls
   redis_use_auth = local.redis.use_password_auth
 
+  trusted_proxies = local.trusted_proxies
+
   vault_address   = var.extern_vault_addr
   vault_namespace = var.extern_vault_namespace
   vault_path      = var.extern_vault_path
