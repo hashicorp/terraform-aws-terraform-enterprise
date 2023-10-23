@@ -17,7 +17,7 @@ locals {
   ssm_policy_arn        = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
   test_name             = "${local.friendly_name_prefix}-test-active-active-rhel-proxy"
   iam_principal         = data.aws_iam_user.ci_s3.arn
-  load_balancing_scheme = "PUBLIC"
+  load_balancing_scheme = "PRIVATE_TCP"
   http_proxy_port       = "3128"
   utility_module_test   = (var.license_file == null && var.is_replicated_deployment)
 }
