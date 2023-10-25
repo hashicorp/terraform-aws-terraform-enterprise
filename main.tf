@@ -120,24 +120,30 @@ module "docker_compose_config" {
   source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/docker_compose_config?ref=ah/tf-8609-fdo-6"
   count  = var.is_replicated_deployment ? 0 : 1
 
+  tfe_license = var.hc_license
+
   hostname                  = local.fqdn
   http_port                 = var.http_port
   https_port                = var.https_port
-  tfe_license               = var.hc_license
+  http_proxy                = var.proxy_ip != null ? "${var.proxy_ip}:${var.proxy_port}" : null
+  https_proxy               = var.proxy_ip != null ? "${var.proxy_ip}:${var.proxy_port}" : null
+  no_proxy                  = local.no_proxy
   license_reporting_opt_out = var.license_reporting_opt_out
   operational_mode          = local.fdo_operational_mode
-  cert_file                 = "/etc/ssl/private/terraform-enterprise/cert.pem"
-  key_file                  = "/etc/ssl/private/terraform-enterprise/key.pem"
-  tfe_image                 = var.tfe_image
-  tls_ca_bundle_file        = "/etc/ssl/private/terraform-enterprise/bundle.pem"
-  tls_ciphers               = var.tls_ciphers
-  tls_version               = var.tls_version
-  run_pipeline_image        = var.run_pipeline_image
-  capacity_concurrency      = var.capacity_concurrency
-  capacity_cpu              = var.capacity_cpu
-  capacity_memory           = var.capacity_memory
-  iact_subnets              = join(",", var.iact_subnet_list)
-  iact_time_limit           = var.iact_subnet_time_limit
+
+  cert_file          = "/etc/ssl/private/terraform-enterprise/cert.pem"
+  key_file           = "/etc/ssl/private/terraform-enterprise/key.pem"
+  tfe_image          = var.tfe_image
+  tls_ca_bundle_file = "/etc/ssl/private/terraform-enterprise/bundle.pem"
+  tls_ciphers        = var.tls_ciphers
+  tls_version        = var.tls_version
+
+  capacity_concurrency = var.capacity_concurrency
+  capacity_cpu         = var.capacity_cpu
+  capacity_memory      = var.capacity_memory
+  iact_subnets         = join(",", var.iact_subnet_list)
+  iact_time_limit      = var.iact_subnet_time_limit
+  run_pipeline_image   = var.run_pipeline_image
 
   database_name       = local.database.name
   database_user       = local.database.username
@@ -190,16 +196,9 @@ module "tfe_init_fdo" {
   certificate_secret_id    = var.vm_certificate_secret_id == null ? null : var.vm_certificate_secret_id
   key_secret_id            = var.vm_key_secret_id == null ? null : var.vm_key_secret_id
 
-  proxy_ip   = var.proxy_ip
-  proxy_port = var.proxy_port
-  extra_no_proxy = concat([
-    "127.0.0.1",
-    "169.254.169.254",
-    ".aws.ce.redhat.com",
-    "secretsmanager.${data.aws_region.current.name}.amazonaws.com",
-    local.fqdn,
-    var.network_cidr
-  ], var.no_proxy)
+  proxy_ip       = var.proxy_ip
+  proxy_port     = var.proxy_port
+  extra_no_proxy = local.no_proxy
 
   registry_username   = var.registry_username
   registry_password   = var.registry_password

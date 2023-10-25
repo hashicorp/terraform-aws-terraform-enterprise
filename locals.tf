@@ -51,6 +51,15 @@ locals {
     }
   )
 
+  no_proxy = concat([
+    "127.0.0.1",
+    "169.254.169.254",
+    ".aws.ce.redhat.com",
+    "secretsmanager.${data.aws_region.current.name}.amazonaws.com",
+    local.fqdn,
+    var.network_cidr
+  ], var.no_proxy)
+
   trusted_proxies = concat(
     var.trusted_proxies,
     var.network_private_subnet_cidrs
