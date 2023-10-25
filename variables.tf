@@ -459,14 +459,15 @@ variable "tls_ciphers" {
 }
 
 variable "tls_version" {
-  default     = null
+  default     = "tls_1_2_tls_1_3"
   type        = string
   description = "(Not needed if is_replicated_deployment is true) TLS version to use. Leave blank to use both TLS v1.2 and TLS v1.3. Defaults to '' if no value is given."
   validation {
     condition = (
       var.tls_version == null ||
       var.tls_version == "tls_1_2" ||
-      var.tls_version == "tls_1_3"
+      var.tls_version == "tls_1_3" ||
+      var.tls_version == "tls_1_2_tls_1_3"
     )
     error_message = "The tls_version value must be 'tls_1_2', 'tls_1_3', or null."
   }
