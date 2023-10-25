@@ -58,6 +58,7 @@ locals {
     "secretsmanager.${data.aws_region.current.name}.amazonaws.com",
     "download.docker.com",
     "centos.org",
+    "localhost",
     local.fqdn,
     var.network_cidr
   ], var.no_proxy)
