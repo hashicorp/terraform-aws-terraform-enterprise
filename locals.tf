@@ -59,6 +59,8 @@ locals {
     "download.docker.com",
     "centos.org",
     "localhost",
+    "s3.amazonaws.com",
+    ".s3.amazonaws.com",
     local.fqdn,
     var.network_cidr
   ], var.no_proxy)
