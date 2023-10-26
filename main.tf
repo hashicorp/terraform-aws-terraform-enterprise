@@ -134,7 +134,7 @@ module "docker_compose_config" {
   cert_file          = "/etc/ssl/private/terraform-enterprise/cert.pem"
   key_file           = "/etc/ssl/private/terraform-enterprise/key.pem"
   tfe_image          = var.tfe_image
-  tls_ca_bundle_file = "/etc/ssl/private/terraform-enterprise/bundle.pem"
+  tls_ca_bundle_file = var.ca_certificate_secret_id != null ? "/etc/ssl/private/terraform-enterprise/bundle.pem" : null
   tls_ciphers        = var.tls_ciphers
   tls_version        = var.tls_version
 
