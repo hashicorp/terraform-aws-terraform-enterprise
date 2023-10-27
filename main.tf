@@ -228,7 +228,7 @@ module "settings" {
   release_sequence              = var.release_sequence
   pg_extra_params               = var.pg_extra_params
 
-  extra_no_proxy = join(",", local.no_proxy)
+  extra_no_proxy = local.no_proxy
 
   # Replicated Base Configuration
   hostname                                  = local.fqdn
