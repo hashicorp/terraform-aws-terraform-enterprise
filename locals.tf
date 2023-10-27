@@ -61,6 +61,7 @@ locals {
     "localhost",
     "s3.amazonaws.com",
     ".s3.amazonaws.com",
+    "s3.${data.aws_region.current.name}.amazonaws.com",
     local.fqdn,
     var.network_cidr
   ], var.no_proxy)
