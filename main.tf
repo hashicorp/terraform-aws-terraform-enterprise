@@ -228,14 +228,7 @@ module "settings" {
   release_sequence              = var.release_sequence
   pg_extra_params               = var.pg_extra_params
 
-  extra_no_proxy = concat([
-    "127.0.0.1",
-    "169.254.169.254",
-    ".aws.ce.redhat.com",
-    "secretsmanager.${data.aws_region.current.name}.amazonaws.com",
-    local.fqdn,
-    var.network_cidr
-  ], var.no_proxy)
+  extra_no_proxy = join(",", local.no_proxy)
 
   # Replicated Base Configuration
   hostname                                  = local.fqdn
