@@ -117,7 +117,7 @@ module "database" {
 # Docker Compose File Config for TFE on instance(s) using Flexible Deployment Options
 # ------------------------------------------------------------------------------------
 module "docker_compose_config" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/docker_compose_config?ref=ah/tf-8609-fdo-6"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/docker_compose_config?ref=main"
   count  = var.is_replicated_deployment ? 0 : 1
 
   tfe_license = var.hc_license
@@ -180,7 +180,7 @@ module "docker_compose_config" {
 # AWS cloud init used to install and configure TFE on instance(s) using Flexible Deployment Options
 # --------------------------------------------------------------------------------------------------
 module "tfe_init_fdo" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=ah/tf-8609-fdo-6"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
   count  = var.is_replicated_deployment ? 0 : 1
 
   cloud             = "aws"
