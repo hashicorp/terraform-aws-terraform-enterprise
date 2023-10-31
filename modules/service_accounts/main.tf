@@ -32,16 +32,7 @@ data "aws_iam_policy_document" "instance_role" {
 }
 
 resource "aws_iam_role_policy" "secretsmanager" {
-  count = (
-    var.existing_iam_instance_profile_name == null &&
-    !var.enable_airgap && (
-      var.ca_certificate_secret_id != null ||
-      var.tfe_license_secret_id != null ||
-      var.vm_certificate_secret_id != null ||
-      var.vm_key_secret_id != null
-    ) ?
-    1 : 0
-  )
+  count = var.existing_iam_instance_profile_name == null && !var.enable_airgap ? 1 : 0
 
   policy = data.aws_iam_policy_document.secretsmanager[0].json
   role   = local.iam_instance_role.id
