@@ -6,6 +6,11 @@ output "ptfe_endpoint" {
   description = "The URL to the TFE application."
 }
 
+output "tfe_url" {
+  value       = module.standalone_vault.tfe_url
+  description = "The URL to the TFE application."
+}
+
 output "replicated_console_url" {
   value       = "${module.standalone_vault.tfe_url}:8800"
   description = "Terraform Enterprise Console URL"

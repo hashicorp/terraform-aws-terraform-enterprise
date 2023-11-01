@@ -7,7 +7,7 @@ following traits:
 
 - Active/Active mode
 - a large VM machine type (m5.8xlarge)
-- Red Hat 7.8 as the VM image
+- Red Hat as the VM image
 - a privately accessible TCP load balancer with TLS pass-through
 - a proxy server with TLS termination
 - Redis authentication

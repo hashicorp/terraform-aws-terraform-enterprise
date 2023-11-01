@@ -226,6 +226,18 @@ variable "hairpin_addressing" {
   description = "In some cloud environments, HTTP clients running on instances behind a loadbalancer cannot send requests to the public hostname of that load balancer. Use this setting to configure TFE services to redirect requests for the installation's FQDN to the instance's internal IP address. Defaults to false."
 }
 
+variable "http_port" {
+  default     = 8080
+  type        = number
+  description = "(Optional if is_replicated_deployment is false) Port application listens on for HTTP. Default is 80."
+}
+
+variable "https_port" {
+  default     = 8443
+  type        = number
+  description = "(Optional if is_replicated_deployment is false) Port application listens on for HTTPS. Default is 443."
+}
+
 variable "iact_subnet_list" {
   default     = []
   description = "A list of CIDR masks that configure the ability to retrieve the IACT from outside the host."
@@ -274,13 +286,13 @@ variable "tfe_license_file_location" {
 }
 
 variable "tls_bootstrap_cert_pathname" {
-  default     = null
+  default     = "/var/lib/terraform-enterprise/certificate.pem"
   type        = string
   description = "The path on the TFE instance to put the certificate. ex. '/var/lib/terraform-enterprise/certificate.pem'"
 }
 
 variable "tls_bootstrap_key_pathname" {
-  default     = null
+  default     = "/var/lib/terraform-enterprise/key.pem"
   type        = string
   description = "The path on the TFE instance to put the key. ex. '/var/lib/terraform-enterprise/key.pem'"
 }
@@ -369,6 +381,12 @@ variable "existing_iam_instance_role_name" {
   type        = string
 }
 
+variable "health_check_grace_period" {
+  default     = null
+  description = "The health grace period aws provides to allow for an instance to pass it's health check."
+  type        = number
+}
+
 variable "iam_role_policy_arns" {
   default     = []
   description = "A set of Amazon Resource Names of IAM role policies to be attached to the TFE IAM role."
@@ -434,12 +452,6 @@ variable "ssl_policy" {
   description = "SSL policy to use on ALB listener"
 }
 
-variable "tls_ca_bundle_file" {
-  default     = null
-  type        = string
-  description = "(Not needed if is_replicated_deployment is true) Path to a file containing TLS CA certificates to be added to the OS CA certificates bundle. Leave blank to not add CA certificates to the OS CA certificates bundle. Defaults to ''."
-}
-
 variable "tls_ciphers" {
   default     = null
   type        = string
@@ -447,14 +459,15 @@ variable "tls_ciphers" {
 }
 
 variable "tls_version" {
-  default     = null
+  default     = "tls_1_2_tls_1_3"
   type        = string
   description = "(Not needed if is_replicated_deployment is true) TLS version to use. Leave blank to use both TLS v1.2 and TLS v1.3. Defaults to '' if no value is given."
   validation {
     condition = (
       var.tls_version == null ||
       var.tls_version == "tls_1_2" ||
-      var.tls_version == "tls_1_3"
+      var.tls_version == "tls_1_3" ||
+      var.tls_version == "tls_1_2_tls_1_3"
     )
     error_message = "The tls_version value must be 'tls_1_2', 'tls_1_3', or null."
   }

@@ -28,12 +28,6 @@ variable "hc_license" {
   description = "(Not needed if is_replicated_deployment is true) The raw TFE license that is validated on application startup."
 }
 
-variable "iact_subnet_list" {
-  default     = []
-  description = "A list of CIDR masks that configure the ability to retrieve the IACT from outside the host."
-  type        = list(string)
-}
-
 variable "is_replicated_deployment" {
   type        = bool
   description = "TFE will be installed using a Replicated license and deployment method."

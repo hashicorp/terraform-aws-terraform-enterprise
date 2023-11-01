@@ -10,6 +10,7 @@ locals {
   enable_database_module       = local.enable_external
   enable_object_storage_module = local.enable_external
   enable_redis_module          = local.active_active
+  fdo_operational_mode         = local.enable_disk ? "disk" : local.active_active ? "active-active" : "external"
   ami_id                       = local.default_ami_id ? data.aws_ami.ubuntu.id : var.ami_id
   default_ami_id               = var.ami_id == null
   fqdn                         = "${var.tfe_subdomain}.${var.domain_name}"
@@ -49,6 +50,21 @@ locals {
       use_tls           = null
     }
   )
+
+  no_proxy = concat([
+    "127.0.0.1",
+    "169.254.169.254",
+    ".aws.ce.redhat.com",
+    "secretsmanager.${data.aws_region.current.name}.amazonaws.com",
+    "download.docker.com",
+    "centos.org",
+    "localhost",
+    "s3.amazonaws.com",
+    ".s3.amazonaws.com",
+    "s3.${data.aws_region.current.name}.amazonaws.com",
+    local.fqdn,
+    var.network_cidr
+  ], var.no_proxy)
 
   trusted_proxies = concat(
     var.trusted_proxies,

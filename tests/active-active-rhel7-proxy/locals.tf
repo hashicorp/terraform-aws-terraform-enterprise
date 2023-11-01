@@ -19,5 +19,5 @@ locals {
   iam_principal         = data.aws_iam_user.ci_s3.arn
   load_balancing_scheme = "PUBLIC"
   http_proxy_port       = "3128"
-  utility_module_test   = var.license_file == null
+  utility_module_test   = (var.license_file == null && var.is_replicated_deployment)
 }

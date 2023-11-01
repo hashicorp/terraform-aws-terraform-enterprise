@@ -17,6 +17,11 @@ output "ptfe_endpoint" {
   description = "Terraform Enterprise Application URL"
 }
 
+output "tfe_url" {
+  value       = module.tfe.tfe_url
+  description = "The URL to the TFE application."
+}
+
 # Change this to health_check_url for consistency. This requires changing it in ptfe-replicated tests.
 output "ptfe_health_check" {
   value       = module.tfe.health_check_url

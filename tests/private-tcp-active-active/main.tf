@@ -19,7 +19,7 @@ resource "random_string" "friendly_name" {
 }
 
 module "secrets" {
-  count  = local.utility_module_test ? 0 : 1
+  count  = local.utility_module_test || !var.is_replicated_deployment ? 0 : 1
   source = "../../fixtures/secrets"
 
   tfe_license = {
@@ -53,9 +53,11 @@ module "private_tcp_active_active" {
   tfe_license_secret_id = try(module.secrets[0].tfe_license_secret_id, var.tfe_license_secret_id)
 
   ami_id                        = data.aws_ami.rhel.id
+  bypass_preflight_checks       = true
   ca_certificate_secret_id      = data.aws_secretsmanager_secret.ca_certificate.arn
   consolidated_services_enabled = var.consolidated_services_enabled
   distribution                  = "rhel"
+  health_check_grace_period     = 3000
   iact_subnet_list              = ["0.0.0.0/0"]
   iam_role_policy_arns          = [local.ssm_policy_arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type                 = "m5.8xlarge"
@@ -68,8 +70,6 @@ module "private_tcp_active_active" {
   redis_encryption_in_transit   = true
   redis_use_password_auth       = true
   tfe_subdomain                 = local.test_name
-  tls_bootstrap_cert_pathname   = "/var/lib/terraform-enterprise/certificate.pem"
-  tls_bootstrap_key_pathname    = "/var/lib/terraform-enterprise/key.pem"
   vm_certificate_secret_id      = var.certificate_pem_secret_id
   vm_key_secret_id              = var.private_key_pem_secret_id
 
@@ -82,5 +82,4 @@ module "private_tcp_active_active" {
   registry_password         = var.registry_password
   registry_username         = var.registry_username
   tfe_image                 = "quay.io/hashicorp/terraform-enterprise:${var.tfe_image_tag}"
-  tls_ca_bundle_file        = "/usr/share/pki/ca-trust-source/anchors/tfe-ca-certificate.crt"
 }

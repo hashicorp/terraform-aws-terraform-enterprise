@@ -19,7 +19,7 @@ resource "random_string" "friendly_name" {
 }
 
 module "secrets" {
-  count  = local.utility_module_test ? 0 : 1
+  count  = local.utility_module_test || !var.is_replicated_deployment ? 0 : 1
   source = "../../fixtures/secrets"
 
   tfe_license = {
@@ -50,8 +50,10 @@ module "private_active_active" {
   tfe_license_secret_id = try(module.secrets[0].tfe_license_secret_id, var.tfe_license_secret_id)
 
   ami_id                        = data.aws_ami.rhel.id
+  bypass_preflight_checks       = true
   distribution                  = "rhel"
   consolidated_services_enabled = var.consolidated_services_enabled
+  health_check_grace_period     = 3000
   iact_subnet_list              = ["0.0.0.0/0"]
   iam_role_policy_arns          = [local.ssm_policy_arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type                 = "m5.4xlarge"
@@ -65,6 +67,8 @@ module "private_active_active" {
   redis_encryption_in_transit   = true
   redis_use_password_auth       = true
   tfe_subdomain                 = local.test_name
+  vm_certificate_secret_id      = data.aws_secretsmanager_secret.vm_certificate.id
+  vm_key_secret_id              = data.aws_secretsmanager_secret.vm_key.id
 
   asg_tags = local.common_tags
 

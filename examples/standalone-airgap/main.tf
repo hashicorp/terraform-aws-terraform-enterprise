@@ -48,8 +48,6 @@ module "standalone_airgap" {
 
   # Bootstrapping resources
   tfe_license_bootstrap_airgap_package_path = "/var/lib/ptfe/ptfe.airgap"
-  tls_bootstrap_cert_pathname               = "/var/lib/terraform-enterprise/certificate.pem"
-  tls_bootstrap_key_pathname                = "/var/lib/terraform-enterprise/key.pem"
   tfe_license_secret_id                     = null
 
   # Standalone, External Mode, Airgapped Installation Example

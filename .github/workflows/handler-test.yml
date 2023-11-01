@@ -10,7 +10,7 @@ env:
 
 jobs:
   active_active_rhel7_proxy:
-    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@ah/tf-8609-fdo-6
+    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@main
     secrets: inherit
     name: Test AWS Active/Active RHEL7 Proxy Scenario
     if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'active-active-rhel7-proxy' }}
@@ -34,7 +34,7 @@ jobs:
         }\n/'
 
   public_active_active:
-    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@ah/tf-8609-fdo-6
+    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@main
     secrets: inherit
     name: Test AWS Public Active/Active Scenario
     if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'public-active-active' }}
@@ -51,7 +51,7 @@ jobs:
       TFC_token_secret_name: PUBLIC_ACTIVE_ACTIVE_TFC_TOKEN
 
   private_active_active:
-    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@ah/tf-8609-fdo-6
+    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@main
     secrets: inherit
     name: Test AWS Private Active/Active Scenario
     if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'private-active-active' }}
@@ -72,7 +72,7 @@ jobs:
       aws_role_to_assume: PRIVATE_ACTIVE_ACTIVE_AWS_ROLE_TO_ASSUME
 
   private_tcp_active_active:
-    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@ah/tf-8609-fdo-6
+    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@main
     secrets: inherit
     name: Test AWS Private TCP Active/Active Scenario
     if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'private-tcp-active-active' }}
@@ -93,7 +93,7 @@ jobs:
       aws_role_to_assume: PRIVATE_TCP_ACTIVE_ACTIVE_AWS_ROLE_TO_ASSUME
 
   standalone_vault:
-    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@ah/tf-8609-fdo-6
+    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@main
     secrets: inherit
     name: Test AWS Standalone Vault Scenario
     if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'standalone-vault' }}
@@ -118,7 +118,7 @@ jobs:
         }\n/'
 
   active_active_rhel7_proxy_replicated:
-    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@ah/tf-8609-fdo-6
+    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@main
     secrets: inherit
     name: Test AWS Active/Active RHEL7 Proxy (Replicated) Scenario
     if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'active-active-rhel7-proxy-replicated' }}
@@ -142,7 +142,7 @@ jobs:
         }\n/'
 
   public_active_active_replicated:
-    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@ah/tf-8609-fdo-6
+    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@main
     secrets: inherit
     name: Test AWS Public Active/Active (Replicated) Scenario
     if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'public-active-active-replicated' }}
@@ -160,7 +160,7 @@ jobs:
       TFC_workspace_substitution_pattern: s/aws-public-active-active/aws-public-active-active-replicated/
 
   private_active_active_replicated:
-    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@ah/tf-8609-fdo-6
+    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@main
     secrets: inherit
     name: Test AWS Private Active/Active (Replicated) Scenario
     if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'private-active-active-replicated' }}
@@ -182,7 +182,7 @@ jobs:
       aws_role_to_assume: PRIVATE_ACTIVE_ACTIVE_AWS_ROLE_TO_ASSUME
 
   private_tcp_active_active_replicated:
-    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@ah/tf-8609-fdo-6
+    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@main
     secrets: inherit
     name: Test AWS Private TCP Active/Active (Replicated) Scenario
     if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'private-tcp-active-active-replicated' }}
@@ -204,7 +204,7 @@ jobs:
       aws_role_to_assume: PRIVATE_TCP_ACTIVE_ACTIVE_AWS_ROLE_TO_ASSUME
 
   standalone_vault_replicated:
-    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@ah/tf-8609-fdo-6
+    uses: hashicorp/terraform-random-tfe-utility/.github/workflows/aws-tests.yml@main
     secrets: inherit
     name: Test AWS Standalone Vault (Replicated) Scenario
     if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'standalone-vault-replicated' }}

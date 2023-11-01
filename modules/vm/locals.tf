@@ -18,4 +18,6 @@ locals {
       }
     ]
   )
+  default_health_check_grace_period = var.default_ami_id ? 900 : 1500
+  health_check_grace_period         = var.health_check_grace_period != null ? var.health_check_grace_period : local.default_health_check_grace_period
 }
