@@ -12,7 +12,7 @@ jobs:
   active_active_rhel7_proxy:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@main
     secrets: inherit
-    name: Destroy resources from AWS Active/Active RHEL7 Proxy
+    name: Destroy AWS Active/Active RHEL7 Proxy
     if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'active-active-rhel7-proxy' }}
     with:
       cloud: AWS
@@ -36,7 +36,7 @@ jobs:
   public_active_active:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@main
     secrets: inherit
-    name: Destroy resources from AWS Public Active/Active
+    name: Destroy AWS Public Active/Active
     if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'public-active-active' }}
     with:
       cloud: AWS
@@ -53,7 +53,7 @@ jobs:
   private_active_active:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@main
     secrets: inherit
-    name: Destroy resources from AWS Private Active/Active
+    name: Destroy AWS Private Active/Active
     if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'private-active-active' }}
     with:
       cloud: AWS
@@ -70,7 +70,7 @@ jobs:
   private_tcp_active_active:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@main
     secrets: inherit
-    name: Destroy resources from AWS Private TCP Active/Active
+    name: Destroy AWS Private TCP Active/Active
     if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'private-tcp-active-active' }}
     with:
       cloud: AWS
@@ -87,7 +87,7 @@ jobs:
   standalone_vault:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@main
     secrets: inherit
-    name: Destroy resources from AWS Standalone Vault
+    name: Destroy AWS Standalone Vault
     if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'standalone-vault' }}
     with:
       cloud: AWS
@@ -111,11 +111,11 @@ jobs:
   active_active_rhel7_proxy_replicated:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@main
     secrets: inherit
-    name: Destroy resources from AWS Active/Active RHEL7 Proxy (Replicated)
+    name: Destroy AWS Active/Active RHEL7 Proxy
     if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'active-active-rhel7-proxy-replicated' }}
     with:
       cloud: AWS
-      test_name: Active/Active RHEL7 Proxy (Replicated)
+      test_name: Active/Active RHEL7 Proxy
       utility_test: false
       is_replicated_deployment: true
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
@@ -135,11 +135,11 @@ jobs:
   public_active_active_replicated:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@main
     secrets: inherit
-    name: Destroy resources from AWS Public Active/Active (Replicated)
+    name: Destroy AWS Public Active/Active
     if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'public-active-active-replicated' }}
     with:
       cloud: AWS
-      test_name: Public Active/Active (Replicated)
+      test_name: Public Active/Active
       utility_test: false
       is_replicated_deployment: true
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
@@ -153,11 +153,11 @@ jobs:
   private_active_active_replicated:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@main
     secrets: inherit
-    name: Destroy resources from AWS Private Active/Active (Replicated)
+    name: Destroy AWS Private Active/Active
     if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'private-active-active-replicated' }}
     with:
       cloud: AWS
-      test_name: Private Active/Active (Replicated)
+      test_name: Private Active/Active
       utility_test: false
       is_replicated_deployment: true
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
@@ -171,11 +171,11 @@ jobs:
   private_tcp_active_active_replicated:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@main
     secrets: inherit
-    name: Destroy resources from AWS Private TCP Active/Active (Replicated)
+    name: Destroy AWS Private TCP Active/Active
     if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'private-tcp-active-active-replicated' }}
     with:
       cloud: AWS
-      test_name: Private TCP Active/Active (Replicated)
+      test_name: Private TCP Active/Active
       utility_test: false
       is_replicated_deployment: true
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
@@ -189,11 +189,11 @@ jobs:
   standalone_vault_replicated:
     uses: hashicorp/terraform-random-tfe-utility/.github/workflows/destroy.yml@main
     secrets: inherit
-    name: Destroy resources from AWS Standalone Vault (Replicated)
+    name: Destroy AWS Standalone Vault
     if: ${{ github.event.client_payload.slash_command.args.unnamed.all == 'all' || github.event.client_payload.slash_command.args.unnamed.all == 'standalone-vault-replicated' }}
     with:
       cloud: AWS
-      test_name: Standalone Vault (Replicated)
+      test_name: Standalone Vault
       utility_test: false
       is_replicated_deployment: true
       module_repository_id: hashicorp/terraform-aws-terraform-enterprise
