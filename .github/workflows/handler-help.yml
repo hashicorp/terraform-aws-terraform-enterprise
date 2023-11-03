@@ -24,21 +24,20 @@ jobs:
             > | /test <all\|test case name...> [destroy=false] | Run the Terraform test workflow on the modules in the tests/ directory. Unnamed arguments can be "all" to run all test cases or specific test case names to only run selected cases. The named argument "destroy=false" will disable the destruction of test infrastructure for debugging purposes. |
             > | /destroy <all\|test case name...> | Destroy any resources that may still be in Terraform state from previous tests. Unnamed arguments can be "all" to destroy all resources from all test cases or specific test case names to only destroy selected test case resources. |
             > | /help | Shows this help message |
-            
-            ## Test Case Names
-
-            FDO:
-            * active-active-rhel7-proxy
-            * private-active-active
-            * private-tcp-active-active
-            * public-active-active
-            * standalone-vault
-
-            Replicated:
-            * active-active-rhel7-proxy-replicated
-            * private-active-active-replicated
-            * private-tcp-active-active-replicated
-            * public-active-active-replicated
-            * standalone-vault-replicated
-
+            > |
+            > | ## Test Case Names
+            > | 
+            > | ### FDO:
+            > | * active-active-rhel7-proxy
+            > | * private-active-active
+            > | * private-tcp-active-active
+            > | * public-active-active
+            > | * standalone-vault
+            > |
+            > | ### Replicated:
+            > | * active-active-rhel7-proxy-replicated
+            > | * private-active-active-replicated
+            > | * private-tcp-active-active-replicated
+            > | * public-active-active-replicated
+            > | * standalone-vault-replicated
           reactions: confused
