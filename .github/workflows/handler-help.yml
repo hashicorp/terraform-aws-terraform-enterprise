@@ -27,14 +27,14 @@ jobs:
             > |
             > | ## Test Case Names
             > | 
-            > | ### FDO:
+            > | ### FDO
             > | * active-active-rhel7-proxy
             > | * private-active-active
             > | * private-tcp-active-active
             > | * public-active-active
             > | * standalone-vault
             > |
-            > | ### Replicated:
+            > | ### Replicated
             > | * active-active-rhel7-proxy-replicated
             > | * private-active-active-replicated
             > | * private-tcp-active-active-replicated
