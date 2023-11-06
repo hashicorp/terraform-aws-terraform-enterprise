@@ -78,9 +78,10 @@ resource "aws_launch_configuration" "tfe" {
   instance_type    = var.instance_type
   user_data_base64 = var.user_data_base64
 
-  iam_instance_profile = var.aws_iam_instance_profile
-  key_name             = var.key_name
-  security_groups      = [aws_security_group.tfe_instance.id]
+  iam_instance_profile        = var.aws_iam_instance_profile
+  key_name                    = var.key_name
+  security_groups             = [aws_security_group.tfe_instance.id]
+  associate_public_ip_address = var.enable_public_ip
 
   metadata_options {
     http_endpoint = "enabled"

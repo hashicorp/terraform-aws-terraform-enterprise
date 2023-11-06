@@ -24,7 +24,7 @@ data "aws_kms_key" "main" {
 }
 
 # -----------------------------------------------------------------------------
-# AWS Service Accounts 
+# AWS Service Accounts
 # -----------------------------------------------------------------------------
 module "service_accounts" {
   source = "./modules/service_accounts"
@@ -340,6 +340,7 @@ module "vm" {
   default_ami_id                      = local.default_ami_id
   enable_disk                         = local.enable_disk
   enable_ssh                          = var.enable_ssh
+  enable_public_ip                    = var.enable_public_ip
   ebs_device_name                     = var.ebs_device_name
   ebs_volume_size                     = var.ebs_volume_size
   ebs_volume_type                     = var.ebs_volume_type

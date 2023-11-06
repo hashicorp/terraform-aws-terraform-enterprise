@@ -46,6 +46,11 @@ variable "enable_ssh" {
   description = "Whether to open port 22 on the TFE instance for SSH access."
 }
 
+variable "enable_public_ip" {
+  type        = bool
+  description = "Whether public IPs should be attached to the EC2 instance(s)."
+}
+
 variable "friendly_name_prefix" {
   type        = string
   description = "(Required) Friendly name prefix used for tagging and naming AWS resources."

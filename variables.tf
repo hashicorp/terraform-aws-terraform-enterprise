@@ -317,6 +317,12 @@ variable "enable_ssh" {
   default     = false
 }
 
+variable "enable_public_ip" {
+  type        = bool
+  description = "Whether public IPs should be attached to the EC2 instance(s)."
+  default     = false
+}
+
 variable "hc_license" {
   default     = null
   type        = string
