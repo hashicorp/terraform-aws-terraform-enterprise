@@ -124,6 +124,11 @@ variable "ebs_delete_on_termination" {
   description = "(Optional if Mounted Disk installation) Whether the volume should be destroyed on instance termination."
 }
 
+variable "ebs_snapshot_id" {
+  type = string
+  description = "(Optional) The Snapshot ID to mount (instead of a new volume)"
+}
+
 variable "enable_disk" {
   type        = bool
   description = "Will you be attaching an EBS block device for a Mounted Disk Installation?"
