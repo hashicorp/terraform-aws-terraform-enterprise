@@ -14,6 +14,15 @@ variable "ami_id" {
   description = "AMI ID to use for TFE instances"
 }
 
+variable "ec2_launch_template_tag_specifications" {
+  description = "(Optional) List of tag specifications to apply to the launch template."
+  type = list(object({
+    resource_type = string
+    tags          = map(string)
+  }))
+  default = []
+}
+
 variable "asg_tags" {
   type        = map(string)
   description = "(Optional) Map of tags only used for the autoscaling group. If you are using the AWS provider's default_tags,please note that it tags every taggable resource except for the autoscaling group, therefore this variable may be used to duplicate the key/value pairs in the default_tags if you wish."
@@ -597,6 +606,12 @@ variable "ebs_volume_type" {
     condition     = contains(["standard", "gp2", "gp3", "st1", "sc1", "io1"], var.ebs_volume_type)
     error_message = "The ebs_volume_type value must be one of: 'standard', 'gp2', 'gp3', 'st1', 'sc1', 'io1'."
   }
+}
+
+variable "ebs_snapshot_id" {
+  type        = string
+  description = "(Optional) The Snapshot ID to mount (instead of a new volume)"
+  default     = null
 }
 
 # External Vault ONLY

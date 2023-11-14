@@ -72,39 +72,55 @@ resource "aws_security_group_rule" "tfe_dashboard" {
   cidr_blocks              = var.aws_lb == null ? var.network_private_subnet_cidrs : null
 }
 
-resource "aws_launch_configuration" "tfe" {
-  name_prefix      = "${var.friendly_name_prefix}-tfe-ec2-asg-lt-"
-  image_id         = var.ami_id
-  instance_type    = var.instance_type
-  user_data_base64 = var.user_data_base64
+resource "aws_launch_template" "tfe" {
+  name_prefix            = "${var.friendly_name_prefix}-tfe-ec2-asg-launch-template-"
+  image_id               = var.ami_id
+  instance_type          = var.instance_type
+  user_data              = var.user_data_base64
+  key_name               = var.key_name
+  vpc_security_group_ids = [aws_security_group.tfe_instance.id]
 
-  iam_instance_profile = var.aws_iam_instance_profile
-  key_name             = var.key_name
-  security_groups      = [aws_security_group.tfe_instance.id]
+  dynamic "tag_specifications" {
+    for_each = var.ec2_launch_template_tag_specifications
+
+    content {
+      resource_type = tag_specifications.value["resource_type"]
+      tags          = tag_specifications.value["tags"]
+    }
+  }
+
+  iam_instance_profile {
+    name = var.aws_iam_instance_profile
+  }
 
   metadata_options {
-    http_endpoint = "enabled"
-    # A hop limit of at least 2 is required for AWS Cost Estimation to function.
+    http_endpoint               = "enabled"
     http_put_response_hop_limit = 2
     http_tokens                 = "optional"
   }
 
-  root_block_device {
-    encrypted             = true
-    volume_type           = "gp2"
-    volume_size           = 50
-    delete_on_termination = true
+  block_device_mappings {
+    device_name = "/dev/sda1"
+    ebs {
+      encrypted             = true
+      volume_type           = "gp2"
+      volume_size           = 50
+      delete_on_termination = true
+    }
   }
 
-  dynamic "ebs_block_device" {
+  dynamic "block_device_mappings" {
     for_each = var.enable_disk ? [1] : [0]
 
     content {
-      device_name           = var.ebs_device_name
-      volume_size           = var.ebs_volume_size
-      volume_type           = var.ebs_volume_type
-      iops                  = var.ebs_iops
-      delete_on_termination = var.ebs_delete_on_termination
+      device_name = var.ebs_device_name
+      ebs {
+        volume_size           = var.ebs_volume_size
+        volume_type           = var.ebs_volume_type
+        iops                  = var.ebs_iops
+        delete_on_termination = var.ebs_delete_on_termination
+        snapshot_id           = var.ebs_snapshot_id
+      }
     }
   }
 
@@ -127,7 +143,11 @@ resource "aws_autoscaling_group" "tfe_asg" {
   # since RHEL has longer startup time
   health_check_grace_period = local.health_check_grace_period
   health_check_type         = "ELB"
-  launch_configuration      = aws_launch_configuration.tfe.name
+
+  launch_template {
+    id      = aws_launch_template.tfe.id
+    version = "$Latest"
+  }
 
   dynamic "tag" {
     for_each = local.tags

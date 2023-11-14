@@ -97,6 +97,14 @@ variable "key_name" {
   type        = string
 }
 
+variable "ec2_launch_template_tag_specifications" {
+  description = "(Optional) List of tag specifications to apply to the launch template."
+  type = list(object({
+    resource_type = string
+    tags          = map(string)
+  }))
+}
+
 # Mounted Disk Installation
 # -------------------------
 variable "ebs_device_name" {
@@ -122,6 +130,11 @@ variable "ebs_iops" {
 variable "ebs_delete_on_termination" {
   type        = bool
   description = "(Optional if Mounted Disk installation) Whether the volume should be destroyed on instance termination."
+}
+
+variable "ebs_snapshot_id" {
+  type        = string
+  description = "(Optional) The Snapshot ID to mount (instead of a new volume)"
 }
 
 variable "enable_disk" {
