@@ -1,6 +1,12 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
+variable "aws_role_arn" {
+  type        = string
+  description = "The AWS Role ARN to assume for this module."
+}
+
+
 variable "acm_certificate_arn" {
   type        = string
   description = "The ARN of an existing ACM certificate."
