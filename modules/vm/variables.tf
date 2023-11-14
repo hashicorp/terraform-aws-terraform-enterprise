@@ -125,7 +125,7 @@ variable "ebs_delete_on_termination" {
 }
 
 variable "ebs_snapshot_id" {
-  type = string
+  type        = string
   description = "(Optional) The Snapshot ID to mount (instead of a new volume)"
 }
 

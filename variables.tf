@@ -599,6 +599,12 @@ variable "ebs_volume_type" {
   }
 }
 
+variable "ebs_snapshot_id" {
+  type        = string
+  description = "(Optional) The Snapshot ID to mount (instead of a new volume)"
+  default     = null
+}
+
 # External Vault ONLY
 # -------------------
 variable "extern_vault_addr" {

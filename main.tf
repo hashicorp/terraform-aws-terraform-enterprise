@@ -24,7 +24,7 @@ data "aws_kms_key" "main" {
 }
 
 # -----------------------------------------------------------------------------
-# AWS Service Accounts 
+# AWS Service Accounts
 # -----------------------------------------------------------------------------
 module "service_accounts" {
   source = "./modules/service_accounts"
@@ -345,6 +345,7 @@ module "vm" {
   ebs_volume_type                     = var.ebs_volume_type
   ebs_iops                            = var.ebs_iops
   ebs_delete_on_termination           = var.ebs_delete_on_termination
+  ebs_snapshot_id                     = var.ebs_snapshot_id
   friendly_name_prefix                = var.friendly_name_prefix
   health_check_grace_period           = var.health_check_grace_period
   instance_type                       = var.instance_type
