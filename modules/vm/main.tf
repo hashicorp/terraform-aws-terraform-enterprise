@@ -80,6 +80,15 @@ resource "aws_launch_template" "tfe" {
   key_name               = var.key_name
   vpc_security_group_ids = [aws_security_group.tfe_instance.id]
 
+  dynamic "tag_specifications" {
+    for_each = var.ec2_launch_template_tag_specifications
+
+    content {
+      resource_type = tag_specifications.value["resource_type"]
+      tags          = tag_specifications.value["tags"]
+    }
+  }
+
   iam_instance_profile {
     name = var.aws_iam_instance_profile
   }

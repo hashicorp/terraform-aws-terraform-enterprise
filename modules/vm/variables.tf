@@ -97,6 +97,14 @@ variable "key_name" {
   type        = string
 }
 
+variable "ec2_launch_template_tag_specifications" {
+  description = "(Optional) List of tag specifications to apply to the launch template."
+  type = list(object({
+    resource_type = string
+    tags          = map(string)
+  }))
+}
+
 # Mounted Disk Installation
 # -------------------------
 variable "ebs_device_name" {

@@ -14,6 +14,15 @@ variable "ami_id" {
   description = "AMI ID to use for TFE instances"
 }
 
+variable "ec2_launch_template_tag_specifications" {
+  description = "(Optional) List of tag specifications to apply to the launch template."
+  type = list(object({
+    resource_type = string
+    tags          = map(string)
+  }))
+  default = []
+}
+
 variable "asg_tags" {
   type        = map(string)
   description = "(Optional) Map of tags only used for the autoscaling group. If you are using the AWS provider's default_tags,please note that it tags every taggable resource except for the autoscaling group, therefore this variable may be used to duplicate the key/value pairs in the default_tags if you wish."
