@@ -7,7 +7,7 @@ output "endpoint" {
 }
 
 output "name" {
-  value       = aws_db_instance.postgresql.name
+  value       = aws_db_instance.postgresql.db_name
   description = "The name of the PostgreSQL RDS instance."
 }
 
