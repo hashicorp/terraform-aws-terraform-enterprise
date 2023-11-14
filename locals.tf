@@ -56,15 +56,27 @@ locals {
     "169.254.169.254",
     ".aws.ce.redhat.com",
     "secretsmanager.${data.aws_region.current.name}.amazonaws.com",
-    "download.docker.com",
+    ".docker.com",
     "centos.org",
     "localhost",
     "s3.amazonaws.com",
     ".s3.amazonaws.com",
     "s3.${data.aws_region.current.name}.amazonaws.com",
     local.fqdn,
-    var.network_cidr
-  ], var.no_proxy)
+    var.network_cidr],
+    local.replicated_no_proxy,
+    local.rhel_no_proxy,
+    var.no_proxy
+  )
+
+  replicated_no_proxy = var.is_replicated_deployment ? [
+    "registry.replicated.com"
+  ] : []
+
+  rhel_no_proxy = var.distribution == "rhel" ? [
+    ".subscription.rhn.redhat.com",
+    ".cdn.redhat.com",
+  ] : []
 
   trusted_proxies = concat(
     var.trusted_proxies,
