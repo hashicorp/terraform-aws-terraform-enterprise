@@ -54,10 +54,8 @@ locals {
   no_proxy = concat([
     "127.0.0.1",
     "169.254.169.254",
-    ".aws.ce.redhat.com",
     "secretsmanager.${data.aws_region.current.name}.amazonaws.com",
     ".docker.com",
-    "centos.org",
     "localhost",
     "s3.amazonaws.com",
     ".s3.amazonaws.com",
@@ -70,10 +68,12 @@ locals {
   )
 
   replicated_no_proxy = var.is_replicated_deployment ? [
-    "registry.replicated.com"
+    ".replicated.com",
   ] : []
 
   rhel_no_proxy = var.distribution == "rhel" ? [
+    ".aws.ce.redhat.com",
+    ".centos.org",
     ".subscription.rhn.redhat.com",
     ".cdn.redhat.com",
   ] : []
