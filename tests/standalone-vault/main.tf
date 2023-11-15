@@ -61,7 +61,7 @@ module "standalone_vault" {
   kms_key_arn                   = module.kms.key
   load_balancing_scheme         = local.load_balancing_scheme
   node_count                    = 1
-  operational_mode              = "'disk"
+  operational_mode              = "disk"
   redis_encryption_at_rest      = false
   redis_encryption_in_transit   = false
   redis_use_password_auth       = false
