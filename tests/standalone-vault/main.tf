@@ -45,6 +45,7 @@ module "standalone_vault" {
   source = "../../"
 
   acm_certificate_arn   = var.acm_certificate_arn
+  disk_path             = "/opt/hashicorp/data"
   domain_name           = var.domain_name
   friendly_name_prefix  = local.friendly_name_prefix
   tfe_license_secret_id = try(module.secrets[0].tfe_license_secret_id, var.tfe_license_secret_id)
@@ -60,6 +61,7 @@ module "standalone_vault" {
   kms_key_arn                   = module.kms.key
   load_balancing_scheme         = local.load_balancing_scheme
   node_count                    = 1
+  operational_mode              = "'disk"
   redis_encryption_at_rest      = false
   redis_encryption_in_transit   = false
   redis_use_password_auth       = false

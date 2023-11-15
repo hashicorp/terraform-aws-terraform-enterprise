@@ -122,7 +122,7 @@ module "docker_compose_config" {
 
   tfe_license = var.hc_license
 
-  hostname                  = local.fqdn
+  disk_path                 = var.operational_mode == "disk" ? var.disk_path : null  hostname                  = local.fqdn
   http_port                 = var.http_port
   https_port                = var.https_port
   http_proxy                = var.proxy_ip != null ? "${var.proxy_ip}:${var.proxy_port}" : null
