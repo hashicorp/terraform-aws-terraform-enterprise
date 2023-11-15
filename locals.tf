@@ -56,6 +56,7 @@ locals {
     "169.254.169.254",
     "secretsmanager.${data.aws_region.current.name}.amazonaws.com",
     ".docker.com",
+    ".docker.io",
     "localhost",
     "s3.amazonaws.com",
     ".s3.amazonaws.com",
