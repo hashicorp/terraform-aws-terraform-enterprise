@@ -225,7 +225,7 @@ variable "custom_image_tag" {
 
 variable "disk_path" {
   default     = null
-  description = "The pathname of the directory in which Terraform Enterprise will store data on the compute instances."
+  description = "The pathname of the directory in which Terraform Enterprise will store data on the compute instances. Required if var.is_replicated_deployment is false and var.operational_mode is 'disk'."
   type        = string
 }
 
