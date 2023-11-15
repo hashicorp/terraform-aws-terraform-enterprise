@@ -128,7 +128,7 @@ module "docker_compose_config" {
   https_port                = var.https_port
   http_proxy                = var.proxy_ip != null ? "${var.proxy_ip}:${var.proxy_port}" : null
   https_proxy               = var.proxy_ip != null ? "${var.proxy_ip}:${var.proxy_port}" : null
-  no_proxy                  = local.no_proxy
+  no_proxy                  = var.proxy_ip != null ? local.no_proxy : null
   license_reporting_opt_out = var.license_reporting_opt_out
   operational_mode          = local.fdo_operational_mode
 
@@ -197,9 +197,9 @@ module "tfe_init_fdo" {
   certificate_secret_id    = var.vm_certificate_secret_id == null ? null : var.vm_certificate_secret_id
   key_secret_id            = var.vm_key_secret_id == null ? null : var.vm_key_secret_id
 
-  proxy_ip       = var.proxy_ip
-  proxy_port     = var.proxy_port
-  extra_no_proxy = local.no_proxy
+  proxy_ip       = var.proxy_ip != null ? var.proxy_ip : null
+  proxy_port     = var.proxy_ip != null ? var.proxy_port : null
+  extra_no_proxy = var.proxy_ip != null ? local.no_proxy : null
 
   registry_username   = var.registry_username
   registry_password   = var.registry_password
