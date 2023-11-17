@@ -431,16 +431,22 @@ variable "pg_extra_params" {
   description = "Parameter keywords of the form param1=value1&param2=value2 to support additional options that may be necessary for your specific PostgreSQL server. Allowed values are documented on the PostgreSQL site. An additional restriction on the sslmode parameter is that only the require, verify-full, verify-ca, and disable values are allowed."
 }
 
-variable "registry_username" {
-  default     = null
+variable "registry" {
+  default     = "images.releases.hashicorp.com"
   type        = string
-  description = "(Not needed if is_replicated_deployment is true) The username for the docker registry from which to source the terraform_enterprise container images."
+  description = "(Not needed if is_replicated_deployment is true) The docker registry from which to source the terraform_enterprise container images."
 }
 
 variable "registry_password" {
   default     = null
   type        = string
   description = "(Not needed if is_replicated_deployment is true) The password for the docker registry from which to source the terraform_enterprise container images."
+}
+
+variable "registry_username" {
+  default     = null
+  type        = string
+  description = "(Not needed if is_replicated_deployment is true) The username for the docker registry from which to source the terraform_enterprise container images."
 }
 
 variable "release_sequence" {
@@ -459,6 +465,18 @@ variable "ssl_policy" {
   type        = string
   default     = "ELBSecurityPolicy-2016-08"
   description = "SSL policy to use on ALB listener"
+}
+
+variable "tfe_image" {
+  default     = "images.releases.hashicorp.com/hashicorp/terraform-enterprise:v202311-1"
+  type        = string
+  description = "(Not needed if is_replicated_deployment is true) The registry path, image name, and image version."
+}
+
+variable "tfe_subdomain" {
+  type        = string
+  default     = "tfe"
+  description = "Subdomain for accessing the Terraform Enterprise UI."
 }
 
 variable "tls_ciphers" {
@@ -480,18 +498,6 @@ variable "tls_version" {
     )
     error_message = "The tls_version value must be 'tls_1_2', 'tls_1_3', or null."
   }
-}
-
-variable "tfe_image" {
-  default     = "quay.io/hashicorp/terraform-enterprise:latest"
-  type        = string
-  description = "(Not needed if is_replicated_deployment is true) The registry path, image name, and image version (e.g. \"quay.io/hashicorp/terraform-enterprise:1234567\")"
-}
-
-variable "tfe_subdomain" {
-  type        = string
-  default     = "tfe"
-  description = "Subdomain for accessing the Terraform Enterprise UI."
 }
 
 # KMS & Secrets Manager
