@@ -110,9 +110,10 @@ module "tfe" {
   is_replicated_deployment  = var.is_replicated_deployment
   hc_license                = var.hc_license
   license_reporting_opt_out = true
+  registry                  = local.registry
   registry_password         = var.registry_password
   registry_username         = var.registry_username
-  tfe_image                 = "quay.io/hashicorp/terraform-enterprise:${var.tfe_image_tag}"
+  tfe_image                 = "${local.registry}/hashicorp/terraform-enterprise:${var.tfe_image_tag}"
 }
 
 resource "null_resource" "wait_for_instances" {

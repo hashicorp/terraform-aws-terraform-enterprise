@@ -134,7 +134,7 @@ module "docker_compose_config" {
 
   cert_file          = "/etc/ssl/private/terraform-enterprise/cert.pem"
   key_file           = "/etc/ssl/private/terraform-enterprise/key.pem"
-  tfe_image          = var.tfe_image
+  tfe_image          = "${local.registry}/hashicorp/terraform-enterprise:${var.tfe_image_tag}"
   tls_ca_bundle_file = var.ca_certificate_secret_id != null ? "/etc/ssl/private/terraform-enterprise/bundle.pem" : null
   tls_ciphers        = var.tls_ciphers
   tls_version        = var.tls_version
@@ -181,7 +181,7 @@ module "docker_compose_config" {
 # AWS cloud init used to install and configure TFE on instance(s) using Flexible Deployment Options
 # --------------------------------------------------------------------------------------------------
 module "tfe_init_fdo" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=ah/TF-10844-registry"
   count  = var.is_replicated_deployment ? 0 : 1
 
   cloud             = "aws"
@@ -201,8 +201,10 @@ module "tfe_init_fdo" {
   proxy_port     = var.proxy_ip != null ? var.proxy_port : null
   extra_no_proxy = var.proxy_ip != null ? local.no_proxy : null
 
-  registry_username   = var.registry_username
-  registry_password   = var.registry_password
+  registry          = var.registry
+  registry_password = var.registry == "images.releases.hashicorp.com" ? var.hc_license : var.registry_password
+  registry_username = var.registry_username
+
   docker_compose_yaml = module.docker_compose_config[0].docker_compose_yaml
 }
 
