@@ -69,5 +69,5 @@ module "public_active_active" {
   registry                  = local.registry
   registry_password         = var.registry_password
   registry_username         = var.registry_username
-  tfe_image                 = "${local.registry}/hashicorp/terraform-enterprise:${var.tfe_image_tag}"
+  tfe_image                 = "${local.registry}/hashicorp/terraform-enterprise:36e174c"
 }
