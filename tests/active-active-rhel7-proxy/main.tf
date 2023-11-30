@@ -84,7 +84,7 @@ module "tfe" {
   aws_secret_access_key         = var.aws_secret_access_key
   bypass_preflight_checks       = true
   ca_certificate_secret_id      = data.aws_secretsmanager_secret.ca_certificate.arn
-  consolidated_services_enabled = var.consolidated_services_enabled
+  consolidated_services_enabled = false
   distribution                  = "rhel"
   health_check_grace_period     = 3000
   iact_subnet_list              = ["0.0.0.0/0"]
