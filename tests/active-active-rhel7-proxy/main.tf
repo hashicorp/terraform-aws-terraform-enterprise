@@ -20,15 +20,15 @@ resource "random_string" "friendly_name" {
 
 # Store TFE License as secret
 # ---------------------------
-module "secrets" {
-  count  = local.utility_module_test || !var.is_replicated_deployment ? 0 : 1
-  source = "../../fixtures/secrets"
+# module "secrets" {
+#   count  = local.utility_module_test || !var.is_replicated_deployment ? 0 : 1
+#   source = "../../fixtures/secrets"
 
-  tfe_license = {
-    name = "${local.friendly_name_prefix}-tfe-license"
-    path = var.license_file
-  }
-}
+#   tfe_license = {
+#     name = "${local.friendly_name_prefix}-tfe-license"
+#     path = var.license_file
+#   }
+# }
 
 data "aws_iam_user" "ci_s3" {
   user_name = var.object_storage_iam_user_name
