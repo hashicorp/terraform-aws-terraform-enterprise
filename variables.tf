@@ -14,6 +14,16 @@ variable "ami_id" {
   description = "AMI ID to use for TFE instances"
 }
 
+variable "container_runtime_engine" {
+  default     = "docker"
+  type        = string
+  description = "The container runtime engine to run the FDO container on. Default is docker."
+  validation {
+    condition     = contains(["docker", "podman"], var.container_runtime_engine)
+    error_message = "Supported values for container_runtime_enginer are docker and podman."
+  }
+}
+
 variable "ec2_launch_template_tag_specifications" {
   description = "(Optional) List of tag specifications to apply to the launch template."
   type = list(object({

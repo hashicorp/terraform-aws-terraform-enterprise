@@ -184,7 +184,7 @@ module "runtime_container_engine_config" {
 # AWS cloud init used to install and configure TFE on instance(s) using Flexible Deployment Options
 # --------------------------------------------------------------------------------------------------
 module "tfe_init_fdo" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=TF-12153/podman-supportn"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=TF-12153/podman-support"
   count  = var.is_replicated_deployment ? 0 : 1
 
   cloud             = "aws"
@@ -208,7 +208,10 @@ module "tfe_init_fdo" {
   registry_password = var.registry == "images.releases.hashicorp.com" ? var.hc_license : var.registry_password
   registry_username = var.registry_username
 
-  docker_compose_yaml = module.runtime_container_engine_config[0].docker_compose_yaml
+  container_runtime_engine = var.container_runtime_engine
+  tfe_image                = var.tfe_image
+  podman_kube_yaml         = module.runtime_container_engine_config[0].podman_kube_yaml
+  docker_compose_yaml      = module.runtime_container_engine_config[0].docker_compose_yaml
 }
 
 # --------------------------------------------------------------------------------------------
