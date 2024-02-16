@@ -270,7 +270,7 @@ variable "iact_subnet_time_limit" {
 }
 
 variable "metrics_endpoint_enabled" {
-  default     = null
+  default     = false
   type        = bool
   description = "(Optional) Metrics are used to understand the behavior of Terraform Enterprise and to troubleshoot and tune performance. Enable an endpoint to expose container metrics. Defaults to false."
 }
