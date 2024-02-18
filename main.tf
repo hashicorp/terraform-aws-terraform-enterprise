@@ -116,21 +116,24 @@ module "database" {
 # ------------------------------------------------------------------------------------
 # Docker Compose File Config for TFE on instance(s) using Flexible Deployment Options
 # ------------------------------------------------------------------------------------
-module "docker_compose_config" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/docker_compose_config?ref=main"
+module "runtime_container_engine_config" {
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=TF-12153/podman-support"
   count  = var.is_replicated_deployment ? 0 : 1
 
   tfe_license = var.hc_license
 
-  disk_path                 = var.operational_mode == "disk" ? var.disk_path : null
-  hostname                  = local.fqdn
-  http_port                 = var.http_port
-  https_port                = var.https_port
-  http_proxy                = var.proxy_ip != null ? "${var.proxy_ip}:${var.proxy_port}" : null
-  https_proxy               = var.proxy_ip != null ? "${var.proxy_ip}:${var.proxy_port}" : null
-  no_proxy                  = var.proxy_ip != null ? local.no_proxy : null
-  license_reporting_opt_out = var.license_reporting_opt_out
-  operational_mode          = local.fdo_operational_mode
+  disk_path                   = var.operational_mode == "disk" ? var.disk_path : null
+  hostname                    = local.fqdn
+  http_port                   = var.http_port
+  https_port                  = var.https_port
+  http_proxy                  = var.proxy_ip != null ? "${var.proxy_ip}:${var.proxy_port}" : null
+  https_proxy                 = var.proxy_ip != null ? "${var.proxy_ip}:${var.proxy_port}" : null
+  no_proxy                    = var.proxy_ip != null ? local.no_proxy : null
+  license_reporting_opt_out   = var.license_reporting_opt_out
+  operational_mode            = local.fdo_operational_mode
+  metrics_endpoint_enabled    = var.metrics_endpoint_enabled
+  metrics_endpoint_port_http  = var.metrics_endpoint_port_http
+  metrics_endpoint_port_https = var.metrics_endpoint_port_https
 
   cert_file          = "/etc/ssl/private/terraform-enterprise/cert.pem"
   key_file           = "/etc/ssl/private/terraform-enterprise/key.pem"
@@ -181,7 +184,7 @@ module "docker_compose_config" {
 # AWS cloud init used to install and configure TFE on instance(s) using Flexible Deployment Options
 # --------------------------------------------------------------------------------------------------
 module "tfe_init_fdo" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=TF-12153/podman-support"
   count  = var.is_replicated_deployment ? 0 : 1
 
   cloud             = "aws"
@@ -205,14 +208,17 @@ module "tfe_init_fdo" {
   registry_password = var.registry == "images.releases.hashicorp.com" ? var.hc_license : var.registry_password
   registry_username = var.registry_username
 
-  docker_compose_yaml = module.docker_compose_config[0].docker_compose_yaml
+  container_runtime_engine = var.container_runtime_engine
+  tfe_image                = var.tfe_image
+  podman_kube_yaml         = module.runtime_container_engine_config[0].podman_kube_yaml
+  docker_compose_yaml      = module.runtime_container_engine_config[0].docker_compose_yaml
 }
 
 # --------------------------------------------------------------------------------------------
 # TFE and Replicated settings to pass to the tfe_init_replicated module for replicated deployment
 # --------------------------------------------------------------------------------------------
 module "settings" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=TF-12153/podman-support"
   count  = var.is_replicated_deployment ? 1 : 0
 
   # TFE Base Configuration
@@ -276,7 +282,7 @@ module "settings" {
 # AWS user data / cloud init used to install and configure TFE on instance(s)
 # -----------------------------------------------------------------------------
 module "tfe_init_replicated" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init_replicated?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init_replicated?ref=TF-12153/podman-support"
   count  = var.is_replicated_deployment ? 1 : 0
 
   # TFE & Replicated Configuration data
