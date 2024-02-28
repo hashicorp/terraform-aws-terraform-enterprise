@@ -30,3 +30,9 @@ variable "tfe_subdomain" {
   type        = string
   description = "Subdomain for TFE"
 }
+
+variable "distribution" {
+  type        = string
+  default     = "ubuntu"
+  description = "The OS distribution to use, either ubuntu or rhel."
+}
