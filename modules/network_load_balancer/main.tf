@@ -53,7 +53,6 @@ resource "aws_lb_target_group" "tfe_tg_8800" {
   vpc_id   = var.network_id
 
   health_check {
-    path     = "/"
     protocol = "TCP"
   }
 }
