@@ -35,8 +35,6 @@ resource "aws_lb_listener" "tfe_listener_8800" {
   load_balancer_arn = aws_lb.tfe_lb.arn
   port              = 8800
   protocol          = "TCP"
-  certificate_arn   = var.certificate_arn
-
 
   default_action {
     type             = "forward"

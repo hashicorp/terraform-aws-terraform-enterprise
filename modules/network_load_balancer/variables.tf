@@ -6,11 +6,6 @@ variable "domain_name" {
   type        = string
 }
 
-variable "certificate_arn" {
-  description = "The Amazon Resource Name of the SSL certificate to associate with the load balancer."
-  type        = string
-}
-
 variable "fqdn" {
   description = "The fully qualified domain name to assign to the Route 53 record."
   type        = string
