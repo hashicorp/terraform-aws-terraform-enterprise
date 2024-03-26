@@ -327,7 +327,6 @@ module "private_tcp_load_balancer" {
   source = "./modules/network_load_balancer"
 
   active_active           = local.active_active
-  certificate_arn         = var.acm_certificate_arn
   domain_name             = var.domain_name
   friendly_name_prefix    = var.friendly_name_prefix
   fqdn                    = local.fqdn
