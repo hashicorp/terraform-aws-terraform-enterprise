@@ -16,11 +16,6 @@ variable "fqdn" {
   type        = string
 }
 
-variable "ssl_policy" {
-  description = "The name of the SSL policy to assign to the load balancer listeners."
-  type        = string
-}
-
 variable "network_id" {
   description = "The identity of the VPC in which to deploy the load balancer target groups."
   type        = string
