@@ -333,7 +333,6 @@ module "private_tcp_load_balancer" {
   fqdn                    = local.fqdn
   network_id              = local.network_id
   network_private_subnets = local.network_private_subnets
-  ssl_policy              = var.ssl_policy
 }
 
 module "vm" {
