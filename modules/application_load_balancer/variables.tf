@@ -60,3 +60,8 @@ variable "friendly_name_prefix" {
   type        = string
   description = "(Required) Friendly name prefix used for tagging and naming AWS resources."
 }
+
+variable "idle_timeout" {
+  type = number
+  description = "The number of seconds a target connection can remain inactive"
+}

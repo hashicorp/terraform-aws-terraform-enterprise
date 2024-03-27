@@ -674,3 +674,9 @@ variable "extern_vault_token_renew" {
   type        = number
   description = "(Optional if var.extern_vault_enable = true) How often (in seconds) to renew the Vault token."
 }
+
+variable "idle_timeout" {
+  default = 60
+  type = number
+  description = "The number of seconds a target connection can remain inactive"
+}

@@ -58,6 +58,7 @@ resource "aws_lb" "tfe_lb" {
   internal           = (var.load_balancing_scheme == "PRIVATE")
   load_balancer_type = "application"
   subnets            = var.load_balancing_scheme == "PRIVATE" ? var.network_private_subnets : var.network_public_subnets
+  idle_timeout       = var.idle_timeout
 
   security_groups = [
     aws_security_group.tfe_lb_allow.id,

@@ -320,6 +320,7 @@ module "load_balancer" {
   network_public_subnets         = local.network_public_subnets
   network_private_subnets        = local.network_private_subnets
   ssl_policy                     = var.ssl_policy
+  idle_timeout = var.idle_timeout
 }
 
 module "private_tcp_load_balancer" {
