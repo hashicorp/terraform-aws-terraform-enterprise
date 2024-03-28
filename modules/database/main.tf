@@ -5,7 +5,7 @@ resource "random_string" "postgresql_password" {
   length           = 128
   special          = true
   min_special      = 4
-  override_special = "+(!]&;$)"
+  override_special = "$"
 }
 
 resource "aws_security_group" "postgresql" {
