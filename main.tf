@@ -358,6 +358,7 @@ module "vm" {
   ebs_snapshot_id                        = var.ebs_snapshot_id
   friendly_name_prefix                   = var.friendly_name_prefix
   health_check_grace_period              = var.health_check_grace_period
+  health_check_type                      = var.health_check_type
   instance_type                          = var.instance_type
   is_replicated_deployment               = var.is_replicated_deployment
   key_name                               = var.key_name
