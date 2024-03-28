@@ -117,7 +117,7 @@ module "database" {
 # Docker Compose File Config for TFE on instance(s) using Flexible Deployment Options
 # ------------------------------------------------------------------------------------
 module "runtime_container_engine_config" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=special-db"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=main"
   count  = var.is_replicated_deployment ? 0 : 1
 
   tfe_license = var.hc_license
