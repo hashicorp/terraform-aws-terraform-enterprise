@@ -21,13 +21,7 @@ locals {
   network_private_subnet_cidrs = var.deploy_vpc ? module.networking[0].network_private_subnet_cidrs : var.network_private_subnet_cidrs
 
   database = try(
-    {
-      name       = module.database[0].name
-      password   = replace(module.database[0].password, "$", "\\$\\$")
-      endpoint   = module.database[0].endpoint
-      username   = module.database[0].username
-      parameters = module.database[0].parameters
-    },
+    module.database[0],
     {
       name       = null
       password   = null
