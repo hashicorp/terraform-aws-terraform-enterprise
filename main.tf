@@ -151,7 +151,7 @@ module "runtime_container_engine_config" {
 
   database_name       = local.database.name
   database_user       = local.database.username
-  database_password   = local.database.password
+  database_password   = replace(local.database.password, "$", "\\$\\$")
   database_host       = local.database.endpoint
   database_parameters = local.database.parameters
 
