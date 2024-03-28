@@ -406,6 +406,17 @@ variable "health_check_grace_period" {
   type        = number
 }
 
+variable "health_check_type" {
+  description = "Type of health check to perform on the instance."
+  type        = string
+  default     = "ELB"
+
+  validation {
+    condition     = contains(["ELB", "EC2"], var.health_check_type)
+    error_message = "Must be one of [ELB, EC2]."
+  }
+}
+
 variable "iam_role_policy_arns" {
   default     = []
   description = "A set of Amazon Resource Names of IAM role policies to be attached to the TFE IAM role."
