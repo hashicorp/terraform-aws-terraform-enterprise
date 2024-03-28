@@ -20,22 +20,14 @@ locals {
   network_public_subnets       = var.deploy_vpc ? module.networking[0].network_public_subnets : var.network_public_subnets
   network_private_subnet_cidrs = var.deploy_vpc ? module.networking[0].network_private_subnet_cidrs : var.network_private_subnet_cidrs
 
-  database = try(
+  database =
     {
-      name       = module.database.name
-      password   = replace(module.database.password, "$", "\\$\\$")
-      endpoint   = module.database.endpoint
-      username   = module.database.username
-      parameters = module.database.parameters
-    },
-    {
-      name       = null
-      password   = null
-      endpoint   = null
-      username   = null
-      parameters = null
+      name       = module.database[0].name
+      password   = replace(module.database[0].password, "$", "\\$\\$")
+      endpoint   = module.database[0].endpoint
+      username   = module.database[0].username
+      parameters = module.database[0].parameters
     }
-  )
 
   object_storage = try(
     module.object_storage[0],
