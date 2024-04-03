@@ -222,20 +222,19 @@ module "settings" {
   count  = var.is_replicated_deployment ? 1 : 0
 
   # TFE Base Configuration
-  consolidated_services_enabled = var.consolidated_services_enabled
-  custom_image_tag              = var.custom_image_tag
-  custom_agent_image_tag        = var.custom_agent_image_tag
-  hairpin_addressing            = var.hairpin_addressing
-  production_type               = var.operational_mode
-  disk_path                     = local.enable_disk ? var.disk_path : null
-  iact_subnet_list              = var.iact_subnet_list
-  iact_subnet_time_limit        = var.iact_subnet_time_limit
-  metrics_endpoint_enabled      = var.metrics_endpoint_enabled
-  metrics_endpoint_port_http    = var.metrics_endpoint_port_http
-  metrics_endpoint_port_https   = var.metrics_endpoint_port_https
-  trusted_proxies               = local.trusted_proxies
-  release_sequence              = var.release_sequence
-  pg_extra_params               = var.pg_extra_params
+  custom_image_tag            = var.custom_image_tag
+  custom_agent_image_tag      = var.custom_agent_image_tag
+  hairpin_addressing          = var.hairpin_addressing
+  production_type             = var.operational_mode
+  disk_path                   = local.enable_disk ? var.disk_path : null
+  iact_subnet_list            = var.iact_subnet_list
+  iact_subnet_time_limit      = var.iact_subnet_time_limit
+  metrics_endpoint_enabled    = var.metrics_endpoint_enabled
+  metrics_endpoint_port_http  = var.metrics_endpoint_port_http
+  metrics_endpoint_port_https = var.metrics_endpoint_port_https
+  trusted_proxies             = local.trusted_proxies
+  release_sequence            = var.release_sequence
+  pg_extra_params             = var.pg_extra_params
 
   extra_no_proxy = local.no_proxy
 

@@ -31,12 +31,6 @@ variable "ca_private_key_secret_name" {
   description = "The secrets manager secret name of the Base64 encoded CA private key."
 }
 
-variable "consolidated_services_enabled" {
-  default     = true
-  type        = bool
-  description = "(Required) True if TFE uses consolidated services."
-}
-
 variable "domain_name" {
   type        = string
   description = "Domain for creating the Terraform Enterprise subdomain on."

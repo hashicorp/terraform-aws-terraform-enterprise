@@ -42,23 +42,22 @@ module "public_active_active" {
   distribution          = "ubuntu"
   tfe_license_secret_id = try(module.secrets[0].tfe_license_secret_id, var.tfe_license_secret_id)
 
-  ami_id                        = data.aws_ami.ubuntu.id
-  bypass_preflight_checks       = true
-  consolidated_services_enabled = var.consolidated_services_enabled
-  health_check_grace_period     = 3000
-  iam_role_policy_arns          = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
-  iact_subnet_list              = ["0.0.0.0/0"]
-  instance_type                 = "m5.xlarge"
-  key_name                      = var.key_name
-  kms_key_arn                   = module.kms.key
-  load_balancing_scheme         = local.load_balancing_scheme
-  node_count                    = 2
-  redis_encryption_at_rest      = false
-  redis_encryption_in_transit   = false
-  redis_use_password_auth       = false
-  tfe_subdomain                 = local.test_name
-  vm_certificate_secret_id      = data.aws_secretsmanager_secret.vm_certificate.id
-  vm_key_secret_id              = data.aws_secretsmanager_secret.vm_key.id
+  ami_id                      = data.aws_ami.ubuntu.id
+  bypass_preflight_checks     = true
+  health_check_grace_period   = 3000
+  iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
+  iact_subnet_list            = ["0.0.0.0/0"]
+  instance_type               = "m5.xlarge"
+  key_name                    = var.key_name
+  kms_key_arn                 = module.kms.key
+  load_balancing_scheme       = local.load_balancing_scheme
+  node_count                  = 2
+  redis_encryption_at_rest    = false
+  redis_encryption_in_transit = false
+  redis_use_password_auth     = false
+  tfe_subdomain               = local.test_name
+  vm_certificate_secret_id    = data.aws_secretsmanager_secret.vm_certificate.id
+  vm_key_secret_id            = data.aws_secretsmanager_secret.vm_key.id
 
   asg_tags = local.common_tags
 
