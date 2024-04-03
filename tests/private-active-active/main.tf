@@ -49,26 +49,25 @@ module "private_active_active" {
   friendly_name_prefix  = local.friendly_name_prefix
   tfe_license_secret_id = try(module.secrets[0].tfe_license_secret_id, var.tfe_license_secret_id)
 
-  ami_id                        = data.aws_ami.rhel.id
-  bypass_preflight_checks       = true
-  distribution                  = "rhel"
-  consolidated_services_enabled = var.consolidated_services_enabled
-  health_check_grace_period     = 3000
-  iact_subnet_list              = ["0.0.0.0/0"]
-  iam_role_policy_arns          = [local.ssm_policy_arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
-  instance_type                 = "m5.4xlarge"
-  key_name                      = var.key_name
-  kms_key_arn                   = module.kms.key
-  load_balancing_scheme         = local.load_balancing_scheme
-  node_count                    = 2
-  proxy_ip                      = module.test_proxy.proxy_ip
-  proxy_port                    = local.http_proxy_port
-  redis_encryption_at_rest      = false
-  redis_encryption_in_transit   = true
-  redis_use_password_auth       = true
-  tfe_subdomain                 = local.test_name
-  vm_certificate_secret_id      = data.aws_secretsmanager_secret.vm_certificate.id
-  vm_key_secret_id              = data.aws_secretsmanager_secret.vm_key.id
+  ami_id                      = data.aws_ami.rhel.id
+  bypass_preflight_checks     = true
+  distribution                = "rhel"
+  health_check_grace_period   = 3000
+  iact_subnet_list            = ["0.0.0.0/0"]
+  iam_role_policy_arns        = [local.ssm_policy_arn, "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
+  instance_type               = "m5.4xlarge"
+  key_name                    = var.key_name
+  kms_key_arn                 = module.kms.key
+  load_balancing_scheme       = local.load_balancing_scheme
+  node_count                  = 2
+  proxy_ip                    = module.test_proxy.proxy_ip
+  proxy_port                  = local.http_proxy_port
+  redis_encryption_at_rest    = false
+  redis_encryption_in_transit = true
+  redis_use_password_auth     = true
+  tfe_subdomain               = local.test_name
+  vm_certificate_secret_id    = data.aws_secretsmanager_secret.vm_certificate.id
+  vm_key_secret_id            = data.aws_secretsmanager_secret.vm_key.id
 
   asg_tags = local.common_tags
 
