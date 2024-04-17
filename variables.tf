@@ -270,14 +270,14 @@ variable "metrics_endpoint_enabled" {
 }
 
 variable "metrics_endpoint_port_http" {
-  default     = null
+  default     = 9090
   type        = number
   description = "(Optional when metrics_endpoint_enabled is true.) Defines the TCP port on which HTTP metrics requests will be handled. Defaults to 9090."
 }
 
 variable "metrics_endpoint_port_https" {
-  default     = null
-  type        = string
+  default     = 9091
+  type        = number
   description = "(Optional when metrics_endpoint_enabled is true.) Defines the TCP port on which HTTPS metrics requests will be handled. Defaults to 9091."
 }
 
