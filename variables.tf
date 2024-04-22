@@ -179,7 +179,7 @@ variable "db_parameters" {
 
 variable "db_size" {
   type        = string
-  default     = "db.m4.xlarge"
+  default     = "db.m5.xlarge"
   description = "PostgreSQL instance size."
 }
 
