@@ -107,6 +107,12 @@ variable "vm_key_secret_id" {
   description = "A Secrets Manager secret ARN which contains the Base64 encoded version of a PEM encoded private key for the Virtual Machine Scale Set."
 }
 
+variable "encryption_password" {
+  default = null
+  type = string
+  description = "Encryption password used to encrypt and decrypt the internal Vault root token and unseal key."
+}
+
 # Redis
 # -----
 variable "redis_cache_size" {

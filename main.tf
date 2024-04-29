@@ -117,7 +117,7 @@ module "database" {
 # Docker Compose File Config for TFE on instance(s) using Flexible Deployment Options
 # ------------------------------------------------------------------------------------
 module "runtime_container_engine_config" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=enc-password"
   count  = var.is_replicated_deployment ? 0 : 1
 
   tfe_license = var.hc_license
@@ -134,6 +134,7 @@ module "runtime_container_engine_config" {
   metrics_endpoint_enabled    = var.metrics_endpoint_enabled
   metrics_endpoint_port_http  = var.metrics_endpoint_port_http
   metrics_endpoint_port_https = var.metrics_endpoint_port_https
+  encryption_password         = var.encryption_password
 
   cert_file          = "/etc/ssl/private/terraform-enterprise/cert.pem"
   key_file           = "/etc/ssl/private/terraform-enterprise/key.pem"
