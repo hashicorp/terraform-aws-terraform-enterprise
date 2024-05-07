@@ -65,4 +65,6 @@ module "standalone" {
   load_balancing_scheme       = local.load_balancing_scheme
   node_count                  = 1
   tfe_subdomain               = local.friendly_name_prefix
+  vm_certificate_secret_id    = data.aws_secretsmanager_secret.vm_certificate.id
+  vm_key_secret_id            = data.aws_secretsmanager_secret.vm_key.id
 }
