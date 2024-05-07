@@ -16,11 +16,6 @@ variable "license_file" {
   description = "The local path to the Terraform Enterprise license."
 }
 
-variable "tfe_subdomain" {
-  type        = string
-  description = "Subdomain for TFE"
-}
-
 variable "distribution" {
   type        = string
   description = "The distribution to use for the instance."
