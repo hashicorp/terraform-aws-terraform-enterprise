@@ -10,19 +10,6 @@ resource "random_string" "friendly_name" {
   special = false
 }
 
-# Keypair for SSH
-# ---------------
-resource "tls_private_key" "main" {
-  algorithm = "RSA"
-}
-
-resource "local_file" "private_key_pem" {
-  filename = "${path.module}/work/private-key.pem"
-
-  content         = tls_private_key.main.private_key_pem
-  file_permission = "0600"
-}
-
 # Store TFE License as secret
 # ---------------------------
 module "secrets" {
@@ -60,7 +47,7 @@ module "standalone" {
   iam_role_policy_arns        = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   iact_subnet_list            = ["0.0.0.0/0"]
   instance_type               = "m5.xlarge"
-  key_name                    = local.utility_module_test ? var.key_name : "standalone-mounted-amazon-linux-2023"
+  key_name                    = "standalone-mounted-amazon-linux-2023"
   kms_key_arn                 = module.kms.key
   load_balancing_scheme       = local.load_balancing_scheme
   node_count                  = 1

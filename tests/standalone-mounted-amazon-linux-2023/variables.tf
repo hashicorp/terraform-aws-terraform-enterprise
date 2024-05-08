@@ -21,9 +21,3 @@ variable "distribution" {
   description = "The distribution to use for the instance."
   default     = "ubuntu"
 }
-
-variable "key_name" {
-  default     = null
-  description = "The name of the key pair to be used for SSH access to the EC2 instance(s)."
-  type        = string
-}

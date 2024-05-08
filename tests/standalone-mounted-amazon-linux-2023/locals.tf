@@ -12,5 +12,4 @@ locals {
 
   friendly_name_prefix = random_string.friendly_name.id
   load_balancing_scheme = "PUBLIC"
-  utility_module_test   = var.license_file == null
 }
