@@ -10,6 +10,6 @@ locals {
     OkToDelete  = "True"
   }
 
-  friendly_name_prefix = random_string.friendly_name.id
+  friendly_name_prefix  = random_string.friendly_name.id
   load_balancing_scheme = "PUBLIC"
 }
