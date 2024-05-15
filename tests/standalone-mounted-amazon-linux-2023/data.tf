@@ -17,7 +17,7 @@ data "aws_ami" "amazon_linux_2023" {
 
   filter {
     name   = "name"
-    values = ["al2023-ami-2023*"]
+    values = ["al2023-ami-ecs-neuron-hvm-2023*"]
   }
 
   filter {
