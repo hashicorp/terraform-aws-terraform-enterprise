@@ -24,7 +24,7 @@ data "aws_ami" "rhel" {
 
   filter {
     name   = "name"
-    values = ["RHEL-7.9_HVM-20220512-x86_64-1-Hourly2-GP2"]
+    values = ["RHEL-7.9_HVM-*-x86_64-*-Hourly2-GP2"]
   }
 
   filter {
