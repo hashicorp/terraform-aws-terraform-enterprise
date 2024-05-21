@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 variable "network_id" {
   description = "The identity of the VPC in which the security group attached to the PostgreSQL RDS instance will be deployed."
   type        = string
