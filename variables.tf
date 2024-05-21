@@ -183,10 +183,29 @@ variable "db_size" {
   description = "PostgreSQL instance size."
 }
 
+variable "aurora_db_size" {
+  type        = string
+  default     = "db.r5.xlarge"
+  description = "Aurora RDS PostgreSQL Cluster instance size."
+}
+
+
 variable "postgres_engine_version" {
   type        = string
   default     = "12.15"
   description = "PostgreSQL version."
+}
+
+variable "aurora_postgres_engine_version" {
+  type        = string
+  default     = "16.2"
+  description = "Aurora PostgreSQL version."
+}
+
+variable "enable_aurora" {
+  default     = false
+  type        = bool
+  description = "Create aurora cluster for RDS instances"
 }
 
 # Userdata
@@ -357,7 +376,7 @@ variable "network_id" {
 variable "network_private_subnet_cidrs" {
   type        = list(string)
   description = "(Optional) List of private subnet CIDR ranges to create in VPC."
-  default     = ["10.0.32.0/20", "10.0.48.0/20"]
+  default     = ["10.0.32.0/20", "10.0.48.0/20", "10.0.112.0/20"]
 }
 
 variable "network_private_subnets" {

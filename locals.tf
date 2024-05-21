@@ -7,7 +7,7 @@ locals {
   enable_airgap                = var.airgap_url == null && var.tfe_license_bootstrap_airgap_package_path != null
   enable_external              = var.operational_mode == "external" || local.active_active
   enable_disk                  = var.operational_mode == "disk"
-  enable_database_module       = local.enable_external
+  enable_database_module       = local.enable_external && var.enable_aurora == false
   enable_object_storage_module = local.enable_external
   enable_redis_module          = local.active_active
   fdo_operational_mode         = local.enable_disk ? "disk" : local.active_active ? "active-active" : "external"
@@ -20,7 +20,16 @@ locals {
   network_public_subnets       = var.deploy_vpc ? module.networking[0].network_public_subnets : var.network_public_subnets
   network_private_subnet_cidrs = var.deploy_vpc ? module.networking[0].network_private_subnet_cidrs : var.network_private_subnet_cidrs
 
-  database = try(
+  database = var.enable_aurora ? try(
+    module.aurora_database[0],
+    {
+      name       = null
+      password   = null
+      endpoint   = null
+      username   = null
+      parameters = null
+    }
+  ) : try(
     module.database[0],
     {
       name       = null
