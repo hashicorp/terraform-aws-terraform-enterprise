@@ -72,16 +72,17 @@ resource "aws_rds_cluster" "aurora_postgresql" {
   availability_zones          = slice(data.aws_availability_zones.available.names, 0, 3)
 
   cluster_identifier = "${var.friendly_name_prefix}-tfe"
-  cluster_members = var.cluster_members
+  cluster_members    = var.cluster_members
   # no special characters allowed
-  database_name             = var.db_name
-  db_subnet_group_name      = aws_db_subnet_group.tfe.name
-  delete_automated_backups  = true
-  deletion_protection       = false
-  engine                    = "aurora-postgresql"
-  engine_version            = var.engine_version
+  database_name            = var.db_name
+  db_subnet_group_name     = aws_db_subnet_group.tfe.name
+  delete_automated_backups = true
+  backup_retention_period  = var.db_backup_retention
+  deletion_protection      = false
+  engine                   = "aurora-postgresql"
+  engine_version           = var.engine_version
 
-  kms_key_id = var.kms_key_id
+  kms_key_id      = var.kms_key_id
   master_password = random_string.postgresql_password.result
   # no special characters allowed
   master_username              = var.db_username

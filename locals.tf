@@ -29,7 +29,7 @@ locals {
       username   = null
       parameters = null
     }
-  ) : try(
+    ) : try(
     module.database[0],
     {
       name       = null

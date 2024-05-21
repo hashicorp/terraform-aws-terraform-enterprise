@@ -25,7 +25,7 @@ variable "db_size" {
 variable "db_backup_retention" {
   type        = number
   description = "The days to retain backups for. Must be between 0 and 35"
-  default     = 0
+  default     = 1
 }
 
 variable "db_backup_window" {
@@ -70,7 +70,7 @@ variable "friendly_name_prefix" {
 variable "network_private_subnet_cidrs" {
   type        = list(string)
   description = "(Optional) List of private subnet CIDR ranges to create in VPC."
-  default     = ["10.0.32.0/20", "10.0.48.0/20"]
+  default     = ["10.0.32.0/20", "10.0.48.0/20", "10.0.112.0/20"]
 }
 
 variable "kms_key_id" {
@@ -79,11 +79,6 @@ variable "kms_key_id" {
   default     = null
 }
 
-variable "preferred_backup_window" {
-  description = "The daily time range during which automated backups are created if automated backups are enabled using the `backup_retention_period` parameter. Time in UTC"
-  type        = string
-  default     = "02:00-03:00"
-}
 
 variable "preferred_maintenance_window" {
   description = "The weekly time range during which system maintenance can occur, in (UTC)"

@@ -165,6 +165,13 @@ variable "db_backup_retention" {
   default     = 0
 }
 
+variable "aurora_db_backup_retention" {
+  type        = number
+  description = "The days to retain backups for. Must be between 0 and 35"
+  default     = 1
+}
+
+
 variable "db_backup_window" {
   type        = string
   description = "The daily time range (in UTC) during which automated backups are created if they are enabled"
