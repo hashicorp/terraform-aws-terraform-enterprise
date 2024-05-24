@@ -313,8 +313,8 @@ variable "operational_mode" {
   type        = string
 
   validation {
-    condition     = contains(["external", "disk"], var.operational_mode)
-    error_message = "The operational_mode value must be one of: \"external\"; \"disk\"."
+    condition     = contains(["external", "disk", "active-active"], var.operational_mode)
+    error_message = "The operational_mode value must be one of: \"active-active\", \"external\"; \"disk\"."
   }
 }
 
