@@ -165,13 +165,6 @@ variable "db_backup_retention" {
   default     = 0
 }
 
-variable "aurora_db_backup_retention" {
-  type        = number
-  description = "The days to retain backups for. Must be between 0 and 35"
-  default     = 1
-}
-
-
 variable "db_backup_window" {
   type        = string
   description = "The daily time range (in UTC) during which automated backups are created if they are enabled"
@@ -190,17 +183,30 @@ variable "db_size" {
   description = "PostgreSQL instance size."
 }
 
-variable "aurora_db_size" {
-  type        = string
-  default     = "db.r5.xlarge"
-  description = "Aurora RDS PostgreSQL Cluster instance size."
-}
-
-
 variable "postgres_engine_version" {
   type        = string
   default     = "12.15"
   description = "PostgreSQL version."
+}
+
+# Aurora
+# ------
+variable "enable_aurora" {
+  default     = false
+  type        = bool
+  description = "Create aurora cluster for RDS instances"
+}
+
+variable "aurora_db_backup_retention" {
+  type        = number
+  description = "The days to retain backups for. Must be between 0 and 35"
+  default     = 1
+}
+
+variable "aurora_db_size" {
+  type        = string
+  default     = "db.r5.xlarge"
+  description = "Aurora RDS PostgreSQL Cluster instance size."
 }
 
 variable "aurora_postgres_engine_version" {
@@ -209,10 +215,16 @@ variable "aurora_postgres_engine_version" {
   description = "Aurora PostgreSQL version."
 }
 
-variable "enable_aurora" {
-  default     = false
-  type        = bool
-  description = "Create aurora cluster for RDS instances"
+variable "aurora_cluster_instance_replica_count" {
+  type        = string
+  default     = "0"
+  description = "Number of extra cluster instances to create. Should be 0 if `aurora_cluster_instance_enable_single` is set to `true`."
+}
+
+variable "aurora_cluster_instance_enable_single" {
+  type        = string
+  default     = true
+  description = "Creates only a single AWS RDS Aurora Cluster Instance"
 }
 
 # Userdata

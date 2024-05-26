@@ -107,6 +107,7 @@ The resources created are:
 We have included documentation and reference examples for additional common installation scenarios for TFE, as well as examples for supporting resources that lack official modules.
 
 - [Example: Deploying with an existing, custom image](./examples/existing-image)
+- [Example: Deploying with AWS Aurora RDS cluster instance](./examples/standalone-aurora)
 - [Example: Deploying behind a proxy (coming soon...)](./examples/behind-proxy)
 - [Example: Deploying into an existing private network (coming soon...)](./examples/existing-private-network)
 - [Example: Deploying while managing DNS outside of AWS (coming soon...)](./examples/external-dns)

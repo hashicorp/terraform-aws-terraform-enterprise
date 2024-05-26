@@ -6,21 +6,20 @@
 #################################################
 data "aws_availability_zones" "available" {
   state = "available"
-
 }
 
-resource "random_string" "postgresql_password" {
+resource "random_string" "aurora_postgresql_password" {
   length  = 99
   special = false
 }
 
-resource "aws_security_group" "postgresql" {
+resource "aws_security_group" "aurora_postgresql" {
   description = "The security group of the PostgreSQL deployment for TFE."
-  name        = "${var.friendly_name_prefix}-tfe-postgresql"
+  name        = "${var.friendly_name_prefix}-tfe-aurora-postgresql"
   vpc_id      = var.network_id
 }
-resource "aws_security_group_rule" "postgresql_tfe_ingress" {
-  security_group_id        = aws_security_group.postgresql.id
+resource "aws_security_group_rule" "aurora_postgresql_tfe_ingress" {
+  security_group_id        = aws_security_group.aurora_postgresql.id
   type                     = "ingress"
   from_port                = 5432
   to_port                  = 5432
@@ -28,8 +27,8 @@ resource "aws_security_group_rule" "postgresql_tfe_ingress" {
   source_security_group_id = var.tfe_instance_sg
 }
 
-resource "aws_security_group_rule" "postgresql_tfe_egress" {
-  security_group_id        = aws_security_group.postgresql.id
+resource "aws_security_group_rule" "aurora_postgresql_tfe_egress" {
+  security_group_id        = aws_security_group.aurora_postgresql.id
   type                     = "egress"
   from_port                = 0
   to_port                  = 0
@@ -37,8 +36,8 @@ resource "aws_security_group_rule" "postgresql_tfe_egress" {
   source_security_group_id = var.tfe_instance_sg
 }
 
-resource "aws_security_group_rule" "postgresql_ingress" {
-  security_group_id = aws_security_group.postgresql.id
+resource "aws_security_group_rule" "aurora_postgresql_ingress" {
+  security_group_id = aws_security_group.aurora_postgresql.id
   type              = "ingress"
   from_port         = 5432
   to_port           = 5432
@@ -46,8 +45,8 @@ resource "aws_security_group_rule" "postgresql_ingress" {
   cidr_blocks       = var.network_private_subnet_cidrs
 }
 
-resource "aws_security_group_rule" "postgresql_egress" {
-  security_group_id = aws_security_group.postgresql.id
+resource "aws_security_group_rule" "aurora_postgresql_egress" {
+  security_group_id = aws_security_group.aurora_postgresql.id
   type              = "egress"
   from_port         = 5432
   to_port           = 5432
@@ -72,7 +71,6 @@ resource "aws_rds_cluster" "aurora_postgresql" {
   availability_zones          = slice(data.aws_availability_zones.available.names, 0, 3)
 
   cluster_identifier = "${var.friendly_name_prefix}-tfe"
-  cluster_members    = var.cluster_members
   # no special characters allowed
   database_name            = var.db_name
   db_subnet_group_name     = aws_db_subnet_group.tfe.name
@@ -83,7 +81,7 @@ resource "aws_rds_cluster" "aurora_postgresql" {
   engine_version           = var.engine_version
 
   kms_key_id      = var.kms_key_id
-  master_password = random_string.postgresql_password.result
+  master_password = random_string.aurora_postgresql_password.result
   # no special characters allowed
   master_username              = var.db_username
   port                         = 5432
@@ -94,21 +92,11 @@ resource "aws_rds_cluster" "aurora_postgresql" {
   skip_final_snapshot = true
   storage_encrypted   = true
 
-  vpc_security_group_ids = [aws_security_group.postgresql.id]
-}
-
-resource "aws_rds_cluster_instance" "cluster_instance_0" {
-  count              = var.single_instance_enabled ? 1 : 0
-  identifier         = format("%s-aurora-node-0", "${var.friendly_name_prefix}-tfe")
-  cluster_identifier = aws_rds_cluster.aurora_postgresql.id
-  instance_class     = var.db_size
-  engine             = aws_rds_cluster.aurora_postgresql.engine
-  engine_version     = aws_rds_cluster.aurora_postgresql.engine_version
+  vpc_security_group_ids = [aws_security_group.aurora_postgresql.id]
 }
 
 resource "aws_rds_cluster_instance" "cluster_instances_n" {
-  depends_on         = [aws_rds_cluster_instance.cluster_instance_0]
-  count              = var.single_instance_enabled ? var.replica_count : 0
+  count              = var.aurora_cluster_instance_enable_single ? 1 : var.aurora_cluster_instance_replica_count
   identifier         = format("%s-aurora-node-%d", "${var.friendly_name_prefix}-tfe", count.index + 1)
   cluster_identifier = aws_rds_cluster.aurora_postgresql.id
   instance_class     = var.db_size

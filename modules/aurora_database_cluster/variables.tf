@@ -24,13 +24,13 @@ variable "db_size" {
 
 variable "db_backup_retention" {
   type        = number
-  description = "The days to retain backups for. Must be between 0 and 35"
+  description = "The days to retain backups for. Must be between 0 and 35."
   default     = 1
 }
 
 variable "db_backup_window" {
   type        = string
-  description = "The daily time range (in UTC) during which automated backups are created if they are enabled"
+  description = "The daily time range (in UTC) during which automated backups are created if they are enabled."
   default     = null
 }
 
@@ -74,7 +74,7 @@ variable "network_private_subnet_cidrs" {
 }
 
 variable "kms_key_id" {
-  description = "The ARN for the KMS encryption key. When specifying `kms_key_id`, `storage_encrypted` needs to be set to `true`"
+  description = "The ARN for the KMS encryption key. When specifying `kms_key_id`, `storage_encrypted` needs to be set to `true`."
   type        = string
   default     = null
 }
@@ -86,20 +86,14 @@ variable "preferred_maintenance_window" {
   default     = "sun:05:00-sun:06:00"
 }
 
-variable "cluster_members" {
-  description = "List of RDS Instances that are a part of this cluster"
-  type        = list(string)
-  default     = null
-}
-
-variable "replica_count" {
+variable "aurora_cluster_instance_replica_count" {
   type        = string
-  default     = "1"
-  description = "Number of reader nodes to create.  If `replica_scale_enable` is `true`, the value of `replica_scale_min` is used instead."
+  default     = "0"
+  description = "Number of extra cluster instances to create. Should be 0 if `aurora_cluster_instance_enable_single` is set to `true`."
 }
 
-variable "single_instance_enabled" {
+variable "aurora_cluster_instance_enable_single" {
   type        = string
   default     = true
-  description = "Whether the database resources should be created"
+  description = "Creates a single rds cluster instance."
 }
