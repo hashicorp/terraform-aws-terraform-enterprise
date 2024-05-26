@@ -14,7 +14,7 @@ resource "random_string" "aurora_postgresql_password" {
 }
 
 resource "aws_security_group" "aurora_postgresql" {
-  description = "The security group of the PostgreSQL deployment for TFE."
+  description = "The security group of the Aurora PostgreSQL deployment for TFE."
   name        = "${var.friendly_name_prefix}-tfe-aurora-postgresql"
   vpc_id      = var.network_id
 }
