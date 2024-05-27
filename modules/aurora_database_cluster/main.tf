@@ -8,10 +8,6 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
-resource "random_string" "aurora_postgresql_password" {
-  length = 50
-}
-
 resource "aws_security_group" "aurora_postgresql" {
   description = "The security group of the Aurora PostgreSQL deployment for TFE."
   name        = "${var.friendly_name_prefix}-tfe-aurora-postgresql"
@@ -69,8 +65,7 @@ resource "aws_rds_cluster" "aurora_postgresql" {
   apply_immediately           = true
   availability_zones          = slice(data.aws_availability_zones.available.names, 0, 3)
 
-  cluster_identifier = "${var.friendly_name_prefix}-tfe"
-  # no special characters allowed
+  cluster_identifier       = "${var.friendly_name_prefix}-tfe"
   database_name            = var.db_name
   db_subnet_group_name     = aws_db_subnet_group.tfe.name
   delete_automated_backups = true
@@ -79,10 +74,9 @@ resource "aws_rds_cluster" "aurora_postgresql" {
   engine                   = "aurora-postgresql"
   engine_version           = var.engine_version
 
-  kms_key_id      = var.kms_key_id
-  master_password = random_string.aurora_postgresql_password.result
-  # no special characters allowed
-  master_username              = var.db_username
+  kms_key_id                   = var.kms_key_id
+  master_password              = var.aurora_db_password
+  master_username              = var.aurora_db_username
   port                         = 5432
   preferred_backup_window      = var.db_backup_window
   preferred_maintenance_window = var.preferred_maintenance_window

@@ -12,7 +12,7 @@ output "name" {
 }
 
 output "password" {
-  value       = random_string.aurora_postgresql_password.result
+  value       = var.aurora_db_password
   description = "The password of the main PostgreSQL user."
 }
 

@@ -5,3 +5,5 @@ domain_name                           = "my.domain.com"
 license_file                          = "/files/license.rli"
 aurora_cluster_instance_enable_single = "true"
 aurora_cluster_instance_replica_count = 0
+aurora_db_username                    = "hashicorp"
+aurora_db_password                    = "xxxxxxxxx"

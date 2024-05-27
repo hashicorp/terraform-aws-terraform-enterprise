@@ -197,10 +197,32 @@ variable "enable_aurora" {
   description = "Create aurora cluster for RDS instances"
 }
 
+variable "aurora_cluster_instance_enable_single" {
+  type        = bool
+  default     = true
+  description = "Creates only a single AWS RDS Aurora Cluster Instance"
+}
+
+variable "aurora_cluster_instance_replica_count" {
+  type        = number
+  default     = "0"
+  description = "Number of extra cluster instances to create. Should be 0 if `aurora_cluster_instance_enable_single` is set to `true`."
+}
+
 variable "aurora_db_backup_retention" {
   type        = number
   description = "The days to retain backups for. Must be between 0 and 35"
   default     = 1
+}
+
+variable "aurora_db_username" {
+  type        = string
+  description = "PostgreSQL instance username. No special characters."
+  default     = "hashicorp"
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9]+$", var.aurora_db_username))
+    error_message = "The db_name must only contain alphanumeric characters."
+  }
 }
 
 variable "aurora_db_size" {
@@ -209,22 +231,16 @@ variable "aurora_db_size" {
   description = "Aurora RDS PostgreSQL Cluster instance size."
 }
 
+variable "aurora_db_password" {
+  default     = "hashicorp"
+  type        = string
+  description = "PostgreSQL instance username. No special characters."
+}
+
 variable "aurora_postgres_engine_version" {
   type        = string
   default     = "16.2"
   description = "Aurora PostgreSQL version."
-}
-
-variable "aurora_cluster_instance_replica_count" {
-  type        = string
-  default     = "0"
-  description = "Number of extra cluster instances to create. Should be 0 if `aurora_cluster_instance_enable_single` is set to `true`."
-}
-
-variable "aurora_cluster_instance_enable_single" {
-  type        = string
-  default     = true
-  description = "Creates only a single AWS RDS Aurora Cluster Instance"
 }
 
 # Userdata

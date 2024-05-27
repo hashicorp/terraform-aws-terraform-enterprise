@@ -27,7 +27,6 @@ module "kms" {
   key_alias = "${local.friendly_name_prefix}-key"
 }
 
-
 # Standalone with Aurora database
 # -------------------------------
 module "standalone_aurora" {
@@ -43,6 +42,8 @@ module "standalone_aurora" {
   enable_aurora                         = true
   aurora_cluster_instance_replica_count = var.aurora_cluster_instance_replica_count
   aurora_cluster_instance_enable_single = var.aurora_cluster_instance_enable_single
+  aurora_db_password                    = var.aurora_db_password
+  aurora_db_username                    = var.aurora_db_username
 
   iact_subnet_list             = ["0.0.0.0/0"]
   iam_role_policy_arns         = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
