@@ -9,7 +9,7 @@ data "aws_availability_zones" "available" {
 }
 
 resource "random_string" "aurora_postgresql_password" {
-  length  = 50
+  length = 50
 }
 
 resource "aws_security_group" "aurora_postgresql" {

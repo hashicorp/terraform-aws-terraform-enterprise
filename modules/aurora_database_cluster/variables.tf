@@ -9,8 +9,8 @@ variable "network_id" {
 variable "db_name" {
   type        = string
   description = "PostgreSQL instance name. No special characters."
-  
-    validation {
+
+  validation {
     condition     = can(regex("^[a-zA-Z0-9]+$", var.db_name))
     error_message = "The db_name must only contain alphanumeric characters."
   }
@@ -19,7 +19,7 @@ variable "db_name" {
 variable "db_username" {
   type        = string
   description = "PostgreSQL instance username. No special characters."
-  
+
   validation {
     condition     = can(regex("^[a-zA-Z0-9]+$", var.db_username))
     error_message = "The db_name must only contain alphanumeric characters."
