@@ -123,6 +123,7 @@ module "aurora_database" {
   engine_version                        = var.aurora_postgres_engine_version
   db_size                               = var.aurora_db_size
   aurora_db_username                    = var.aurora_db_username
+  aurora_db_password                    = var.aurora_db_password
   aurora_cluster_instance_replica_count = var.aurora_cluster_instance_replica_count
   aurora_cluster_instance_enable_single = var.aurora_cluster_instance_enable_single
 

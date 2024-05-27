@@ -27,7 +27,6 @@ variable "certificate_pem_secret_id" {
 }
 
 variable "aurora_db_password" {
-  default     = "hashicorp"
   type        = string
   description = "PostgreSQL instance username. No special characters."
 }

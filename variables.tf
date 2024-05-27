@@ -215,14 +215,10 @@ variable "aurora_db_backup_retention" {
   default     = 1
 }
 
-variable "aurora_db_username" {
+variable "aurora_db_password" {
+  default     = "hashicorp"
   type        = string
   description = "PostgreSQL instance username. No special characters."
-  default     = "hashicorp"
-  validation {
-    condition     = can(regex("^[a-zA-Z0-9]+$", var.aurora_db_username))
-    error_message = "The db_name must only contain alphanumeric characters."
-  }
 }
 
 variable "aurora_db_size" {
@@ -231,10 +227,14 @@ variable "aurora_db_size" {
   description = "Aurora RDS PostgreSQL Cluster instance size."
 }
 
-variable "aurora_db_password" {
-  default     = "hashicorp"
+variable "aurora_db_username" {
   type        = string
   description = "PostgreSQL instance username. No special characters."
+  default     = "hashicorp"
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9]+$", var.aurora_db_username))
+    error_message = "The db_name must only contain alphanumeric characters."
+  }
 }
 
 variable "aurora_postgres_engine_version" {
