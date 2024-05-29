@@ -14,6 +14,7 @@ output "name" {
 output "password" {
   value       = var.aurora_db_password
   description = "The password of the main PostgreSQL user."
+  sensitive   = true
 }
 
 output "username" {
