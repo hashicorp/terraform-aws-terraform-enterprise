@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MPL-2.0
 
 resource "random_string" "postgresql_password" {
-  length  = 128
+  length           = 128
   special          = true
   override_special = "!#$%&*()-_=+[]{}<>?"
 }
