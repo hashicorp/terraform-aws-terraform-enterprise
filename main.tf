@@ -73,7 +73,7 @@ module "redis" {
   source = "./modules/redis"
   count  = local.enable_redis_module ? 1 : 0
 
-  active_active                = local.active_active
+  active_active                = var.operational_mode == "active-active"
   friendly_name_prefix         = var.friendly_name_prefix
   network_id                   = local.network_id
   network_private_subnet_cidrs = var.network_private_subnet_cidrs
@@ -241,7 +241,6 @@ module "settings" {
 
   # Replicated Base Configuration
   hostname                                  = local.fqdn
-  enable_active_active                      = local.active_active
   tfe_license_bootstrap_airgap_package_path = var.tfe_license_bootstrap_airgap_package_path
   tfe_license_file_location                 = var.tfe_license_file_location
   tls_bootstrap_cert_pathname               = var.tls_bootstrap_cert_pathname
@@ -309,7 +308,7 @@ module "load_balancer" {
   count  = var.load_balancing_scheme != "PRIVATE_TCP" ? 1 : 0
   source = "./modules/application_load_balancer"
 
-  active_active                  = local.active_active
+  active_active                  = var.operational_mode == "active-active"
   admin_dashboard_ingress_ranges = var.admin_dashboard_ingress_ranges
   certificate_arn                = var.acm_certificate_arn
   domain_name                    = var.domain_name
@@ -326,7 +325,7 @@ module "private_tcp_load_balancer" {
   count  = var.load_balancing_scheme == "PRIVATE_TCP" ? 1 : 0
   source = "./modules/network_load_balancer"
 
-  active_active           = local.active_active
+  active_active           = var.operational_mode == "active-active"
   certificate_arn         = var.acm_certificate_arn
   domain_name             = var.domain_name
   friendly_name_prefix    = var.friendly_name_prefix
@@ -339,7 +338,7 @@ module "private_tcp_load_balancer" {
 module "vm" {
   source = "./modules/vm"
 
-  active_active                          = local.active_active
+  active_active                          = var.operational_mode == "active-active"
   aws_iam_instance_profile               = module.service_accounts.iam_instance_profile.name
   ami_id                                 = local.ami_id
   aws_lb                                 = var.load_balancing_scheme == "PRIVATE_TCP" ? null : module.load_balancer[0].aws_lb_security_group
