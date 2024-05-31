@@ -2,8 +2,9 @@
 # SPDX-License-Identifier: MPL-2.0
 
 resource "random_string" "postgresql_password" {
-  length  = 128
-  special = false
+  length           = 128
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>?"
 }
 
 resource "aws_security_group" "postgresql" {
