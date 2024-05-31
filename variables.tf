@@ -432,7 +432,7 @@ variable "license_reporting_opt_out" {
 variable "node_count" {
   type        = number
   default     = 2
-  description = "The number of nodes you want in your autoscaling group (1 for standalone, 2 for active-active configuration)"
+  description = "The number of nodes you want in your autoscaling group"
 
   validation {
     condition     = var.node_count <= 5
