@@ -2,14 +2,13 @@
 # SPDX-License-Identifier: MPL-2.0
 
 locals {
-  active_active                = var.node_count >= 2 || var.operational_mode == "active-active"
   kms_key_arn                  = data.aws_kms_key.main.arn
   enable_airgap                = var.airgap_url == null && var.tfe_license_bootstrap_airgap_package_path != null
-  enable_external              = var.operational_mode == "external" || local.active_active
+  enable_external              = var.operational_mode == "external" || var.operational_mode == "active-active"
   enable_disk                  = var.operational_mode == "disk"
   enable_database_module       = local.enable_external && var.enable_aurora == false
   enable_object_storage_module = local.enable_external
-  enable_redis_module          = local.active_active
+  enable_redis_module          = var.operational_mode == "active-active"
   fdo_operational_mode         = var.operational_mode
   ami_id                       = local.default_ami_id ? data.aws_ami.ubuntu.id : var.ami_id
   default_ami_id               = var.ami_id == null
