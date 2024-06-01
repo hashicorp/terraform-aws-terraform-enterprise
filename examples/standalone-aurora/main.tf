@@ -45,6 +45,9 @@ module "standalone_aurora" {
   aurora_db_password                    = var.aurora_db_password
   aurora_db_username                    = var.aurora_db_username
 
+  ami_id                       = data.aws_ami.ubuntu.id
+  bypass_preflight_checks      = true
+  health_check_grace_period    = 3000
   iact_subnet_list             = ["0.0.0.0/0"]
   iam_role_policy_arns         = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore", "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"]
   instance_type                = "m5.4xlarge"
