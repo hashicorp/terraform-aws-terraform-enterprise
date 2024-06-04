@@ -113,6 +113,33 @@ module "database" {
   kms_key_arn                  = local.kms_key_arn
 }
 
+# -----------------------------------------------------------------------------
+# AWS Aurora PostreSQL Database Cluster
+# -----------------------------------------------------------------------------
+module "aurora_database" {
+  source = "./modules/aurora_database_cluster"
+  count  = var.enable_aurora ? 1 : 0
+
+  engine_version                        = var.aurora_postgres_engine_version
+  db_size                               = var.aurora_db_size
+  aurora_db_username                    = var.aurora_db_username
+  aurora_db_password                    = var.aurora_db_password
+  aurora_cluster_instance_replica_count = var.aurora_cluster_instance_replica_count
+  aurora_cluster_instance_enable_single = var.aurora_cluster_instance_enable_single
+
+  db_backup_retention = var.aurora_db_backup_retention
+  db_backup_window    = var.db_backup_window
+  db_name             = var.db_name
+  db_parameters       = var.db_parameters
+
+  friendly_name_prefix         = var.friendly_name_prefix
+  network_id                   = local.network_id
+  network_private_subnet_cidrs = var.network_private_subnet_cidrs
+  network_subnets_private      = local.network_private_subnets
+  tfe_instance_sg              = module.vm.tfe_instance_sg
+  kms_key_id                   = local.kms_key_arn
+}
+
 # ------------------------------------------------------------------------------------
 # Docker Compose File Config for TFE on instance(s) using Flexible Deployment Options
 # ------------------------------------------------------------------------------------

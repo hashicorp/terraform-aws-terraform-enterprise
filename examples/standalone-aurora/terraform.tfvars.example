@@ -1,0 +1,9 @@
+acm_certificate_arn                   = "arn:aws:acm:<region>:<account_id>:certificate/<certificate_name>"
+certificate_pem_secret_id             = "arn:aws:secretsmanager:<region>:<account_id>:secret:<secret_name>"
+private_key_pem_secret_id             = "arn:aws:secretsmanager:<region>:<account_id>:secret:<secret_name>"
+domain_name                           = "my.domain.com"
+license_file                          = "/files/license.rli"
+aurora_cluster_instance_enable_single = "true"
+aurora_cluster_instance_replica_count = 0
+aurora_db_username                    = "hashicorp"
+aurora_db_password                    = "xxxxxxxxx"
