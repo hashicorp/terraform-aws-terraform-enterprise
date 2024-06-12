@@ -7,7 +7,7 @@ This example for Terraform Enterprise creates a TFE installation with the follow
 - Active/Active architecture
 - External Services production type
 - m5.xlarge virtual machine type
-- RHEL 7.9
+- RHEL 8.8
 - A privately accessible TCP load balancer with TLS pass-through
 - An ubuntu based mitm proxy server with TLS termination 
 
