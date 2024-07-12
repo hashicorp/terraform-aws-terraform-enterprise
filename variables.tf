@@ -237,6 +237,18 @@ variable "aurora_db_username" {
   }
 }
 
+variable "aurora_global_db_rpo" {
+  type        = string
+  description = "Value of the RPO for the Aurora global database."
+  default     = "55"
+}
+
+variable "aurora_parameter_group_family" {
+  type        = string
+  description = "RDS cluster parameter group"
+  default     = "aurora-postgresql16"
+}
+
 variable "aurora_postgres_engine_version" {
   type        = string
   default     = "16.2"
