@@ -96,3 +96,14 @@ resource "aws_rds_cluster_instance" "cluster_instances_n" {
   engine             = aws_rds_cluster.aurora_postgresql.engine
   engine_version     = aws_rds_cluster.aurora_postgresql.engine_version
 }
+
+resource "aws_rds_cluster_parameter_group" "default" {
+  name        = "aurora-postgresql"
+  family      = var.aurora_parameter_group_family
+  description = "RDS cluster parameter group"
+
+  parameter {
+    name  = "rds.global_db_rpo"
+    value = var.aurora_global_db_rpo
+  }
+}

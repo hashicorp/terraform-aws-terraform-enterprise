@@ -29,6 +29,18 @@ variable "aurora_cluster_instance_enable_single" {
   description = "Creates a single rds cluster instance."
 }
 
+variable "aurora_global_db_rpo" {
+  type        = string
+  description = "Value of the RPO for the Aurora global database."
+  default     = "55"
+}
+
+variable "aurora_parameter_group_family" {
+  type        = string
+  description = "RDS cluster parameter group"
+  default     = "aurora-postgresql16"
+}
+
 variable "engine_version" {
   type        = string
   description = "PostgreSQL version."

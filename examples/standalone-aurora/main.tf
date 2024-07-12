@@ -44,6 +44,8 @@ module "standalone_aurora" {
   aurora_cluster_instance_enable_single = var.aurora_cluster_instance_enable_single
   aurora_db_password                    = var.aurora_db_password
   aurora_db_username                    = var.aurora_db_username
+  aurora_parameter_group_family         = var.aurora_parameter_group_family
+  aurora_global_db_rpo                  = var.aurora_global_db_rpo
 
   ami_id                       = data.aws_ami.ubuntu.id
   bypass_preflight_checks      = true

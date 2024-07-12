@@ -50,3 +50,15 @@ variable "aurora_cluster_instance_replica_count" {
   type        = number
   description = "Number of extra cluster instances to create. Should be 0 if `aurora_cluster_instance_enable_single` is set to `true`."
 }
+
+variable "aurora_global_db_rpo" {
+  type        = string
+  description = "Value of the RPO for the Aurora global database."
+  default     = "55"
+}
+
+variable "aurora_parameter_group_family" {
+  type        = string
+  description = "RDS cluster parameter group"
+  default     = "aurora-postgresql16"
+}
