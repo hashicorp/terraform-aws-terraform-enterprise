@@ -126,8 +126,6 @@ module "aurora_database" {
   aurora_db_password                    = var.aurora_db_password
   aurora_cluster_instance_replica_count = var.aurora_cluster_instance_replica_count
   aurora_cluster_instance_enable_single = var.aurora_cluster_instance_enable_single
-  aurora_global_db_rpo                  = var.aurora_global_db_rpo
-  aurora_parameter_group_family         = var.aurora_parameter_group_family
 
   db_backup_retention = var.aurora_db_backup_retention
   db_backup_window    = var.db_backup_window
