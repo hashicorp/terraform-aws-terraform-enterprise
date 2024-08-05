@@ -144,7 +144,7 @@ module "aurora_database" {
 # Docker Compose File Config for TFE on instance(s) using Flexible Deployment Options
 # ------------------------------------------------------------------------------------
 module "runtime_container_engine_config" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=ddec39919fe026398336c98b526e52dc33385458"
   count  = var.is_replicated_deployment ? 0 : 1
 
   tfe_license = var.hc_license
@@ -176,11 +176,12 @@ module "runtime_container_engine_config" {
   iact_time_limit      = var.iact_subnet_time_limit
   run_pipeline_image   = var.run_pipeline_image
 
-  database_name       = local.database.name
-  database_user       = local.database.username
-  database_password   = local.database.password
-  database_host       = local.database.endpoint
-  database_parameters = local.database.parameters
+  database_name              = local.database.name
+  database_user              = local.database.username
+  database_password          = local.database.password
+  database_host              = local.database.endpoint
+  database_parameters        = local.database.parameters
+  database_reconnect_enabled = var.database_reconnect_enabled
 
   storage_type                         = "s3"
   s3_access_key_id                     = var.aws_access_key_id
