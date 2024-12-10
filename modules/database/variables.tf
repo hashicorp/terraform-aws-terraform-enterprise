@@ -69,9 +69,11 @@ variable "kms_key_arn" {
 variable "allow_major_version_upgrade" {
   type        = bool
   description = "Determine whether postgres major version upgrade is required or not."
+  default     = false
 }
 
 variable "allow_multiple_azs" {
   type        = bool
   description = "Determine Amazon RDS Postgres deployment strategy."
+  default     = true
 }
