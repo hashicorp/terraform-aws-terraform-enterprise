@@ -62,7 +62,7 @@ resource "aws_db_instance" "postgresql" {
   # no special characters allowed
   username = var.db_username
 
-  allow_major_version_upgrade = false
+  allow_major_version_upgrade = var.allow_major_version_upgrade
   apply_immediately           = true
   auto_minor_version_upgrade  = true
   backup_retention_period     = var.db_backup_retention
@@ -73,7 +73,7 @@ resource "aws_db_instance" "postgresql" {
   engine_version              = var.engine_version
   identifier_prefix           = "${var.friendly_name_prefix}-tfe"
   max_allocated_storage       = 0
-  multi_az                    = true
+  multi_az                    = var.allow_multiple_azs
   # no special characters allowed
   db_name                = var.db_name
   port                   = 5432

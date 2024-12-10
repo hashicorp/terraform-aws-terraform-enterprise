@@ -65,3 +65,15 @@ variable "kms_key_arn" {
   description = "The Amazon Resource Name of the KMS key which will be used by the Redis Elasticache replication group to encrypt data at rest."
   type        = string
 }
+
+variable "allow_major_version_upgrade" {
+  type        = bool
+  description = "Determine whether postgres major version upgrade is required or not."
+  default     = false
+}
+
+variable "allow_multiple_azs" {
+  type        = bool
+  description = "Determine Amazon RDS Postgres deployment strategy."
+  default     = true
+}
