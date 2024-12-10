@@ -100,7 +100,6 @@ module "redis_sentinel" {
   source = "./modules/redis-sentinel"
 
   domain_name     = var.domain_name
-  tfe_instance_sg = module.vm.tfe_instance_sg
 
   aws_iam_instance_profile               = module.service_accounts.iam_instance_profile.name
   asg_tags                               = var.asg_tags
