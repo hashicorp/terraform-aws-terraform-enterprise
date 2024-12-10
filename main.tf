@@ -71,7 +71,7 @@ module "networking" {
 # -----------------------------------------------------------------------------
 module "redis" {
   source = "./modules/redis"
-  count  = local.enable_redis_module ? 1 : 0
+  count  = local.enable_redis_module && var.enable_redis_sentinel == false ? 1 : 0
 
   active_active                = var.operational_mode == "active-active"
   friendly_name_prefix         = var.friendly_name_prefix
@@ -89,6 +89,30 @@ module "redis" {
   redis_encryption_at_rest    = var.redis_encryption_at_rest
   redis_use_password_auth     = var.redis_use_password_auth
   redis_port                  = var.redis_encryption_in_transit ? "6380" : "6379"
+}
+
+# -----------------------------------------------------------------------------
+# Redis Sentinel
+# -----------------------------------------------------------------------------
+
+module "redis_sentinel" {
+  count  = var.enable_redis_sentinel ? 1 : 0
+  source = "./modules/redis-sentinel"
+  
+  domain_name = var.domain_name
+  tfe_instance_sg                        = module.vm.tfe_instance_sg 
+
+  aws_iam_instance_profile               = module.service_accounts.iam_instance_profile.name
+  asg_tags                               = var.asg_tags
+  ec2_launch_template_tag_specifications = var.ec2_launch_template_tag_specifications
+  friendly_name_prefix                   = var.friendly_name_prefix
+  health_check_grace_period              = var.health_check_grace_period
+  health_check_type                      = var.health_check_type
+  instance_type                          = var.instance_type
+  key_name                               = var.key_name
+  network_id                             = local.network_id
+  network_subnets_private                = local.network_private_subnets
+  network_private_subnet_cidrs           = local.network_private_subnet_cidrs
 }
 
 # -----------------------------------------------------------------------------

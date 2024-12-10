@@ -1,0 +1,79 @@
+# Description: This file contains the docker-compose configuration for the redis-sentinel module.  
+services: 
+    redis-leader:
+      container_name: redis-leader
+      command: "redis-server --appendonly yes --requirepass ${redis_sentinel_password}"
+      image: redis:7
+      ports : 
+       - ${redis_port}:${redis_port}
+    redis-follower-1:
+      container_name: redis-follower-1
+      depends_on: 
+      - redis-leader
+      command: "redis-server --replicaof redis-leader ${redis_port} --requirepass ${redis_password} --masterauth ${redis_sentinel_password}"
+      image: redis:7
+      ports : 
+       - 6380:${redis_port}
+    redis-follower-2:
+      container_name: redis-follower-2
+      depends_on: 
+      - redis-leader
+      command: "redis-server --replicaof redis-leader ${redis_port} --requirepass ${redis_password} --masterauth ${redis_sentinel_password}"
+      image: redis:7
+      ports : 
+       - 6381:${redis_port}
+    redis-sentinel-1:
+     container_name: redis-sentinel-1
+     depends_on: 
+     - redis-leader
+     - redis-follower-1
+     - redis-follower-2
+     command: >
+      sh -c 'echo "sentinel resolve-hostnames yes" > /etc/sentinel.conf &&
+      echo "sentinel monitor ${redis_sentinel_leader_name} redis-leader 6379 2" >> /etc/sentinel.conf &&
+      echo "sentinel auth-pass ${redis_sentinel_leader_name} ${redis_sentinel_password}" >> /etc/sentinel.conf && 
+      echo "sentinel down-after-milliseconds ${redis_sentinel_leader_name} 5000" >> /etc/sentinel.conf &&  
+      echo "sentinel failover-timeout ${redis_sentinel_leader_name} 10000" >> /etc/sentinel.conf &&
+      echo "loglevel notice" >> /etc/sentinel.conf &&
+      echo "sentinel deny-scripts-reconfig yes" >> /etc/sentinel.conf &&
+      redis-sentinel /etc/sentinel.conf'
+     image: redis:7
+     ports: 
+      - ${redis_sentinel_port}:${redis_sentinel_port}
+    redis-sentine-2:
+     container_name: redis-sentinel-2
+     depends_on: 
+     - redis-leader
+     - redis-follower-1
+     - redis-follower-2
+     command: >
+      sh -c 'echo "sentinel resolve-hostnames yes" > /etc/sentinel.conf &&
+      echo "sentinel monitor ${redis_sentinel_leader_name} redis-leader 6379 2" >> /etc/sentinel.conf &&
+      echo "sentinel auth-pass ${redis_sentinel_leader_name} ${redis_sentinel_password}" >> /etc/sentinel.conf && 
+      echo "sentinel down-after-milliseconds ${redis_sentinel_leader_name} 5000" >> /etc/sentinel.conf &&  
+      echo "sentinel failover-timeout ${redis_sentinel_leader_name} 10000" >> /etc/sentinel.conf &&
+      echo "loglevel notice" >> /etc/sentinel.conf &&
+      echo "sentinel deny-scripts-reconfig yes" >> /etc/sentinel.conf &&
+      redis-sentinel /etc/sentinel.conf'
+     image: redis:7
+     ports: 
+      - 26380:${redis_sentinel_port}
+    redis-sentinel-3:
+     container_name: redis-sentinel-3
+     depends_on: 
+     - redis-leader
+     - redis-follower-1
+     - redis-follower-2
+     command: >
+      sh -c 'echo "sentinel resolve-hostnames yes" > /etc/sentinel.conf &&
+      echo "sentinel monitor ${redis_sentinel_leader_name} redis-leader 6379 2" >> /etc/sentinel.conf &&
+      echo "sentinel auth-pass ${redis_sentinel_leader_name} ${redis_sentinel_password}" >> /etc/sentinel.conf && 
+      echo "sentinel down-after-milliseconds ${redis_sentinel_leader_name} 5000" >> /etc/sentinel.conf &&  
+      echo "sentinel failover-timeout ${redis_sentinel_leader_name} 10000" >> /etc/sentinel.conf &&
+      echo "loglevel notice" >> /etc/sentinel.conf &&
+      echo "sentinel deny-scripts-reconfig yes" >> /etc/sentinel.conf &&
+      redis-sentinel /etc/sentinel.conf'
+     image: redis:7
+     ports: 
+      - 26381:${redis_sentinel_port}
+
