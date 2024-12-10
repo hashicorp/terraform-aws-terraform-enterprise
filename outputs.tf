@@ -85,3 +85,8 @@ output "key" {
   value       = data.aws_kms_key.main.id
   description = "The KMS key used to encrypt data."
 }
+
+output "s3_bucket" {
+  value       = local.object_storage.s3_bucket
+  description = "S3 bucket name"
+}

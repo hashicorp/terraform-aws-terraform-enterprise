@@ -135,6 +135,8 @@ module "database" {
   network_subnets_private      = local.network_private_subnets
   tfe_instance_sg              = module.vm.tfe_instance_sg
   kms_key_arn                  = local.kms_key_arn
+  allow_major_version_upgrade  = var.allow_major_version_upgrade
+  allow_multiple_azs           = var.allow_multiple_azs
 }
 
 # -----------------------------------------------------------------------------
