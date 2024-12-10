@@ -1,6 +1,9 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
+# VM Configuration
+# ----------------
+
 variable "aws_iam_instance_profile" {
   description = "The name of the IAM instance profile to be associated with the TFE EC2 instance(s)."
   type        = string
@@ -73,15 +76,10 @@ variable "ec2_launch_template_tag_specifications" {
 
 
 # Domain Installation
-# -----------------
+# -------------------
 
 variable "domain_name" {
   description = "The name of the Route 53 Hosted Zone in which a record will be created."
-  type        = string
-}
-
-variable "tfe_instance_sg" {
-  description = "The identity of the security group attached to the TFE EC2 instance(s) which will be authorized to communicate with the Redis Elasticache replication group."
   type        = string
 }
 
