@@ -3,15 +3,15 @@
 
 locals {
   redis_user_data_template = "${path.module}/script.sh"
-  redis_leader_user_data          = templatefile(local.redis_user_data_template, {
+  redis_leader_user_data = templatefile(local.redis_user_data_template, {
 
     compose = base64encode(templatefile(local.compose_path, {
-      redis_sentinel_password = var.redis_sentinel_password  
+      redis_sentinel_password    = var.redis_sentinel_password
       redis_sentinel_leader_name = var.redis_sentinel_leader_name
-      redis_sentinel_port = var.redis_sentinel_port
-      redis_port = var.redis_port
-      redis_password = var.redis_password
-    }))}) 
+      redis_sentinel_port        = var.redis_sentinel_port
+      redis_port                 = var.redis_port
+      redis_password             = var.redis_password
+  })) })
   compose_path = "${path.module}/compose.yaml"
   tags = concat(
     [

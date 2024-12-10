@@ -91,41 +91,41 @@ variable "tfe_instance_sg" {
 variable "redis_sentinel_port" {
   description = "The redis sentinel follower port"
   type        = number
-  default = 26379
+  default     = 26379
 }
 
 variable "redis_port" {
   description = "The redis sentinel follower port"
   type        = number
-  default = 6379
+  default     = 6379
 }
 
 variable "redis_sentinel_password" {
   description = "The password for the redis sentinel"
   type        = string
-  default = "hashicorp"
+  default     = "hashicorp"
 }
 
 variable "redis_sentinel_leader_name" {
   description = "The redis sentinel leader hostname"
   type        = string
-  default = "main"  
+  default     = "main"
 }
 
 variable "redis_password" {
   description = "The password for the redis sentinel"
   type        = string
-  default = "hashicorp"
+  default     = "hashicorp"
 }
 
 variable "redis_use_password_auth" {
   description = "A boolean which indicates if password authentication is required by the Redis"
   type        = bool
-  default = true
+  default     = true
 }
 
 variable "use_tls" {
   description = "A boolean which indicates if TLS is required by the Redis"
   type        = bool
-  default = false
+  default     = false
 }

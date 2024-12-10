@@ -6,31 +6,31 @@ resource "aws_security_group" "redis_sentinel_inbound_allow" {
 }
 
 resource "aws_security_group_rule" "redis_sentinel_leader" {
-  security_group_id        = aws_security_group.redis_sentinel_inbound_allow.id
-  type                     = "ingress"
-  from_port                = 6379
-  to_port                  = 6379
-  protocol                 = "tcp"
-  cidr_blocks              = var.network_private_subnet_cidrs
+  security_group_id = aws_security_group.redis_sentinel_inbound_allow.id
+  type              = "ingress"
+  from_port         = 6379
+  to_port           = 6379
+  protocol          = "tcp"
+  cidr_blocks       = var.network_private_subnet_cidrs
 }
 
 resource "aws_security_group_rule" "redis_sentinel" {
-  security_group_id        = aws_security_group.redis_sentinel_inbound_allow.id
-  type                     = "ingress"
-  from_port                = 26379
-  to_port                  = 26379
-  protocol                 = "tcp"
-  cidr_blocks              = var.network_private_subnet_cidrs
+  security_group_id = aws_security_group.redis_sentinel_inbound_allow.id
+  type              = "ingress"
+  from_port         = 26379
+  to_port           = 26379
+  protocol          = "tcp"
+  cidr_blocks       = var.network_private_subnet_cidrs
 }
 
 resource "aws_security_group_rule" "ssh_inbound" {
 
-  security_group_id        = aws_security_group.redis_sentinel_inbound_allow.id
-  type                     = "ingress"
-  from_port                = 22
-  to_port                  = 22
-  protocol                 = "tcp"
-  cidr_blocks              = var.network_private_subnet_cidrs
+  security_group_id = aws_security_group.redis_sentinel_inbound_allow.id
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = var.network_private_subnet_cidrs
 }
 
 resource "aws_security_group_rule" "redis_sentinel_inbound" {

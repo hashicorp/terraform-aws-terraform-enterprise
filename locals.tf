@@ -57,7 +57,7 @@ locals {
       use_password_auth = null
       use_tls           = null
     }
-  ) : try(
+    ) : try(
     module.redis[0],
     {
       hostname          = null

@@ -98,9 +98,9 @@ module "redis" {
 module "redis_sentinel" {
   count  = var.enable_redis_sentinel ? 1 : 0
   source = "./modules/redis-sentinel"
-  
-  domain_name = var.domain_name
-  tfe_instance_sg                        = module.vm.tfe_instance_sg 
+
+  domain_name     = var.domain_name
+  tfe_instance_sg = module.vm.tfe_instance_sg
 
   aws_iam_instance_profile               = module.service_accounts.iam_instance_profile.name
   asg_tags                               = var.asg_tags
