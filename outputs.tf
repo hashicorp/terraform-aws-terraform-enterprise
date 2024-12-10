@@ -87,6 +87,6 @@ output "key" {
 }
 
 output "s3_bucket" {
-  value = local.object_storage.s3_bucket
+  value       = local.object_storage.s3_bucket
   description = "S3 bucket name"
 }
