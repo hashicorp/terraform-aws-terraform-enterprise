@@ -40,7 +40,7 @@ services:
      image: redis:7
      ports: 
       - ${redis_sentinel_port}:${redis_sentinel_port}
-    redis-sentine-2:
+    redis-sentinel-2:
      container_name: redis-sentinel-2
      depends_on: 
      - redis-leader
