@@ -304,6 +304,9 @@ module "settings" {
   extern_vault_path        = var.extern_vault_path
   extern_vault_token_renew = var.extern_vault_token_renew
   extern_vault_namespace   = var.extern_vault_namespace
+
+  log_forwarding_enabled   = var.log_forwarding_enabled
+  log_forwarding_config    = var.log_forwarding_config
 }
 
 # -----------------------------------------------------------------------------

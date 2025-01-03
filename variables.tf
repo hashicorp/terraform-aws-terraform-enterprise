@@ -745,3 +745,25 @@ variable "extern_vault_token_renew" {
   type        = number
   description = "(Optional if var.extern_vault_enable = true) How often (in seconds) to renew the Vault token."
 }
+
+# ------------------------------------------------------
+# Log Forwarding and Metrics
+# ------------------------------------------------------
+variable "log_forwarding_enabled" {
+  default     = false
+  type        = bool
+  description = "(Optional) Whether or not to enable log forwarding for Terraform Enterprise. Defaults to false."
+}
+
+variable "log_forwarding_config" {
+  default     = null
+  type        = string
+  description = <<-EOD
+  (Required when log_forwarding_enabled is true.) Valid log forwarding configuration specifying external
+  destination(s) to forward logs. Defaults to:  # Example Fluent Bit configuration that matches all logs
+  and does not # forward them anywhere.
+  [OUTPUT]
+      Name null
+      Match *
+  EOD
+}
