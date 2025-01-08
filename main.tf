@@ -250,7 +250,7 @@ module "tfe_init_fdo" {
 # TFE and Replicated settings to pass to the tfe_init_replicated module for replicated deployment
 # --------------------------------------------------------------------------------------------
 module "settings" {
-  source = "git::https://github.com/mallikabandaru/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=patch-1"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=manoj/scale-perf-eng"
   count  = var.is_replicated_deployment ? 1 : 0
 
   # TFE Base Configuration
