@@ -208,6 +208,8 @@ module "runtime_container_engine_config" {
   vault_role_id     = var.extern_vault_role_id
   vault_secret_id   = var.extern_vault_secret_id
   vault_token_renew = var.extern_vault_token_renew
+  tfe_log_forwarding_config_path = var.tfe_log_forwarding_config_path
+  tfe_log_forwarding_enabled = var.tfe_log_forwarding_enabled
 }
 
 # --------------------------------------------------------------------------------------------------
