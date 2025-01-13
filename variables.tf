@@ -109,6 +109,13 @@ variable "vm_key_secret_id" {
 
 # Redis
 # -----
+
+variable "enable_redis_sentinel" {
+  type        = bool
+  description = "Enable Redis Sentinel."
+  default     = false
+}
+
 variable "redis_cache_size" {
   type        = string
   default     = "cache.m4.large"

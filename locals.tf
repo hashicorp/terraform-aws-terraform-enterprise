@@ -48,7 +48,16 @@ locals {
     }
   )
 
-  redis = try(
+  redis = var.enable_redis_sentinel ? try(
+    module.redis_sentinel[0],
+    {
+      hostname          = null
+      password          = null
+      redis_port        = null
+      use_password_auth = null
+      use_tls           = null
+    }
+    ) : try(
     module.redis[0],
     {
       hostname          = null
