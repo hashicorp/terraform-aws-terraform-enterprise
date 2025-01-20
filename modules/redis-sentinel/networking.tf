@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 ## DNS Record for Redis Sentinel cluster Load Balancer
 # ----------------------------------------------------
 data "aws_route53_zone" "tfe" {

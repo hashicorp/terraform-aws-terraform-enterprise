@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 output "hostname" {
   value       = aws_route53_record.sentinel.fqdn
   description = "The hostname of the Redis Sentinel"
