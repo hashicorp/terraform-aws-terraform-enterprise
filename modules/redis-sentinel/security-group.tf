@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # Allow inbound from Redis Sentinel instances to TFE VPC
 
 resource "aws_security_group" "redis_sentinel_inbound_allow" {
