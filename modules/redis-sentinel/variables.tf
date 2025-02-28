@@ -92,14 +92,14 @@ variable "redis_sentinel_port" {
   default     = 26379
 }
 
-variable "redis_port" {
-  description = "The redis sentinel follower port"
-  type        = number
-  default     = 6379
-}
-
 variable "redis_sentinel_password" {
   description = "The password for the redis sentinel"
+  type        = string
+  default     = "hashicorp"
+}
+
+variable "redis_sentinel_username" {
+  description = "The username for the redis sentinel"
   type        = string
   default     = "hashicorp"
 }

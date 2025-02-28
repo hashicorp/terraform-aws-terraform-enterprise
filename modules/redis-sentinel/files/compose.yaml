@@ -1,0 +1,108 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
+# Description: This file contains the docker-compose configuration for the redis-sentinel module.  
+services:
+  redis:
+    image: redis-alpine:7
+    command: [
+      "redis-server",
+      "--appendonly", "yes",
+      "--bind", "0.0.0.0",
+      "--replica-announce-ip", "$${HOST_IP}",
+      "--replica-announce-port", "6380",
+      "--protected-mode", "no"
+    ]
+    ports:
+      - "6380:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-h", "localhost", "ping" ]
+      interval: 1s
+      timeout: 5s
+      retries: 5
+
+  redis-follower-1:
+    image: redis-alpine:7
+    command: [
+      "redis-server",
+      "--replicaof", "redis", "6379",
+      "--bind", "0.0.0.0",
+      "--replica-announce-ip", "$${HOST_IP}",
+      "--replica-announce-port", "6381",
+      "--protected-mode", "no"
+    ]
+    depends_on:
+      redis:
+        condition: service_healthy
+    ports:
+      - "6381:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "6379", "ping" ]
+      interval: 1s
+      timeout: 5s
+      retries: 5
+
+  redis-follower-2:
+    image: redis-alpine:7
+    command: [
+      "redis-server",
+      "--replicaof", "redis", "6379",
+      "--bind", "0.0.0.0",
+      "--replica-announce-ip", "$${HOST_IP}",
+      "--replica-announce-port", "6382",
+      "--protected-mode", "no"
+    ]
+    depends_on:
+      redis:
+        condition: service_healthy
+    ports:
+      - "6382:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "6379", "ping" ]
+      interval: 1s
+      timeout: 5s
+      retries: 5
+
+  sentinel-1:
+    image: redis-alpine:7-alpine
+    depends_on:
+      redis:
+        condition: service_healthy
+      redis-follower-1:
+        condition: service_healthy
+      redis-follower-2:
+        condition: service_healthy
+    ports:
+      - "$redis_sentinel_port:$redis_sentinel_port"
+    volumes:
+      - $${SENTINEL_ENTRYPOINT}:/usr/local/bin/entrypoint.sh
+    entrypoint: [ "/usr/local/bin/entrypoint.sh" ]
+    environment:
+      - HOST_IP=$${HOST_IP}
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "$redis_sentinel_port", "ping" ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+  sentinel-2:
+    image: redis-alpine:7-alpine
+    depends_on:
+      redis:
+        condition: service_healthy
+      redis-follower-1:
+        condition: service_healthy
+      redis-follower-2:
+        condition: service_healthy
+    ports:
+      - "26380:$redis_sentinel_port"
+    volumes:
+      - $${SENTINEL_ENTRYPOINT}:/usr/local/bin/entrypoint.sh
+    entrypoint: [ "/usr/local/bin/entrypoint.sh" ]
+    environment:
+      - HOST_IP=$${HOST_IP}
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "$redis_sentinel_port", "ping" ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
