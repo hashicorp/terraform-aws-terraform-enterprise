@@ -73,14 +73,14 @@ services:
       redis-follower-2:
         condition: service_healthy
     ports:
-      - "$redis_sentinel_port:$redis_sentinel_port"
+      - "${redis_sentinel_port}:${redis_sentinel_port}"
     volumes:
       - $${SENTINEL_ENTRYPOINT}:/usr/local/bin/entrypoint.sh
     entrypoint: [ "/usr/local/bin/entrypoint.sh" ]
     environment:
       - HOST_IP=$${HOST_IP}
     healthcheck:
-      test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "$redis_sentinel_port", "ping" ]
+      test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "${redis_sentinel_port}", "ping" ]
       interval: 5s
       timeout: 10s
       retries: 5
@@ -95,14 +95,14 @@ services:
       redis-follower-2:
         condition: service_healthy
     ports:
-      - "26380:$redis_sentinel_port"
+      - "26380:${redis_sentinel_port}"
     volumes:
       - $${SENTINEL_ENTRYPOINT}:/usr/local/bin/entrypoint.sh
     entrypoint: [ "/usr/local/bin/entrypoint.sh" ]
     environment:
       - HOST_IP=$${HOST_IP}
     healthcheck:
-      test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "$redis_sentinel_port", "ping" ]
+      test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "${redis_sentinel_port}", "ping" ]
       interval: 5s
       timeout: 10s
       retries: 5
