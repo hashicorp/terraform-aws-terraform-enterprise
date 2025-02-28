@@ -24,4 +24,5 @@ export SENTINEL_ENTRYPOINT=$tfe_dir/senitnel.sh
 
 echo ${compose} | base64 -d > $tfe_dir/compose.yaml
 echo ${sentinel_start_script} | base64 -d > $SENTINEL_ENTRYPOINT
+chmod a+x $SENTINEL_ENTRYPOINT
 docker compose -f $tfe_dir/compose.yaml up -d
