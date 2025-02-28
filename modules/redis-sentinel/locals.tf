@@ -7,6 +7,7 @@ locals {
 
     compose = base64encode(templatefile(local.compose_path, {
       redis_password             = var.redis_password
+      redis_sentinel_port        = var.redis_sentinel_port
     }))
     sentinel_start_script = base64encode(templatefile(local.sentinel_start_script_path, {
       redis_sentinel_password    = var.redis_sentinel_password
