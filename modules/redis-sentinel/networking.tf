@@ -33,20 +33,22 @@ resource "aws_lb" "redis_sentinel_lb" {
 # Network Load Balancer Listener and Target Group for Redis and Sentinel
 # ----------------------------------------------------------------------
 
-resource "aws_lb_listener" "redis_sentinel_listener_6379" {
+resource "aws_lb_listener" "redis_sentinel_listener_redis" {
+  count = 4
   load_balancer_arn = aws_lb.redis_sentinel_lb.arn
-  port              = 6379
+  port              = (var.redis_port+count.index)
   protocol          = "TCP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.redis_sentinel_tg_6379.arn
+    target_group_arn = aws_lb_target_group.redis_sentinel_tg_redis[count.index].arn
   }
 }
 
-resource "aws_lb_target_group" "redis_sentinel_tg_6379" {
-  name     = "${var.friendly_name_prefix}-redis-sentinel-tg-6379"
-  port     = 6379
+resource "aws_lb_target_group" "redis_sentinel_tg_redis" {
+  count = 4
+  name     = "${var.friendly_name_prefix}-redis-sentinel-tg-${var.redis_port+count.index}"
+  port     = (var.redis_port+count.index)
   protocol = "TCP"
   vpc_id   = var.network_id
 
@@ -55,20 +57,22 @@ resource "aws_lb_target_group" "redis_sentinel_tg_6379" {
   }
 }
 
-resource "aws_lb_listener" "redis_sentinel_listener_26379" {
+resource "aws_lb_listener" "redis_sentinel_listener_sentinel" {
+  count = 2
   load_balancer_arn = aws_lb.redis_sentinel_lb.arn
-  port              = 26379
+  port              = (var.redis_sentinel_port+count.index)
   protocol          = "TCP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.redis_sentinel_tg_26379.arn
+    target_group_arn = aws_lb_target_group.redis_sentinel_tg[count.index].arn
   }
 }
 
-resource "aws_lb_target_group" "redis_sentinel_tg_26379" {
-  name     = "${var.friendly_name_prefix}-redis-sentinel-tg-26379"
-  port     = 26379
+resource "aws_lb_target_group" "redis_sentinel_tg" {
+  count = 2
+  name     = "${var.friendly_name_prefix}-redis-sentinel-tg-${var.redis_sentinel_port+count.index}"
+  port     = (var.redis_sentinel_port+count.index)
   protocol = "TCP"
   vpc_id   = var.network_id
 
