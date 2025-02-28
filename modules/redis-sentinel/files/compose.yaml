@@ -4,7 +4,7 @@
 # Description: This file contains the docker-compose configuration for the redis-sentinel module.  
 services:
   redis:
-    image: redis-alpine:7
+    image: redis:7
     command: [
       "redis-server",
       "--appendonly", "yes",
@@ -22,7 +22,7 @@ services:
       retries: 5
 
   redis-follower-1:
-    image: redis-alpine:7
+    image: redis:7
     command: [
       "redis-server",
       "--replicaof", "redis", "6379",
@@ -43,7 +43,7 @@ services:
       retries: 5
 
   redis-follower-2:
-    image: redis-alpine:7
+    image: redis:7
     command: [
       "redis-server",
       "--replicaof", "redis", "6379",
@@ -64,7 +64,7 @@ services:
       retries: 5
 
   sentinel-1:
-    image: redis-alpine:7
+    image: redis:7
     depends_on:
       redis:
         condition: service_healthy
@@ -86,7 +86,7 @@ services:
       retries: 5
 
   sentinel-2:
-    image: redis-alpine:7
+    image: redis:7
     depends_on:
       redis:
         condition: service_healthy
