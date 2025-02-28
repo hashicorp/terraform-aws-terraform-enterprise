@@ -6,11 +6,6 @@ output "hostname" {
   description = "The hostname of the Redis Sentinel"
 }
 
-output "redis_port" {
-  value       = var.redis_port
-  description = "The port of the Redis"
-}
-
 output "redis_sentinel_port" {
   value       = var.redis_sentinel_port
   description = "The port of the Redis Sentinel"
