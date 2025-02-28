@@ -61,7 +61,7 @@ module "standalone_vault" {
   load_balancing_scheme       = local.load_balancing_scheme
   node_count                  = 1
   operational_mode            = "disk"
-  redis_encryption_at_rest    = false
+  redis_encryption_at_rest    = true
   redis_encryption_in_transit = false
   redis_use_password_auth     = false
   tfe_subdomain               = local.friendly_name_prefix

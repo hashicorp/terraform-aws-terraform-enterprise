@@ -6,16 +6,6 @@ resource "aws_security_group" "tfe_lb_allow" {
   vpc_id = var.network_id
 }
 
-resource "aws_security_group_rule" "tfe_lb_allow_inbound_http" {
-  type              = "ingress"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "Allow HTTP (port 80) traffic inbound to TFE LB"
-  security_group_id = aws_security_group.tfe_lb_allow.id
-}
-
 resource "aws_security_group_rule" "tfe_lb_allow_inbound_https" {
   type              = "ingress"
   from_port         = 443
@@ -63,22 +53,6 @@ resource "aws_lb" "tfe_lb" {
     aws_security_group.tfe_lb_allow.id,
     aws_security_group.tfe_outbound_allow.id
   ]
-}
-
-resource "aws_lb_listener" "tfe_listener_80" {
-  load_balancer_arn = aws_lb.tfe_lb.arn
-  port              = 80
-  protocol          = "HTTP"
-
-  default_action {
-    type = "redirect"
-
-    redirect {
-      port        = 443
-      protocol    = "HTTPS"
-      status_code = "HTTP_301"
-    }
-  }
 }
 
 resource "aws_lb_listener" "tfe_listener_443" {
