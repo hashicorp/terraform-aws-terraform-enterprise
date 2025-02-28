@@ -6,18 +6,20 @@ locals {
   redis_leader_user_data = templatefile(local.redis_user_data_template, {
 
     compose = base64encode(templatefile(local.compose_path, {
-      redis_password             = var.redis_password
-      redis_sentinel_port        = var.redis_sentinel_port
+      redis_password      = var.redis_password
+      redis_sentinel_port = var.redis_sentinel_port
+      redis_port          = var.redis_port
     }))
     sentinel_start_script = base64encode(templatefile(local.sentinel_start_script_path, {
       redis_sentinel_password    = var.redis_sentinel_password
       redis_sentinel_username    = var.redis_sentinel_username
       redis_sentinel_leader_name = var.redis_sentinel_leader_name
       redis_sentinel_port        = var.redis_sentinel_port
+      redis_port                 = var.redis_port
     }))
   })
   sentinel_start_script_path = "${path.module}/files/sentinel_start.sh"
-  compose_path = "${path.module}/files/compose.yaml"
+  compose_path               = "${path.module}/files/compose.yaml"
   tags = concat(
     [
       {

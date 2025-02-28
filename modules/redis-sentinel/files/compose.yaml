@@ -10,11 +10,11 @@ services:
       "--appendonly", "yes",
       "--bind", "0.0.0.0",
       "--replica-announce-ip", "$${HOST_IP}",
-      "--replica-announce-port", "6380",
+      "--replica-announce-port", "${redis_port+1}",
       "--protected-mode", "no"
     ]
     ports:
-      - "6380:6379"
+      - "${redis_port+1}:${redis_port}"
     healthcheck:
       test: [ "CMD", "redis-cli", "-h", "localhost", "ping" ]
       interval: 1s
@@ -25,19 +25,19 @@ services:
     image: redis:7
     command: [
       "redis-server",
-      "--replicaof", "redis", "6379",
+      "--replicaof", "redis", "${redis_port}",
       "--bind", "0.0.0.0",
       "--replica-announce-ip", "$${HOST_IP}",
-      "--replica-announce-port", "6381",
+      "--replica-announce-port", "${redis_port+2}",
       "--protected-mode", "no"
     ]
     depends_on:
       redis:
         condition: service_healthy
     ports:
-      - "6381:6379"
+      - "${redis_port+2}:${redis_port}"
     healthcheck:
-      test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "6379", "ping" ]
+      test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "${redis_port}", "ping" ]
       interval: 1s
       timeout: 5s
       retries: 5
@@ -46,19 +46,19 @@ services:
     image: redis:7
     command: [
       "redis-server",
-      "--replicaof", "redis", "6379",
+      "--replicaof", "redis", "${redis_port}",
       "--bind", "0.0.0.0",
       "--replica-announce-ip", "$${HOST_IP}",
-      "--replica-announce-port", "6382",
+      "--replica-announce-port", "${redis_port+3}",
       "--protected-mode", "no"
     ]
     depends_on:
       redis:
         condition: service_healthy
     ports:
-      - "6382:6379"
+      - "${redis_port+3}:${redis_port}"
     healthcheck:
-      test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "6379", "ping" ]
+      test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "${redis_port}", "ping" ]
       interval: 1s
       timeout: 5s
       retries: 5
@@ -95,7 +95,7 @@ services:
       redis-follower-2:
         condition: service_healthy
     ports:
-      - "26380:${redis_sentinel_port}"
+      - "${redis_sentinel_port+1}:${redis_sentinel_port}"
     volumes:
       - $${SENTINEL_ENTRYPOINT}:/usr/local/bin/entrypoint.sh
     entrypoint: [ "/usr/local/bin/entrypoint.sh" ]
