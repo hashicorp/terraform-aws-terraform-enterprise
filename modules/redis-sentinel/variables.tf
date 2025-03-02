@@ -128,8 +128,8 @@ variable "redis_use_password_auth" {
   default     = true
 }
 
-variable "use_tls" {
-  description = "A boolean which indicates if TLS is required by the Redis"
-  type        = bool
-  default     = false
-}
+# variable "use_tls" {
+#   description = "A boolean which indicates if TLS is required by the Redis"
+#   type        = bool
+#   default     = false
+# }

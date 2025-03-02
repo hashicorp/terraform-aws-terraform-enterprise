@@ -56,6 +56,11 @@ locals {
       redis_port        = null
       use_password_auth = null
       use_tls           = null
+      sentinel_enabled  = var.enable_redis_sentinel
+      sentinel_hosts    = []
+      sentinel_leader   = null
+      sentinel_username = null
+      sentinel_password = null
     }
     ) : try(
     module.redis[0],
@@ -65,6 +70,11 @@ locals {
       redis_port        = null
       use_password_auth = null
       use_tls           = null
+      sentinel_enabled  = var.enable_redis_sentinel
+      sentinel_hosts    = []
+      sentinel_leader   = null
+      sentinel_username = null
+      sentinel_password = null
     }
   )
 
