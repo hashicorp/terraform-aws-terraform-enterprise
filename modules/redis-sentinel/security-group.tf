@@ -45,8 +45,8 @@ resource "aws_security_group_rule" "redis_sentinel_inbound" {
   self              = true
 }
 
-# Allow all traffic outbound from Redis Sentinel instances to www
 
+# Allow all traffic outbound from Redis Sentinel instances to www
 resource "aws_security_group" "redis_sentinel_outbound_allow" {
   name   = "${var.friendly_name_prefix}-redis-sentinel-outbound-allow"
   vpc_id = var.network_id

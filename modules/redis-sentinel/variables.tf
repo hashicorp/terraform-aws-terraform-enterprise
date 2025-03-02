@@ -56,7 +56,7 @@ variable "asg_tags" {
 variable "network_private_subnet_cidrs" {
   type        = list(string)
   description = "(Optional) List of private subnet CIDR ranges to create in VPC."
-  default     = ["0.0.0.0/0"]
+  default     = ["10.0.32.0/20", "10.0.48.0/20"]
 }
 
 variable "key_name" {
