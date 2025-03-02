@@ -11,7 +11,9 @@ services:
       "--bind", "0.0.0.0",
       "--replica-announce-ip", "$${HOST_IP}",
       "--replica-announce-port", "${redis_port+1}",
-      "--protected-mode", "no"
+      "--protected-mode", "no"%{if redis_password != "" },
+      "--requirepass", "${redis_password}",
+      %{endif}
     ]
     ports:
       - "${redis_port+1}:${redis_port}"
@@ -29,7 +31,9 @@ services:
       "--bind", "0.0.0.0",
       "--replica-announce-ip", "$${HOST_IP}",
       "--replica-announce-port", "${redis_port+2}",
-      "--protected-mode", "no"
+      "--protected-mode", "no"%{if redis_password != "" },
+      "--requirepass", "${redis_password}"
+      %{endif}
     ]
     depends_on:
       redis:
@@ -50,7 +54,9 @@ services:
       "--bind", "0.0.0.0",
       "--replica-announce-ip", "$${HOST_IP}",
       "--replica-announce-port", "${redis_port+3}",
-      "--protected-mode", "no"
+      "--protected-mode", "no"%{if redis_password != "" },
+      "--requirepass", "${redis_password}"
+      %{endif}
     ]
     depends_on:
       redis:
