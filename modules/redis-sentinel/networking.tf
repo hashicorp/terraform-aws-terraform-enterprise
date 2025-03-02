@@ -29,8 +29,8 @@ resource "aws_lb" "redis_sentinel_lb" {
   load_balancer_type = "network"
   subnets            = var.network_subnets_private
   security_groups = [
-    aws_security_group.redis_sentinel_inbound_allow,
-    aws_security_group.redis_sentinel_outbound_allow,
+    aws_security_group.redis_sentinel_inbound_allow.id,
+    aws_security_group.redis_sentinel_outbound_allow.id,
   ]
 }
 
