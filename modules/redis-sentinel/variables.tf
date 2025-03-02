@@ -125,7 +125,7 @@ variable "redis_password" {
 variable "redis_use_password_auth" {
   description = "A boolean which indicates if password authentication is required by the Redis"
   type        = bool
-  default     = true
+  default     = false
 }
 
 # variable "use_tls" {
