@@ -1,6 +1,11 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
+output "sentinel_enabled" {
+  value = true
+  description = "sentinel is enabled"
+}
+
 output "sentinel_hosts" {
   value       = ["${aws_route53_record.sentinel.fqdn}:${var.redis_sentinel_port}"]
   description = "The host/port combinations for available Redis sentinel endpoints."
