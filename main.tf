@@ -169,7 +169,7 @@ module "aurora_database" {
 # Docker Compose File Config for TFE on instance(s) using Flexible Deployment Options
 # ------------------------------------------------------------------------------------
 module "runtime_container_engine_config" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=TF-20058/standardizing-redis-sentinel-config"
   count  = var.is_replicated_deployment ? 0 : 1
 
   tfe_license = var.hc_license
@@ -222,6 +222,11 @@ module "runtime_container_engine_config" {
   redis_password = local.redis.password
   redis_use_tls  = local.redis.use_tls
   redis_use_auth = local.redis.use_password_auth
+  redis_use_sentinel = var.enable_redis_sentinel
+  redis_sentinel_hosts = local.redis.sentinel_hosts
+  redis_sentinel_leader_name = local.redis.sentinel_leader
+  redis_sentinel_user = local.redis.redis_sentinel_username
+  redis_sentinel_password = local.redis.redus_sentinel_password
 
   trusted_proxies = local.trusted_proxies
 

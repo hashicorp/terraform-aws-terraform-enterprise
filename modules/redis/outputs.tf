@@ -35,3 +35,23 @@ output "use_tls" {
   value       = var.active_active ? aws_elasticache_replication_group.redis[0].transit_encryption_enabled : false
   description = "A boolean which indicates if transit encryption is required by the Redis Elasticache replication group."
 }
+
+output "sentinel_hosts" {
+  value       = []
+  description = "The host/port combinations for available Redis sentinel endpoints."
+}
+
+output "sentinel_leader" {
+  value       = null
+  description = "The name of the Redis Sentinel leader"
+}
+
+output "sentinel_password" {
+  value       = null
+  description = "the password to authenticate to Redis sentinel"
+}
+
+output "sentinel_username" {
+  value       = null
+  description = "the username to authenticate to Redis sentinel"
+}
