@@ -119,7 +119,7 @@ variable "redis_sentinel_leader_name" {
 variable "redis_password" {
   description = "The password for the redis sentinel"
   type        = string
-  default     = "hashicorp"
+  default     = null
 }
 
 variable "redis_use_password_auth" {
