@@ -55,3 +55,8 @@ output "sentinel_username" {
   value       = null
   description = "the username to authenticate to Redis sentinel"
 }
+
+output "sentinel_enabled" {
+  value = false
+  description = "sentinel is not enabled"
+}
