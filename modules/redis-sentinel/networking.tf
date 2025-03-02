@@ -24,10 +24,11 @@ resource "aws_route53_record" "sentinel" {
 # ------------------------------------------------
 
 resource "aws_lb" "redis_sentinel_lb" {
-  name               = "${var.friendly_name_prefix}-redis-sentinel-nlb"
-  internal           = true
-  load_balancer_type = "network"
-  subnets            = var.network_subnets_private
+  name                             = "${var.friendly_name_prefix}-redis-sentinel-nlb"
+  internal                         = true
+  load_balancer_type               = "network"
+  subnets                          = var.network_subnets_private
+  enable_cross_zone_load_balancing = true
   security_groups = [
     aws_security_group.redis_sentinel_inbound_allow.id,
     aws_security_group.redis_sentinel_outbound_allow.id,
