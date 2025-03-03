@@ -101,13 +101,13 @@ variable "redis_port" {
 variable "redis_sentinel_password" {
   description = "The password for the redis sentinel"
   type        = string
-  default     = "hashicorp"
+  default     = "sentinelhashicorp"
 }
 
 variable "redis_sentinel_username" {
   description = "The username for the redis sentinel"
   type        = string
-  default     = "hashicorp"
+  default     = "sentinelhashicorpuser"
 }
 
 variable "redis_sentinel_leader_name" {
@@ -119,7 +119,7 @@ variable "redis_sentinel_leader_name" {
 variable "redis_password" {
   description = "The password for the redis sentinel"
   type        = string
-  default     = "hashicorp"
+  default     = "redishosthhashi"
 }
 
 variable "redis_use_password_auth" {
