@@ -131,7 +131,7 @@ variable "redis_encryption_in_transit" {
 variable "redis_encryption_at_rest" {
   type        = bool
   description = "Determine whether Redis data is encrypted at rest."
-  default     = false
+  default     = true
 }
 
 variable "redis_engine_version" {
