@@ -13,6 +13,7 @@ services:
       "--replica-announce-port", "${redis_port+1}",
       "--protected-mode", "no"%{if redis_password != null && redis_password != "" },
       "--requirepass", "${redis_password}",
+      "--masterauth", "${redis_password}"
       %{endif}
     ]
     ports:
@@ -27,12 +28,13 @@ services:
     image: redis:7
     command: [
       "redis-server",
-      "--replicaof", "redis", "${redis_port}",
+      "--replicaof", "redis", "${redis_port}", "-a", "'${redis_password}'",
       "--bind", "0.0.0.0",
       "--replica-announce-ip", "$${HOST_IP}",
       "--replica-announce-port", "${redis_port+2}",
       "--protected-mode", "no"%{if redis_password != null && redis_password != "" },
-      "--requirepass", "${redis_password}"
+      "--requirepass", "${redis_password}",
+      "--masterauth", "${redis_password}"
       %{endif}
     ]
     depends_on:
@@ -41,7 +43,7 @@ services:
     ports:
       - "${redis_port+2}:${redis_port}"
     healthcheck:
-      test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "${redis_port}", "ping" ]
+      test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "${redis_port}", "-a", "'${redis_password}'", "ping" ]
       interval: 1s
       timeout: 5s
       retries: 5
@@ -50,12 +52,13 @@ services:
     image: redis:7
     command: [
       "redis-server",
-      "--replicaof", "redis", "${redis_port}",
+      "--replicaof", "redis", "${redis_port}", "-a", "'${redis_password}'",
       "--bind", "0.0.0.0",
       "--replica-announce-ip", "$${HOST_IP}",
       "--replica-announce-port", "${redis_port+3}",
       "--protected-mode", "no"%{if redis_password != null && redis_password != "" },
-      "--requirepass", "${redis_password}"
+      "--requirepass", "${redis_password}",
+      "--masterauth", "${redis_password}"
       %{endif}
     ]
     depends_on:
@@ -64,7 +67,7 @@ services:
     ports:
       - "${redis_port+3}:${redis_port}"
     healthcheck:
-      test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "${redis_port}", "ping" ]
+      test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "${redis_port}", "-a", "'${redis_password}'", "ping" ]
       interval: 1s
       timeout: 5s
       retries: 5
