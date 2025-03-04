@@ -2,13 +2,19 @@
 
 set -e
 
+# Fail if required environment variables are not set
+if [ -z "$${HOST_IP}" ]; then
+  echo "ERROR: HOST_IP environment variable is required"
+  exit 1
+fi
+
 # Create the /etc/redis directory if it doesn't exist
 mkdir -p /etc/redis
 
 # Generate the sentinel.conf file
 cat <<EOF > /etc/redis/sentinel.conf
 port ${redis_sentinel_port}
-sentinel monitor ${redis_sentinel_leader_name} ${cluster_hostname} ${redis_port+1} 1
+sentinel monitor ${redis_sentinel_leader_name} $${HOST_IP} ${redis_port+1} 1
 %{if redis_password != null && redis_password != "" }sentinel auth-pass ${redis_sentinel_leader_name} ${redis_password}%{endif}
 sentinel resolve-hostnames yes
 sentinel down-after-milliseconds ${redis_sentinel_leader_name} 5000
