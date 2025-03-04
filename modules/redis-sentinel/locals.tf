@@ -9,6 +9,7 @@ locals {
       redis_password      = var.redis_password
       redis_sentinel_port = var.redis_sentinel_port
       redis_port          = var.redis_port
+      cluster_hostname    = aws_route53_record.sentinel.fqdn
     }))
     sentinel_start_script = base64encode(templatefile(local.sentinel_start_script_path, {
       redis_sentinel_password    = var.redis_sentinel_password
@@ -16,6 +17,7 @@ locals {
       redis_sentinel_leader_name = var.redis_sentinel_leader_name
       redis_sentinel_port        = var.redis_sentinel_port
       redis_port                 = var.redis_port
+      cluster_hostname           = aws_route53_record.sentinel.fqdn
     }))
   })
   sentinel_start_script_path = "${path.module}/files/sentinel_start.sh"
