@@ -9,7 +9,7 @@ services:
       "redis-server",
       "--appendonly", "yes",
       "--bind", "0.0.0.0",
-      "--replica-announce-ip", "$${HOST_IP}",
+      "--replica-announce-ip", "${cluster_hostname}",
       "--replica-announce-port", "${redis_port+1}",
       "--protected-mode", "no"%{if redis_password != null && redis_password != "" },
       "--requirepass", "${redis_password}",
@@ -30,7 +30,7 @@ services:
       "redis-server",
       "--replicaof", "redis", "${redis_port}",
       "--bind", "0.0.0.0",
-      "--replica-announce-ip", "$${HOST_IP}",
+      "--replica-announce-ip", "${cluster_hostname}",
       "--replica-announce-port", "${redis_port+2}",
       "--protected-mode", "no"%{if redis_password != null && redis_password != "" },
       "--requirepass", "${redis_password}",
@@ -54,7 +54,7 @@ services:
       "redis-server",
       "--replicaof", "redis", "${redis_port}",
       "--bind", "0.0.0.0",
-      "--replica-announce-ip", "$${HOST_IP}",
+      "--replica-announce-ip", "${cluster_hostname}",
       "--replica-announce-port", "${redis_port+3}",
       "--protected-mode", "no"%{if redis_password != null && redis_password != "" },
       "--requirepass", "${redis_password}",
@@ -87,7 +87,7 @@ services:
       - $${SENTINEL_ENTRYPOINT}:/usr/local/bin/entrypoint.sh
     entrypoint: [ "/usr/local/bin/entrypoint.sh" ]
     environment:
-      - HOST_IP=$${HOST_IP}
+      - HOST_IP=${cluster_hostname}
     healthcheck:
       test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "${redis_sentinel_port}", "ping" ]
       interval: 5s
@@ -109,7 +109,7 @@ services:
       - $${SENTINEL_ENTRYPOINT}:/usr/local/bin/entrypoint.sh
     entrypoint: [ "/usr/local/bin/entrypoint.sh" ]
     environment:
-      - HOST_IP=$${HOST_IP}
+      - HOST_IP=${cluster_hostname}
     healthcheck:
       test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "${redis_sentinel_port}", "ping" ]
       interval: 5s

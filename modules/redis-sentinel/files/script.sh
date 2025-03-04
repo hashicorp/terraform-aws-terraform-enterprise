@@ -16,10 +16,7 @@ apt-get --assume-yes autoremove
 
 tfe_dir="/etc/redis"
 mkdir -p $tfe_dir
-get_linux_ip() {
-  ip addr show | awk '/inet / && !/127.0.0.1/ {print $2}' | cut -d/ -f1 | head -n 1
-}
-export HOST_IP=$(get_linux_ip)
+
 export SENTINEL_ENTRYPOINT=$tfe_dir/senitnel.sh
 
 echo ${compose} | base64 -d > $tfe_dir/compose.yaml
