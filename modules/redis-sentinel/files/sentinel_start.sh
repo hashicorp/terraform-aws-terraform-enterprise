@@ -9,6 +9,7 @@ mkdir -p /etc/redis
 cat <<EOF > /etc/redis/sentinel.conf
 port ${redis_sentinel_port}
 sentinel monitor ${redis_sentinel_leader_name} ${cluster_hostname} ${redis_port+1} 1
+%{if redis_password != null && redis_password != "" }sentinel auth-pass ${redis_sentinel_leader_name} ${redis_password}%{endif}
 sentinel resolve-hostnames yes
 sentinel down-after-milliseconds ${redis_sentinel_leader_name} 5000
 sentinel failover-timeout ${redis_sentinel_leader_name} 10000
