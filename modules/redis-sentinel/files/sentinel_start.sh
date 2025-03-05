@@ -18,7 +18,7 @@ sentinel monitor ${redis_sentinel_leader_name} $${HOST_IP} ${redis_port+1} 1
 %{if (redis_password != null && redis_password != "") && (redis_username == null || redis_username == "")}
 sentinel auth-pass ${redis_sentinel_leader_name} ${redis_password}
 %{endif}
-%{if (redis_password != null && redis_password != "") && (redis_username != null || redis_username != "")}
+%{if (redis_password != null && redis_password != "") && (redis_username != null && redis_username != "")}
 sentinel auth-pass ${redis_sentinel_leader_name} ${redis_password}
 sentinel auth-user ${redis_sentinel_leader_name} ${redis_username}
 %{endif}
