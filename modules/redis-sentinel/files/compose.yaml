@@ -5,9 +5,10 @@
 services:
   redis:
     image: redis:7
+    entrypoint: ["/opt/redis/init.sh"]
     command: [
       "redis-server",
-      "/opt/redis/redis.conf",
+      "/etc/redis/redis.conf",
       "--appendonly", "yes",
       "--replica-announce-ip", "$${HOST_IP}",
       "--replica-announce-port", "${redis_port+1}"
@@ -16,6 +17,7 @@ services:
       - "${redis_port+1}:${redis_port}"
     volumes:
       - $${REDIS_CONF}:/opt/redis/redis.conf
+      - $${REDIS_INIT}:/opt/redis/init.sh
     healthcheck:
       test: [ "CMD", "redis-cli", "-h", "localhost", "ping" ]
       interval: 1s
@@ -24,9 +26,10 @@ services:
 
   redis-follower-1:
     image: redis:7
+    entrypoint: ["/opt/redis/init.sh"]
     command: [
       "redis-server",
-      "/opt/redis/redis.conf",
+      "/etc/redis/redis.conf",
       "--replicaof", "redis", "${redis_port}",
       "--replica-announce-ip", "$${HOST_IP}",
       "--replica-announce-port", "${redis_port+2}"
@@ -38,6 +41,7 @@ services:
       - "${redis_port+2}:${redis_port}"
     volumes:
       - $${REDIS_CONF}:/opt/redis/redis.conf
+      - $${REDIS_INIT}:/opt/redis/init.sh
     healthcheck:
       test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "${redis_port}", "-a", "'${redis_password}'", "ping" ]
       interval: 1s
@@ -46,9 +50,10 @@ services:
 
   redis-follower-2:
     image: redis:7
+    entrypoint: ["/opt/redis/init.sh"]
     command: [
       "redis-server",
-      "/opt/redis/redis.conf",
+      "/etc/redis/redis.conf",
       "--replicaof", "redis", "${redis_port}",
       "--replica-announce-ip", "$${HOST_IP}",
       "--replica-announce-port", "${redis_port+3}"
@@ -60,6 +65,7 @@ services:
       - "${redis_port+3}:${redis_port}"
     volumes:
       - $${REDIS_CONF}:/opt/redis/redis.conf
+      - $${REDIS_INIT}:/opt/redis/init.sh
     healthcheck:
       test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "${redis_port}", "-a", "'${redis_password}'", "ping" ]
       interval: 1s
