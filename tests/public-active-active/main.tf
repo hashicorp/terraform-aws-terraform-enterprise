@@ -52,7 +52,7 @@ module "public_active_active" {
   kms_key_arn                 = module.kms.key
   load_balancing_scheme       = local.load_balancing_scheme
   node_count                  = 2
-  redis_encryption_at_rest    = false
+  redis_encryption_at_rest    = true
   redis_encryption_in_transit = false
   redis_use_password_auth     = false
   tfe_subdomain               = local.test_name

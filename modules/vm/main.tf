@@ -115,6 +115,7 @@ resource "aws_launch_template" "tfe" {
     content {
       device_name = var.ebs_device_name
       ebs {
+        encrypted             = true
         volume_size           = var.ebs_volume_size
         volume_type           = var.ebs_volume_type
         iops                  = var.ebs_iops
