@@ -7,7 +7,7 @@ services:
     image: redis:7
     command: [
       "redis-server",
-      "/etc/redis/redis.conf",
+      "/opt/redis/redis.conf",
       "--appendonly", "yes",
       "--replica-announce-ip", "$${HOST_IP}",
       "--replica-announce-port", "${redis_port+1}"
@@ -15,7 +15,7 @@ services:
     ports:
       - "${redis_port+1}:${redis_port}"
     volumes:
-      - $${REDIS_CONF}:/etc/redis/redis.conf
+      - $${REDIS_CONF}:/opt/redis/redis.conf
     healthcheck:
       test: [ "CMD", "redis-cli", "-h", "localhost", "ping" ]
       interval: 1s
@@ -26,7 +26,7 @@ services:
     image: redis:7
     command: [
       "redis-server",
-      "/etc/redis/redis.conf",
+      "/opt/redis/redis.conf",
       "--replicaof", "redis", "${redis_port}",
       "--replica-announce-ip", "$${HOST_IP}",
       "--replica-announce-port", "${redis_port+2}"
@@ -37,7 +37,7 @@ services:
     ports:
       - "${redis_port+2}:${redis_port}"
     volumes:
-      - $${REDIS_CONF}:/etc/redis/redis.conf
+      - $${REDIS_CONF}:/opt/redis/redis.conf
     healthcheck:
       test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "${redis_port}", "-a", "'${redis_password}'", "ping" ]
       interval: 1s
@@ -48,7 +48,7 @@ services:
     image: redis:7
     command: [
       "redis-server",
-      "/etc/redis/redis.conf",
+      "/opt/redis/redis.conf",
       "--replicaof", "redis", "${redis_port}",
       "--replica-announce-ip", "$${HOST_IP}",
       "--replica-announce-port", "${redis_port+3}"
@@ -59,7 +59,7 @@ services:
     ports:
       - "${redis_port+3}:${redis_port}"
     volumes:
-      - $${REDIS_CONF}:/etc/redis/redis.conf
+      - $${REDIS_CONF}:/opt/redis/redis.conf
     healthcheck:
       test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "${redis_port}", "-a", "'${redis_password}'", "ping" ]
       interval: 1s
