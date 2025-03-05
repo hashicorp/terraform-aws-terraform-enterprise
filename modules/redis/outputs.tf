@@ -26,6 +26,11 @@ output "password" {
   description = "The password which is required to create connections with the Redis Elasticache replication group."
 }
 
+output "username" {
+  value       = null
+  description = "The username which is required to create connections with the Redis Elasticache replication group. Defaults to null to maintain the output interface with the redis-sentinel module."
+}
+
 output "use_password_auth" {
   value       = var.active_active && var.redis_use_password_auth ? true : false
   description = "A boolean which indicates if password authentication is required by the Redis Elasticache replication group."
@@ -57,6 +62,6 @@ output "sentinel_username" {
 }
 
 output "sentinel_enabled" {
-  value = false
+  value       = false
   description = "sentinel is not enabled"
 }
