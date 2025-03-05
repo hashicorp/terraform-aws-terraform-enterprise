@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MPL-2.0
 
 output "sentinel_enabled" {
-  value = true
+  value       = true
   description = "sentinel is enabled"
 }
 
@@ -39,6 +39,11 @@ output "redis_port" {
 output "password" {
   value       = var.redis_password
   description = "The password which is required to authenticate to Redis server."
+}
+
+output "username" {
+  value       = var.redis_username
+  description = "The username which is required to authenticate to Redis server."
 }
 
 output "use_password_auth" {

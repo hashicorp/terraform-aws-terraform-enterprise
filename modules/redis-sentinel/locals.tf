@@ -4,7 +4,10 @@
 locals {
   redis_user_data_template = "${path.module}/files/script.sh"
   redis_leader_user_data = templatefile(local.redis_user_data_template, {
-
+    redis_conf = base64encode(templatefile(local.redis_conf_path, {
+      redis_username = var.redis_username
+      redis_password = var.redis_password
+    }))
     compose = base64encode(templatefile(local.compose_path, {
       redis_password      = var.redis_password
       redis_sentinel_port = var.redis_sentinel_port
@@ -21,6 +24,7 @@ locals {
   })
   sentinel_start_script_path = "${path.module}/files/sentinel_start.sh"
   compose_path               = "${path.module}/files/compose.yaml"
+  redis_conf_path            = "${path.module}/files/redis.conf"
   tags = concat(
     [
       {

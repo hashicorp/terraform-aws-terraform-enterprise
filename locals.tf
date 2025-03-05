@@ -53,6 +53,7 @@ locals {
     {
       hostname          = null
       password          = null
+      username          = null
       redis_port        = null
       use_password_auth = null
       use_tls           = null
@@ -67,6 +68,7 @@ locals {
     {
       hostname          = null
       password          = null
+      username          = null
       redis_port        = null
       use_password_auth = null
       use_tls           = null

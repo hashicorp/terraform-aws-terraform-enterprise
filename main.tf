@@ -218,7 +218,7 @@ module "runtime_container_engine_config" {
   s3_use_instance_profile              = var.aws_access_key_id == null ? "1" : "0"
 
   redis_host                 = local.redis.hostname
-  redis_user                 = ""
+  redis_user                 = local.redis.username
   redis_password             = local.redis.password
   redis_use_tls              = local.redis.use_tls
   redis_use_auth             = local.redis.use_password_auth
