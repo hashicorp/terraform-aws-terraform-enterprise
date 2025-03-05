@@ -22,9 +22,11 @@ get_linux_ip() {
 export HOST_IP=$(get_linux_ip)
 export SENTINEL_ENTRYPOINT=$tfe_dir/senitnel.sh
 export REDIS_CONF=$tfe_dir/redis.conf
+export REDIS_INIT=$tfe_dir/redis-init.sh
 echo ${compose} | base64 -d > $tfe_dir/compose.yaml
 echo ${sentinel_start_script} | base64 -d > $SENTINEL_ENTRYPOINT
 echo ${redis_conf} | base64 -d > $REDIS_CONF
+echo ${redis_init} | base64 -d > $REDIS_INIT
 chmod a+r $REDIS_CONF
 chmod a+x $SENTINEL_ENTRYPOINT
 docker compose -f $tfe_dir/compose.yaml up -d
