@@ -20,6 +20,7 @@ locals {
       redis_sentinel_port        = var.redis_sentinel_port
       redis_port                 = var.redis_port
       redis_password             = var.redis_password
+      redis_username             = var.redis_username
     }))
   })
   sentinel_start_script_path = "${path.module}/files/sentinel_start.sh"
