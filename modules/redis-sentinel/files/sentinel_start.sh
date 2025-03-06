@@ -26,7 +26,7 @@ sentinel resolve-hostnames yes
 sentinel down-after-milliseconds ${redis_sentinel_leader_name} 5000
 sentinel failover-timeout ${redis_sentinel_leader_name} 10000
 sentinel parallel-syncs ${redis_sentinel_leader_name} 1
-user ${redis_sentinel_username} allcommands allkeys on >${redis_sentinel_password}
+user ${redis_sentinel_username} on >${redis_sentinel_password} ~* &* +@all
 requirepass adminPassword
 daemonize no
 logfile ""
