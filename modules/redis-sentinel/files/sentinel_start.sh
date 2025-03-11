@@ -15,6 +15,17 @@ mkdir -p /etc/redis
 cat <<EOF > /etc/redis/sentinel.conf
 port ${redis_sentinel_port}
 sentinel monitor ${redis_sentinel_leader_name} $${HOST_IP} ${redis_port+1} 1
+
+# Sentinel auth
+%{if (redis_sentinel_password != null && redis_sentinel_password != "") && (redis_sentinel_username == null || redis_sentinel_username == "")}
+requirepass ${redis_sentinel_password}
+%{endif}
+%{if (redis_sentinel_password != null && redis_sentinel_password != "") && (redis_sentinel_username != null && redis_sentinel_username != "")}
+user ${redis_sentinel_username} on >${redis_sentinel_password} ~* &* +@all
+user default off
+%{endif}
+
+# Redis auth
 %{if (redis_password != null && redis_password != "") && (redis_username == null || redis_username == "")}
 sentinel auth-pass ${redis_sentinel_leader_name} ${redis_password}
 %{endif}
@@ -22,12 +33,11 @@ sentinel auth-pass ${redis_sentinel_leader_name} ${redis_password}
 sentinel auth-pass ${redis_sentinel_leader_name} ${redis_password}
 sentinel auth-user ${redis_sentinel_leader_name} ${redis_username}
 %{endif}
+
 sentinel resolve-hostnames yes
 sentinel down-after-milliseconds ${redis_sentinel_leader_name} 5000
 sentinel failover-timeout ${redis_sentinel_leader_name} 10000
 sentinel parallel-syncs ${redis_sentinel_leader_name} 1
-user ${redis_sentinel_username} on >${redis_sentinel_password} ~* &* +@all
-requirepass adminPassword
 daemonize no
 logfile ""
 logfile /dev/stdout
