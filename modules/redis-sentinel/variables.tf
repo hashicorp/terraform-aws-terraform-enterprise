@@ -107,7 +107,7 @@ variable "redis_sentinel_password" {
 variable "redis_sentinel_username" {
   description = "The username for the redis sentinel"
   type        = string
-  default     = null
+  default     = "sentineluser"
 }
 
 variable "redis_sentinel_leader_name" {
@@ -125,7 +125,7 @@ variable "redis_password" {
 variable "redis_username" {
   description = "The username for the admin user in redis server instances."
   type        = string
-  default     = null
+  default     = "redisuser"
 }
 
 variable "redis_use_password_auth" {
