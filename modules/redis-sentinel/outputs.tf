@@ -17,12 +17,12 @@ output "sentinel_leader" {
 }
 
 output "sentinel_password" {
-  value       = var.redis_sentinel_password
+  value       = local.sentinel_password
   description = "the password to authenticate to Redis sentinel"
 }
 
 output "sentinel_username" {
-  value       = var.redis_sentinel_username
+  value       = local.sentinel_username
   description = "the username to authenticate to Redis sentinel"
 }
 
@@ -37,12 +37,12 @@ output "redis_port" {
 }
 
 output "password" {
-  value       = var.redis_password
+  value       = local.redis_password
   description = "The password which is required to authenticate to Redis server."
 }
 
 output "username" {
-  value       = var.redis_username
+  value       = local.redis_username
   description = "The username which is required to authenticate to Redis server."
 }
 

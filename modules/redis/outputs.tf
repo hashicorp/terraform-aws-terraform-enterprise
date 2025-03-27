@@ -32,7 +32,7 @@ output "username" {
 }
 
 output "use_password_auth" {
-  value       = var.active_active && var.redis_use_password_auth ? true : false
+  value       = var.active_active && local.redis_use_password_auth ? true : false
   description = "A boolean which indicates if password authentication is required by the Redis Elasticache replication group."
 }
 

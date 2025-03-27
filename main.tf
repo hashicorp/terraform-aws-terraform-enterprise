@@ -99,8 +99,9 @@ module "redis_sentinel" {
   count  = var.enable_redis_sentinel ? 1 : 0
   source = "./modules/redis-sentinel"
 
-  domain_name = var.domain_name
-
+  domain_name                            = var.domain_name
+  redis_authentication_mode              = var.redis_authentication_mode
+  sentinel_authentication_mode           = var.redis_authentication_mode
   aws_iam_instance_profile               = module.service_accounts.iam_instance_profile.name
   asg_tags                               = var.asg_tags
   ec2_launch_template_tag_specifications = var.ec2_launch_template_tag_specifications
