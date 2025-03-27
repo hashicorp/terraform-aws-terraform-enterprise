@@ -2,26 +2,30 @@
 # SPDX-License-Identifier: MPL-2.0
 
 locals {
+  redis_username           = try(random_pet.redis_username[0].id, null)
+  redis_password           = try(random_password.redis_password[0].result, null)
+  sentinel_username        = try(random_pet.sentinel_username[0].id, null)
+  sentinel_password        = try(random_password.sentinel_password[0].result, null)
   redis_user_data_template = "${path.module}/files/script.sh"
   redis_leader_user_data = templatefile(local.redis_user_data_template, {
     redis_init = base64encode(file(local.redis_init_path))
     redis_conf = base64encode(templatefile(local.redis_conf_path, {
-      redis_username = var.redis_username
-      redis_password = var.redis_password
+      redis_username = local.redis_username
+      redis_password = local.redis_password
     }))
     compose = base64encode(templatefile(local.compose_path, {
-      redis_password      = var.redis_password
+      redis_password      = local.redis_password
       redis_sentinel_port = var.redis_sentinel_port
       redis_port          = var.redis_port
     }))
     sentinel_start_script = base64encode(templatefile(local.sentinel_start_script_path, {
-      redis_sentinel_password    = var.redis_sentinel_password
-      redis_sentinel_username    = var.redis_sentinel_username
+      redis_sentinel_password    = local.sentinel_password
+      redis_sentinel_username    = local.sentinel_username
       redis_sentinel_leader_name = var.redis_sentinel_leader_name
       redis_sentinel_port        = var.redis_sentinel_port
       redis_port                 = var.redis_port
-      redis_password             = var.redis_password
-      redis_username             = var.redis_username
+      redis_password             = local.redis_password
+      redis_username             = local.redis_username
     }))
   })
   sentinel_start_script_path = "${path.module}/files/sentinel_start.sh"

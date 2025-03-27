@@ -5,6 +5,29 @@
 # Launch Template for Redis Sentinel
 # ----------------------------------
 
+resource "random_password" "redis_password" {
+  count            = contains(["USER_AND_PASSWORD", "PASSWORD"], var.redis_authentication_mode) ? 1 : 0
+  length           = 16
+  special          = true
+  override_special = "#$%&*()-_=+[]{}<>:?"
+}
+
+resource "random_pet" "redis_username" {
+  count = var.redis_authentication_mode == "USER_AND_PASSWORD" ? 1 : 0
+}
+
+resource "random_password" "sentinel_password" {
+  count            = contains(["USER_AND_PASSWORD", "PASSWORD"], var.sentinel_authentication_mode) ? 1 : 0
+  length           = 16
+  special          = true
+  override_special = "#$%&*()-_=+[]{}<>:?"
+}
+
+resource "random_pet" "sentinel_username" {
+  count = var.sentinel_authentication_mode == "USER_AND_PASSWORD" ? 1 : 0
+}
+
+
 resource "aws_launch_template" "redis_sentinel_leader" {
   name_prefix            = "${var.friendly_name_prefix}-redis-sentinel-leader"
   image_id               = data.aws_ami.ubuntu.id
