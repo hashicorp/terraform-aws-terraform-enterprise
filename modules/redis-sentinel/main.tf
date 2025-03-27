@@ -5,6 +5,29 @@
 # Launch Template for Redis Sentinel
 # ----------------------------------
 
+resource "random_password" "redis_password" {
+  count            = contains(["USER_AND_PASSWORD", "PASSWORD"], var.redis_authentication_mode) ? 1 : 0
+  length           = 16
+  special          = true
+  override_special = "#$%&*()-_=+[]{}<>:?"
+}
+
+resource "random_pet" "redis_username" {
+  count = var.redis_authentication_mode == "USER_AND_PASSWORD" ? 1 : 0
+}
+
+resource "random_password" "sentinel_password" {
+  count            = contains(["USER_AND_PASSWORD", "PASSWORD"], var.sentinel_authentication_mode) ? 1 : 0
+  length           = 16
+  special          = true
+  override_special = "#$%&*()-_=+[]{}<>:?"
+}
+
+resource "random_pet" "sentinel_username" {
+  count = var.sentinel_authentication_mode == "USER_AND_PASSWORD" ? 1 : 0
+}
+
+
 resource "aws_launch_template" "redis_sentinel_leader" {
   name_prefix            = "${var.friendly_name_prefix}-redis-sentinel-leader"
   image_id               = data.aws_ami.ubuntu.id
@@ -56,9 +79,10 @@ resource "aws_autoscaling_group" "redis_sentinel" {
   max_size            = 1
   desired_capacity    = 1
   vpc_zone_identifier = var.network_subnets_private
-  target_group_arns = [aws_lb_target_group.redis_sentinel_tg_6379.arn,
-    aws_lb_target_group.redis_sentinel_tg_26379.arn
-  ]
+  target_group_arns = concat(
+    [for tg in aws_lb_target_group.redis_sentinel_tg : tg.arn],
+    [for tg in aws_lb_target_group.redis_sentinel_tg_redis : tg.arn]
+  )
 
   # Increases grace period for any AMI that is not the default Ubuntu
   # since RHEL has longer startup time

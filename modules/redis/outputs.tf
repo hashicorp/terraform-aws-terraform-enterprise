@@ -26,12 +26,42 @@ output "password" {
   description = "The password which is required to create connections with the Redis Elasticache replication group."
 }
 
+output "username" {
+  value       = null
+  description = "The username which is required to create connections with the Redis Elasticache replication group. Defaults to null to maintain the output interface with the redis-sentinel module."
+}
+
 output "use_password_auth" {
-  value       = var.active_active && var.redis_use_password_auth ? true : false
+  value       = var.active_active && local.redis_use_password_auth ? true : false
   description = "A boolean which indicates if password authentication is required by the Redis Elasticache replication group."
 }
 
 output "use_tls" {
   value       = var.active_active ? aws_elasticache_replication_group.redis[0].transit_encryption_enabled : false
   description = "A boolean which indicates if transit encryption is required by the Redis Elasticache replication group."
+}
+
+output "sentinel_hosts" {
+  value       = []
+  description = "The host/port combinations for available Redis sentinel endpoints."
+}
+
+output "sentinel_leader" {
+  value       = null
+  description = "The name of the Redis Sentinel leader"
+}
+
+output "sentinel_password" {
+  value       = null
+  description = "the password to authenticate to Redis sentinel"
+}
+
+output "sentinel_username" {
+  value       = null
+  description = "the username to authenticate to Redis sentinel"
+}
+
+output "sentinel_enabled" {
+  value       = false
+  description = "sentinel is not enabled"
 }

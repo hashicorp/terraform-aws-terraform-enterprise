@@ -41,6 +41,17 @@ variable "redis_port" {
   description = "Set port for Redis. Defaults to 6379 default port"
 }
 
+variable "redis_authentication_mode" {
+  description = "The authentincation mode for redis server instances.  Must be one of [USER_AND_PASSWORD, PASSWORD, NONE]."
+  type        = string
+  default     = "PASSWORD"
+  validation {
+    condition     = contains(["USER_AND_PASSWORD", "PASSWORD", "NONE"], var.redis_authentication_mode)
+    error_message = "Must be one of [USER_AND_PASSWORD, PASSWORD, NONE]."
+  }
+}
+
+
 variable "cache_size" {
   type        = string
   description = "Redis instance size."

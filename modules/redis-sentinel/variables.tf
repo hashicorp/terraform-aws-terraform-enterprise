@@ -93,15 +93,9 @@ variable "redis_sentinel_port" {
 }
 
 variable "redis_port" {
-  description = "The redis sentinel follower port"
+  description = "The base port for redis isntances"
   type        = number
   default     = 6379
-}
-
-variable "redis_sentinel_password" {
-  description = "The password for the redis sentinel"
-  type        = string
-  default     = "hashicorp"
 }
 
 variable "redis_sentinel_leader_name" {
@@ -110,20 +104,27 @@ variable "redis_sentinel_leader_name" {
   default     = "main"
 }
 
-variable "redis_password" {
-  description = "The password for the redis sentinel"
+variable "redis_authentication_mode" {
+  description = "The authentincation mode for redis server instances.  Must be one of [USER_AND_PASSWORD, PASSWORD, NONE]."
   type        = string
-  default     = "hashicorp"
+  default     = "PASSWORD"
+  validation {
+    condition     = contains(["USER_AND_PASSWORD", "PASSWORD", "NONE"], var.redis_authentication_mode)
+    error_message = "Must be one of [USER_AND_PASSWORD, PASSWORD, NONE]."
+  }
 }
 
+variable "sentinel_authentication_mode" {
+  description = "The authentincation mode for redis sentinel instances.  Must be one of [USER_AND_PASSWORD, PASSWORD, NONE]."
+  type        = string
+  default     = "NONE"
+  validation {
+    condition     = contains(["USER_AND_PASSWORD", "PASSWORD", "NONE"], var.sentinel_authentication_mode)
+    error_message = "Must be one of [USER_AND_PASSWORD, PASSWORD, NONE]."
+  }
+}
 variable "redis_use_password_auth" {
   description = "A boolean which indicates if password authentication is required by the Redis"
   type        = bool
   default     = true
-}
-
-variable "use_tls" {
-  description = "A boolean which indicates if TLS is required by the Redis"
-  type        = bool
-  default     = false
 }

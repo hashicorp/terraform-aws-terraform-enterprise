@@ -1,8 +1,12 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
+locals {
+  redis_use_password_auth = var.redis_use_password_auth || var.redis_authentication_mode == "PASSWORD" 
+}
+
 resource "random_id" "redis_password" {
-  count       = var.active_active && var.redis_use_password_auth ? 1 : 0
+  count       = var.active_active && local.redis_use_password_auth ? 1 : 0
   byte_length = 16
 }
 
@@ -79,7 +83,7 @@ resource "aws_elasticache_replication_group" "redis" {
 
   # Password used to access a password protected server.
   # Can be specified only if transit_encryption_enabled = true.
-  auth_token                 = var.redis_encryption_in_transit && var.redis_use_password_auth ? random_id.redis_password[0].hex : null
+  auth_token                 = var.redis_encryption_in_transit && local.redis_use_password_auth ? random_id.redis_password[0].hex : null
   transit_encryption_enabled = var.redis_encryption_in_transit
 
   at_rest_encryption_enabled = var.redis_encryption_at_rest

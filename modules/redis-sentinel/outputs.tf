@@ -1,42 +1,57 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
-output "hostname" {
-  value       = aws_route53_record.sentinel.fqdn
-  description = "The hostname of the Redis Sentinel"
+output "sentinel_enabled" {
+  value       = true
+  description = "sentinel is enabled"
 }
 
-output "redis_port" {
-  value       = var.redis_port
-  description = "The port of the Redis"
+output "sentinel_hosts" {
+  value       = ["${aws_route53_record.sentinel.fqdn}:${var.redis_sentinel_port}"]
+  description = "The host/port combinations for available Redis sentinel endpoints."
 }
 
-output "redis_sentinel_port" {
-  value       = var.redis_sentinel_port
-  description = "The port of the Redis Sentinel"
-}
-
-output "redis_sentinel_leader_name" {
+output "sentinel_leader" {
   value       = var.redis_sentinel_leader_name
   description = "The name of the Redis Sentinel leader"
 }
 
-output "redis_sentinel_password" {
-  value       = var.redis_sentinel_password
-  description = "value of the Redis Sentinel password"
+output "sentinel_password" {
+  value       = local.sentinel_password
+  description = "the password to authenticate to Redis sentinel"
+}
+
+output "sentinel_username" {
+  value       = local.sentinel_username
+  description = "the username to authenticate to Redis sentinel"
+}
+
+output "hostname" {
+  value       = null
+  description = "The IP address of the primary node in the Redis Elasticache replication group."
+}
+
+output "redis_port" {
+  value       = null
+  description = "The port number on which the Redis Elasticache replication group accepts connections."
 }
 
 output "password" {
-  value       = var.redis_password
-  description = "value of the Redis password"
+  value       = local.redis_password
+  description = "The password which is required to authenticate to Redis server."
+}
+
+output "username" {
+  value       = local.redis_username
+  description = "The username which is required to authenticate to Redis server."
 }
 
 output "use_password_auth" {
-  value       = var.redis_use_password_auth ? true : false
-  description = "A boolean which indicates if password authentication is required by the Redis"
+  value       = var.redis_use_password_auth
+  description = "A boolean which indicates if password authentication is required by the Redis server."
 }
 
 output "use_tls" {
-  value       = var.use_tls ? true : false
-  description = "A boolean which indicates if TLS is required by the Redis"
+  value       = false
+  description = "A boolean which indicates if transit encryption is required by Redis server."
 }

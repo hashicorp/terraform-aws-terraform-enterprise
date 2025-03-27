@@ -99,8 +99,9 @@ module "redis_sentinel" {
   count  = var.enable_redis_sentinel ? 1 : 0
   source = "./modules/redis-sentinel"
 
-  domain_name = var.domain_name
-
+  domain_name                            = var.domain_name
+  redis_authentication_mode              = var.redis_authentication_mode
+  sentinel_authentication_mode           = var.redis_authentication_mode
   aws_iam_instance_profile               = module.service_accounts.iam_instance_profile.name
   asg_tags                               = var.asg_tags
   ec2_launch_template_tag_specifications = var.ec2_launch_template_tag_specifications
@@ -217,11 +218,16 @@ module "runtime_container_engine_config" {
   s3_server_side_encryption_kms_key_id = local.kms_key_arn
   s3_use_instance_profile              = var.aws_access_key_id == null ? "1" : "0"
 
-  redis_host     = local.redis.hostname
-  redis_user     = ""
-  redis_password = local.redis.password
-  redis_use_tls  = local.redis.use_tls
-  redis_use_auth = local.redis.use_password_auth
+  redis_host                 = local.redis.hostname
+  redis_user                 = local.redis.username
+  redis_password             = local.redis.password
+  redis_use_tls              = local.redis.use_tls
+  redis_use_auth             = local.redis.use_password_auth
+  redis_use_sentinel         = var.enable_redis_sentinel
+  redis_sentinel_hosts       = local.redis.sentinel_hosts
+  redis_sentinel_leader_name = local.redis.sentinel_leader
+  redis_sentinel_user        = local.redis.sentinel_username
+  redis_sentinel_password    = local.redis.sentinel_password
 
   trusted_proxies = local.trusted_proxies
 

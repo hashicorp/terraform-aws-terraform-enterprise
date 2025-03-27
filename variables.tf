@@ -152,6 +152,26 @@ variable "redis_use_password_auth" {
   default     = false
 }
 
+variable "redis_authentication_mode" {
+  description = "The authentincation mode for redis server instances.  Must be one of [USER_AND_PASSWORD, PASSWORD, NONE]."
+  type        = string
+  default     = "PASSWORD"
+  validation {
+    condition     = contains(["USER_AND_PASSWORD", "PASSWORD", "NONE"], var.redis_authentication_mode)
+    error_message = "Must be one of [USER_AND_PASSWORD, PASSWORD, NONE]."
+  }
+}
+
+variable "sentinel_authentication_mode" {
+  description = "The authentincation mode for redis sentinel instances.  Must be one of [USER_AND_PASSWORD, PASSWORD, NONE]."
+  type        = string
+  default     = "NONE"
+  validation {
+    condition     = contains(["USER_AND_PASSWORD", "PASSWORD", "NONE"], var.sentinel_authentication_mode)
+    error_message = "Must be one of [USER_AND_PASSWORD, PASSWORD, NONE]."
+  }
+}
+
 # Postgres
 # --------
 variable "db_name" {
