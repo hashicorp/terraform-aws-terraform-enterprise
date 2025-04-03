@@ -51,32 +51,36 @@ locals {
   redis = var.enable_redis_sentinel ? try(
     module.redis_sentinel[0],
     {
-      hostname          = null
-      password          = null
-      username          = null
-      redis_port        = null
-      use_password_auth = null
-      use_tls           = null
-      sentinel_enabled  = var.enable_redis_sentinel
-      sentinel_hosts    = []
-      sentinel_leader   = null
-      sentinel_username = null
-      sentinel_password = null
+      hostname                          = null
+      password                          = null
+      username                          = null
+      redis_port                        = null
+      use_password_auth                 = null
+      use_tls                           = null
+      sentinel_enabled                  = var.enable_redis_sentinel
+      sentinel_hosts                    = []
+      sentinel_leader                   = null
+      sentinel_username                 = null
+      sentinel_password                 = null
+      aws_elasticache_subnet_group_name = null
+      aws_security_group_redis          = null
     }
     ) : try(
     module.redis[0],
     {
-      hostname          = null
-      password          = null
-      username          = null
-      redis_port        = null
-      use_password_auth = null
-      use_tls           = null
-      sentinel_enabled  = var.enable_redis_sentinel
-      sentinel_hosts    = []
-      sentinel_leader   = null
-      sentinel_username = null
-      sentinel_password = null
+      hostname                          = null
+      password                          = null
+      username                          = null
+      redis_port                        = null
+      use_password_auth                 = null
+      use_tls                           = null
+      sentinel_enabled                  = var.enable_redis_sentinel
+      sentinel_hosts                    = []
+      sentinel_leader                   = null
+      sentinel_username                 = null
+      sentinel_password                 = null
+      aws_elasticache_subnet_group_name = null
+      aws_security_group_redis          = null
     }
   )
 
