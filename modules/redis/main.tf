@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MPL-2.0
 
 locals {
-  redis_use_password_auth = var.redis_use_password_auth || var.redis_authentication_mode == "PASSWORD" 
+  redis_use_password_auth = var.redis_use_password_auth || var.redis_authentication_mode == "PASSWORD"
 }
 
 resource "random_id" "redis_password" {

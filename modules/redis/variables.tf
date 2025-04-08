@@ -44,7 +44,7 @@ variable "redis_port" {
 variable "redis_authentication_mode" {
   description = "The authentincation mode for redis server instances.  Must be one of [USER_AND_PASSWORD, PASSWORD, NONE]."
   type        = string
-  default     = "PASSWORD"
+  default     = "NONE"
   validation {
     condition     = contains(["USER_AND_PASSWORD", "PASSWORD", "NONE"], var.redis_authentication_mode)
     error_message = "Must be one of [USER_AND_PASSWORD, PASSWORD, NONE]."
