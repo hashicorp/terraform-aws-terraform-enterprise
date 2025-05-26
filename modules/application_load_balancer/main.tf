@@ -26,6 +26,16 @@ resource "aws_security_group_rule" "tfe_lb_allow_inbound_https" {
   security_group_id = aws_security_group.tfe_lb_allow.id
 }
 
+resource "aws_security_group_rule" "tfe_lb_allow_inbound_https_admin_api" {
+  type              = "ingress"
+  from_port         = 8446
+  to_port           = 8446
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "Allow HTTPS (port 8446) traffic inbound to TFE LB for Admin API"
+  security_group_id = aws_security_group.tfe_lb_allow.id
+}
+
 resource "aws_security_group_rule" "tfe_lb_allow_inbound_dashboard" {
   count             = var.active_active ? 0 : 1
   type              = "ingress"
