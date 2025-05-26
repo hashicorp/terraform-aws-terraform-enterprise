@@ -72,6 +72,16 @@ resource "aws_security_group_rule" "tfe_dashboard" {
   cidr_blocks              = var.aws_lb == null ? var.network_private_subnet_cidrs : null
 }
 
+resource "aws_security_group_rule" "tfe_admin_api" {
+  security_group_id        = aws_security_group.tfe_instance.id
+  type                     = "ingress"
+  from_port                = var.admin_api_https_port
+  to_port                  = var.admin_api_https_port
+  protocol                 = "tcp"
+  source_security_group_id = var.aws_lb
+  cidr_blocks              = var.aws_lb == null ? var.network_private_subnet_cidrs : null
+}
+
 resource "aws_launch_template" "tfe" {
   name_prefix            = "${var.friendly_name_prefix}-tfe-ec2-asg-launch-template-"
   image_id               = var.ami_id
@@ -136,9 +146,13 @@ resource "aws_autoscaling_group" "tfe_asg" {
   max_size            = var.node_count
   desired_capacity    = var.node_count
   vpc_zone_identifier = var.network_subnets_private
-  target_group_arns = var.active_active || !var.is_replicated_deployment ? [var.aws_lb_target_group_tfe_tg_443_arn] : [
+  target_group_arns = var.active_active || !var.is_replicated_deployment ? [
+    var.aws_lb_target_group_tfe_tg_443_arn,
+    var.aws_lb_target_group_tfe_tg_admin_api_arn,
+  ] : [
     var.aws_lb_target_group_tfe_tg_8800_arn,
     var.aws_lb_target_group_tfe_tg_443_arn,
+    var.aws_lb_target_group_tfe_tg_admin_api_arn,
   ]
   # Increases grace period for any AMI that is not the default Ubuntu
   # since RHEL has longer startup time

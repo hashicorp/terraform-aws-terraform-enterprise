@@ -30,28 +30,6 @@ resource "aws_lb_target_group" "tfe_tg_443" {
   }
 }
 
-resource "aws_lb_target_group" "tfe_tg_8446" {
-  name     = "${var.friendly_name_prefix}-tfe-alb-tg-8446"
-  port     = 8446
-  protocol = "TCP"
-  vpc_id   = var.network_id
-
-  health_check {
-    protocol = "TCP"
-  }
-}
-
-resource "aws_lb_listener" "tfe_listener_8446" {
-  load_balancer_arn = aws_lb.tfe_lb.arn
-  port              = 8446
-  protocol          = "TCP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.tfe_tg_8446.arn
-  }
-}
-
 resource "aws_lb_listener" "tfe_listener_8800" {
   count             = var.active_active ? 0 : 1
   load_balancer_arn = aws_lb.tfe_lb.arn
@@ -76,6 +54,28 @@ resource "aws_lb_target_group" "tfe_tg_8800" {
 
   health_check {
     path     = "/"
+    protocol = "TCP"
+  }
+}
+
+resource "aws_lb_listener" "tfe_listener_admin_api" {
+  load_balancer_arn = aws_lb.tfe_lb.arn
+  port              = var.admin_api_https_port
+  protocol          = "TCP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tfe_tg_admin_api.arn
+  }
+}
+
+resource "aws_lb_target_group" "tfe_tg_admin_api" {
+  name     = "${var.friendly_name_prefix}-tfe-nlb-tg-${var.admin_api_https_port}"
+  port     = var.admin_api_https_port
+  protocol = "TCP"
+  vpc_id   = var.network_id
+
+  health_check {
     protocol = "TCP"
   }
 }

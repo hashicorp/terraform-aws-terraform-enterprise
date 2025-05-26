@@ -26,16 +26,6 @@ resource "aws_security_group_rule" "tfe_lb_allow_inbound_https" {
   security_group_id = aws_security_group.tfe_lb_allow.id
 }
 
-resource "aws_security_group_rule" "tfe_lb_allow_inbound_https_admin_api" {
-  type              = "ingress"
-  from_port         = 8446
-  to_port           = 8446
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "Allow HTTPS (port 8446) traffic inbound to TFE LB for Admin API"
-  security_group_id = aws_security_group.tfe_lb_allow.id
-}
-
 resource "aws_security_group_rule" "tfe_lb_allow_inbound_dashboard" {
   count             = var.active_active ? 0 : 1
   type              = "ingress"
@@ -44,6 +34,16 @@ resource "aws_security_group_rule" "tfe_lb_allow_inbound_dashboard" {
   protocol          = "tcp"
   cidr_blocks       = var.admin_dashboard_ingress_ranges
   description       = "Allow dashboard traffic inbound to TFE LB"
+  security_group_id = aws_security_group.tfe_lb_allow.id
+}
+
+resource "aws_security_group_rule" "tfe_lb_allow_inbound_admin_api" {
+  type              = "ingress"
+  from_port         = var.admin_api_https_port
+  to_port           = var.admin_api_https_port
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "Allow Admin API HTTPS traffic inbound to TFE LB"
   security_group_id = aws_security_group.tfe_lb_allow.id
 }
 
@@ -144,6 +144,26 @@ resource "aws_lb_target_group" "tfe_tg_8800" {
     protocol = "HTTPS"
     matcher  = "200-399"
   }
+}
+
+resource "aws_lb_listener" "tfe_listener_admin_api" {
+  load_balancer_arn = aws_lb.tfe_lb.arn
+  port              = var.admin_api_https_port
+  protocol          = "HTTPS"
+  ssl_policy        = var.ssl_policy
+  certificate_arn   = var.certificate_arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tfe_tg_admin_api.arn
+  }
+}
+
+resource "aws_lb_target_group" "tfe_tg_admin_api" {
+  name     = "${var.friendly_name_prefix}-tfe-alb-tg-${var.admin_api_https_port}"
+  port     = var.admin_api_https_port
+  protocol = "HTTPS"
+  vpc_id   = var.network_id
 }
 
 data "aws_route53_zone" "tfe" {

@@ -368,6 +368,7 @@ module "load_balancer" {
 
   active_active                  = var.operational_mode == "active-active"
   admin_dashboard_ingress_ranges = var.admin_dashboard_ingress_ranges
+  admin_api_https_port           = var.admin_api_https_port
   certificate_arn                = var.acm_certificate_arn
   domain_name                    = var.domain_name
   friendly_name_prefix           = var.friendly_name_prefix
@@ -384,6 +385,7 @@ module "private_tcp_load_balancer" {
   source = "./modules/network_load_balancer"
 
   active_active           = var.operational_mode == "active-active"
+  admin_api_https_port    = var.admin_api_https_port
   certificate_arn         = var.acm_certificate_arn
   domain_name             = var.domain_name
   friendly_name_prefix    = var.friendly_name_prefix
@@ -396,12 +398,14 @@ module "private_tcp_load_balancer" {
 module "vm" {
   source = "./modules/vm"
 
-  active_active                          = var.operational_mode == "active-active"
-  aws_iam_instance_profile               = module.service_accounts.iam_instance_profile.name
-  ami_id                                 = local.ami_id
-  aws_lb                                 = var.load_balancing_scheme == "PRIVATE_TCP" ? null : module.load_balancer[0].aws_lb_security_group
-  aws_lb_target_group_tfe_tg_443_arn     = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_443_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_443_arn
-  aws_lb_target_group_tfe_tg_8800_arn    = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn
+  active_active                               = var.operational_mode == "active-active"
+  aws_iam_instance_profile                    = module.service_accounts.iam_instance_profile.name
+  ami_id                                      = local.ami_id
+  aws_lb                                      = var.load_balancing_scheme == "PRIVATE_TCP" ? null : module.load_balancer[0].aws_lb_security_group
+  aws_lb_target_group_tfe_tg_443_arn          = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_443_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_443_arn
+  aws_lb_target_group_tfe_tg_8800_arn         = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn
+  aws_lb_target_group_tfe_tg_admin_api_arn    = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_admin_api_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_admin_api_arn
+  admin_api_https_port                        = var.admin_api_https_port
   asg_tags                               = var.asg_tags
   ec2_launch_template_tag_specifications = var.ec2_launch_template_tag_specifications
   default_ami_id                         = local.default_ami_id

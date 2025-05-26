@@ -26,6 +26,16 @@ variable "aws_lb_target_group_tfe_tg_8800_arn" {
   type        = string
 }
 
+variable "aws_lb_target_group_tfe_tg_admin_api_arn" {
+  description = "The Amazon Resource Name of the load balancer target group for traffic on the Admin API HTTPS port which will be backed by the TFE EC2 autoscaling group."
+  type        = string
+}
+
+variable "admin_api_https_port" {
+  type        = number
+  description = "Port application listens on for Admin API HTTPS."
+}
+
 variable "aws_iam_instance_profile" {
   description = "The name of the IAM instance profile to be associated with the TFE EC2 instance(s)."
   type        = string
