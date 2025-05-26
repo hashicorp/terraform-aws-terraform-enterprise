@@ -40,3 +40,8 @@ variable "friendly_name_prefix" {
   type        = string
   description = "(Required) Friendly name prefix used for tagging and naming AWS resources."
 }
+
+variable "admin_api_https_port" {
+  type        = number
+  description = "Port application listens on for Admin API HTTPS."
+}
