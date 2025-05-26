@@ -30,6 +30,28 @@ resource "aws_lb_target_group" "tfe_tg_443" {
   }
 }
 
+resource "aws_lb_target_group" "tfe_tg_8446" {
+  name     = "${var.friendly_name_prefix}-tfe-alb-tg-8446"
+  port     = 8446
+  protocol = "TCP"
+  vpc_id   = var.network_id
+
+  health_check {
+    protocol = "TCP"
+  }
+}
+
+resource "aws_lb_listener" "tfe_listener_8446" {
+  load_balancer_arn = aws_lb.tfe_lb.arn
+  port              = 8446
+  protocol          = "TCP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tfe_tg_8446.arn
+  }
+}
+
 resource "aws_lb_listener" "tfe_listener_8800" {
   count             = var.active_active ? 0 : 1
   load_balancer_arn = aws_lb.tfe_lb.arn
