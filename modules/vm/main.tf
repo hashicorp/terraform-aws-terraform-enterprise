@@ -149,7 +149,7 @@ resource "aws_autoscaling_group" "tfe_asg" {
   target_group_arns = var.active_active || !var.is_replicated_deployment ? [
     var.aws_lb_target_group_tfe_tg_443_arn,
     var.aws_lb_target_group_tfe_tg_admin_api_arn,
-  ] : [
+    ] : [
     var.aws_lb_target_group_tfe_tg_8800_arn,
     var.aws_lb_target_group_tfe_tg_443_arn,
     var.aws_lb_target_group_tfe_tg_admin_api_arn,

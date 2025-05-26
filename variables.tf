@@ -345,8 +345,8 @@ variable "https_port" {
 }
 
 variable "admin_api_https_port" {
-  default = 8446
-  type    = number
+  default     = 8446
+  type        = number
   description = "(Optional if is_replicated_deployment is false) Port application listens on for Admin API HTTPS. Default is 8443."
 }
 
