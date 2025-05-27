@@ -170,7 +170,7 @@ module "aurora_database" {
 # Docker Compose File Config for TFE on instance(s) using Flexible Deployment Options
 # ------------------------------------------------------------------------------------
 module "runtime_container_engine_config" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=kosy/add-admin-port"
   count  = var.is_replicated_deployment ? 0 : 1
 
   tfe_license = var.hc_license
@@ -179,6 +179,7 @@ module "runtime_container_engine_config" {
   hostname                    = local.fqdn
   http_port                   = var.http_port
   https_port                  = var.https_port
+  admin_api_https_port        = var.admin_api_https_port
   http_proxy                  = var.proxy_ip != null ? "${var.proxy_ip}:${var.proxy_port}" : null
   https_proxy                 = var.proxy_ip != null ? "${var.proxy_ip}:${var.proxy_port}" : null
   no_proxy                    = var.proxy_ip != null ? local.no_proxy : null
