@@ -58,6 +58,28 @@ resource "aws_lb_target_group" "tfe_tg_8800" {
   }
 }
 
+resource "aws_lb_listener" "tfe_listener_admin_api" {
+  load_balancer_arn = aws_lb.tfe_lb.arn
+  port              = var.admin_api_https_port
+  protocol          = "TCP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tfe_tg_admin_api.arn
+  }
+}
+
+resource "aws_lb_target_group" "tfe_tg_admin_api" {
+  name     = "${var.friendly_name_prefix}-tfe-nlb-tg-${var.admin_api_https_port}"
+  port     = var.admin_api_https_port
+  protocol = "TCP"
+  vpc_id   = var.network_id
+
+  health_check {
+    protocol = "TCP"
+  }
+}
+
 data "aws_route53_zone" "tfe" {
   name         = var.domain_name
   private_zone = false

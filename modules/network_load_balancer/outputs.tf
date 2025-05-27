@@ -18,3 +18,9 @@ output "load_balancer_address" {
 
   description = "The DNS name of the load balancer."
 }
+
+output "aws_lb_target_group_tfe_tg_admin_api_arn" {
+  value = aws_lb_target_group.tfe_tg_admin_api.arn
+
+  description = "The Amazon Resource Name of the load balancer target group for traffic on the Admin API HTTPS port."
+}
