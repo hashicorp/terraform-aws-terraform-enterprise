@@ -166,9 +166,15 @@ resource "aws_lb_target_group" "tfe_tg_admin_api" {
   vpc_id   = var.network_id
 
   health_check {
-    path     = "/"
-    protocol = "HTTPS"
-    matcher  = "200-399"
+    enabled             = true
+    healthy_threshold   = 2
+    interval            = 30
+    matcher             = "200-399,401,403"
+    path                = "/"
+    port                = "traffic-port"
+    protocol            = "HTTPS"
+    timeout             = 5
+    unhealthy_threshold = 2
   }
 }
 
