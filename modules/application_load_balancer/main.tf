@@ -164,6 +164,12 @@ resource "aws_lb_target_group" "tfe_tg_admin_api" {
   port     = var.admin_api_https_port
   protocol = "HTTPS"
   vpc_id   = var.network_id
+
+  health_check {
+    path     = "/_health_check"
+    protocol = "HTTPS"
+    matcher  = "200-399"
+  }
 }
 
 data "aws_route53_zone" "tfe" {
