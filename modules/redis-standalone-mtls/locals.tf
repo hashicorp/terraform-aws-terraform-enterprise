@@ -5,18 +5,18 @@ locals {
   redis_user_data_template = "${path.module}/files/script.sh"
   redis_user_data = templatefile(local.redis_user_data_template, {
     redis_init = base64encode(file(local.redis_init_path))
-    fullchain = var.fullchain
-    privkey = var.privkey
+    fullchain  = var.fullchain
+    privkey    = var.privkey
     isrgrootx1 = var.ca_cert
     redis_conf = base64encode(templatefile(local.redis_conf_path, {
     }))
     compose = base64encode(templatefile(local.compose_path, {
-      redis_port          = var.redis_port
+      redis_port = var.redis_port
     }))
   })
-  compose_path               = "${path.module}/files/compose.yaml"
-  redis_conf_path            = "${path.module}/files/redis.conf"
-  redis_init_path            = "${path.module}/files/redis-init.sh"
+  compose_path    = "${path.module}/files/compose.yaml"
+  redis_conf_path = "${path.module}/files/redis.conf"
+  redis_init_path = "${path.module}/files/redis-init.sh"
   tags = concat(
     [
       {

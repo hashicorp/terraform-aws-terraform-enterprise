@@ -115,7 +115,7 @@ variable "ca_cert" {
 
 variable "fullchain" {
   description = "The full chain certificate to be used for TLS encryption in Redis."
-  type        = string  
+  type        = string
 }
 
 variable "privkey" {
