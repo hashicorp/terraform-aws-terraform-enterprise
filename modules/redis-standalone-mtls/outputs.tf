@@ -2,9 +2,10 @@
 # SPDX-License-Identifier: MPL-2.0
 
 output "hostname" {
-  value       = null
-  description = "The IP address of the primary node in the Redis Elasticache replication group."
+  value       = ["${aws_route53_record.redis.fqdn}:${var.redis_port}"]
+  description = "The host/port combinations for available Redis endpoint."
 }
+
 
 output "redis_port" {
   value       = null
@@ -21,12 +22,22 @@ output "use_tls" {
   description = "A boolean which indicates if transit encryption is required by Redis server."
 }
 
-output "aws_elasticache_subnet_group_name" {
-  value       = ""
-  description = "The name of the subnetwork group in which the Redis Elasticache replication group is deployed."
+output "use_mtls" {
+  value       = true
+  description = "A boolean which indicates if mTLS is required by Redis server."
 }
 
-output "aws_security_group_redis" {
-  value       = ""
-  description = "The identity of the security group attached to the Redis Elasticache replication group."
+output "ca_cert" {
+  value      = var.ca_cert
+  description = "The CA certificate used for mTLS authentication with Redis."
+}
+
+output "redis_cert" {
+  value       = var.fullchain
+  description = "The client certificate used for mTLS authentication with Redis."
+}
+
+output "redis_key" {
+  value       = var.privkey
+  description = "The client private key used for mTLS authentication with Redis."
 }

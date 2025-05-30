@@ -8,7 +8,7 @@ data "aws_route53_zone" "tfe" {
   private_zone = false
 }
 
-resource "aws_route53_record" "sentinel" {
+resource "aws_route53_record" "redis" {
   zone_id = data.aws_route53_zone.tfe.zone_id
   name    = "${var.friendly_name_prefix}-redis"
   type    = "A"
@@ -30,8 +30,8 @@ resource "aws_lb" "redis_lb" {
   subnets                          = var.network_subnets_private
   enable_cross_zone_load_balancing = true
   security_groups = [
-    aws_security_group.id,
-    aws_security_group.id,
+    aws_security_group.redis_outbound_allow.id,
+    aws_security_group.redis_inbound_allow.id,
   ]
 }
 
@@ -46,11 +46,11 @@ resource "aws_lb_listener" "redis_listener_redis" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.redis_tg_redis[count.index].arn
+    target_group_arn = aws_lb_target_group.redis_tg[count.index].arn
   }
 }
 
-resource "aws_lb_target_group" "redis_tg_redis" {
+resource "aws_lb_target_group" "redis_tg" {
   count    = 4
   name     = "${var.friendly_name_prefix}-redis-tg-${var.redis_port + count.index}"
   port     = (var.redis_port + count.index)
