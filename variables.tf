@@ -116,42 +116,6 @@ variable "enable_redis_sentinel" {
   default     = false
 }
 
-variable "enable_redis_mtls" {
-  type        = bool
-  description = "Enable Redis mTLS."
-  default     = false
-}
-
-variable "redis_client_cert" {
-  type        = string
-  description = "Redis client cert file"
-}
-
-variable "redis_client_key" {
-  type        = string
-  description = "Redis client key file"
-}
-
-variable "redis_client_ca" {
-  type        = string
-  description = "Redis client CA file"
-}
-
-variable "redis_client_cert_path" {
-  type        = string
-  description = "Redis client cert file"
-}
-
-variable "redis_client_key_path" {
-  type        = string
-  description = "Redis client key file"
-}
-
-variable "redis_client_ca_path" {
-  type        = string
-  description = "Redis client CA file"
-}
-
 variable "redis_cache_size" {
   type        = string
   default     = "cache.m4.large"
