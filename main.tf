@@ -116,33 +116,6 @@ module "redis_sentinel" {
 }
 
 # -----------------------------------------------------------------------------
-# Redis Sentinel
-# -----------------------------------------------------------------------------
-
-module "redis_mtls" {
-  count  = var.enable_redis_mtls ? 1 : 0
-  source = "./modules/redis-standalone-mtls"
-  # This module is used to deploy a Redis instance with mTLS enabled.
-
-  domain_name                            = var.domain_name
-  ca_cert                                = var.redis_client_ca
-  fullchain                              = var.redis_client_cert
-  privkey                                = var.redis_client_key
-  redis_authentication_mode              = "NONE" # mTLS does not use password authentication
-  aws_iam_instance_profile               = module.service_accounts.iam_instance_profile.name
-  asg_tags                               = var.asg_tags
-  ec2_launch_template_tag_specifications = var.ec2_launch_template_tag_specifications
-  friendly_name_prefix                   = var.friendly_name_prefix
-  health_check_grace_period              = var.health_check_grace_period
-  health_check_type                      = var.health_check_type
-  instance_type                          = var.instance_type
-  key_name                               = var.key_name
-  network_id                             = local.network_id
-  network_subnets_private                = local.network_private_subnets
-  network_private_subnet_cidrs           = local.network_private_subnet_cidrs
-}
-
-# -----------------------------------------------------------------------------
 # AWS PostreSQL Database
 # -----------------------------------------------------------------------------
 module "database" {
@@ -197,7 +170,7 @@ module "aurora_database" {
 # Docker Compose File Config for TFE on instance(s) using Flexible Deployment Options
 # ------------------------------------------------------------------------------------
 module "runtime_container_engine_config" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=redis-standalone"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=main"
   count  = var.is_replicated_deployment ? 0 : 1
 
   tfe_license = var.hc_license
@@ -275,7 +248,7 @@ module "runtime_container_engine_config" {
 # AWS cloud init used to install and configure TFE on instance(s) using Flexible Deployment Options
 # --------------------------------------------------------------------------------------------------
 module "tfe_init_fdo" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=redis-standalone"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
   count  = var.is_replicated_deployment ? 0 : 1
 
   cloud             = "aws"
@@ -314,7 +287,7 @@ module "tfe_init_fdo" {
 # TFE and Replicated settings to pass to the tfe_init_replicated module for replicated deployment
 # --------------------------------------------------------------------------------------------
 module "settings" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=redis-standalone"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=main"
   count  = var.is_replicated_deployment ? 1 : 0
 
   # TFE Base Configuration
