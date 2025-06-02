@@ -116,6 +116,45 @@ variable "enable_redis_sentinel" {
   default     = false
 }
 
+variable "enable_redis_mtls" {
+  type        = bool
+  description = "Enable Redis mTLS."
+  default     = false
+}
+
+variable "redis_client_cert_path" {
+  type        = string
+  default     = false
+  description = "Redis client cert file"
+}
+
+variable "redis_client_key_path" {
+  type        = string
+  default     = false
+  description = "Redis client key file"
+}
+
+variable "redis_client_ca_path" {
+  type        = string
+  default     = false
+  description = "Redis client CA file"
+}
+
+variable redis_private_key_secret_id {
+  type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded private key for tfe."
+}
+
+variable "redis_certificate_secret_id" {
+  type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for tfe."
+}
+
+variable "redis_ca_certificate_secret_id" {
+  type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for tfe."
+}
+
 variable "redis_cache_size" {
   type        = string
   default     = "cache.m4.large"

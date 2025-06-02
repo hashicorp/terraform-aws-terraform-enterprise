@@ -24,3 +24,4 @@
 # Local Working dir
 work
 backends.tf
+*.pem

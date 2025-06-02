@@ -116,6 +116,33 @@ module "redis_sentinel" {
 }
 
 # -----------------------------------------------------------------------------
+# Redis mTLS
+# -----------------------------------------------------------------------------
+
+module "redis_mtls" {
+  count  = var.enable_redis_mtls ? 1 : 0
+  source = "./modules/redis-standalone-mtls"
+  # This module is used to deploy a Redis instance with mTLS enabled.
+
+  domain_name                            = var.domain_name
+  redis_client_ca_path                   = var.redis_client_ca_path
+  redis_client_cert_path                 = var.redis_client_cert_path
+  redis_client_key_path                  = var.redis_client_key_path
+  redis_authentication_mode              = "NONE" # mTLS does not use password authentication
+  aws_iam_instance_profile               = module.service_accounts.iam_instance_profile.name
+  asg_tags                               = var.asg_tags
+  ec2_launch_template_tag_specifications = var.ec2_launch_template_tag_specifications
+  friendly_name_prefix                   = var.friendly_name_prefix
+  health_check_grace_period              = var.health_check_grace_period
+  health_check_type                      = var.health_check_type
+  instance_type                          = var.instance_type
+  key_name                               = var.key_name
+  network_id                             = local.network_id
+  network_subnets_private                = local.network_private_subnets
+  network_private_subnet_cidrs           = local.network_private_subnet_cidrs
+}
+
+# -----------------------------------------------------------------------------
 # AWS PostreSQL Database
 # -----------------------------------------------------------------------------
 module "database" {
@@ -170,7 +197,7 @@ module "aurora_database" {
 # Docker Compose File Config for TFE on instance(s) using Flexible Deployment Options
 # ------------------------------------------------------------------------------------
 module "runtime_container_engine_config" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=redis-standalone"
   count  = var.is_replicated_deployment ? 0 : 1
 
   tfe_license = var.hc_license
@@ -228,6 +255,11 @@ module "runtime_container_engine_config" {
   redis_sentinel_leader_name = local.redis.sentinel_leader
   redis_sentinel_user        = local.redis.sentinel_username
   redis_sentinel_password    = local.redis.sentinel_password
+  redis_use_mtls             = var.enable_redis_mtls
+  redis_ca_cert_path         = "/etc/ssl/private/terraform-enterprise/redis/ca_cert.pem"
+  redis_client_cert_path     = "/etc/ssl/private/terraform-enterprise/redis/cert.pem"
+  redis_client_key_path      = "/etc/ssl/private/terraform-enterprise/redis/key.pem"
+
 
   trusted_proxies = local.trusted_proxies
 
@@ -243,7 +275,7 @@ module "runtime_container_engine_config" {
 # AWS cloud init used to install and configure TFE on instance(s) using Flexible Deployment Options
 # --------------------------------------------------------------------------------------------------
 module "tfe_init_fdo" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=redis-standalone"
   count  = var.is_replicated_deployment ? 0 : 1
 
   cloud             = "aws"
@@ -258,6 +290,11 @@ module "tfe_init_fdo" {
   ca_certificate_secret_id = var.ca_certificate_secret_id == null ? null : var.ca_certificate_secret_id
   certificate_secret_id    = var.vm_certificate_secret_id == null ? null : var.vm_certificate_secret_id
   key_secret_id            = var.vm_key_secret_id == null ? null : var.vm_key_secret_id
+ 
+  redis_use_mtls                 = var.enable_redis_mtls
+  redis_ca_certificate_secret_id = var.redis_ca_certificate_secret_id == null ? null : var.redis_ca_certificate_secret_id
+  redis_certificate_secret_id    = var.redis_certificate_secret_id == null ? null : var.redis_certificate_secret_id
+  redis_key_secret_id            = var.redis_key_secret_id == null ? null : var.redis_key_secret_id
 
   proxy_ip       = var.proxy_ip != null ? var.proxy_ip : null
   proxy_port     = var.proxy_ip != null ? var.proxy_port : null
