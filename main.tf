@@ -291,7 +291,7 @@ module "tfe_init_fdo" {
   certificate_secret_id    = var.vm_certificate_secret_id == null ? null : var.vm_certificate_secret_id
   key_secret_id            = var.vm_key_secret_id == null ? null : var.vm_key_secret_id
  
-  redis_use_mtls                 = var.enable_redis_mtls
+  enable_redis_mtls                 = var.enable_redis_mtls
   redis_ca_certificate_secret_id = var.redis_ca_certificate_secret_id == null ? null : var.redis_ca_certificate_secret_id
   redis_client_certificate_secret_id    = var.redis_client_certificate_secret_id == null ? null : var.redis_client_certificate_secret_id
   redis_client_key_secret_id            = var.redis_client_key_secret_id == null ? null : var.redis_client_key_secret_id
