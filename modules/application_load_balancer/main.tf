@@ -166,9 +166,9 @@ resource "aws_lb_target_group" "tfe_tg_admin_api" {
   vpc_id   = var.network_id
 
   health_check {
-    path     = "/_health_check"
+    path     = "/api/v1/ping"
     protocol = "HTTPS"
-    matcher  = "200-399"
+    matcher  = "200-399,400,401,403"
   }
 }
 
