@@ -125,9 +125,9 @@ module "redis_mtls" {
   # This module is used to deploy a Redis instance with mTLS enabled.
 
   domain_name                            = var.domain_name
-  redis_client_ca_path                   = var.redis_client_ca_path
-  redis_client_cert_path                 = var.redis_client_cert_path
-  redis_client_key_path                  = var.redis_client_key_path
+  redis_client_ca                        = var.redis_client_ca
+  redis_client_cert                      = var.redis_client_cert
+  redis_client_key                       = var.redis_client_key
   redis_authentication_mode              = "NONE" # mTLS does not use password authentication
   aws_iam_instance_profile               = module.service_accounts.iam_instance_profile.name
   asg_tags                               = var.asg_tags

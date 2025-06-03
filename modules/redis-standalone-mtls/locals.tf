@@ -5,9 +5,9 @@ locals {
   redis_user_data_template = "${path.module}/files/script.sh"
   redis_user_data = templatefile(local.redis_user_data_template, {
     redis_init = base64encode(file(local.redis_init_path))
-    fullchain  = file(var.redis_client_cert_path)
-    privkey    = file(var.redis_client_key_path)
-    isrgrootx1 = file(var.redis_client_ca_path)
+    fullchain  = var.redis_client_cert
+    privkey    = var.redis_client_key
+    isrgrootx1 = var.redis_client_ca
     redis_conf = base64encode(templatefile(local.redis_conf_path, {
     }))
     compose = base64encode(templatefile(local.compose_path, {

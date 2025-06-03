@@ -140,6 +140,24 @@ variable "redis_client_ca_path" {
   description = "Redis client CA file"
 }
 
+variable "redis_client_cert" {
+  type        = string
+  default     = false
+  description = "Redis client cert file"
+}
+
+variable "redis_client_key" {
+  type        = string
+  default     = false
+  description = "Redis client key file"
+}
+
+variable "redis_client_ca" {
+  type        = string
+  default     = false
+  description = "Redis client CA file"
+}
+
 variable redis_client_key_secret_id {
   type        = string
   description = "The secrets manager secret ID of the Base64 & PEM encoded private key for tfe."

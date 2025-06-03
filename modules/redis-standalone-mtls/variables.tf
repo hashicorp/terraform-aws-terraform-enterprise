@@ -108,17 +108,17 @@ variable "redis_use_password_auth" {
   default     = false
 }
 
-variable "redis_client_ca_path" {
+variable "redis_client_ca" {
   description = "The CA certificate to be used for TLS encryption in Redis."
   type        = string
 }
 
-variable "redis_client_cert_path" {
+variable "redis_client_cert" {
   description = "The full chain certificate to be used for TLS encryption in Redis."
   type        = string
 }
 
-variable "redis_client_key_path" {
+variable "redis_client_key" {
   description = "The private key to be used for TLS encryption in Redis."
   type        = string
 }
