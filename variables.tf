@@ -140,7 +140,7 @@ variable "redis_client_ca_path" {
   description = "Redis client CA file"
 }
 
-variable redis_client_private_key_secret_id {
+variable redis_client_key_secret_id {
   type        = string
   description = "The secrets manager secret ID of the Base64 & PEM encoded private key for tfe."
 }
