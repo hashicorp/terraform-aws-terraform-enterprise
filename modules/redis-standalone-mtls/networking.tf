@@ -39,21 +39,20 @@ resource "aws_lb" "redis_lb" {
 # ---------------------------------------------------------
 
 resource "aws_lb_listener" "redis_listener_redis" {
-  count             = 4
   load_balancer_arn = aws_lb.redis_lb.arn
-  port              = (var.redis_port + count.index)
+  port              = (var.redis_port)
   protocol          = "TCP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.redis_tg[count.index].arn
+    target_group_arn = aws_lb_target_group.redis_tg.arn
   }
 }
 
 resource "aws_lb_target_group" "redis_tg" {
   count    = 4
-  name     = "${var.friendly_name_prefix}-redis-tg-${var.redis_port + count.index}"
-  port     = (var.redis_port + count.index)
+  name     = "${var.friendly_name_prefix}-redis-tg-${var.redis_port}"
+  port     = (var.redis_port)
   protocol = "TCP"
   vpc_id   = var.network_id
 
