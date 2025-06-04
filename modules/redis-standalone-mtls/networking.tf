@@ -45,7 +45,7 @@ resource "aws_lb_listener" "redis_listener_redis" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.redis_tg.arn
+    target_group_arn = [aws_lb_target_group.redis_tg.arn]
   }
 }
 
