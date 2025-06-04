@@ -5,7 +5,6 @@
 services:
   redis:
     image: redis:7
-    entrypoint: ["/opt/redis/init.sh"]
     command: [
       "redis-server",
       # disable all ports
@@ -17,7 +16,7 @@ services:
       "--tls-auth-clients", "yes"
     ]
     ports:
-      - "${redis_port+1}:${redis_port}"
+      - "${redis_port}:${redis_port}"
     volumes:
       # For Redis TLS certificates.
       - $${FULLCHAIN}:/certs/fullchain.pem
