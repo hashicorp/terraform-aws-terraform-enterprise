@@ -344,6 +344,12 @@ variable "https_port" {
   description = "(Optional if is_replicated_deployment is false) Port application listens on for HTTPS. Default is 443."
 }
 
+variable "admin_api_https_port" {
+  default     = 8446
+  type        = number
+  description = "(Optional if is_replicated_deployment is false) Port application listens on for Admin API HTTPS. Default is 8443."
+}
+
 variable "iact_subnet_list" {
   default     = []
   description = "A list of CIDR masks that configure the ability to retrieve the IACT from outside the host."
