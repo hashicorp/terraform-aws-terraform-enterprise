@@ -50,7 +50,6 @@ resource "aws_lb_listener" "redis_listener_redis" {
 }
 
 resource "aws_lb_target_group" "redis_tg" {
-  count    = 4
   name     = "${var.friendly_name_prefix}-redis-tg-${var.redis_port}"
   port     = (var.redis_port)
   protocol = "TCP"
