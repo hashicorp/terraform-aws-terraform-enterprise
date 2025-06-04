@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MPL-2.0
 
 output "hostname" {
-  value       = ["${aws_route53_record.redis.fqdn}:${var.redis_port}"]
+  value       = "${aws_route53_record.redis.fqdn}:${var.redis_port}"
   description = "The host/port combinations for available Redis endpoint."
 }
 
@@ -12,7 +12,7 @@ output "password" {
 }
 
 output "username" {
-  value       = ""
+  value       = null
   description = "The username which is required to authenticate to Redis server."
 }
 
@@ -32,27 +32,27 @@ output "use_tls" {
 }
 
 output "sentinel_enabled" {
-  value       = true
+  value       = false
   description = "sentinel is enabled"
 }
 
 output "sentinel_hosts" {
-  value       = ""
+  value       = []
   description = "The host/port combinations for available Redis sentinel endpoints."
 }
 
 output "sentinel_leader" {
-  value       = ""
+  value       = null
   description = "The name of the Redis Sentinel leader"
 }
 
 output "sentinel_username" {
-  value       = ""
+  value       = null
   description = "the username to authenticate to Redis sentinel"
 }
 
 output "sentinel_password" {
-  value       = ""
+  value       = null
   description = "the password to authenticate to Redis sentinel"
 }
 
