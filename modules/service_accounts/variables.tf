@@ -62,3 +62,21 @@ variable "vm_key_secret_id" {
   Scale Set.
   EOD
 }
+
+variable redis_client_key_secret_id {
+  type        = string
+  default     = null
+  description = "The secrets manager secret ID of the Base64 & PEM encoded private key for redis."
+}
+
+variable "redis_client_certificate_secret_id" {
+  type        = string
+  default     = null
+  description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for redis."
+}
+
+variable "redis_ca_certificate_secret_id" {
+  type        = string
+  default     = null
+  description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for redis."
+}

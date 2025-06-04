@@ -38,6 +38,9 @@ module "service_accounts" {
   tfe_license_secret_id              = var.tfe_license_secret_id
   kms_key_arn                        = local.kms_key_arn
   vm_certificate_secret_id           = var.vm_certificate_secret_id
+  redis_ca_certificate_secret_id     = var.redis_ca_certificate_secret_id
+  redis_client_certificate_secret_id = var.redis_client_certificate_secret_id
+  redis_client_key_secret_id         = var.redis_client_key_secret_id
   vm_key_secret_id                   = var.vm_key_secret_id
 }
 
