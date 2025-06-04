@@ -67,7 +67,7 @@ resource "aws_autoscaling_group" "redis" {
   max_size            = 1
   desired_capacity    = 1
   vpc_zone_identifier = var.network_subnets_private
-  target_group_arns = aws_lb_target_group.redis_tg.arn
+  target_group_arns = [aws_lb_target_group.redis_tg.arn]
 
   # Increases grace period for any AMI that is not the default Ubuntu
   # since RHEL has longer startup time
