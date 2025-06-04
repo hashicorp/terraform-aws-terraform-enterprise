@@ -19,8 +19,6 @@ services:
     ports:
       - "${redis_port+1}:${redis_port}"
     volumes:
-      - $${REDIS_CONF}:/opt/redis/redis.conf
-      - $${REDIS_INIT}:/opt/redis/init.sh
       # For Redis TLS certificates.
       - $${FULLCHAIN}:/certs/fullchain.pem
       - $${PRIVKEY}:/certs/privkey.pem

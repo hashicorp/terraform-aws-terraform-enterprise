@@ -25,7 +25,6 @@ function retry {
 
 }
 
-
 curl --noproxy '*' --fail --silent --show-error --location https://download.docker.com/linux/ubuntu/gpg \
 	| gpg --dearmor --output /usr/share/keyrings/docker-archive-keyring.gpg
 echo \
@@ -38,26 +37,17 @@ retry 10 apt-get --assume-yes autoremove
 
 tfe_dir="/etc/redis"
 mkdir -p $tfe_dir
-get_linux_ip() {
-  ip addr show | awk '/inet / && !/127.0.0.1/ {print $2}' | cut -d/ -f1 | head -n 1
-}
-export HOST_IP=$(get_linux_ip)
-export REDIS_CONF=$tfe_dir/redis.conf
-export REDIS_INIT=$tfe_dir/redis-init.sh
+
 export FULLCHAIN=$tfe_dir/fullchain.pem
 export PRIVKEY=$tfe_dir/privkey.pem
 export ISRGROOTX1=$tfe_dir/isrgrootx1.pem
 echo ${compose} | base64 -d > $tfe_dir/compose.yaml
-echo ${redis_conf} | base64 -d > $REDIS_CONF
-echo ${redis_init} | base64 -d > $REDIS_INIT
+
+
 echo ${fullchain} | base64 -d > $FULLCHAIN
 echo ${privkey} | base64 -d > $PRIVKEY
 echo ${isrgrootx1} | base64 -d > $ISRGROOTX1
-# echo ${fullchain} | base64 -d > $FULLCHAIN
-# echo ${privkey} | base64 -d > $PRIVKEY
-# echo ${isrgrootx1} | base64 -d > $ISRGROOTX1
-chmod a+r $REDIS_CONF
-chmod a+x $REDIS_INIT
+
 chmod a+r $FULLCHAIN
 chmod a+r $PRIVKEY
 chmod a+r $ISRGROOTX1
