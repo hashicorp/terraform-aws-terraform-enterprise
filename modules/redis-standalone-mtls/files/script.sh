@@ -63,9 +63,9 @@ fullchain=$(get_base64_secrets ${redis_client_cert})
 privkey=$(get_base64_secrets ${redis_client_key})
 isrgrootx1=$(get_base64_secrets ${redis_client_ca})
 
-echo ${fullchain} | base64 -d > $FULLCHAIN
-echo ${privkey} | base64 -d > $PRIVKEY
-echo ${isrgrootx1} | base64 -d > $ISRGROOTX1
+echo $fullchain | base64 -d > $FULLCHAIN
+echo $privkey | base64 -d > $PRIVKEY
+echo $isrgrootx1 | base64 -d > $ISRGROOTX1
 
 chmod a+r $FULLCHAIN
 chmod a+r $PRIVKEY
