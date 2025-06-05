@@ -4,6 +4,14 @@
 
 set -eu pipefail
 
+function get_base64_secrets {
+	local secret_id=$1
+	# OS: Agnostic
+	# Description: Pull the Base 64 encoded secrets from AWS Secrets Manager
+
+	/usr/local/bin/aws secretsmanager get-secret-value --secret-id $secret_id | jq --raw-output '.SecretBinary,.SecretString | select(. != null)'
+}
+
 function retry {
   local retries=$1
   shift
@@ -35,6 +43,14 @@ retry 10 apt-get --assume-yes update
 retry 10 apt-get --assume-yes install docker-ce docker-ce-cli containerd.io redis-tools
 retry 10 apt-get --assume-yes autoremove
 
+
+echo "[$(date +"%FT%T")] [Terraform Enterprise] Install AWS CLI" 
+curl --noproxy '*' "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m | grep -q "arm\|aarch" && echo "aarch64" || echo "x86_64").zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+./aws/install
+rm -f ./awscliv2.zip
+rm -rf ./aws
+
 tfe_dir="/etc/redis"
 mkdir -p $tfe_dir
 
@@ -43,6 +59,9 @@ export PRIVKEY=$tfe_dir/privkey.pem
 export ISRGROOTX1=$tfe_dir/isrgrootx1.pem
 echo ${compose} | base64 -d > $tfe_dir/compose.yaml
 
+fullchain=$(get_base64_secrets ${redis_client_cert})
+privkey=$(get_base64_secrets ${redis_client_key})
+isrgrootx1=$(get_base64_secrets ${redis_client_ca})
 
 echo ${fullchain} | base64 -d > $FULLCHAIN
 echo ${privkey} | base64 -d > $PRIVKEY
