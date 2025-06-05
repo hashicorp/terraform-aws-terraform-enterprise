@@ -40,7 +40,7 @@ echo \
 	https://download.docker.com/linux/ubuntu $(lsb_release --codename --short) stable" \
 	| sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 retry 10 apt-get --assume-yes update
-retry 10 apt-get --assume-yes install docker-ce docker-ce-cli containerd.io redis-tools
+retry 10 apt-get --assume-yes install docker-ce docker-ce-cli containerd.io redis-tools unzip jq
 retry 10 apt-get --assume-yes autoremove
 
 
