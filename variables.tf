@@ -116,6 +116,30 @@ variable "enable_redis_sentinel" {
   default     = false
 }
 
+variable "enable_redis_mtls" {
+  type        = bool
+  description = "Enable Redis mTLS."
+  default     = false
+}
+
+variable "redis_client_key_secret_id" {
+  type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded private key for redis."
+  default     = false
+}
+
+variable "redis_client_certificate_secret_id" {
+  type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for redis."
+  default     = false
+}
+
+variable "redis_ca_certificate_secret_id" {
+  type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for redis."
+  default     = false
+}
+
 variable "redis_cache_size" {
   type        = string
   default     = "cache.m4.large"
