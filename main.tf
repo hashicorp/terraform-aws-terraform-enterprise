@@ -210,6 +210,7 @@ module "runtime_container_engine_config" {
   hostname                    = local.fqdn
   http_port                   = var.http_port
   https_port                  = var.https_port
+  admin_api_https_port        = var.admin_api_https_port
   http_proxy                  = var.proxy_ip != null ? "${var.proxy_ip}:${var.proxy_port}" : null
   https_proxy                 = var.proxy_ip != null ? "${var.proxy_ip}:${var.proxy_port}" : null
   no_proxy                    = var.proxy_ip != null ? local.no_proxy : null
@@ -409,6 +410,7 @@ module "load_balancer" {
 
   active_active                  = var.operational_mode == "active-active"
   admin_dashboard_ingress_ranges = var.admin_dashboard_ingress_ranges
+  admin_api_https_port           = var.admin_api_https_port
   certificate_arn                = var.acm_certificate_arn
   domain_name                    = var.domain_name
   friendly_name_prefix           = var.friendly_name_prefix
@@ -425,6 +427,7 @@ module "private_tcp_load_balancer" {
   source = "./modules/network_load_balancer"
 
   active_active           = var.operational_mode == "active-active"
+  admin_api_https_port    = var.admin_api_https_port
   certificate_arn         = var.acm_certificate_arn
   domain_name             = var.domain_name
   friendly_name_prefix    = var.friendly_name_prefix
@@ -437,32 +440,34 @@ module "private_tcp_load_balancer" {
 module "vm" {
   source = "./modules/vm"
 
-  active_active                          = var.operational_mode == "active-active"
-  aws_iam_instance_profile               = module.service_accounts.iam_instance_profile.name
-  ami_id                                 = local.ami_id
-  aws_lb                                 = var.load_balancing_scheme == "PRIVATE_TCP" ? null : module.load_balancer[0].aws_lb_security_group
-  aws_lb_target_group_tfe_tg_443_arn     = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_443_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_443_arn
-  aws_lb_target_group_tfe_tg_8800_arn    = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn
-  asg_tags                               = var.asg_tags
-  ec2_launch_template_tag_specifications = var.ec2_launch_template_tag_specifications
-  default_ami_id                         = local.default_ami_id
-  enable_disk                            = local.enable_disk
-  enable_ssh                             = var.enable_ssh
-  ebs_device_name                        = var.ebs_device_name
-  ebs_volume_size                        = var.ebs_volume_size
-  ebs_volume_type                        = var.ebs_volume_type
-  ebs_iops                               = var.ebs_iops
-  ebs_delete_on_termination              = var.ebs_delete_on_termination
-  ebs_snapshot_id                        = var.ebs_snapshot_id
-  friendly_name_prefix                   = var.friendly_name_prefix
-  health_check_grace_period              = var.health_check_grace_period
-  health_check_type                      = var.health_check_type
-  instance_type                          = var.instance_type
-  is_replicated_deployment               = var.is_replicated_deployment
-  key_name                               = var.key_name
-  network_id                             = local.network_id
-  network_subnets_private                = local.network_private_subnets
-  network_private_subnet_cidrs           = local.network_private_subnet_cidrs
-  node_count                             = var.node_count
-  user_data_base64                       = var.is_replicated_deployment ? module.tfe_init_replicated[0].tfe_userdata_base64_encoded : module.tfe_init_fdo[0].tfe_userdata_base64_encoded
+  active_active                            = var.operational_mode == "active-active"
+  aws_iam_instance_profile                 = module.service_accounts.iam_instance_profile.name
+  ami_id                                   = local.ami_id
+  aws_lb                                   = var.load_balancing_scheme == "PRIVATE_TCP" ? null : module.load_balancer[0].aws_lb_security_group
+  aws_lb_target_group_tfe_tg_443_arn       = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_443_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_443_arn
+  aws_lb_target_group_tfe_tg_8800_arn      = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn
+  aws_lb_target_group_tfe_tg_admin_api_arn = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_admin_api_arn : module.load_balancer[0].aws_lb_target_group_tfe_tg_admin_api_arn
+  admin_api_https_port                     = var.admin_api_https_port
+  asg_tags                                 = var.asg_tags
+  ec2_launch_template_tag_specifications   = var.ec2_launch_template_tag_specifications
+  default_ami_id                           = local.default_ami_id
+  enable_disk                              = local.enable_disk
+  enable_ssh                               = var.enable_ssh
+  ebs_device_name                          = var.ebs_device_name
+  ebs_volume_size                          = var.ebs_volume_size
+  ebs_volume_type                          = var.ebs_volume_type
+  ebs_iops                                 = var.ebs_iops
+  ebs_delete_on_termination                = var.ebs_delete_on_termination
+  ebs_snapshot_id                          = var.ebs_snapshot_id
+  friendly_name_prefix                     = var.friendly_name_prefix
+  health_check_grace_period                = var.health_check_grace_period
+  health_check_type                        = var.health_check_type
+  instance_type                            = var.instance_type
+  is_replicated_deployment                 = var.is_replicated_deployment
+  key_name                                 = var.key_name
+  network_id                               = local.network_id
+  network_subnets_private                  = local.network_private_subnets
+  network_private_subnet_cidrs             = local.network_private_subnet_cidrs
+  node_count                               = var.node_count
+  user_data_base64                         = var.is_replicated_deployment ? module.tfe_init_replicated[0].tfe_userdata_base64_encoded : module.tfe_init_fdo[0].tfe_userdata_base64_encoded
 }
