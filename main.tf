@@ -74,7 +74,7 @@ module "networking" {
 # -----------------------------------------------------------------------------
 module "redis" {
   source = "./modules/redis"
-  count  = local.enable_redis_module && var.enable_redis_sentinel == false ? 1 : 0
+  count  = local.enable_redis_module && var.enable_redis_sentinel == false || var.enable_redis_mtls == false ? 1 : 0
 
   active_active                = var.operational_mode == "active-active"
   friendly_name_prefix         = var.friendly_name_prefix
