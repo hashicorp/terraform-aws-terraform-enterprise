@@ -108,18 +108,18 @@ variable "redis_use_password_auth" {
   default     = false
 }
 
-variable "redis_client_ca" {
-  description = "The CA certificate to be used for TLS encryption in Redis."
+variable "redis_client_key_secret_id" {
   type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded private key for redis."
 }
 
-variable "redis_client_cert" {
-  description = "The full chain certificate to be used for TLS encryption in Redis."
+variable "redis_client_certificate_secret_id" {
   type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for redis."
 }
 
-variable "redis_client_key" {
-  description = "The private key to be used for TLS encryption in Redis."
+variable "redis_ca_certificate_secret_id" {
   type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for redis."
 }
-          
+  

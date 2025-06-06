@@ -47,24 +47,24 @@ locals {
       }
     }
   )
-    redis_default =     {
-      hostname                          = null
-      password                          = null
-      username                          = null
-      redis_port                        = null
-      use_password_auth                 = null
-      use_tls                           = null
-      sentinel_enabled                  = var.enable_redis_sentinel
-      sentinel_hosts                    = []
-      sentinel_leader                   = null
-      sentinel_username                 = null
-      sentinel_password                 = null
-      aws_elasticache_subnet_group_name = null
-      aws_security_group_redis          = null
-    }
-redis = var.enable_redis_sentinel ? module.redis_sentinel[0] : var.enable_redis_mtls ? module.redis_mtls[0] : try(module.redis[0], local.redis_default)
+  redis_default = {
+    hostname                          = null
+    password                          = null
+    username                          = null
+    redis_port                        = null
+    use_password_auth                 = null
+    use_tls                           = null
+    sentinel_enabled                  = var.enable_redis_sentinel
+    sentinel_hosts                    = []
+    sentinel_leader                   = null
+    sentinel_username                 = null
+    sentinel_password                 = null
+    aws_elasticache_subnet_group_name = null
+    aws_security_group_redis          = null
+  }
+  redis = var.enable_redis_sentinel ? module.redis_sentinel[0] : var.enable_redis_mtls ? module.redis_mtls[0] : try(module.redis[0], local.redis_default)
 
-no_proxy = concat([
+  no_proxy = concat([
     "127.0.0.1",
     "169.254.169.254",
     "secretsmanager.${data.aws_region.current.name}.amazonaws.com",
