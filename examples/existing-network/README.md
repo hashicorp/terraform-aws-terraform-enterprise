@@ -7,19 +7,19 @@ This example for Terraform Enterprise creates a TFE installation with the follow
 - Active/Active architecture
 - External Services production type
 - m5.xlarge virtual machine type
-- Ubuntu 20.04
+- Ubuntu 24.04
 - A publicly accessible HTTP load balancer with TLS termination
 
 ## Prerequisites
 
 This example assumes that the following resources exist:
 
-- TFE license is on a file path defined by `var.license_file` 
+- TFE license is on a file path defined by `var.license_file`
 - A DNS zone
 - Valid managed SSL certificate to use with load balancer:
   - Create/Import a managed SSL Certificate using AWS ACM to serve as the certificate for the DNS A Record.
 - Existing Virtual Network
-  
+
 ## How to Use This Module
 
 ### Deployment
