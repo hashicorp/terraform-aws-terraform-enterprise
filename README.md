@@ -87,7 +87,9 @@ module "tfe_node" {
 
 ## Module Manifest
 
-This module will create all infrastructure resources required to install Terraform Enterprise in a standalone or active-active configuration (depending on how many nodes you specify) on AWS in the designated region according to the Reference Architecture. The default base AMI used is Ubuntu 20.04 LTS but you may specify a RHEL 7.x AMI ID by using the `ami_id` variable.
+This module will create all infrastructure resources required to install Terraform Enterprise in a standalone or
+active-active configuration (depending on how many nodes you specify) on AWS in the designated region according to the
+Reference Architecture. The default base AMI used is Ubuntu 24.04 LTS but you may specify a RHEL 7.x AMI ID by using the `ami_id` variable.
 
 The resources created are:
 

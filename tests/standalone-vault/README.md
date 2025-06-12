@@ -7,7 +7,7 @@ installation with the following traits.
 
 - Active/Active mode
 - a small VM machine type (m5.xlarge)
-- Ubuntu 20.04 as the VM image
+- Ubuntu 24.04 as the VM image
 - a publicly accessible HTTP load balancer with TLS termination
 - no proxy server
 - External PostgreSQL

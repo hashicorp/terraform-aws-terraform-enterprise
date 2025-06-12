@@ -4,17 +4,17 @@
 
 This example for Terraform Enterprise creates a TFE installation with the following traits:
 
--  [Active/Active](https://www.terraform.io/enterprise/install/automated/active-active) architecture defined by `var.node_count`
--  External Services production type
--  m5.xlarge virtual machine type
--  Ubuntu 20.04
--  A publicly accessible HTTP load balancer with TLS termination
+- [Active/Active](https://www.terraform.io/enterprise/install/automated/active-active) architecture defined by `var.node_count`
+- External Services production type
+- m5.xlarge virtual machine type
+- Ubuntu 24.04
+- A publicly accessible HTTP load balancer with TLS termination
 
 ## Prerequisites
 
 This example assumes that the following resources exist:
 
-- TFE license is on a file path defined by `var.license_file` 
+- TFE license is on a file path defined by `var.license_file`
 - A DNS zone
 - Valid managed SSL certificate to use with load balancer:
   - Create/Import a managed SSL Certificate using AWS ACM to serve as the certificate for the DNS A Record.
@@ -36,7 +36,7 @@ This example assumes that the following resources exist:
   data source. To do this, simply provide a value for the `ami_id` variable with the specific
   AMI ID that you wish to use. If you choose to do this, you do not need to provide values for
   the other variables that begin with `ami_`.
-  
+
 ## How to Use This Module
 
 ### Deployment
