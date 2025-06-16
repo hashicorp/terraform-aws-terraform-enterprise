@@ -90,3 +90,24 @@ output "s3_bucket" {
   value       = local.object_storage.s3_bucket
   description = "S3 bucket name"
 }
+
+output "use_mtls_aws" {
+  value       = var.db_use_mtls
+  description = "Whether to use mTLS while authenticating with the PostgreSQL server"
+}
+
+output "ca_cert_file_aws" {
+  value       = var.db_ca_cert_file
+  description = "Specifies the path to a file containing the root certificate for validating PostgreSQL server certificates"
+}
+
+output "client_cert_file_aws" {
+  value       = var.db_ca_cert_file
+  description = "Specifies the path to a file containing the client certificate that Terraform Enterprise uses for authenticating with the PostgreSQL server"
+}
+
+output "client_key_file_aws" {
+  value       = var.db_client_key_file
+  description = "Specifies the path to a file containing the client private key corresponding to the PostgreSQL client certificate"
+}
+
