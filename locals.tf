@@ -22,28 +22,28 @@ locals {
   database = var.enable_aurora ? try(
     module.aurora_database[0],
     {
-      name       = null
-      password   = null
-      endpoint   = null
-      username   = null
-      parameters = null
-      use_mtls = null
-      ca_cert_file = null
+      name             = null
+      password         = null
+      endpoint         = null
+      username         = null
+      parameters       = null
+      use_mtls         = null
+      ca_cert_file     = null
       client_cert_file = null
-      client_key_file = null
+      client_key_file  = null
     }
     ) : try(
     module.database[0],
     {
-      name       = null
-      password   = null
-      endpoint   = null
-      username   = null
-      parameters = null
-      use_mtls = null
-      ca_cert_file = null
+      name             = null
+      password         = null
+      endpoint         = null
+      username         = null
+      parameters       = null
+      use_mtls         = null
+      ca_cert_file     = null
       client_cert_file = null
-      client_key_file = null
+      client_key_file  = null
     }
   )
 
