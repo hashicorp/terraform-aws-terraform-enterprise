@@ -258,12 +258,6 @@ variable "db_endpoint" {
   default     = ""
 }
 
-variable "db_port" {
-  type        = string
-  description = "Determine Amazon RDS Postgres deployment strategy."
-  default     = "5432"
-}
-
 variable "db_password" {
   type        = string
   description = "Determine Amazon RDS Postgres deployment strategy."
@@ -288,11 +282,6 @@ variable "db_client_cert_file" {
 }
 
 variable "db_client_key_file" {
-  type        = string
-  default     = ""
-  description = "Path to a file containing the client key for Database TLS connections. Leave blank to not use a client key for Database TLS connections. Defaults to \"\" if no value is given."
-}
-variable "database_client_key_file" {
   type        = string
   default     = ""
   description = "Path to a file containing the client key for Database TLS connections. Leave blank to not use a client key for Database TLS connections. Defaults to \"\" if no value is given."
