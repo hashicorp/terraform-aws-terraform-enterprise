@@ -234,15 +234,15 @@ module "runtime_container_engine_config" {
   iact_time_limit      = var.iact_subnet_time_limit
   run_pipeline_image   = var.run_pipeline_image
 
-  database_name       = local.database.name
-  database_user       = local.database.username
-  database_password   = local.database.password
-  database_host       = local.database.endpoint
-  database_parameters = local.database.parameters
-  database_use_mtls = local.database.use_mtls
-  database_ca_cert_file = local.database.ca_cert_file
-  database_client_cert_file = local.database.client_cert_file
-  database_client_key_file = local.database.client_key_file
+  database_name             = var.db_name
+  database_user             = var.db_username
+  database_password         = var.db_password
+  database_host             = var.db_endpoint
+  database_parameters       = var.db_parameters
+  database_use_mtls         = var.use_mtls
+  database_ca_cert_file     = var.ca_cert_file
+  database_client_cert_file = var.client_cert_file
+  database_client_key_file  = var.client_key_file
 
   storage_type                         = "s3"
   s3_access_key_id                     = var.aws_access_key_id
