@@ -207,6 +207,10 @@ module "runtime_container_engine_config" {
   database_password   = local.database.password
   database_host       = local.database.endpoint
   database_parameters = local.database.parameters
+  database_use_mtls = local.database.use_mtls
+  database_ca_cert_file = local.database.ca_cert_file
+  database_client_cert_file = local.database.client_cert_file
+  database_client_key_file = local.database.client_key_file
 
   storage_type                         = "s3"
   s3_access_key_id                     = var.aws_access_key_id

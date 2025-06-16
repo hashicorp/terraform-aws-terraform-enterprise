@@ -27,6 +27,10 @@ locals {
       endpoint   = null
       username   = null
       parameters = null
+      use_mtls = null
+      ca_cert_file = null
+      client_cert_file = null
+      client_key_file = null
     }
     ) : try(
     module.database[0],
@@ -36,6 +40,10 @@ locals {
       endpoint   = null
       username   = null
       parameters = null
+      use_mtls = null
+      ca_cert_file = null
+      client_cert_file = null
+      client_key_file = null
     }
   )
 
