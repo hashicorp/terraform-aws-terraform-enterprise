@@ -116,6 +116,30 @@ variable "enable_redis_sentinel" {
   default     = false
 }
 
+variable "enable_redis_mtls" {
+  type        = bool
+  description = "Enable Redis mTLS."
+  default     = false
+}
+
+variable "redis_client_key_secret_id" {
+  type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded private key for redis."
+  default     = null
+}
+
+variable "redis_client_certificate_secret_id" {
+  type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for redis."
+  default     = null
+}
+
+variable "redis_ca_certificate_secret_id" {
+  type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for redis."
+  default     = null
+}
+
 variable "redis_cache_size" {
   type        = string
   default     = "cache.m4.large"
@@ -342,6 +366,12 @@ variable "https_port" {
   default     = 8443
   type        = number
   description = "(Optional if is_replicated_deployment is false) Port application listens on for HTTPS. Default is 443."
+}
+
+variable "admin_api_https_port" {
+  default     = 8446
+  type        = number
+  description = "(Optional if is_replicated_deployment is false) Port application listens on for Admin API HTTPS. Default is 8443."
 }
 
 variable "iact_subnet_list" {

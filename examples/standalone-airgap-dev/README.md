@@ -7,22 +7,22 @@ This example for Terraform Enterprise creates a TFE installation with the follow
 - Standalone
 - External Services production type
 - Air gapped (mocked)
-- This example merely tests that the `airgap_url` package is able to install TFE. It does not, however, assume that the environment is air gapped, and it therefore installs the prerequisites for an air gapped installation, too. 
+- This example merely tests that the `airgap_url` package is able to install TFE. It does not, however, assume that the environment is air gapped, and it therefore installs the prerequisites for an air gapped installation, too.
 - m5.xlarge virtual machine type
-- Ubuntu 20.04
+- Ubuntu 24.04
 - A publicly accessible HTTP load balancer with TLS termination
 
 ## Prerequisites
 
 This example assumes that the following resources exist:
 
-- TFE license is on a file path defined by `var.license_file` 
+- TFE license is on a file path defined by `var.license_file`
 - Air gap prerequisites:
   - The URL of an airgap package
 - A DNS zone
 - Valid managed SSL certificate to use with load balancer:
   - Create/Import a managed SSL Certificate using AWS ACM to serve as the certificate for the DNS A Record.
-  
+
 ## How to Use This Module
 
 ### Deployment

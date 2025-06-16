@@ -37,6 +37,16 @@ resource "aws_security_group_rule" "tfe_lb_allow_inbound_dashboard" {
   security_group_id = aws_security_group.tfe_lb_allow.id
 }
 
+resource "aws_security_group_rule" "tfe_lb_allow_inbound_admin_api" {
+  type              = "ingress"
+  from_port         = var.admin_api_https_port
+  to_port           = var.admin_api_https_port
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "Allow Admin API HTTPS traffic inbound to TFE LB"
+  security_group_id = aws_security_group.tfe_lb_allow.id
+}
+
 resource "aws_security_group" "tfe_outbound_allow" {
   name   = "${var.friendly_name_prefix}-tfe-outbound-allow"
   vpc_id = var.network_id
@@ -133,6 +143,32 @@ resource "aws_lb_target_group" "tfe_tg_8800" {
     path     = "/"
     protocol = "HTTPS"
     matcher  = "200-399"
+  }
+}
+
+resource "aws_lb_listener" "tfe_listener_admin_api" {
+  load_balancer_arn = aws_lb.tfe_lb.arn
+  port              = var.admin_api_https_port
+  protocol          = "HTTPS"
+  ssl_policy        = var.ssl_policy
+  certificate_arn   = var.certificate_arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tfe_tg_admin_api.arn
+  }
+}
+
+resource "aws_lb_target_group" "tfe_tg_admin_api" {
+  name     = "${var.friendly_name_prefix}-tfe-alb-tg-${var.admin_api_https_port}"
+  port     = var.admin_api_https_port
+  protocol = "HTTPS"
+  vpc_id   = var.network_id
+
+  health_check {
+    path     = "/api/v1/ping"
+    protocol = "HTTPS"
+    matcher  = "200-399,400,401,403"
   }
 }
 
