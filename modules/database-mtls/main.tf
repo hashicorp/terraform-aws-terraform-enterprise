@@ -115,6 +115,10 @@ resource "null_resource" "configure_mtls" {
     null_resource.generate_certificates, # <- Make sure certs are copied before this
     aws_instance.postgres
   ]
+
+  triggers = {
+    always_run = timestamp()
+  }
   connection {
     type        = "ssh"
     user        = "ubuntu" # or "ec2-user" for Amazon Linux
