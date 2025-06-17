@@ -249,7 +249,7 @@ module "runtime_container_engine_config" {
   database_name             = local.database.name
   database_user             = local.database.username
   database_password         = local.database.password
-  database_host             = local.database.endpoint
+  database_host             = "${local.database.endpoint}:5432"
   database_parameters       = local.database.parameters
   database_use_mtls         = var.db_use_mtls
   database_ca_cert_file     = var.db_ca_cert_file
