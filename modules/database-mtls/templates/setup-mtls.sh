@@ -26,9 +26,9 @@ fi
 docker run -d \
   --name postgres \
   -p 5432:5432 \
-  -e POSTGRES_USER="postgres" \
+  -e POSTGRES_USER="hashicorp" \
   -e POSTGRES_PASSWORD="postgres_postgres" \
-  -e POSTGRES_DB="postgres" \
+  -e POSTGRES_DB="hashicorp" \
   postgres:16 || {
     echo "❌ Docker run failed"
     exit 1
