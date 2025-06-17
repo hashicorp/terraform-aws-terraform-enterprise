@@ -252,16 +252,22 @@ variable "allow_multiple_azs" {
   default     = true
 }
 
-variable "db_endpoint" {
-  type        = string
-  description = "Determine Amazon RDS Postgres deployment strategy."
-  default     = ""
-}
+# variable "db_endpoint" {
+#   type        = string
+#   description = "Determine Amazon RDS Postgres deployment strategy."
+#   default     = ""
+# }
 
-variable "db_password" {
-  type        = string
-  description = "Determine Amazon RDS Postgres deployment strategy."
-  default     = ""
+# variable "db_password" {
+#   type        = string
+#   description = "Determine Amazon RDS Postgres deployment strategy."
+#   default     = ""
+# }
+
+variable "enable_mtls_database" {
+  type        = bool
+  description = "Whether or not to use mutual TLS to access database. Defaults to false if no value is given."
+  default     = false
 }
 
 variable "db_use_mtls" {

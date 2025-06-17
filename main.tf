@@ -147,6 +147,18 @@ module "redis_mtls" {
 }
 
 # -----------------------------------------------------------------------------
+# EC2 PostreSQL container with mTLS
+# -----------------------------------------------------------------------------
+module "database" {
+  source = "./modules/database-mtls"
+  count  = local.enable_mtls_database_module ? 1 : 0
+
+  db_name       = var.db_name
+  db_parameters = var.db_parameters
+  db_username   = var.db_username
+}
+
+# -----------------------------------------------------------------------------
 # AWS PostreSQL Database
 # -----------------------------------------------------------------------------
 module "database" {
@@ -234,11 +246,11 @@ module "runtime_container_engine_config" {
   iact_time_limit      = var.iact_subnet_time_limit
   run_pipeline_image   = var.run_pipeline_image
 
-  database_name             = var.db_name
-  database_user             = var.db_username
-  database_password         = var.db_password
-  database_host             = var.db_endpoint
-  database_parameters       = var.db_parameters
+  database_name             = local.database.name
+  database_user             = local.database.username
+  database_password         = local.database.password
+  database_host             = local.database.endpoint
+  database_parameters       = local.database.parameters
   database_use_mtls         = var.db_use_mtls
   database_ca_cert_file     = var.db_ca_cert_file
   database_client_cert_file = var.db_client_cert_file
