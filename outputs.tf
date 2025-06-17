@@ -106,8 +106,8 @@ output "client_cert_file_aws" {
   description = "Specifies the path to a file containing the client certificate that Terraform Enterprise uses for authenticating with the PostgreSQL server"
 }
 
-output "client_key_file_aws" {
-  value       = var.db_client_key_file
+output "postgres_ip" {
+  value       = local.database.endpoint
   description = "Specifies the path to a file containing the client private key corresponding to the PostgreSQL client certificate"
 }
 
