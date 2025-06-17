@@ -149,7 +149,7 @@ module "redis_mtls" {
 # -----------------------------------------------------------------------------
 # EC2 PostreSQL container with mTLS
 # -----------------------------------------------------------------------------
-module "database" {
+module "database_mtls" {
   source = "./modules/database-mtls"
   count  = local.enable_mtls_database_module ? 1 : 0
 
