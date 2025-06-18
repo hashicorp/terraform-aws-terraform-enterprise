@@ -153,9 +153,11 @@ module "database_mtls" {
   source = "./modules/database-mtls"
   count  = local.enable_mtls_database_module ? 1 : 0
 
-  db_name       = var.db_name
-  db_parameters = var.db_parameters
-  db_username   = var.db_username
+  db_name              = var.db_name
+  db_parameters        = var.db_parameters
+  db_username          = var.db_username
+  friendly_name_prefix = var.friendly_name_prefix
+  network_id           = local.network_id
 }
 
 # -----------------------------------------------------------------------------

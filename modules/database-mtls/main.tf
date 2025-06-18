@@ -1,27 +1,25 @@
-resource "aws_security_group" "ec2_sg" {
-  name_prefix = "ec2-sg-"
-  description = "Allow all ingress and egress for testing"
+resource "aws_security_group" "postgresql" {
+  description = "The security group of the PostgreSQL deployment for TFE."
+  name        = "${var.friendly_name_prefix}-tfe-postgresql"
+  vpc_id      = var.network_id
+}
 
-  ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"          # -1 means all protocols
-    cidr_blocks = ["0.0.0.0/0"] # All IPv4 addresses
-  }
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # or restrict to trusted IPs
-  }
+resource "aws_security_group_rule" "postgresql_ingress" {
+  security_group_id = aws_security_group.postgresql.id
+  type              = "ingress"
+  from_port         = 5432
+  to_port           = 5432
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
 
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1" # All protocols
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+resource "aws_security_group_rule" "postgresql_tfe_egress" {
+  security_group_id = aws_security_group.postgresql.id
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
 }
 
 # Define the IAM role for the nginx instance
@@ -40,8 +38,6 @@ resource "aws_iam_role" "nginx_instance_role" {
     ]
   })
 }
-
-# Create an instance profile for the nginx instance
 resource "aws_iam_instance_profile" "nginx_instance_profile" {
   name = "nginx-instance-profile"
   role = aws_iam_role.nginx_instance_role.name
@@ -51,7 +47,7 @@ resource "aws_instance" "postgres" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.medium"
   associate_public_ip_address = true
-  security_groups             = [aws_security_group.ec2_sg.name]
+  security_groups             = [aws_security_group.postgresql.name]
   iam_instance_profile        = aws_iam_instance_profile.nginx_instance_profile.name
   key_name                    = aws_key_pair.ec2_key.key_name
 
@@ -82,59 +78,59 @@ resource "aws_key_pair" "ec2_key" {
   public_key = tls_private_key.ssh.public_key_openssh
 }
 
-resource "null_resource" "generate_certificates" {
-  depends_on = [aws_instance.postgres]
+# resource "null_resource" "generate_certificates" {
+#   depends_on = [aws_instance.postgres]
 
-  triggers = {
-    always_run = timestamp()
-  }
+#   triggers = {
+#     always_run = timestamp()
+#   }
 
-  connection {
-    type        = "ssh"
-    user        = "ubuntu"
-    private_key = tls_private_key.ssh.private_key_pem
-    host        = aws_instance.postgres.public_ip
-  }
+#   connection {
+#     type        = "ssh"
+#     user        = "ubuntu"
+#     private_key = tls_private_key.ssh.private_key_pem
+#     host        = aws_instance.postgres.public_ip
+#   }
 
-  provisioner "file" {
-    source      = "${path.module}/templates/certificate_generate.sh"
-    destination = "/home/ubuntu/certificate_generate.sh"
-  }
+#   provisioner "file" {
+#     source      = "${path.module}/templates/certificate_generate.sh"
+#     destination = "/home/ubuntu/certificate_generate.sh"
+#   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "chmod +x /home/ubuntu/certificate_generate.sh",
-      "sudo /home/ubuntu/certificate_generate.sh"
-    ]
-  }
-}
+#   provisioner "remote-exec" {
+#     inline = [
+#       "chmod +x /home/ubuntu/certificate_generate.sh",
+#       "sudo /home/ubuntu/certificate_generate.sh"
+#     ]
+#   }
+# }
 
 
-resource "null_resource" "configure_mtls" {
-  depends_on = [
-    null_resource.generate_certificates, # <- Make sure certs are copied before this
-    aws_instance.postgres
-  ]
+# resource "null_resource" "configure_mtls" {
+#   depends_on = [
+#     null_resource.generate_certificates, # <- Make sure certs are copied before this
+#     aws_instance.postgres
+#   ]
 
-  triggers = {
-    always_run = timestamp()
-  }
-  connection {
-    type        = "ssh"
-    user        = "ubuntu" # or "ec2-user" for Amazon Linux
-    private_key = tls_private_key.ssh.private_key_pem
-    host        = aws_instance.postgres.public_ip
-  }
+#   triggers = {
+#     always_run = timestamp()
+#   }
+#   connection {
+#     type        = "ssh"
+#     user        = "ubuntu" # or "ec2-user" for Amazon Linux
+#     private_key = tls_private_key.ssh.private_key_pem
+#     host        = aws_instance.postgres.public_ip
+#   }
 
-  provisioner "file" {
-    source      = "${path.module}/templates/setup-mtls.sh" # local path to script
-    destination = "/home/ubuntu/setup-mtls.sh"             # remote path
-  }
+#   provisioner "file" {
+#     source      = "${path.module}/templates/setup-mtls.sh" # local path to script
+#     destination = "/home/ubuntu/setup-mtls.sh"             # remote path
+#   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "chmod +x /home/ubuntu/setup-mtls.sh",
-      "sudo /home/ubuntu/setup-mtls.sh"
-    ]
-  }
-}
+#   provisioner "remote-exec" {
+#     inline = [
+#       "chmod +x /home/ubuntu/setup-mtls.sh",
+#       "sudo /home/ubuntu/setup-mtls.sh"
+#     ]
+#   }
+# }

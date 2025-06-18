@@ -1,9 +1,3 @@
-#!/bin/bash
-set -e
-
-# Install OpenSSL
-apt-get update -y
-apt-get install -y openssl
 
 echo "installed openssl"
 
