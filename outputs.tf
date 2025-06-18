@@ -112,26 +112,26 @@ output "postgres_ip" {
 }
 
 output "database_host" {
-  value       = module.runtime_container_engine_config.database_host
+  value       = module.runtime_container_engine_config[0].database_host
   description = "The PostgreSQL server to connect to in the format HOST[:PORT] (e.g. db.example.com or db.example.com:5432). If only HOST is provided then the :PORT defaults to :5432 if no value is given. Required when TFE_OPERATIONAL_MODE is external or active-active."
 }
 
 output "database_name" {
-  value       = module.runtime_container_engine_config.database_name
+  value       = module.runtime_container_engine_config[0].database_name
   description = "Name of the PostgreSQL database to store application data in. Required when TFE_OPERATIONAL_MODE is external or active-active."
 }
 
 output "database_parameters" {
-  value       = module.runtime_container_engine_config.database_parameters
+  value       = module.runtime_container_engine_config[0].database_parameters
   description = "PostgreSQL server parameters for the connection URI. Used to configure the PostgreSQL connection (e.g. sslmode=require)."
 }
 
 output "database_password" {
-  value       = module.runtime_container_engine_config.database_password
+  value       = module.runtime_container_engine_config[0].database_password
   description = "PostgreSQL password. Required when TFE_OPERATIONAL_MODE is external or active-active."
 }
 
 output "database_user" {
-  value       = module.runtime_container_engine_config.database_user
+  value       = module.runtime_container_engine_config[0].database_user
   description = "PostgreSQL password. Required when TFE_OPERATIONAL_MODE is external or active-active."
 }
