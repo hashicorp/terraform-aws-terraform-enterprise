@@ -1,6 +1,6 @@
 resource "aws_security_group" "postgresql" {
   description = "The security group of the PostgreSQL deployment for TFE."
-  name        = "${var.friendly_name_prefix}-tfe-postgresql"
+  name        = "${var.friendly_name_prefix}-tfe-postgres-mtls"
   vpc_id      = var.network_id
 }
 
