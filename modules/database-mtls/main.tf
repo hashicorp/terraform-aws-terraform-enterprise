@@ -47,7 +47,7 @@ resource "aws_instance" "postgres" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.medium"
   associate_public_ip_address = true
-  security_groups             = [aws_security_group.postgresql.name]
+  vpc_security_group_ids      = [aws_security_group.postgresql.id]
   iam_instance_profile        = aws_iam_instance_profile.nginx_instance_profile.name
   key_name                    = aws_key_pair.ec2_key.key_name
 
@@ -77,60 +77,3 @@ resource "aws_key_pair" "ec2_key" {
   key_name   = "ec2-postgres-key"
   public_key = tls_private_key.ssh.public_key_openssh
 }
-
-# resource "null_resource" "generate_certificates" {
-#   depends_on = [aws_instance.postgres]
-
-#   triggers = {
-#     always_run = timestamp()
-#   }
-
-#   connection {
-#     type        = "ssh"
-#     user        = "ubuntu"
-#     private_key = tls_private_key.ssh.private_key_pem
-#     host        = aws_instance.postgres.public_ip
-#   }
-
-#   provisioner "file" {
-#     source      = "${path.module}/templates/certificate_generate.sh"
-#     destination = "/home/ubuntu/certificate_generate.sh"
-#   }
-
-#   provisioner "remote-exec" {
-#     inline = [
-#       "chmod +x /home/ubuntu/certificate_generate.sh",
-#       "sudo /home/ubuntu/certificate_generate.sh"
-#     ]
-#   }
-# }
-
-
-# resource "null_resource" "configure_mtls" {
-#   depends_on = [
-#     null_resource.generate_certificates, # <- Make sure certs are copied before this
-#     aws_instance.postgres
-#   ]
-
-#   triggers = {
-#     always_run = timestamp()
-#   }
-#   connection {
-#     type        = "ssh"
-#     user        = "ubuntu" # or "ec2-user" for Amazon Linux
-#     private_key = tls_private_key.ssh.private_key_pem
-#     host        = aws_instance.postgres.public_ip
-#   }
-
-#   provisioner "file" {
-#     source      = "${path.module}/templates/setup-mtls.sh" # local path to script
-#     destination = "/home/ubuntu/setup-mtls.sh"             # remote path
-#   }
-
-#   provisioner "remote-exec" {
-#     inline = [
-#       "chmod +x /home/ubuntu/setup-mtls.sh",
-#       "sudo /home/ubuntu/setup-mtls.sh"
-#     ]
-#   }
-# }
