@@ -13,6 +13,15 @@ resource "aws_security_group_rule" "postgresql_ingress" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
+resource "aws_security_group_rule" "postgresql_ingress_all" {
+  security_group_id = aws_security_group.postgresql.id
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
 resource "aws_security_group_rule" "postgresql_tfe_egress" {
   security_group_id = aws_security_group.postgresql.id
   type              = "egress"
@@ -59,21 +68,21 @@ resource "aws_instance" "postgres" {
   })
 
   tags = {
-    Name = "Terraform-Postgres"
+    Name = "Terraform-Postgres-mTLS"
   }
 }
 
-resource "local_file" "private_key_pem" {
-  content         = tls_private_key.ssh.private_key_pem
-  filename        = "${path.module}/ec2-postgres-key.pem"
-  file_permission = "0600"
-}
-resource "tls_private_key" "ssh" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
+# resource "local_file" "private_key_pem" {
+#   content         = tls_private_key.ssh.private_key_pem
+#   filename        = "${path.module}/ec2-postgres-key.pem"
+#   file_permission = "0600"
+# }
+# resource "tls_private_key" "ssh" {
+#   algorithm = "RSA"
+#   rsa_bits  = 4096
+# }
 
-resource "aws_key_pair" "ec2_key" {
-  key_name   = "ec2-postgres-key"
-  public_key = tls_private_key.ssh.public_key_openssh
-}
+# resource "aws_key_pair" "ec2_key" {
+#   key_name   = "ec2-postgres-key"
+#   public_key = tls_private_key.ssh.public_key_openssh
+# }
