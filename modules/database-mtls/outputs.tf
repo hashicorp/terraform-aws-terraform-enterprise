@@ -3,9 +3,6 @@ output "postgres_public_ip" {
   value       = aws_instance.postgres.public_ip
 }
 
-# Copyright (c) HashiCorp, Inc.
-# SPDX-License-Identifier: MPL-2.0
-
 output "endpoint" {
   value       = aws_instance.postgres.public_ip
   description = "The connection endpoint of the PostgreSQL RDS instance in address:port format."
@@ -13,7 +10,7 @@ output "endpoint" {
 
 output "name" {
   value       = var.db_name
-  description = "The name of the PostgreSQL RDS instance."
+  description = "The name of the PostgreSQL instance."
 }
 
 output "password" {

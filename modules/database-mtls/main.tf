@@ -10,8 +10,7 @@ resource "aws_security_group_rule" "postgresql_ingress" {
   from_port         = 5432
   to_port           = 5432
   protocol          = "tcp"
-  # cidr_blocks       = ["0.0.0.0/0"]
-  cidr_blocks = var.network_private_subnet_cidrs
+  cidr_blocks       = ["0.0.0.0/0"]
 }
 
 resource "aws_security_group_rule" "postgresql_tfe_egress" {

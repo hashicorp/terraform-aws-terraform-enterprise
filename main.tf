@@ -159,7 +159,6 @@ module "database_mtls" {
   friendly_name_prefix         = var.friendly_name_prefix
   network_id                   = local.network_id
   network_private_subnet_cidrs = var.network_private_subnet_cidrs
-
 }
 
 # -----------------------------------------------------------------------------

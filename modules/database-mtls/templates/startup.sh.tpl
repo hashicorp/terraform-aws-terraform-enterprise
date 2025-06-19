@@ -60,9 +60,9 @@ echo "🚀 Starting PostgreSQL container..."
 docker run -d \
   --name postgres \
   -p 5432:5432 \
-  -e POSTGRES_USER="hashicorp" \
+  -e POSTGRES_USER=${POSTGRES_USER} \
   -e POSTGRES_PASSWORD="postgres_postgres" \
-  -e POSTGRES_DB="hashicorp" \
+  -e POSTGRES_DB=${POSTGRES_DB} \
   postgres:16 || { echo "❌ Docker run failed"; exit 1; }
 
 # Validate container is running
