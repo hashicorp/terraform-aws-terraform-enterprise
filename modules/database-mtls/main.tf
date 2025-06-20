@@ -58,7 +58,7 @@ resource "aws_instance" "postgres" {
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.postgresql.id]
   iam_instance_profile        = aws_iam_instance_profile.nginx_instance_profile.name
-  # key_name                    = aws_key_pair.ec2_key.key_name
+  key_name                    = aws_key_pair.ec2_key.key_name
 
   user_data = templatefile("${path.module}/templates/startup.sh.tpl", {
     POSTGRES_USER     = var.db_username
@@ -72,17 +72,44 @@ resource "aws_instance" "postgres" {
   }
 }
 
-# resource "local_file" "private_key_pem" {
-#   content         = tls_private_key.ssh.private_key_pem
-#   filename        = "${path.module}/ec2-postgres-key.pem"
-#   file_permission = "0600"
-# }
-# resource "tls_private_key" "ssh" {
-#   algorithm = "RSA"
-#   rsa_bits  = 4096
-# }
+resource "local_file" "private_key_pem" {
+  content         = tls_private_key.ssh.private_key_pem
+  filename        = "${path.module}/ec2-postgres-key.pem"
+  file_permission = "0600"
+}
+resource "tls_private_key" "ssh" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
 
-# resource "aws_key_pair" "ec2_key" {
-#   key_name   = "ec2-postgres-key"
-#   public_key = tls_private_key.ssh.public_key_openssh
-# }
+resource "aws_key_pair" "ec2_key" {
+  key_name   = "ec2-postgres-key"
+  public_key = tls_private_key.ssh.public_key_openssh
+}
+
+resource "null_resource" "generate_certificates" {
+  depends_on = [aws_instance.postgres]
+
+  triggers = {
+    always_run = timestamp()
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = tls_private_key.ssh.private_key_pem
+    host        = aws_instance.postgres.public_ip
+  }
+
+  provisioner "file" {
+    source      = "${path.module}/templates/certificate_generate.sh"
+    destination = "/home/ubuntu/certificate_generate.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo '===== Startup Script Logs ====='",
+      "sudo cat /var/log/startup.log || echo '❌ Log file not found.'"
+    ]
+  }
+}
