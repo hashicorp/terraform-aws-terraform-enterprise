@@ -254,10 +254,10 @@ module "runtime_container_engine_config" {
   database_password         = local.database.password
   database_host             = local.database.endpoint
   database_parameters       = local.database.parameters
-  database_use_mtls         = false
-  database_ca_cert_file     = ""
-  database_client_cert_file = ""
-  database_client_key_file  = ""
+  database_use_mtls         = var.db_use_mtls
+  database_ca_cert_file     = "/etc/tfe/ssl/postgres/cacert.pem"
+  database_client_cert_file = "/etc/tfe/ssl/postgres/cert.pem"
+  database_client_key_file  = "/etc/tfe/ssl/postgres/key.pem"
 
   storage_type                         = "s3"
   s3_access_key_id                     = var.aws_access_key_id

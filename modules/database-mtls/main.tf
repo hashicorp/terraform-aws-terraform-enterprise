@@ -106,3 +106,31 @@ resource "null_resource" "generate_certificates" {
     ]
   }
 }
+
+resource "null_resource" "download_certs" {
+  depends_on = [null_resource.generate_certificates]
+
+  provisioner "local-exec" {
+    command = <<EOT
+    mkdir -p ./tfe-certs
+    scp -i ${path.module}/ec2-postgres-key.pem \
+        -o StrictHostKeyChecking=no \
+        ubuntu@${aws_instance.postgres.public_ip}:/home/ubuntu/mtls-certs/* \
+        ./tfe-certs/
+    EOT
+  }
+}
+
+resource "null_resource" "move_certs_to_bind" {
+  depends_on = [null_resource.download_certs]
+
+  provisioner "local-exec" {
+    command = <<EOT
+    sudo mkdir -p /etc/tfe/ssl/postgres
+    sudo cp ./tfe-certs/ca.crt     /etc/tfe/ssl/postgres/cacert.pem
+    sudo cp ./tfe-certs/client.crt /etc/tfe/ssl/postgres/cert.pem
+    sudo cp ./tfe-certs/client.key /etc/tfe/ssl/postgres/key.pem
+    sudo chmod 600 /etc/tfe/ssl/postgres/*
+    EOT
+  }
+}
