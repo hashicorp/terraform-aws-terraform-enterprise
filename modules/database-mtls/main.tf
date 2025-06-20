@@ -93,19 +93,12 @@ resource "null_resource" "generate_certificates" {
   triggers = {
     always_run = timestamp()
   }
-
   connection {
     type        = "ssh"
     user        = "ubuntu"
     private_key = tls_private_key.ssh.private_key_pem
     host        = aws_instance.postgres.public_ip
   }
-
-  provisioner "file" {
-    source      = "${path.module}/templates/certificate_generate.sh"
-    destination = "/home/ubuntu/certificate_generate.sh"
-  }
-
   provisioner "remote-exec" {
     inline = [
       "echo '===== Startup Script Logs ====='",
