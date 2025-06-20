@@ -109,7 +109,7 @@ resource "null_resource" "generate_certificates" {
   provisioner "remote-exec" {
     inline = [
       "echo '===== Startup Script Logs ====='",
-      "sudo cat /var/log/startup.log || echo '❌ Log file not found.'"
+      "sudo cat /home/ubuntu/startup.log || echo '❌ Log file not found.'"
     ]
   }
 }

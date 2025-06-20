@@ -1,8 +1,10 @@
 #!/bin/bash
 set -e
 
+mkdir -p "/home/ubuntu"
+
 # Redirect all output to log file
-exec > >(tee -a /var/log/startup.log) 2>&1
+exec > >(tee -a /home/ubuntu/startup.log) 2>&1
 set -x  # Print each command as it runs (for full trace)
 
 echo "🔧 Installing dependencies..."
