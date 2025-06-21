@@ -254,7 +254,7 @@ module "runtime_container_engine_config" {
   database_password         = local.database.password
   database_host             = local.database.endpoint
   database_parameters       = local.database.parameters
-  database_use_mtls         = var.db_use_mtls
+  database_use_mtls         = false
   database_ca_cert_file     = "/etc/tfe/ssl/postgres/cacert.pem"
   database_client_cert_file = "/etc/tfe/ssl/postgres/cert.pem"
   database_client_key_file  = "/etc/tfe/ssl/postgres/key.pem"

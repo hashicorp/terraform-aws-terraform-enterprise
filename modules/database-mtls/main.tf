@@ -74,7 +74,7 @@ resource "aws_instance" "postgres" {
 
 resource "local_file" "private_key_pem" {
   content         = tls_private_key.ssh.private_key_pem
-  filename        = "${path.module}/ec2-postgres-key.pem"
+  filename        = "${path.module}/${var.friendly_name_prefix}-ec2-postgres-key.pem"
   file_permission = "0600"
 }
 resource "tls_private_key" "ssh" {
@@ -83,7 +83,7 @@ resource "tls_private_key" "ssh" {
 }
 
 resource "aws_key_pair" "ec2_key" {
-  key_name   = "ec2-postgres-key"
+  key_name   = "${var.friendly_name_prefix}-ec2-postgres-key"
   public_key = tls_private_key.ssh.public_key_openssh
 }
 
