@@ -33,7 +33,7 @@ resource "aws_security_group_rule" "postgresql_tfe_egress" {
 
 # Define the IAM role for the nginx instance
 resource "aws_iam_role" "nginx_instance_role" {
-  name = "nginx-instance-role"
+  name = "${var.friendly_name_prefix}-nginx-instance-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -48,7 +48,7 @@ resource "aws_iam_role" "nginx_instance_role" {
   })
 }
 resource "aws_iam_instance_profile" "nginx_instance_profile" {
-  name = "nginx-instance-profile"
+  name = "${var.friendly_name_prefix}-nginx-instance-profile"
   role = aws_iam_role.nginx_instance_role.name
 }
 
@@ -107,30 +107,30 @@ resource "null_resource" "generate_certificates" {
   }
 }
 
-resource "null_resource" "download_certs" {
-  depends_on = [null_resource.generate_certificates]
+# resource "null_resource" "download_certs" {
+#   depends_on = [null_resource.generate_certificates]
 
-  provisioner "local-exec" {
-    command = <<EOT
-    mkdir -p ./tfe-certs
-    scp -i ${path.module}/ec2-postgres-key.pem \
-        -o StrictHostKeyChecking=no \
-        ubuntu@${aws_instance.postgres.public_ip}:/home/ubuntu/mtls-certs/* \
-        ./tfe-certs/
-    EOT
-  }
-}
+#   provisioner "local-exec" {
+#     command = <<EOT
+#     mkdir -p ./tfe-certs
+#     scp -i ${path.module}/ec2-postgres-key.pem \
+#         -o StrictHostKeyChecking=no \
+#         ubuntu@${aws_instance.postgres.public_ip}:/home/ubuntu/mtls-certs/* \
+#         ./tfe-certs/
+#     EOT
+#   }
+# }
 
-resource "null_resource" "move_certs_to_bind" {
-  depends_on = [null_resource.download_certs]
+# resource "null_resource" "move_certs_to_bind" {
+#   depends_on = [null_resource.download_certs]
 
-  provisioner "local-exec" {
-    command = <<EOT
-    sudo mkdir -p /etc/tfe/ssl/postgres
-    sudo cp ./tfe-certs/ca.crt     /etc/tfe/ssl/postgres/cacert.pem
-    sudo cp ./tfe-certs/client.crt /etc/tfe/ssl/postgres/cert.pem
-    sudo cp ./tfe-certs/client.key /etc/tfe/ssl/postgres/key.pem
-    sudo chmod 600 /etc/tfe/ssl/postgres/*
-    EOT
-  }
-}
+#   provisioner "local-exec" {
+#     command = <<EOT
+#     sudo mkdir -p /etc/tfe/ssl/postgres
+#     sudo cp ./tfe-certs/ca.crt     /etc/tfe/ssl/postgres/cacert.pem
+#     sudo cp ./tfe-certs/client.crt /etc/tfe/ssl/postgres/cert.pem
+#     sudo cp ./tfe-certs/client.key /etc/tfe/ssl/postgres/key.pem
+#     sudo chmod 600 /etc/tfe/ssl/postgres/*
+#     EOT
+#   }
+# }
