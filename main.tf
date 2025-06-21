@@ -147,6 +147,21 @@ module "redis_mtls" {
 }
 
 # -----------------------------------------------------------------------------
+# EC2 PostreSQL container with mTLS
+# -----------------------------------------------------------------------------
+module "database_mtls" {
+  source = "./modules/database-mtls"
+  count  = local.enable_mtls_database_module ? 1 : 0
+
+  db_name                      = var.db_name
+  db_parameters                = var.db_parameters
+  db_username                  = var.db_username
+  friendly_name_prefix         = var.friendly_name_prefix
+  network_id                   = local.network_id
+  network_private_subnet_cidrs = var.network_private_subnet_cidrs
+}
+
+# -----------------------------------------------------------------------------
 # AWS PostreSQL Database
 # -----------------------------------------------------------------------------
 module "database" {
@@ -201,7 +216,7 @@ module "aurora_database" {
 # Docker Compose File Config for TFE on instance(s) using Flexible Deployment Options
 # ------------------------------------------------------------------------------------
 module "runtime_container_engine_config" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=postgres-mtls"
   count  = var.is_replicated_deployment ? 0 : 1
 
   tfe_license = var.hc_license
@@ -239,6 +254,13 @@ module "runtime_container_engine_config" {
   database_password   = local.database.password
   database_host       = local.database.endpoint
   database_parameters = local.database.parameters
+  database_use_mtls   = false
+  # database_ca_cert_file     = "/etc/tfe/ssl/postgres/cacert.pem"
+  # database_client_cert_file = "/etc/tfe/ssl/postgres/cert.pem"
+  # database_client_key_file  = "/etc/tfe/ssl/postgres/key.pem"
+  database_ca_cert_file     = ""
+  database_client_cert_file = ""
+  database_client_key_file  = ""
 
   storage_type                         = "s3"
   s3_access_key_id                     = var.aws_access_key_id

@@ -90,3 +90,48 @@ output "s3_bucket" {
   value       = local.object_storage.s3_bucket
   description = "S3 bucket name"
 }
+
+output "use_mtls_aws" {
+  value       = var.db_use_mtls
+  description = "Whether to use mTLS while authenticating with the PostgreSQL server"
+}
+
+output "ca_cert_file_aws" {
+  value       = var.db_ca_cert_file
+  description = "Specifies the path to a file containing the root certificate for validating PostgreSQL server certificates"
+}
+
+output "client_cert_file_aws" {
+  value       = var.db_ca_cert_file
+  description = "Specifies the path to a file containing the client certificate that Terraform Enterprise uses for authenticating with the PostgreSQL server"
+}
+
+output "postgres_ip" {
+  value       = local.database.endpoint
+  description = "Specifies the path to a file containing the client private key corresponding to the PostgreSQL client certificate"
+}
+
+output "database_host" {
+  value       = module.runtime_container_engine_config[0].database_host
+  description = "The PostgreSQL server to connect to in the format HOST[:PORT] (e.g. db.example.com or db.example.com:5432). If only HOST is provided then the :PORT defaults to :5432 if no value is given. Required when TFE_OPERATIONAL_MODE is external or active-active."
+}
+
+output "database_name" {
+  value       = module.runtime_container_engine_config[0].database_name
+  description = "Name of the PostgreSQL database to store application data in. Required when TFE_OPERATIONAL_MODE is external or active-active."
+}
+
+output "database_parameters" {
+  value       = module.runtime_container_engine_config[0].database_parameters
+  description = "PostgreSQL server parameters for the connection URI. Used to configure the PostgreSQL connection (e.g. sslmode=require)."
+}
+
+output "database_password" {
+  value       = module.runtime_container_engine_config[0].database_password
+  description = "PostgreSQL password. Required when TFE_OPERATIONAL_MODE is external or active-active."
+}
+
+output "database_user" {
+  value       = module.runtime_container_engine_config[0].database_user
+  description = "PostgreSQL password. Required when TFE_OPERATIONAL_MODE is external or active-active."
+}
