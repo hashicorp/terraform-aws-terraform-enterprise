@@ -60,12 +60,12 @@ resource "aws_instance" "postgres" {
   iam_instance_profile        = aws_iam_instance_profile.nginx_instance_profile.name
   key_name                    = aws_key_pair.ec2_key.key_name
 
-  user_data = templatefile("${path.module}/templates/startup.sh.tpl", {
-    POSTGRES_USER     = var.db_username
-    POSTGRES_PASSWORD = "postgres_postgres"
-    # password          = random_string.postgresql_password.result
-    POSTGRES_DB = var.db_name
-  })
+  # user_data = templatefile("${path.module}/templates/startup.sh.tpl", {
+  #   POSTGRES_USER     = var.db_username
+  #   POSTGRES_PASSWORD = "postgres_postgres"
+  #   # password          = random_string.postgresql_password.result
+  #   POSTGRES_DB = var.db_name
+  # })
 
   tags = {
     Name = "Terraform-Postgres-mTLS"
@@ -93,19 +93,46 @@ resource "null_resource" "generate_certificates" {
   triggers = {
     always_run = timestamp()
   }
+
   connection {
     type        = "ssh"
     user        = "ubuntu"
     private_key = tls_private_key.ssh.private_key_pem
     host        = aws_instance.postgres.public_ip
   }
+
+  provisioner "file" {
+    source      = "${path.module}/templates/certificate_generate.sh"
+    destination = "/home/ubuntu/certificate_generate.sh"
+  }
+
   provisioner "remote-exec" {
     inline = [
-      "echo '===== Startup Script Logs ====='",
-      "sudo cat /home/ubuntu/startup.log || echo '❌ Log file not found.'"
+      "chmod +x /home/ubuntu/certificate_generate.sh",
+      "sudo /home/ubuntu/certificate_generate.sh"
     ]
   }
 }
+
+# resource "null_resource" "generate_certificates" {
+#   depends_on = [aws_instance.postgres]
+
+#   triggers = {
+#     always_run = timestamp()
+#   }
+#   connection {
+#     type        = "ssh"
+#     user        = "ubuntu"
+#     private_key = tls_private_key.ssh.private_key_pem
+#     host        = aws_instance.postgres.public_ip
+#   }
+#   provisioner "remote-exec" {
+#     inline = [
+#       "echo '===== Startup Script Logs ====='",
+#       "sudo cat /home/ubuntu/startup.log || echo '❌ Log file not found.'"
+#     ]
+#   }
+# }
 
 # resource "null_resource" "download_certs" {
 #   depends_on = [null_resource.generate_certificates]
