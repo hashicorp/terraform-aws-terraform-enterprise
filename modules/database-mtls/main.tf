@@ -1,7 +1,7 @@
 resource "aws_security_group" "postgresql" {
   description = "The security group of the PostgreSQL deployment for TFE."
   name        = "${var.friendly_name_prefix}-tfe-postgres-mtls"
-  vpc_id      = var.network_id
+  vpc_id      = data.aws_vpc.default.id
 }
 
 resource "aws_security_group_rule" "postgresql_ingress" {
@@ -10,8 +10,7 @@ resource "aws_security_group_rule" "postgresql_ingress" {
   from_port         = 5432
   to_port           = 5432
   protocol          = "tcp"
-  # cidr_blocks       = ["0.0.0.0/0"]
-  cidr_blocks = var.network_private_subnet_cidrs
+  cidr_blocks       = ["0.0.0.0/0"]
 }
 
 resource "aws_security_group_rule" "postgresql_ingress_all" {
@@ -20,8 +19,7 @@ resource "aws_security_group_rule" "postgresql_ingress_all" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  # cidr_blocks       = ["0.0.0.0/0"]
-  cidr_blocks = var.network_private_subnet_cidrs
+  cidr_blocks       = ["0.0.0.0/0"]
 }
 
 resource "aws_security_group_rule" "postgresql_tfe_egress" {
@@ -30,8 +28,7 @@ resource "aws_security_group_rule" "postgresql_tfe_egress" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  # cidr_blocks       = ["0.0.0.0/0"]
-  cidr_blocks = var.network_private_subnet_cidrs
+  cidr_blocks       = ["0.0.0.0/0"]
 }
 
 # Define the IAM role for the nginx instance
