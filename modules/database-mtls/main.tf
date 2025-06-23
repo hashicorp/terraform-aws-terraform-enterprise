@@ -10,7 +10,8 @@ resource "aws_security_group_rule" "postgresql_ingress" {
   from_port         = 5432
   to_port           = 5432
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  # cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks = var.network_private_subnet_cidrs
 }
 
 resource "aws_security_group_rule" "postgresql_ingress_all" {
@@ -19,7 +20,8 @@ resource "aws_security_group_rule" "postgresql_ingress_all" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
+  # cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks = var.network_private_subnet_cidrs
 }
 
 resource "aws_security_group_rule" "postgresql_tfe_egress" {
@@ -28,7 +30,8 @@ resource "aws_security_group_rule" "postgresql_tfe_egress" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
+  # cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks = var.network_private_subnet_cidrs
 }
 
 # Define the IAM role for the nginx instance
