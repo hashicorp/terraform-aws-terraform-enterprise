@@ -98,7 +98,7 @@ resource "null_resource" "generate_certificates" {
   depends_on = [aws_instance.postgres]
 
   triggers = {
-    always_run = timestamp()
+    instance_ip = aws_instance.postgres.public_ip
   }
 
   connection {
