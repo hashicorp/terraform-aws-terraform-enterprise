@@ -54,7 +54,7 @@ resource "aws_iam_instance_profile" "nginx_instance_profile" {
 
 resource "aws_instance" "postgres" {
   ami                         = data.aws_ami.ubuntu.id
-  instance_type               = "t3.medium"
+  instance_type               = "m5.xlarge"
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.postgresql.id]
   iam_instance_profile        = aws_iam_instance_profile.nginx_instance_profile.name
