@@ -165,4 +165,4 @@ echo "✅ PostgreSQL with mTLS is fully up and running."
 # Show psql command for user
 echo
 echo "👉 Connect using:"
-echo "psql "host=$EC2_IP port=5432 user=hashicorp dbname=hashicorp sslmode=verify-full sslrootcert= sslcert= sslkey="
+echo "psql \"host=$EC2_IP port=5432 user=hashicorp dbname=hashicorp sslmode=verify-full sslrootcert=ca.crt sslcert=client.crt sslkey=client.key\""
