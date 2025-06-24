@@ -67,6 +67,13 @@ resource "aws_instance" "postgres" {
   #   POSTGRES_DB = var.db_name
   # })
 
+  root_block_device {
+    volume_type           = "gp3"
+    volume_size           = 100  # Size in GiB
+    delete_on_termination = true # Deletes EBS when instance is terminated
+    encrypted             = true # Enable encryption
+  }
+
   tags = {
     Name = "Terraform-Postgres-mTLS"
   }
