@@ -3,9 +3,9 @@ set -e
 
 mkdir -p "/home/ubuntu"
 
-# Redirect all output to log file
+# Redirect output to a log file
 exec > >(tee -a /home/ubuntu/startup.log) 2>&1
-set -x  # Print each command as it runs (for full trace)
+set -x
 
 echo "🔧 Installing dependencies..."
 apt-get update -y
@@ -14,49 +14,72 @@ systemctl start docker
 systemctl enable docker
 echo "✅ Docker and dependencies installed."
 
-echo "🔐 Generating SSL certificates..."
+echo "🔐 Generating SSL certificates with SAN = localhost..."
+
+# OpenSSL config file for SAN
+OPENSSL_CNF="openssl.cnf"
+cat > "$OPENSSL_CNF" <<EOF
+[req]
+distinguished_name = req_distinguished_name
+x509_extensions = v3_ca
+req_extensions = v3_req
+prompt = no
+
+[req_distinguished_name]
+CN = postgres
+
+[v3_ca]
+subjectAltName = @alt_names
+
+[v3_req]
+subjectAltName = @alt_names
+
+[alt_names]
+IP.1 = $EC2_IP
+
+EOF
 
 # Generate CA
 openssl req -new -x509 -days 365 -nodes \
   -subj "/CN=Test CA" \
-  -keyout ca.key -out ca.crt
+  -keyout "ca.key" -out "ca.crt"
 
-# Generate Server Certificate
+# Generate Server key and CSR with SAN
 openssl req -new -nodes \
-  -subj "/CN=postgres" \
-  -keyout server.key -out server.csr
+  -keyout "server.key" -out "server.csr" \
+  -config "$OPENSSL_CNF"
 
-openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial \
-  -out server.crt -days 365
+# Sign server cert
+openssl x509 -req -in "server.csr" -CA "ca.crt" -CAkey "ca.key" -CAcreateserial \
+  -out "server.crt" -days 365 -extensions v3_req -extfile "$OPENSSL_CNF"
 
-# Generate Client Certificate
+# Generate client cert
 openssl req -new -nodes \
   -subj "/CN=pg-client" \
-  -keyout client.key -out client.csr
+  -keyout "client.key" -out "client.csr"
 
-openssl x509 -req -in client.csr -CA ca.crt -CAkey ca.key -CAcreateserial \
-  -out client.crt -days 365
+openssl x509 -req -in "client.csr" -CA "ca.crt" -CAkey "ca.key" -CAcreateserial \
+  -out "client.crt" -days 365
 
-chmod 600 server.key client.key
+chmod 600 "server.key" "client.key"
 echo "✅ Certificates generated."
 
 # Log certs
 echo "===== CA CERT =====";      cat ca.crt
 echo "===== CLIENT CERT =====";  cat client.crt
 echo "===== CLIENT KEY =====";   cat client.key
-
 # Prepare cert directory
 CERT_DIR="/home/ubuntu/mtls-certs"
 mkdir -p "$CERT_DIR"
 cp server.crt server.key ca.crt "$CERT_DIR/"
 chown ubuntu:ubuntu "$CERT_DIR"/*
 
-echo "✅ Certificates copied to $CERT_DIR."
+echo "✅ Certificates generated in $CERT_DIR"
 
 # Add user to docker group
 usermod -aG docker ubuntu
 
-# Cleanup existing container
+# Cleanup old container if exists
 if docker ps -a --format '{{.Names}}' | grep -qw postgres; then
   echo "Removing existing 'postgres' container..."
   docker rm -f postgres
@@ -71,10 +94,10 @@ docker run -d \
   -e POSTGRES_DB="hashicorp" \
   postgres:16 || { echo "❌ Docker run failed"; exit 1; }
 
-# Validate container is running
 sleep 5
+
 if ! docker ps | grep -qw postgres; then
-  echo "❌ Postgres container failed to start. Logs:"
+  echo "❌ Container failed to start."
   docker logs postgres
   exit 1
 fi
@@ -104,22 +127,24 @@ docker cp "$CERT_DIR/ca.crt"     postgres:/var/lib/postgresql/certs/
 # Set permissions inside container
 docker exec postgres bash -c "chown postgres:postgres /var/lib/postgresql/certs/* && chmod 600 /var/lib/postgresql/certs/server.key"
 
-echo "✅ Certificates copied and secured inside container."
-
-# Enable SSL in Postgres config
-docker exec postgres bash -c "echo \"ssl = on
+# Configure PostgreSQL for SSL
+docker exec postgres bash -c "echo \"
+ssl = on
 ssl_cert_file = '/var/lib/postgresql/certs/server.crt'
-ssl_key_file  = '/var/lib/postgresql/certs/server.key'
-ssl_ca_file   = '/var/lib/postgresql/certs/ca.crt'\" >> /var/lib/postgresql/data/postgresql.conf"
+ssl_key_file = '/var/lib/postgresql/certs/server.key'
+ssl_ca_file = '/var/lib/postgresql/certs/ca.crt'
+\" >> /var/lib/postgresql/data/postgresql.conf"
 
-# Enable client auth
-docker exec postgres bash -c "echo \"hostssl all all 0.0.0.0/0 cert clientcert=verify-full\" >> /var/lib/postgresql/data/pg_hba.conf"
-docker exec postgres bash -c "echo \"hostssl all all 0.0.0.0/0 md5\" >> /var/lib/postgresql/data/pg_hba.conf"
+# Update pg_hba.conf
+docker exec postgres bash -c "echo \"
+hostssl all all 0.0.0.0/0 cert clientcert=verify-full
+hostssl all all 0.0.0.0/0 md5
+\" >> /var/lib/postgresql/data/pg_hba.conf"
 
 docker restart postgres
-echo "🔄 Postgres container restarted with SSL settings."
+echo "🔄 Postgres container restarted with SSL config."
 
-# Wait for PostgreSQL on port 5432
+# Wait until port is ready
 echo "⏳ Waiting for PostgreSQL to listen on port 5432..."
 start_time=$(date +%s)
 while ! nc -z localhost 5432; do
@@ -127,7 +152,7 @@ while ! nc -z localhost 5432; do
   (( $(date +%s) - start_time > 180 )) && echo "❌ Timeout: PostgreSQL not listening." && exit 1
 done
 
-# Wait for readiness
+# Check PostgreSQL readiness
 echo "⏳ Waiting for PostgreSQL to be ready..."
 start_time=$(date +%s)
 until docker exec postgres pg_isready -U postgres > /dev/null 2>&1; do
@@ -136,3 +161,8 @@ until docker exec postgres pg_isready -U postgres > /dev/null 2>&1; do
 done
 
 echo "✅ PostgreSQL with mTLS is fully up and running."
+
+# Show psql command for user
+echo
+echo "👉 Connect using:"
+echo "psql "host=$EC2_IP port=5432 user=hashicorp dbname=hashicorp sslmode=verify-full sslrootcert= sslcert= sslkey="
