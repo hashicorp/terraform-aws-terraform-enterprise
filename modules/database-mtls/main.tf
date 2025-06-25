@@ -150,7 +150,7 @@ resource "null_resource" "download_certs" {
 
 data "local_file" "ca_cert" {
   depends_on = [null_resource.download_certs]
-  filename   = "./tfe-certs/ca.crt"
+  filename   = "${path.module}/tfe-certs/ca.crt"
 }
 
 # 3. Secrets Manager using content from the file
