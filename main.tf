@@ -254,7 +254,7 @@ module "runtime_container_engine_config" {
   database_password         = local.database.password
   database_host             = local.database.endpoint
   database_parameters       = local.database.parameters
-  database_use_mtls         = true
+  database_use_mtls         = false
   database_ca_cert_file     = "/etc/ssl/private/terraform-enterprise/postgres/ca.crt"
   database_client_cert_file = "/etc/ssl/private/terraform-enterprise/postgres/client.crt"
   database_client_key_file  = "/etc/ssl/private/terraform-enterprise/postgres/client.key"
@@ -299,7 +299,8 @@ module "runtime_container_engine_config" {
 # AWS cloud init used to install and configure TFE on instance(s) using Flexible Deployment Options
 # --------------------------------------------------------------------------------------------------
 module "tfe_init_fdo" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
+  # source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=postgres-mtls"
   count  = var.is_replicated_deployment ? 0 : 1
 
   cloud             = "aws"
@@ -319,6 +320,11 @@ module "tfe_init_fdo" {
   redis_ca_certificate_secret_id     = var.redis_ca_certificate_secret_id == null ? null : var.redis_ca_certificate_secret_id
   redis_client_certificate_secret_id = var.redis_client_certificate_secret_id == null ? null : var.redis_client_certificate_secret_id
   redis_client_key_secret_id         = var.redis_client_key_secret_id == null ? null : var.redis_client_key_secret_id
+
+  enable_postgres_mtls                  = false
+  postgres_ca_certificate_secret_id     = null
+  postgres_client_certificate_secret_id = null
+  postgres_client_key_secret_id         = null
 
   proxy_ip       = var.proxy_ip != null ? var.proxy_ip : null
   proxy_port     = var.proxy_ip != null ? var.proxy_port : null
