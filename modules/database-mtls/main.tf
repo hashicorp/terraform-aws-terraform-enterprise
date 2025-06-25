@@ -130,13 +130,13 @@ resource "null_resource" "download_certs" {
     command = <<EOT
     set -e
     echo "📁 Creating local directory ./tfe-certs..."
-    mkdir -p ${path.module}/tfe-certs
+    mkdir -p ./tfe-certs
 
     echo "⬇️  Downloading certificates from EC2 instance at ${aws_instance.postgres.public_ip}..."
     scp -i ${path.module}/${var.friendly_name_prefix}-ec2-postgres-key.pem \
         -o StrictHostKeyChecking=no \
         ubuntu@${aws_instance.postgres.public_ip}:/home/ubuntu/mtls-certs/* \
-        ${path.module}/tfe-certs/
+        ./tfe-certs/
 
     if [ $? -eq 0 ]; then
       echo "✅ Certificates successfully downloaded to ./tfe-certs."
@@ -145,15 +145,14 @@ resource "null_resource" "download_certs" {
       exit 1
     fi
 
-    echo "📄 Contents of ${path.module}/tfe-certs:"
-    ls -l ${path.module}/tfe-certs
+    ls -l ./tfe-certs
     EOT
   }
 }
 
 data "local_file" "ca_cert" {
   depends_on = [null_resource.download_certs]
-  filename   = "${path.module}/tfe-certs/ca.crt"
+  filename   = "./tfe-certs/ca.crt"
 }
 
 # 3. Secrets Manager using content from the file
