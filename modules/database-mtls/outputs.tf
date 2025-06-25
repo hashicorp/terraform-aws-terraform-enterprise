@@ -28,8 +28,11 @@ output "parameters" {
   description = "PostgreSQL server parameters for the connection URI."
 }
 
-output "ca_certificate_secret_binary" {
-  value       = base64encode(data.local_file.ca_cert.content)
-  description = "The secret which contains the CA certificate."
-  sensitive   = true
+# output "ca_certificate_secret_binary" {
+#   value       = base64encode(data.local_file.ca_cert.content)
+#   description = "The secret which contains the CA certificate."
+#   sensitive   = true
+# }
+output "secret_name" {
+  value = aws_secretsmanager_secret.database_mtls_client_ca.name
 }
