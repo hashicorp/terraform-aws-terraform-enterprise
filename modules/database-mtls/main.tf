@@ -148,16 +148,21 @@ resource "null_resource" "download_certs" {
   }
 }
 
+data "local_file" "ca_cert" {
+  depends_on = [null_resource.download_certs]
+  filename   = "./tfe-certs/ca.crt"
+}
+
+# 3. Secrets Manager using content from the file
+resource "aws_secretsmanager_secret_version" "database_mtls_client_ca" {
+  secret_binary = base64encode(data.local_file.ca_cert.content)
+  secret_id     = aws_secretsmanager_secret.database_mtls_client_ca.id
+}
+
 resource "aws_secretsmanager_secret" "database_mtls_client_ca" {
   depends_on  = [null_resource.download_certs]
   name        = "database_mtls_client_ca"
   description = "LetsEncrypt root certificate"
-}
-
-resource "aws_secretsmanager_secret_version" "database_mtls_client_ca" {
-  depends_on    = [null_resource.download_certs]
-  secret_binary = filebase64("./tfe-certs/ca.crt")
-  secret_id     = aws_secretsmanager_secret.database_mtls_client_ca.id
 }
 
 # resource "null_resource" "move_certs_to_bind" {
