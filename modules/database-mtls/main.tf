@@ -115,6 +115,8 @@ resource "null_resource" "generate_certificates" {
 
   provisioner "remote-exec" {
     inline = [
+      "echo '⏳ Waiting 60 seconds before running certificate script...'",
+      "sleep 60",
       "chmod +x /home/ubuntu/certificate_generate.sh",
       "sudo EC2_IP=${aws_instance.postgres.public_ip} /home/ubuntu/certificate_generate.sh"
     ]
