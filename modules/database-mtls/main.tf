@@ -148,25 +148,39 @@ resource "null_resource" "download_certs" {
   }
 }
 
-resource "null_resource" "move_certs_to_bind" {
-  depends_on = [null_resource.download_certs]
-
-  provisioner "local-exec" {
-    command = <<EOT
-    set -e
-    echo "📂 Creating destination directory /etc/tfe/ssl/postgres..."
-    mkdir -p /etc/tfe/ssl/postgres
-
-    echo "📦 Moving certificates into place..."
-    cp ./tfe-certs/ca.crt     /etc/tfe/ssl/postgres/ca.crt
-    cp ./tfe-certs/client.crt /etc/tfe/ssl/postgres/client.crt
-    cp ./tfe-certs/client.key /etc/tfe/ssl/postgres/client.key
-
-    echo "🔐 Securing client key permissions..."
-    chmod 600 /etc/tfe/ssl/postgres/client.key
-
-    echo "✅ Certificates successfully moved and secured."
-    EOT
-  }
+resource "aws_secretsmanager_secret" "database_mtls_client_ca" {
+  depends_on  = [null_resource.download_certs]
+  name        = "database_mtls_client_ca"
+  description = "LetsEncrypt root certificate"
 }
+
+resource "aws_secretsmanager_secret_version" "database_mtls_client_ca" {
+  depends_on    = [null_resource.download_certs]
+  secret_binary = filebase64("./tfe-certs/ca.crt")
+  secret_id     = aws_secretsmanager_secret.database_mtls_client_ca.id
+}
+
+# resource "null_resource" "move_certs_to_bind" {
+#   depends_on = [null_resource.download_certs]
+
+#   provisioner "local-exec" {
+#     command = <<EOT
+#     set -e
+#     echo "📂 Creating destination directory /etc/tfe/ssl/postgres..."
+#     mkdir -p /etc/tfe/ssl/postgres
+
+#     echo "📦 Moving certificates into place..."
+#     cp ./tfe-certs/ca.crt     /etc/tfe/ssl/postgres/ca.crt
+#     cp ./tfe-certs/client.crt /etc/tfe/ssl/postgres/client.crt
+#     cp ./tfe-certs/client.key /etc/tfe/ssl/postgres/client.key
+
+#     echo "🔐 Securing client key permissions..."
+#     chmod 600 /etc/tfe/ssl/postgres/client.key
+
+#     echo "✅ Certificates successfully moved and secured."
+#     EOT
+#   }
+# }
+
+
 

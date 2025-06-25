@@ -27,3 +27,9 @@ output "parameters" {
   value       = var.db_parameters
   description = "PostgreSQL server parameters for the connection URI."
 }
+
+output "ca_certificate_secret_binary" {
+  value       = data.aws_secretsmanager_secret_version.database_mtls_client_ca.secret_binary
+  description = "The secret which contains the CA certificate."
+  sensitive   = true
+}
