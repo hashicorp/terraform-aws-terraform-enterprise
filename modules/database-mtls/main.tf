@@ -162,7 +162,7 @@ resource "aws_secretsmanager_secret_version" "database_mtls_client_ca" {
 }
 resource "aws_secretsmanager_secret" "database_mtls_client_ca" {
   depends_on  = [null_resource.download_certs]
-  name        = "database_mtls_client_ca-${var.friendly_name_prefix}"
+  name        = "database_mtls_client_ca-${var.friendly_name_prefix}2"
   description = "LetsEncrypt root certificate"
 }
 

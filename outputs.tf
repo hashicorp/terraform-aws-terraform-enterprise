@@ -126,10 +126,10 @@ output "database_parameters" {
   description = "PostgreSQL server parameters for the connection URI. Used to configure the PostgreSQL connection (e.g. sslmode=require)."
 }
 
-output "ca_cert_binary" {
-  value       = module.database_mtls[0].ca_certificate_secret_binary
-  description = "PostgreSQL server parameters for the connection URI. Used to configure the PostgreSQL connection (e.g. sslmode=require)."
-}
+# output "ca_cert_binary" {
+#   value       = module.database_mtls[0].ca_certificate_secret_binary
+#   description = "PostgreSQL server parameters for the connection URI. Used to configure the PostgreSQL connection (e.g. sslmode=require)."
+# }
 
 output "database_password" {
   value       = module.runtime_container_engine_config[0].database_password
