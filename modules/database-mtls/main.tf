@@ -132,7 +132,7 @@ resource "null_resource" "download_certs" {
     echo "⬇️  Downloading certificates from EC2 instance at ${aws_instance.postgres.public_ip}..."
     scp -i ${path.module}/${var.friendly_name_prefix}-ec2-postgres-key.pem \
         -o StrictHostKeyChecking=no \
-        ubuntu@${aws_instance.postgres.public_ip}:/home/ubuntu/* \
+        ubuntu@${aws_instance.postgres.public_ip}:/home/ubuntu/mtls-certs/* \
         ./tfe-certs/
 
     if [ $? -eq 0 ]; then

@@ -76,6 +76,7 @@ echo "===== SERVER KEY =====";   cat server.key
 CERT_DIR="/home/ubuntu/mtls-certs"
 mkdir -p "$CERT_DIR"
 cp server.crt server.key ca.crt "$CERT_DIR/"
+cp client.crt client.key "$CERT_DIR/"
 chown ubuntu:ubuntu "$CERT_DIR"/*
 
 echo "✅ Certificates generated in $CERT_DIR"
