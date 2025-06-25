@@ -29,7 +29,7 @@ output "parameters" {
 }
 
 output "ca_certificate_secret_binary" {
-  value       = data.aws_secretsmanager_secret_version.database_mtls_client_ca.secret_binary
+  value       = base64encode(data.local_file.ca_cert.content)
   description = "The secret which contains the CA certificate."
   sensitive   = true
 }
