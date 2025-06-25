@@ -33,6 +33,7 @@ output "parameters" {
 #   description = "The secret which contains the CA certificate."
 #   sensitive   = true
 # }
-output "secret_name" {
-  value = aws_secretsmanager_secret.database_mtls_client_ca.name
+output "ca_certificate_secret_binary" {
+  value       = aws_secretsmanager_secret.database_mtls_client_ca.name
+  description = "The secret which contains the CA certificate."
 }
