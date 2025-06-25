@@ -128,6 +128,7 @@ resource "null_resource" "download_certs" {
 
   provisioner "local-exec" {
     command = <<EOT
+    set -e
     echo "📁 Creating local directory ./tfe-certs..."
     mkdir -p ./tfe-certs
 
@@ -152,16 +153,17 @@ resource "null_resource" "move_certs_to_bind" {
 
   provisioner "local-exec" {
     command = <<EOT
+    set -e
     echo "📂 Creating destination directory /etc/tfe/ssl/postgres..."
-    sudo mkdir -p /etc/tfe/ssl/postgres
+    mkdir -p /etc/tfe/ssl/postgres
 
     echo "📦 Moving certificates into place..."
-    sudo cp ./tfe-certs/ca.crt     /etc/tfe/ssl/postgres/ca.crt
-    sudo cp ./tfe-certs/client.crt /etc/tfe/ssl/postgres/client.crt
-    sudo cp ./tfe-certs/client.key /etc/tfe/ssl/postgres/client.key
+    cp ./tfe-certs/ca.crt     /etc/tfe/ssl/postgres/ca.crt
+    cp ./tfe-certs/client.crt /etc/tfe/ssl/postgres/client.crt
+    cp ./tfe-certs/client.key /etc/tfe/ssl/postgres/client.key
 
     echo "🔐 Securing client key permissions..."
-    sudo chmod 600 /etc/tfe/ssl/postgres/client.key
+    chmod 600 /etc/tfe/ssl/postgres/client.key
 
     echo "✅ Certificates successfully moved and secured."
     EOT
