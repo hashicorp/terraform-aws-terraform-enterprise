@@ -144,8 +144,6 @@ resource "null_resource" "download_certs" {
       echo "❌ Failed to download certificates."
       exit 1
     fi
-
-    ls -l ./tfe-certs
     EOT
   }
 }
