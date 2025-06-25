@@ -68,6 +68,10 @@ echo "✅ Certificates generated."
 echo "===== CA CERT =====";      cat ca.crt
 echo "===== CLIENT CERT =====";  cat client.crt
 echo "===== CLIENT KEY =====";   cat client.key
+
+echo "===== Server CA =====";   cat ca.crt
+echo "===== Server CERT =====";   cat server.key
+echo "===== SERVER KEY =====";   cat server.key
 # Prepare cert directory
 CERT_DIR="/home/ubuntu/mtls-certs"
 mkdir -p "$CERT_DIR"

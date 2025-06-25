@@ -249,18 +249,15 @@ module "runtime_container_engine_config" {
   iact_time_limit      = var.iact_subnet_time_limit
   run_pipeline_image   = var.run_pipeline_image
 
-  database_name       = local.database.name
-  database_user       = local.database.username
-  database_password   = local.database.password
-  database_host       = local.database.endpoint
-  database_parameters = local.database.parameters
-  database_use_mtls   = false
-  # database_ca_cert_file     = "/etc/tfe/ssl/postgres/cacert.pem"
-  # database_client_cert_file = "/etc/tfe/ssl/postgres/cert.pem"
-  # database_client_key_file  = "/etc/tfe/ssl/postgres/key.pem"
-  database_ca_cert_file     = ""
-  database_client_cert_file = ""
-  database_client_key_file  = ""
+  database_name             = local.database.name
+  database_user             = local.database.username
+  database_password         = local.database.password
+  database_host             = local.database.endpoint
+  database_parameters       = local.database.parameters
+  database_use_mtls         = true
+  database_ca_cert_file     = "/etc/ssl/private/terraform-enterprise/postgres/ca.crt"
+  database_client_cert_file = "/etc/ssl/private/terraform-enterprise/postgres/client.crt"
+  database_client_key_file  = "/etc/ssl/private/terraform-enterprise/postgres/client.key"
 
   storage_type                         = "s3"
   s3_access_key_id                     = var.aws_access_key_id

@@ -121,50 +121,48 @@ resource "null_resource" "generate_certificates" {
   }
 }
 
-# resource "null_resource" "generate_certificates" {
-#   depends_on = [aws_instance.postgres]
+resource "null_resource" "download_certs" {
+  depends_on = [null_resource.generate_certificates]
 
-#   triggers = {
-#     always_run = timestamp()
-#   }
-#   connection {
-#     type        = "ssh"
-#     user        = "ubuntu"
-#     private_key = tls_private_key.ssh.private_key_pem
-#     host        = aws_instance.postgres.public_ip
-#   }
-#   provisioner "remote-exec" {
-#     inline = [
-#       "echo '===== Startup Script Logs ====='",
-#       "sudo cat /home/ubuntu/startup.log || echo '❌ Log file not found.'"
-#     ]
-#   }
-# }
+  provisioner "local-exec" {
+    command = <<EOT
+    echo "📁 Creating local directory ./tfe-certs..."
+    mkdir -p ./tfe-certs
 
-# resource "null_resource" "download_certs" {
-#   depends_on = [null_resource.generate_certificates]
+    echo "⬇️  Downloading certificates from EC2 instance at ${aws_instance.postgres.public_ip}..."
+    scp -i ${path.module}/${var.friendly_name_prefix}-ec2-postgres-key.pem \
+        -o StrictHostKeyChecking=no \
+        ubuntu@${aws_instance.postgres.public_ip}:/home/ubuntu/* \
+        ./tfe-certs/
 
-#   provisioner "local-exec" {
-#     command = <<EOT
-#     mkdir -p ./tfe-certs
-#     scp -i ${path.module}/ec2-postgres-key.pem \
-#         -o StrictHostKeyChecking=no \
-#         ubuntu@${aws_instance.postgres.public_ip}:/home/ubuntu/mtls-certs/* \
-#         ./tfe-certs/
-#     EOT
-#   }
-# }
+    if [ $? -eq 0 ]; then
+      echo "✅ Certificates successfully downloaded to ./tfe-certs."
+    else
+      echo "❌ Failed to download certificates."
+      exit 1
+    fi
+    EOT
+  }
+}
 
-# resource "null_resource" "move_certs_to_bind" {
-#   depends_on = [null_resource.download_certs]
+resource "null_resource" "move_certs_to_bind" {
+  depends_on = [null_resource.download_certs]
 
-#   provisioner "local-exec" {
-#     command = <<EOT
-#     sudo mkdir -p /etc/tfe/ssl/postgres
-#     sudo cp ./tfe-certs/ca.crt     /etc/tfe/ssl/postgres/cacert.pem
-#     sudo cp ./tfe-certs/client.crt /etc/tfe/ssl/postgres/cert.pem
-#     sudo cp ./tfe-certs/client.key /etc/tfe/ssl/postgres/key.pem
-#     sudo chmod 600 /etc/tfe/ssl/postgres/*
-#     EOT
-#   }
-# }
+  provisioner "local-exec" {
+    command = <<EOT
+    echo "📂 Creating destination directory /etc/tfe/ssl/postgres..."
+    sudo mkdir -p /etc/tfe/ssl/postgres
+
+    echo "📦 Moving certificates into place..."
+    sudo cp ./tfe-certs/ca.crt     /etc/tfe/ssl/postgres/ca.crt
+    sudo cp ./tfe-certs/client.crt /etc/tfe/ssl/postgres/client.crt
+    sudo cp ./tfe-certs/client.key /etc/tfe/ssl/postgres/client.key
+
+    echo "🔐 Securing client key permissions..."
+    sudo chmod 600 /etc/tfe/ssl/postgres/client.key
+
+    echo "✅ Certificates successfully moved and secured."
+    EOT
+  }
+}
+
