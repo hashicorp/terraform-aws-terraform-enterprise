@@ -14,9 +14,9 @@ function get_base64_secrets {
 }
 
 echo "[$(date +"%FT%T")] [Terraform Enterprise] Install AWS CLI" 
-curl --noproxy '*' "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m | grep -q "arm\|aarch" && echo "aarch64" || echo "x86_64").zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-./aws/install
+curl --noproxy '*' "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m | grep -q "arm\|aarch" && echo "aarch64" || echo "x86_64").zip" -o "awscliv2.zip" > /dev/null 2>&1
+unzip awscliv2.zip > /dev/null 2>&1
+./aws/install > /dev/null 2>&1
 rm -f ./awscliv2.zip
 rm -rf ./aws
 
