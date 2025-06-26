@@ -305,8 +305,6 @@ variable "db_use_mtls" {
 #   default     = ""
 #   description = "Path to a file containing the client key for Database TLS connections. Leave blank to not use a client key for Database TLS connections. Defaults to \"\" if no value is given."
 # }
-
-
 # Aurora
 # ------
 variable "enable_aurora" {
