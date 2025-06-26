@@ -122,6 +122,19 @@ variable "enable_redis_mtls" {
   default     = false
 }
 
+variable "postgres_ca_certificate_secret_id" {
+  type = string
+}
+
+variable "postgres_client_certificate_secret_id" {
+  type = string
+}
+
+variable "postgres_client_key_secret_id" {
+  type = string
+}
+
+
 variable "redis_client_key_secret_id" {
   type        = string
   description = "The secrets manager secret ID of the Base64 & PEM encoded private key for redis."

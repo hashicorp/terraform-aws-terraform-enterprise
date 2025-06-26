@@ -31,3 +31,15 @@ variable "network_private_subnet_cidrs" {
   type        = list(string)
   description = "(Optional) List of private subnet CIDR ranges to create in VPC."
 }
+
+variable "postgres_ca_certificate_secret_id" {
+  type = string
+}
+
+variable "postgres_client_certificate_secret_id" {
+  type = string
+}
+
+variable "postgres_client_key_secret_id" {
+  type = string
+}

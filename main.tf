@@ -153,13 +153,16 @@ module "database_mtls" {
   source = "./modules/database-mtls"
   count  = local.enable_mtls_database_module ? 1 : 0
 
-  domain_name                  = var.domain_name
-  db_name                      = var.db_name
-  db_parameters                = var.db_parameters
-  db_username                  = var.db_username
-  friendly_name_prefix         = var.friendly_name_prefix
-  network_id                   = local.network_id
-  network_private_subnet_cidrs = var.network_private_subnet_cidrs
+  domain_name                           = var.domain_name
+  db_name                               = var.db_name
+  db_parameters                         = var.db_parameters
+  db_username                           = var.db_username
+  friendly_name_prefix                  = var.friendly_name_prefix
+  network_id                            = local.network_id
+  network_private_subnet_cidrs          = var.network_private_subnet_cidrs
+  postgres_client_certificate_secret_id = var.postgres_client_certificate_secret_id
+  postgres_client_key_secret_id         = var.postgres_client_key_secret_id
+  postgres_ca_certificate_secret_id     = var.postgres_ca_certificate_secret_id
 }
 
 # -----------------------------------------------------------------------------
