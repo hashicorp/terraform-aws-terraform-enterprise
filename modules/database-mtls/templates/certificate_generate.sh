@@ -3,7 +3,7 @@ set -e
 
 echo "🔧 Installing dependencies..."
 apt-get update -y
-apt-get install -y docker.io postgresql-client openssl autoremove unzip jq
+apt-get install -y docker.io postgresql-client openssl unzip jq
 
 function get_base64_secrets {
 	local secret_id=$1
