@@ -43,3 +43,8 @@ variable "postgres_client_certificate_secret_id" {
 variable "postgres_client_key_secret_id" {
   type = string
 }
+
+variable "aws_iam_instance_profile" {
+  description = "The name of the IAM instance profile to be associated with the TFE EC2 instance(s)."
+  type        = string
+}

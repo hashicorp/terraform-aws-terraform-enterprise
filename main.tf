@@ -166,6 +166,8 @@ module "database_mtls" {
   postgres_client_certificate_secret_id = var.postgres_client_certificate_secret_id
   postgres_client_key_secret_id         = var.postgres_client_key_secret_id
   postgres_ca_certificate_secret_id     = var.postgres_ca_certificate_secret_id
+  aws_iam_instance_profile              = module.service_accounts.iam_instance_profile.name
+
 }
 
 # -----------------------------------------------------------------------------
@@ -329,9 +331,9 @@ module "tfe_init_fdo" {
   redis_client_key_secret_id         = var.redis_client_key_secret_id == null ? null : var.redis_client_key_secret_id
 
   enable_postgres_mtls                  = false
-  postgres_ca_certificate_secret_id     = null
-  postgres_client_certificate_secret_id = null
-  postgres_client_key_secret_id         = null
+  postgres_ca_certificate_secret_id     = var.postgres_ca_certificate_secret_id == null ? null : var.postgres_ca_certificate_secret_id
+  postgres_client_certificate_secret_id = var.postgres_client_certificate_secret_id == null ? null : var.postgres_client_certificate_secret_id
+  postgres_client_key_secret_id         = var.postgres_client_key_secret_id == null ? null : var.postgres_client_key_secret_id
 
   proxy_ip       = var.proxy_ip != null ? var.proxy_ip : null
   proxy_port     = var.proxy_ip != null ? var.proxy_port : null
