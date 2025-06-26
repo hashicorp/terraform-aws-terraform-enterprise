@@ -29,19 +29,22 @@ data "aws_kms_key" "main" {
 module "service_accounts" {
   source = "./modules/service_accounts"
 
-  ca_certificate_secret_id           = var.ca_certificate_secret_id
-  friendly_name_prefix               = var.friendly_name_prefix
-  existing_iam_instance_role_name    = var.existing_iam_instance_role_name
-  existing_iam_instance_profile_name = var.existing_iam_instance_profile_name
-  iam_role_policy_arns               = var.iam_role_policy_arns
-  enable_airgap                      = local.enable_airgap
-  tfe_license_secret_id              = var.tfe_license_secret_id
-  kms_key_arn                        = local.kms_key_arn
-  vm_certificate_secret_id           = var.vm_certificate_secret_id
-  redis_ca_certificate_secret_id     = var.redis_ca_certificate_secret_id
-  redis_client_certificate_secret_id = var.redis_client_certificate_secret_id
-  redis_client_key_secret_id         = var.redis_client_key_secret_id
-  vm_key_secret_id                   = var.vm_key_secret_id
+  ca_certificate_secret_id              = var.ca_certificate_secret_id
+  friendly_name_prefix                  = var.friendly_name_prefix
+  existing_iam_instance_role_name       = var.existing_iam_instance_role_name
+  existing_iam_instance_profile_name    = var.existing_iam_instance_profile_name
+  iam_role_policy_arns                  = var.iam_role_policy_arns
+  enable_airgap                         = local.enable_airgap
+  tfe_license_secret_id                 = var.tfe_license_secret_id
+  kms_key_arn                           = local.kms_key_arn
+  vm_certificate_secret_id              = var.vm_certificate_secret_id
+  redis_ca_certificate_secret_id        = var.redis_ca_certificate_secret_id
+  redis_client_certificate_secret_id    = var.redis_client_certificate_secret_id
+  redis_client_key_secret_id            = var.redis_client_key_secret_id
+  postgres_client_certificate_secret_id = var.postgres_client_certificate_secret_id
+  postgres_client_key_secret_id         = var.postgres_client_key_secret_id
+  postgres_ca_certificate_secret_id     = var.postgres_ca_certificate_secret_id
+  vm_key_secret_id                      = var.vm_key_secret_id
 }
 
 # -----------------------------------------------------------------------------
