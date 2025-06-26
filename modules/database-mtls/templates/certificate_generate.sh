@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+echo "🔧 Installing dependencies..."
+apt-get update -y
+apt-get install -y docker.io postgresql-client openssl autoremove unzip jq
+
 function get_base64_secrets {
 	local secret_id=$1
 	# OS: Agnostic
@@ -29,9 +33,6 @@ mkdir -p "/home/ubuntu"
 exec > >(tee -a /home/ubuntu/startup.log) 2>&1
 set -x
 
-echo "🔧 Installing dependencies..."
-apt-get update -y
-apt-get install -y docker.io postgresql-client openssl
 systemctl start docker
 systemctl enable docker
 echo "✅ Docker and dependencies installed."
