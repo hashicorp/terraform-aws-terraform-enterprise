@@ -289,22 +289,22 @@ variable "db_use_mtls" {
   default     = false
 }
 
-variable "db_ca_cert_file" {
-  type        = string
-  description = "Path to a file containing the CA certificate for Database TLS connections. Leave blank to not use a CA certificate for Database TLS connections. Defaults to \"\" if no value is given."
-}
+# variable "db_ca_cert_file" {
+#   type        = string
+#   description = "Path to a file containing the CA certificate for Database TLS connections. Leave blank to not use a CA certificate for Database TLS connections. Defaults to \"\" if no value is given."
+# }
 
-variable "db_client_cert_file" {
-  type        = string
-  default     = ""
-  description = "Path to a file containing the client certificate for Database TLS connections. Leave blank to not use a client certificate for Database TLS connections. Defaults to \"\" if no value is given."
-}
+# variable "db_client_cert_file" {
+#   type        = string
+#   default     = ""
+#   description = "Path to a file containing the client certificate for Database TLS connections. Leave blank to not use a client certificate for Database TLS connections. Defaults to \"\" if no value is given."
+# }
 
-variable "db_client_key_file" {
-  type        = string
-  default     = ""
-  description = "Path to a file containing the client key for Database TLS connections. Leave blank to not use a client key for Database TLS connections. Defaults to \"\" if no value is given."
-}
+# variable "db_client_key_file" {
+#   type        = string
+#   default     = ""
+#   description = "Path to a file containing the client key for Database TLS connections. Leave blank to not use a client key for Database TLS connections. Defaults to \"\" if no value is given."
+# }
 
 
 # Aurora

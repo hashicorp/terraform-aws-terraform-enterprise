@@ -96,15 +96,15 @@ output "use_mtls_aws" {
   description = "Whether to use mTLS while authenticating with the PostgreSQL server"
 }
 
-output "ca_cert_file_aws" {
-  value       = var.db_ca_cert_file
-  description = "Specifies the path to a file containing the root certificate for validating PostgreSQL server certificates"
-}
+# output "ca_cert_file_aws" {
+#   value       = var.db_ca_cert_file
+#   description = "Specifies the path to a file containing the root certificate for validating PostgreSQL server certificates"
+# }
 
-output "client_cert_file_aws" {
-  value       = var.db_ca_cert_file
-  description = "Specifies the path to a file containing the client certificate that Terraform Enterprise uses for authenticating with the PostgreSQL server"
-}
+# output "client_cert_file_aws" {
+#   value       = var.db_ca_cert_file
+#   description = "Specifies the path to a file containing the client certificate that Terraform Enterprise uses for authenticating with the PostgreSQL server"
+# }
 
 output "postgres_ip" {
   value       = local.database.endpoint
