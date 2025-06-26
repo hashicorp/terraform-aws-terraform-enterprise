@@ -3,6 +3,11 @@ output "postgres_public_ip" {
   value       = aws_instance.postgres.public_ip
 }
 
+output "postgres_domain_name" {
+  value       = aws_route53_record.postgres.fqdn
+  description = "The host/port combinations for available Redis endpoint."
+}
+
 output "endpoint" {
   value       = aws_instance.postgres.public_ip
   description = "The connection endpoint of the PostgreSQL RDS instance in address:port format."

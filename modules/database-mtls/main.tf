@@ -1,3 +1,17 @@
+data "aws_route53_zone" "postgres_zone" {
+  name         = var.domain_name
+  private_zone = false
+}
+
+resource "aws_route53_record" "postgres" {
+  zone_id = data.aws_route53_zone.postgres_zone.zone_id
+  name    = "${var.friendly_name_prefix}-postgres-mtls"
+  type    = "A"
+  ttl     = 300
+
+  records = [aws_instance.postgres.public_ip]
+}
+
 resource "aws_security_group" "postgresql" {
   description = "The security group of the PostgreSQL deployment for TFE."
   name        = "${var.friendly_name_prefix}-tfe-postgres-mtls"

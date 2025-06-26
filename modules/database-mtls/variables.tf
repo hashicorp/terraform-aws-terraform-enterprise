@@ -1,3 +1,8 @@
+variable "domain_name" {
+  description = "The name of the Route 53 Hosted Zone in which a record will be created."
+  type        = string
+}
+
 variable "db_name" {
   type        = string
   description = "PostgreSQL instance name. No special characters."

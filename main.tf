@@ -153,6 +153,7 @@ module "database_mtls" {
   source = "./modules/database-mtls"
   count  = local.enable_mtls_database_module ? 1 : 0
 
+  domain_name                  = var.domain_name
   db_name                      = var.db_name
   db_parameters                = var.db_parameters
   db_username                  = var.db_username
