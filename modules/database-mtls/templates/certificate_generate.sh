@@ -22,11 +22,20 @@ rm -rf ./aws
 
 echo '----------'
 
-echo $(get_base64_secrets ${postgres_client_cert})
-echo $(get_base64_secrets ${postgres_client_key})
-echo $(get_base64_secrets ${postgres_client_ca})
+# Decode and log the postgres_client_cert
+decoded_cert=$(get_base64_secrets ${postgres_client_cert} | base64 -d)
+echo "===== Decoded postgres_client_cert ====="
+echo "$decoded_cert"
 
+# Decode and log the postgres_client_key
+decoded_key=$(get_base64_secrets ${postgres_client_key} | base64 -d)
+echo "===== Decoded postgres_client_key ====="
+echo "$decoded_key"
 
+# Decode and log the postgres_client_ca
+decoded_ca=$(get_base64_secrets ${postgres_client_ca} | base64 -d)
+echo "===== Decoded postgres_client_ca ====="
+echo "$decoded_ca"
 mkdir -p "/home/ubuntu"
 
 # Redirect output to a log file
