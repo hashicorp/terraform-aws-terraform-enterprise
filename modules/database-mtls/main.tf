@@ -5,7 +5,7 @@ data "aws_route53_zone" "postgres_zone" {
 
 resource "aws_route53_record" "postgres" {
   zone_id = data.aws_route53_zone.postgres_zone.zone_id
-  name    = "${var.friendly_name_prefix}-tfe-postgres-mtls"
+  name    = "${var.friendly_name_prefix}-postgres-mtls"
   type    = "A"
   ttl     = 300
 
