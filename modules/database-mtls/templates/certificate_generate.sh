@@ -28,7 +28,6 @@ rm -rf ./aws
 
 CERT_DIR="/home/ubuntu/mtls-certs"
 mkdir -p "$CERT_DIR"
-chown ubuntu:ubuntu "$CERT_DIR"/*
 
 SERVER_KEY="$CERT_DIR/server.key"
 SERVER_CRT="$CERT_DIR/server.crt"
@@ -48,6 +47,7 @@ get_base64_secrets "$postgres_client_ca" | base64 -d > "$CA"
 cat "$CA"
 
 chmod 600 "$SERVER_KEY"
+chown ubuntu:ubuntu "$CERT_DIR"/*
 echo "✅ Certificates generated in $CERT_DIR"
 
 # Add user to docker group
