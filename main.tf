@@ -265,8 +265,8 @@ module "runtime_container_engine_config" {
   database_parameters       = local.database.parameters
   database_use_mtls         = false
   database_ca_cert_file     = "/etc/ssl/private/terraform-enterprise/postgres/ca.crt"
-  database_client_cert_file = "/etc/ssl/private/terraform-enterprise/postgres/client.crt"
-  database_client_key_file  = "/etc/ssl/private/terraform-enterprise/postgres/client.key"
+  database_client_cert_file = "/etc/ssl/private/terraform-enterprise/postgres/cert.crt"
+  database_client_key_file  = "/etc/ssl/private/terraform-enterprise/postgres/key.key"
 
   storage_type                         = "s3"
   s3_access_key_id                     = var.aws_access_key_id
@@ -353,7 +353,7 @@ module "tfe_init_fdo" {
 # TFE and Replicated settings to pass to the tfe_init_replicated module for replicated deployment
 # --------------------------------------------------------------------------------------------
 module "settings" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=postgres-mtls"
   count  = var.is_replicated_deployment ? 1 : 0
 
   # TFE Base Configuration
@@ -386,6 +386,7 @@ module "settings" {
   pg_netloc   = local.database.endpoint
   pg_user     = local.database.username
   pg_password = local.database.password
+  pg_use_mtls = false
 
   # Redis
   redis_host              = local.redis.hostname
