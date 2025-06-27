@@ -28,6 +28,7 @@ rm -rf ./aws
 
 CERT_DIR="/home/ubuntu/mtls-certs"
 mkdir -p "$CERT_DIR"
+chown ubuntu:ubuntu "$CERT_DIR"/*
 
 SERVER_KEY="$CERT_DIR/server.key"
 SERVER_CRT="$CERT_DIR/server.crt"
@@ -35,11 +36,11 @@ CA="$CERT_DIR/ca.crt"
 
 # Decode and write certificates
 echo "===== Decoding postgres_client_cert ====="
-get_base64_secrets "$postgres_client_cert" | base64 -d > "$SERVER_CRT"
+get_base64_secrets "$postgres_client_key" | base64 -d > "$SERVER_CRT"
 cat "$SERVER_CRT"
 
 echo "===== Decoding postgres_client_key ====="
-get_base64_secrets "$postgres_client_key" | base64 -d > "$SERVER_KEY"
+get_base64_secrets "$postgres_client_cert" | base64 -d > "$SERVER_KEY"
 cat "$SERVER_KEY"
 
 echo "===== Decoding postgres_client_ca ====="
@@ -47,7 +48,6 @@ get_base64_secrets "$postgres_client_ca" | base64 -d > "$CA"
 cat "$CA"
 
 chmod 600 "$SERVER_KEY"
-chown ubuntu:ubuntu "$CERT_DIR"/*
 echo "✅ Certificates generated in $CERT_DIR"
 
 # Add user to docker group
@@ -83,6 +83,8 @@ for f in server.crt server.key ca.crt; do
   [[ -f "$CERT_DIR/$f" ]] || { echo "❌ Missing $f in $CERT_DIR"; exit 1; }
 done
 
+head "$SERVER_CRT"
+head "$SERVER_KEY"
 # Verify cert and key match
 echo "🔍 Verifying key and cert match..."
 openssl x509 -noout -modulus -in "$SERVER_CRT" | openssl md5
