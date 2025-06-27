@@ -29,9 +29,9 @@ rm -rf ./aws
 CERT_DIR="/home/ubuntu/mtls-certs"
 mkdir -p "$CERT_DIR"
 
-export SERVER_KEY="$CERT_DIR/server.key"
-export SERVER_CRT="$CERT_DIR/server.crt"
-export CA="$CERT_DIR/ca.crt"
+SERVER_KEY="$CERT_DIR/server.key"
+SERVER_CRT="$CERT_DIR/server.crt"
+CA="$CERT_DIR/ca.crt"
 
 # Decode and write certificates
 echo "===== Decoding postgres_client_cert ====="
