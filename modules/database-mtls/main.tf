@@ -170,17 +170,17 @@ resource "null_resource" "generate_certificates" {
 # }
 
 # 3. Secrets Manager using content from the file
-resource "aws_secretsmanager_secret_version" "database_mtls_client_ca" {
-  depends_on = [null_resource.download_certs]
-  # secret_binary = filebase64("./tfe-certs/ca.crt")
-  secret_binary = base64encode("exampledata")
-  secret_id     = aws_secretsmanager_secret.database_mtls_client_ca.id
-}
-resource "aws_secretsmanager_secret" "database_mtls_client_ca" {
-  depends_on  = [null_resource.download_certs]
-  name        = "database_mtls_client_ca-${var.friendly_name_prefix}2"
-  description = "LetsEncrypt root certificate"
-}
+# resource "aws_secretsmanager_secret_version" "database_mtls_client_ca" {
+#   depends_on = [null_resource.download_certs]
+#   # secret_binary = filebase64("./tfe-certs/ca.crt")
+#   secret_binary = base64encode("exampledata")
+#   secret_id     = aws_secretsmanager_secret.database_mtls_client_ca.id
+# }
+# resource "aws_secretsmanager_secret" "database_mtls_client_ca" {
+#   depends_on  = [null_resource.download_certs]
+#   name        = "database_mtls_client_ca-${var.friendly_name_prefix}2"
+#   description = "LetsEncrypt root certificate"
+# }
 
 # resource "null_resource" "move_certs_to_bind" {
 #   depends_on = [null_resource.download_certs]
