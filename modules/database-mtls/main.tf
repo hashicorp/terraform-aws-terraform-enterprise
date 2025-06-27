@@ -135,7 +135,7 @@ resource "null_resource" "generate_certificates" {
       "echo '⏳ Waiting 60 seconds before running certificate script...'",
       "sleep 60",
       "chmod +x /home/ubuntu/certificate_generate.sh",
-      "sudo postgres_client_cert=${var.postgres_client_certificate_secret_id} postgres_client_key=${var.postgres_client_key_secret_id} postgres_client_ca=${var.postgres_ca_certificate_secret_id} EC2_IP=${aws_instance.postgres.public_ip} /home/ubuntu/certificate_generate.sh"
+      "sudo postgres_client_cert=${var.postgres_client_certificate_secret_id} postgres_client_key=${var.postgres_client_key_secret_id} postgres_client_ca=${var.postgres_ca_certificate_secret_id} /home/ubuntu/certificate_generate.sh"
     ]
   }
 }

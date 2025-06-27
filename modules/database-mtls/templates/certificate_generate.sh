@@ -4,6 +4,12 @@ set -e
 echo "🔧 Installing dependencies..."
 apt-get update -y
 apt-get install -y docker.io postgresql-client openssl unzip jq
+systemctl start docker
+systemctl enable docker
+echo "✅ Docker and dependencies installed."
+
+# Redirect output to a log file
+# exec > >(tee -a /home/ubuntu/startup.log) 2>&1
 
 function get_base64_secrets {
 	local secret_id=$1
@@ -20,98 +26,32 @@ unzip awscliv2.zip > /dev/null 2>&1
 rm -f ./awscliv2.zip
 rm -rf ./aws
 
-echo '----------'
+mkdir -p "/home/ubuntu"
+CERT_DIR="/home/ubuntu/mtls-certs"
+mkdir -p "$CERT_DIR"
+
+export SERVER_KEY=$CERT_DIR/server.key
+export CA=$CERT_DIR/ca.crt
+export SERVER_CRT=$CERT_DIR/server.crt
 
 # Decode and log the postgres_client_cert
-decoded_cert=$(get_base64_secrets ${postgres_client_cert} | base64 -d)
+decoded_cert=$(get_base64_secrets ${postgres_client_cert} | base64 -d) > $SERVER_CRT
 echo "===== Decoded postgres_client_cert ====="
 echo "$decoded_cert"
 
 # Decode and log the postgres_client_key
-decoded_key=$(get_base64_secrets ${postgres_client_key} | base64 -d)
+decoded_key=$(get_base64_secrets ${postgres_client_key} | base64 -d) > $SERVER_KEY
 echo "===== Decoded postgres_client_key ====="
 echo "$decoded_key"
 
 # Decode and log the postgres_client_ca
-decoded_ca=$(get_base64_secrets ${postgres_client_ca} | base64 -d)
+decoded_ca=$(get_base64_secrets ${postgres_client_ca} | base64 -d) > $CA
 echo "===== Decoded postgres_client_ca ====="
 echo "$decoded_ca"
-mkdir -p "/home/ubuntu"
 
-# Redirect output to a log file
-exec > >(tee -a /home/ubuntu/startup.log) 2>&1
-set -x
-
-systemctl start docker
-systemctl enable docker
-echo "✅ Docker and dependencies installed."
-
-echo "🔐 Generating SSL certificates with SAN = localhost..."
-
-
-
-
-# OpenSSL config file for SAN
-OPENSSL_CNF="openssl.cnf"
-cat > "$OPENSSL_CNF" <<EOF
-[req]
-distinguished_name = req_distinguished_name
-x509_extensions = v3_ca
-req_extensions = v3_req
-prompt = no
-
-[req_distinguished_name]
-CN = postgres
-
-[v3_ca]
-subjectAltName = @alt_names
-
-[v3_req]
-subjectAltName = @alt_names
-
-[alt_names]
-IP.1 = $EC2_IP
-
-EOF
-
-# Generate CA
-openssl req -new -x509 -days 365 -nodes \
-  -subj "/CN=Test CA" \
-  -keyout "ca.key" -out "ca.crt"
-
-# Generate Server key and CSR with SAN
-openssl req -new -nodes \
-  -keyout "server.key" -out "server.csr" \
-  -config "$OPENSSL_CNF"
-
-# Sign server cert
-openssl x509 -req -in "server.csr" -CA "ca.crt" -CAkey "ca.key" -CAcreateserial \
-  -out "server.crt" -days 365 -extensions v3_req -extfile "$OPENSSL_CNF"
-
-# Generate client cert
-openssl req -new -nodes \
-  -subj "/CN=pg-client" \
-  -keyout "client.key" -out "client.csr"
-
-openssl x509 -req -in "client.csr" -CA "ca.crt" -CAkey "ca.key" -CAcreateserial \
-  -out "client.crt" -days 365
-
-chmod 600 "server.key" "client.key"
+chmod 600 $SERVER_KEY
 echo "✅ Certificates generated."
 
-# Log certs
-echo "===== CA CERT =====";      cat ca.crt
-echo "===== CLIENT CERT =====";  cat client.crt
-echo "===== CLIENT KEY =====";   cat client.key
-
-echo "===== Server CA =====";   cat ca.crt
-echo "===== Server CERT =====";   cat server.key
-echo "===== SERVER KEY =====";   cat server.key
-# Prepare cert directory
-CERT_DIR="/home/ubuntu/mtls-certs"
-mkdir -p "$CERT_DIR"
-cp server.crt server.key ca.crt "$CERT_DIR/"
-cp client.crt client.key "$CERT_DIR/"
 chown ubuntu:ubuntu "$CERT_DIR"/*
 
 echo "✅ Certificates generated in $CERT_DIR"
@@ -205,4 +145,3 @@ echo "✅ PostgreSQL with mTLS is fully up and running."
 # Show psql command for user
 echo
 echo "👉 Connect using:"
-echo "psql \"host=$EC2_IP port=5432 user=hashicorp dbname=hashicorp sslmode=verify-full sslrootcert=ca.crt sslcert=client.crt sslkey=client.key\""
