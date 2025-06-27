@@ -139,30 +139,30 @@ resource "null_resource" "generate_certificates" {
     ]
   }
 }
-resource "null_resource" "download_certs" {
-  depends_on = [null_resource.generate_certificates]
+# resource "null_resource" "download_certs" {
+#   depends_on = [null_resource.generate_certificates]
 
-  provisioner "local-exec" {
-    command = <<EOT
-    set -e
-    echo "📁 Creating local directory ./tfe-certs..."
-    mkdir -p ./tfe-certs
+#   provisioner "local-exec" {
+#     command = <<EOT
+#     set -e
+#     echo "📁 Creating local directory ./tfe-certs..."
+#     mkdir -p ./tfe-certs
 
-    echo "⬇️  Downloading certificates from EC2 instance at ${aws_instance.postgres.public_ip}..."
-    scp -i ${path.module}/${var.friendly_name_prefix}-ec2-postgres-key.pem \
-        -o StrictHostKeyChecking=no \
-        ubuntu@${aws_instance.postgres.public_ip}:/home/ubuntu/mtls-certs/* \
-        ./tfe-certs/
+#     echo "⬇️  Downloading certificates from EC2 instance at ${aws_instance.postgres.public_ip}..."
+#     scp -i ${path.module}/${var.friendly_name_prefix}-ec2-postgres-key.pem \
+#         -o StrictHostKeyChecking=no \
+#         ubuntu@${aws_instance.postgres.public_ip}:/home/ubuntu/mtls-certs/* \
+#         ./tfe-certs/
 
-    if [ $? -eq 0 ]; then
-      echo "✅ Certificates successfully downloaded to ./tfe-certs."
-    else
-      echo "❌ Failed to download certificates."
-      exit 1
-    fi
-    EOT
-  }
-}
+#     if [ $? -eq 0 ]; then
+#       echo "✅ Certificates successfully downloaded to ./tfe-certs."
+#     else
+#       echo "❌ Failed to download certificates."
+#       exit 1
+#     fi
+#     EOT
+#   }
+# }
 
 # data "local_file" "ca_cert" {
 #   depends_on = [null_resource.download_certs]
