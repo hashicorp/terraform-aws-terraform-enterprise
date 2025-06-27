@@ -263,7 +263,7 @@ module "runtime_container_engine_config" {
   database_password         = local.database.password
   database_host             = local.database.endpoint
   database_parameters       = local.database.parameters
-  database_use_mtls         = false
+  database_use_mtls         = true
   database_ca_cert_file     = "/etc/ssl/private/terraform-enterprise/postgres/ca.crt"
   database_client_cert_file = "/etc/ssl/private/terraform-enterprise/postgres/cert.crt"
   database_client_key_file  = "/etc/ssl/private/terraform-enterprise/postgres/key.key"
@@ -330,7 +330,7 @@ module "tfe_init_fdo" {
   redis_client_certificate_secret_id = var.redis_client_certificate_secret_id == null ? null : var.redis_client_certificate_secret_id
   redis_client_key_secret_id         = var.redis_client_key_secret_id == null ? null : var.redis_client_key_secret_id
 
-  enable_postgres_mtls                  = false
+  enable_postgres_mtls                  = true
   postgres_ca_certificate_secret_id     = var.postgres_ca_certificate_secret_id == null ? null : var.postgres_ca_certificate_secret_id
   postgres_client_certificate_secret_id = var.postgres_client_certificate_secret_id == null ? null : var.postgres_client_certificate_secret_id
   postgres_client_key_secret_id         = var.postgres_client_key_secret_id == null ? null : var.postgres_client_key_secret_id
@@ -386,7 +386,7 @@ module "settings" {
   pg_netloc   = local.database.endpoint
   pg_user     = local.database.username
   pg_password = local.database.password
-  pg_use_mtls = false
+  pg_use_mtls = true
 
   # Redis
   redis_host              = local.redis.hostname
