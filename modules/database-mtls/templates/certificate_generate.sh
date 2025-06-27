@@ -96,26 +96,26 @@ sleep 30
 
 # Copy certs into the container
 docker exec postgres mkdir -p /var/lib/postgresql/certs
-docker cp "$SERVER_CRT" postgres:/var/lib/postgresql/certs/server.crt
-docker cp "$SERVER_KEY" postgres:/var/lib/postgresql/certs/server.key
-docker cp "$CA"         postgres:/var/lib/postgresql/certs/ca.crt
+docker cp "$SERVER_CRT" postgres:/var/lib/postgresql/certs/
+docker cp "$SERVER_KEY" postgres:/var/lib/postgresql/certs/
+docker cp "$CA"         postgres:/var/lib/postgresql/certs/
 
 # Set permissions
 docker exec postgres bash -c "chown postgres:postgres /var/lib/postgresql/certs/* && chmod 600 /var/lib/postgresql/certs/server.key"
 
 # Configure PostgreSQL for SSL
-docker exec postgres bash -c "cat > /var/lib/postgresql/data/postgresql.conf <<EOF
+docker exec postgres bash -c "echo \"
 ssl = on
 ssl_cert_file = '/var/lib/postgresql/certs/server.crt'
 ssl_key_file = '/var/lib/postgresql/certs/server.key'
 ssl_ca_file = '/var/lib/postgresql/certs/ca.crt'
-EOF"
+\" >> /var/lib/postgresql/data/postgresql.conf"
 
 # Update pg_hba.conf
-docker exec postgres bash -c "cat >> /var/lib/postgresql/data/pg_hba.conf <<EOF
+docker exec postgres bash -c "echo \"
 hostssl all all 0.0.0.0/0 cert clientcert=verify-full
 hostssl all all 0.0.0.0/0 md5
-EOF"
+\" >> /var/lib/postgresql/data/pg_hba.conf"
 
 docker restart postgres
 echo "🔄 Postgres container restarted with SSL config."
@@ -138,6 +138,5 @@ done
 
 echo "✅ PostgreSQL with mTLS is fully up and running."
 
-# Show connection example
 echo
 echo "👉 Connect using:"
