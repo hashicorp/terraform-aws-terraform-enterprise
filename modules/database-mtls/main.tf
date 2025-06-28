@@ -14,7 +14,7 @@ resource "aws_route53_record" "postgres" {
 
 resource "aws_security_group" "postgresql" {
   description = "The security group of the PostgreSQL deployment for TFE."
-  name        = "${var.friendly_name_prefix}-tfe-postgres-mtls"
+  name        = "${var.friendly_name_prefix}-postgres-mtls"
   vpc_id      = data.aws_vpc.default.id
 }
 
@@ -26,16 +26,6 @@ resource "aws_security_group_rule" "postgresql_ingress" {
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
 }
-
-resource "aws_security_group_rule" "postgresql_ingress_all" {
-  security_group_id = aws_security_group.postgresql.id
-  type              = "ingress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
-}
-
 resource "aws_security_group_rule" "postgresql_tfe_egress" {
   security_group_id = aws_security_group.postgresql.id
   type              = "egress"
@@ -45,26 +35,26 @@ resource "aws_security_group_rule" "postgresql_tfe_egress" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-# Define the IAM role for the nginx instance
-resource "aws_iam_role" "nginx_instance_role" {
-  name = "${var.friendly_name_prefix}-nginx-instance-role"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        },
-        Action = "sts:AssumeRole"
-      }
-    ]
-  })
-}
-resource "aws_iam_instance_profile" "nginx_instance_profile" {
-  name = "${var.friendly_name_prefix}-nginx-instance-profile"
-  role = aws_iam_role.nginx_instance_role.name
-}
+# # Define the IAM role for the nginx instance
+# resource "aws_iam_role" "nginx_instance_role" {
+#   name = "${var.friendly_name_prefix}-nginx-instance-role"
+#   assume_role_policy = jsonencode({
+#     Version = "2012-10-17",
+#     Statement = [
+#       {
+#         Effect = "Allow",
+#         Principal = {
+#           Service = "ec2.amazonaws.com"
+#         },
+#         Action = "sts:AssumeRole"
+#       }
+#     ]
+#   })
+# }
+# resource "aws_iam_instance_profile" "nginx_instance_profile" {
+#   name = "${var.friendly_name_prefix}-nginx-instance-profile"
+#   role = aws_iam_role.nginx_instance_role.name
+# }
 
 resource "aws_instance" "postgres" {
   ami                         = data.aws_ami.ubuntu.id
