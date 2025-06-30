@@ -33,15 +33,18 @@ variable "network_private_subnet_cidrs" {
 }
 
 variable "postgres_ca_certificate_secret_id" {
-  type = string
+  type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for postgres."
 }
 
 variable "postgres_client_certificate_secret_id" {
-  type = string
+  type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for postgres."
 }
 
 variable "postgres_client_key_secret_id" {
-  type = string
+  type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for postgres."
 }
 
 variable "aws_iam_instance_profile" {
