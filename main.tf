@@ -386,7 +386,6 @@ module "settings" {
   pg_netloc   = local.database.endpoint
   pg_user     = local.database.username
   pg_password = local.database.password
-  pg_use_mtls = true
 
   # Redis
   redis_host              = local.redis.hostname
