@@ -45,27 +45,6 @@ resource "aws_security_group_rule" "postgresql_tfe_egress" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-# # Define the IAM role for the nginx instance
-# resource "aws_iam_role" "nginx_instance_role" {
-#   name = "${var.friendly_name_prefix}-nginx-instance-role"
-#   assume_role_policy = jsonencode({
-#     Version = "2012-10-17",
-#     Statement = [
-#       {
-#         Effect = "Allow",
-#         Principal = {
-#           Service = "ec2.amazonaws.com"
-#         },
-#         Action = "sts:AssumeRole"
-#       }
-#     ]
-#   })
-# }
-# resource "aws_iam_instance_profile" "nginx_instance_profile" {
-#   name = "${var.friendly_name_prefix}-nginx-instance-profile"
-#   role = aws_iam_role.nginx_instance_role.name
-# }
-
 resource "aws_instance" "postgres" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "m5.xlarge"

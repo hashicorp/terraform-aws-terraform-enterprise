@@ -80,17 +80,21 @@ variable "redis_ca_certificate_secret_id" {
   default     = null
   description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for redis."
 }
+
 variable "postgres_ca_certificate_secret_id" {
-  type    = string
-  default = null
+  type        = string
+  default     = null
+  description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for postgres."
 }
 
 variable "postgres_client_certificate_secret_id" {
-  type    = string
-  default = null
+  type        = string
+  default     = null
+  description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for postgres."
 }
 
 variable "postgres_client_key_secret_id" {
-  type    = string
-  default = null
+  type        = string
+  default     = null
+  description = "The secrets manager secret ID of the Base64 & PEM encoded private key for postgres."
 }

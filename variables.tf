@@ -122,22 +122,6 @@ variable "enable_redis_mtls" {
   default     = false
 }
 
-variable "postgres_ca_certificate_secret_id" {
-  type    = string
-  default = null
-}
-
-variable "postgres_client_certificate_secret_id" {
-  type    = string
-  default = null
-}
-
-variable "postgres_client_key_secret_id" {
-  type    = string
-  default = null
-}
-
-
 variable "redis_client_key_secret_id" {
   type        = string
   description = "The secrets manager secret ID of the Base64 & PEM encoded private key for redis."
@@ -268,23 +252,28 @@ variable "allow_multiple_azs" {
   default     = true
 }
 
-# variable "db_endpoint" {
-#   type        = string
-#   description = "Determine Amazon RDS Postgres deployment strategy."
-#   default     = ""
-# }
-
-# variable "db_password" {
-#   type        = string
-#   description = "Determine Amazon RDS Postgres deployment strategy."
-#   default     = ""
-# }
-
-
 variable "db_use_mtls" {
   type        = bool
   description = "Whether or not to use mutual TLS to access database. Defaults to false if no value is given."
   default     = false
+}
+
+variable "postgres_ca_certificate_secret_id" {
+  type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for redis."
+  default     = null
+}
+
+variable "postgres_client_certificate_secret_id" {
+  type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for redis."
+  default     = null
+}
+
+variable "postgres_client_key_secret_id" {
+  type        = string
+  description = "The secrets manager secret ID of the Base64 & PEM encoded private key for redis."
+  default     = null
 }
 
 # Aurora
