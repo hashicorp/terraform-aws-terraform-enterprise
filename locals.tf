@@ -6,8 +6,7 @@ locals {
   enable_airgap                = var.airgap_url == null && var.tfe_license_bootstrap_airgap_package_path != null
   enable_external              = var.operational_mode == "external" || var.operational_mode == "active-active"
   enable_disk                  = var.operational_mode == "disk"
-  enable_mtls_database_module  = var.enable_mtls_database
-  enable_database_module       = local.enable_external && var.enable_aurora == false && var.enable_mtls_database == false
+  enable_database_module       = local.enable_external && var.enable_aurora == false && var.db_use_mtls == false
   enable_object_storage_module = local.enable_external
   enable_redis_module          = var.operational_mode == "active-active"
   fdo_operational_mode         = var.operational_mode
@@ -34,7 +33,7 @@ locals {
 
   selected_database = (
     var.enable_aurora ? local.aurora_database :
-    var.enable_mtls_database ? local.mtls_database :
+    var.db_use_mtls ? local.mtls_database :
     local.standard_db
   )
 

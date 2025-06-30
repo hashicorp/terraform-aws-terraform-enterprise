@@ -154,7 +154,7 @@ module "redis_mtls" {
 # -----------------------------------------------------------------------------
 module "database_mtls" {
   source = "./modules/database-mtls"
-  count  = local.enable_mtls_database_module ? 1 : 0
+  count  = var.db_use_mtls ? 1 : 0
 
   domain_name                           = var.domain_name
   db_name                               = var.db_name
@@ -263,7 +263,7 @@ module "runtime_container_engine_config" {
   database_password         = local.database.password
   database_host             = local.database.endpoint
   database_parameters       = local.database.parameters
-  database_use_mtls         = true
+  database_use_mtls         = var.db_use_mtls
   database_ca_cert_file     = "/etc/ssl/private/terraform-enterprise/postgres/ca.crt"
   database_client_cert_file = "/etc/ssl/private/terraform-enterprise/postgres/cert.crt"
   database_client_key_file  = "/etc/ssl/private/terraform-enterprise/postgres/key.key"
