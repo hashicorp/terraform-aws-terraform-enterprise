@@ -225,7 +225,7 @@ module "aurora_database" {
 # Docker Compose File Config for TFE on instance(s) using Flexible Deployment Options
 # ------------------------------------------------------------------------------------
 module "runtime_container_engine_config" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=postgres-mtls"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=main"
   count  = var.is_replicated_deployment ? 0 : 1
 
   tfe_license = var.hc_license
@@ -308,8 +308,7 @@ module "runtime_container_engine_config" {
 # AWS cloud init used to install and configure TFE on instance(s) using Flexible Deployment Options
 # --------------------------------------------------------------------------------------------------
 module "tfe_init_fdo" {
-  # source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=postgres-mtls"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
   count  = var.is_replicated_deployment ? 0 : 1
 
   cloud             = "aws"
@@ -353,7 +352,7 @@ module "tfe_init_fdo" {
 # TFE and Replicated settings to pass to the tfe_init_replicated module for replicated deployment
 # --------------------------------------------------------------------------------------------
 module "settings" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=postgres-mtls"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=main"
   count  = var.is_replicated_deployment ? 1 : 0
 
   # TFE Base Configuration
