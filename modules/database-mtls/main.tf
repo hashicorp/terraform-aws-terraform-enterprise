@@ -1,3 +1,9 @@
+resource "random_string" "postgresql_password" {
+  length           = 128
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>?"
+}
+
 data "aws_route53_zone" "postgres_zone" {
   name         = var.domain_name
   private_zone = false
@@ -113,7 +119,7 @@ resource "null_resource" "generate_certificates" {
     inline = [
       "sleep 60",
       "chmod +x /home/ubuntu/certificate_generate.sh",
-      "sudo postgres_user=${var.db_username} postgres_db=${var.db_name} postgres_client_cert=${var.postgres_client_certificate_secret_id} postgres_client_key=${var.postgres_client_key_secret_id} postgres_client_ca=${var.postgres_ca_certificate_secret_id} /home/ubuntu/certificate_generate.sh"
+      "sudo postgres_password=${random_string.postgresql_password.result} postgres_user=${var.db_username} postgres_db=${var.db_name} postgres_client_cert=${var.postgres_client_certificate_secret_id} postgres_client_key=${var.postgres_client_key_secret_id} postgres_client_ca=${var.postgres_ca_certificate_secret_id} /home/ubuntu/certificate_generate.sh"
     ]
   }
 }
