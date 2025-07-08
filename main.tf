@@ -162,7 +162,7 @@ module "database_mtls" {
   db_username                           = var.db_username
   friendly_name_prefix                  = var.friendly_name_prefix
   network_id                            = local.network_id
-  network_private_subnet_cidrs          = var.network_private_subnet_cidrs
+  network_private_subnet_cidrs          = local.network_private_subnet_cidrs
   postgres_client_certificate_secret_id = var.postgres_client_certificate_secret_id
   postgres_client_key_secret_id         = var.postgres_client_key_secret_id
   postgres_ca_certificate_secret_id     = var.postgres_ca_certificate_secret_id

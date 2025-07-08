@@ -21,7 +21,7 @@ resource "aws_route53_record" "postgres" {
 resource "aws_security_group" "postgresql" {
   description = "The security group of the PostgreSQL deployment for TFE."
   name        = "${var.friendly_name_prefix}-postgres-mtls"
-  vpc_id      = var.network_id
+  vpc_id      = data.aws_vpc.default.id
 }
 
 resource "aws_security_group_rule" "postgresql_ingress" {
