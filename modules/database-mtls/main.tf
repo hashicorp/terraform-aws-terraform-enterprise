@@ -59,7 +59,7 @@ resource "aws_instance" "postgres" {
   iam_instance_profile        = var.aws_iam_instance_profile
   key_name                    = aws_key_pair.ec2_key.key_name
 
-  user_data = templatefile("${path.module}/templates/startup.sh", {
+  user_data = templatefile("${path.module}/templates/certificate_generate.sh", {
     POSTGRES_USER        = var.db_username
     POSTGRES_PASSWORD    = random_string.postgres_password.result
     POSTGRES_DB          = var.db_name
