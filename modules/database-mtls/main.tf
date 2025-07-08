@@ -42,14 +42,14 @@ resource "aws_security_group_rule" "postgresql_ingress_ssh" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-# resource "aws_security_group_rule" "postgresql_tfe_egress" {
-#   security_group_id = aws_security_group.postgresql.id
-#   type              = "egress"
-#   from_port         = 0
-#   to_port           = 0
-#   protocol          = "-1"
-#   cidr_blocks       = ["0.0.0.0/0"]
-# }
+resource "aws_security_group_rule" "postgresql_tfe_egress" {
+  security_group_id = aws_security_group.postgresql.id
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
 
 resource "aws_instance" "postgres" {
   ami                         = data.aws_ami.ubuntu.id
@@ -118,13 +118,8 @@ resource "null_resource" "generate_certificates" {
   provisioner "remote-exec" {
     inline = [
       "sleep 60",
-      "echo 'export postgres_user=${var.db_username}' >> /tmp/cert_env.sh",
-      "echo 'export postgres_db=${var.db_name}' >> /tmp/cert_env.sh",
-      "echo 'export postgres_client_cert=${var.postgres_client_certificate_secret_id}' >> /tmp/cert_env.sh",
-      "echo 'export postgres_client_key=${var.postgres_client_key_secret_id}' >> /tmp/cert_env.sh",
-      "echo 'export postgres_client_ca=${var.postgres_ca_certificate_secret_id}' >> /tmp/cert_env.sh",
       "chmod +x /home/ubuntu/certificate_generate.sh",
-      "sudo bash -c 'source /tmp/cert_env.sh && /home/ubuntu/certificate_generate.sh'"
+      "sudo postgres_user=${var.db_username} postgres_db=${var.db_name} postgres_client_cert=${var.postgres_client_certificate_secret_id} postgres_client_key=${var.postgres_client_key_secret_id} postgres_client_ca=${var.postgres_ca_certificate_secret_id} /home/ubuntu/certificate_generate.sh"
     ]
   }
 }
