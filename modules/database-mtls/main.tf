@@ -61,7 +61,7 @@ resource "aws_instance" "postgres" {
 
   user_data = templatefile("${path.module}/templates/certificate_generate.sh", {
     POSTGRES_USER        = var.db_username
-    POSTGRES_PASSWORD    = random_string.postgres_password.result
+    POSTGRES_PASSWORD    = "postgres_postgres"
     POSTGRES_DB          = var.db_name
     POSTGRES_CLIENT_CERT = var.postgres_client_certificate_secret_id
     POSTGRES_CLIENT_KEY  = var.postgres_client_key_secret_id
