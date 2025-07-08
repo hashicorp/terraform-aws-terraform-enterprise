@@ -35,15 +35,15 @@ CA="$CERT_DIR/ca.crt"
 
 # Decode and write certificates
 echo "===== Decoding postgres_client_cert ====="
-get_base64_secrets "$postgres_client_cert" | base64 -d > "$SERVER_CRT"
+get_base64_secrets "$POSTGRES_CLIENT_CERT" | base64 -d > "$SERVER_CRT"
 cat "$SERVER_CRT"
 
 echo "===== Decoding postgres_client_key ====="
-get_base64_secrets "$postgres_client_key" | base64 -d > "$SERVER_KEY"
+get_base64_secrets "$POSTGRES_CLIENT_KEY" | base64 -d > "$SERVER_KEY"
 cat "$SERVER_KEY"
 
 echo "===== Decoding postgres_client_ca ====="
-get_base64_secrets "$postgres_client_ca" | base64 -d > "$CA"
+get_base64_secrets "$POSTGRES_CLIENT_CA" | base64 -d > "$CA"
 cat "$CA"
 
 chmod 600 "$SERVER_KEY"
@@ -63,9 +63,9 @@ echo "🚀 Starting PostgreSQL container..."
 docker run -d \
   --name postgres \
   -p 5432:5432 \
-  -e POSTGRES_USER=$postgres_user \
-  -e POSTGRES_PASSWORD="postgres_postgres" \
-  -e POSTGRES_DB=$postgres_db \
+  -e POSTGRES_USER=$POSTGRES_USER \
+  -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
+  -e POSTGRES_DB=$POSTGRES_DB \
   postgres:16 || { echo "❌ Docker run failed"; exit 1; }
 
 sleep 5
