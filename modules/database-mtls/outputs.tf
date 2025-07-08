@@ -1,5 +1,5 @@
 output "endpoint" {
-  value       = aws_route53_record.postgres.fqdn
+  value       = aws_route53_record.postgres_db_dns.fqdn
   description = "The connection endpoint of the PostgreSQL RDS instance in address:port format."
 }
 
