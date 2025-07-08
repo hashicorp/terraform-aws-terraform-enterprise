@@ -32,35 +32,62 @@ chown ubuntu:ubuntu "$CERT_DIR/"*
 # Remove old container if exists
 docker rm -f postgres 2>/dev/null || true
 
-echo "🚀 Starting PostgreSQL container with mounted certs..."
+docker volume create postgres-certs
+
+docker run --rm \
+  -v postgres-certs:/target \
+  -v "$CERT_DIR:/source:ro" \
+  postgres:16 \
+  bash -c "
+    cp /source/server.crt /source/server.key /source/ca.crt /target/ &&
+    chown postgres:postgres /target/server.key /target/server.crt /target/ca.crt &&
+    chmod 600 /target/server.key &&
+    chmod 644 /target/server.crt /target/ca.crt
+  "
+
 docker run -d \
   --name postgres \
   -p 5432:5432 \
-  -v "$CERT_DIR:/certs:ro" \
+  -v postgres-certs:/certs:ro \
   -e POSTGRES_USER="$POSTGRES_USER" \
   -e POSTGRES_PASSWORD="$POSTGRES_PASSWORD" \
   -e POSTGRES_DB="$POSTGRES_DB" \
-  postgres:16
+  postgres:16 \
+  postgres \
+  -c ssl=on \
+  -c ssl_cert_file='/certs/server.crt' \
+  -c ssl_key_file='/certs/server.key' \
+  -c ssl_ca_file='/certs/ca.crt'
 
-echo "⏳ Waiting for PostgreSQL to initialize..."
-sleep 30
+# echo "🚀 Starting PostgreSQL container with mounted certs..."
+# docker run -d \
+#   --name postgres \
+#   -p 5432:5432 \
+#   -v "$CERT_DIR:/certs:ro" \
+#   -e POSTGRES_USER="$POSTGRES_USER" \
+#   -e POSTGRES_PASSWORD="$POSTGRES_PASSWORD" \
+#   -e POSTGRES_DB="$POSTGRES_DB" \
+#   postgres:16
 
-echo "🔧 Configuring PostgreSQL for SSL..."
-docker exec postgres bash -c "cat >> /var/lib/postgresql/data/postgresql.conf" <<EOF
-ssl = on
-ssl_cert_file = '/certs/server.crt'
-ssl_key_file = '/certs/server.key'
-ssl_ca_file = '/certs/ca.crt'
-EOF
+# echo "⏳ Waiting for PostgreSQL to initialize..."
+# sleep 30
 
-docker exec postgres bash -c "cat >> /var/lib/postgresql/data/pg_hba.conf" <<EOF
-hostssl all all 0.0.0.0/0 cert clientcert=verify-full
-hostssl all all 0.0.0.0/0 md5
-EOF
+# echo "🔧 Configuring PostgreSQL for SSL..."
+# docker exec postgres bash -c "cat >> /var/lib/postgresql/data/postgresql.conf" <<EOF
+# ssl = on
+# ssl_cert_file = '/certs/server.crt'
+# ssl_key_file = '/certs/server.key'
+# ssl_ca_file = '/certs/ca.crt'
+# EOF
 
-docker restart postgres
+# docker exec postgres bash -c "cat >> /var/lib/postgresql/data/pg_hba.conf" <<EOF
+# hostssl all all 0.0.0.0/0 cert clientcert=verify-full
+# hostssl all all 0.0.0.0/0 md5
+# EOF
 
-echo "✅ PostgreSQL restarted with mTLS configuration."
+# docker restart postgres
+
+# echo "✅ PostgreSQL restarted with mTLS configuration."
 
 # Wait until PostgreSQL is up
 echo "⏳ Waiting for PostgreSQL to become ready..."
