@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-
+set -x
 # Optional: Uncomment to log to file
 # exec > >(tee -a /home/ubuntu/startup.log) 2>&1
 
