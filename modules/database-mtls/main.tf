@@ -21,7 +21,7 @@ resource "aws_route53_record" "postgres" {
 resource "aws_security_group" "postgresql" {
   description = "The security group of the PostgreSQL deployment for TFE."
   name        = "${var.friendly_name_prefix}-postgres-mtls"
-  vpc_id      = data.aws_vpc.default.id
+  vpc_id      = var.network_id
 }
 
 resource "aws_security_group_rule" "postgresql_ingress" {
@@ -30,7 +30,7 @@ resource "aws_security_group_rule" "postgresql_ingress" {
   from_port         = 5432
   to_port           = 5432
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = var.network_private_subnet_cidrs
 }
 
 resource "aws_security_group_rule" "postgresql_ingress_ssh" {
@@ -39,7 +39,7 @@ resource "aws_security_group_rule" "postgresql_ingress_ssh" {
   from_port         = 22
   to_port           = 22
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = var.network_private_subnet_cidrs
 }
 
 resource "aws_security_group_rule" "postgresql_tfe_egress" {
