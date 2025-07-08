@@ -1,142 +1,74 @@
 #!/bin/bash
-set -e
-set -x
-# Optional: Uncomment to log to file
-# exec > >(tee -a /home/ubuntu/startup.log) 2>&1
+set -euxo pipefail
 
 echo "🔧 Installing dependencies..."
-apt-get update -y
-apt-get install -y docker.io postgresql-client openssl unzip jq
-systemctl start docker
-systemctl enable docker
-echo "✅ Docker and dependencies installed."
+apt-get update -y && apt-get install -y docker.io postgresql-client openssl unzip jq
+systemctl enable --now docker
+usermod -aG docker ubuntu
 
-# Redirect output to a log file
-# exec > >(tee -a /home/ubuntu/startup.log) 2>&1
+echo "⬇️ Installing AWS CLI..."
+curl -sS --noproxy '*' "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m | grep -q 'arm\|aarch' && echo 'aarch64' || echo 'x86_64').zip" -o "awscliv2.zip" > /dev/null 2>&1
+unzip -q awscliv2.zip > /dev/null 2>&1
+./aws/install > /dev/null 2>&1
+rm -rf aws awscliv2.zip > /dev/null 2>&1
+
+# Create cert dir and download secrets
+CERT_DIR="/home/ubuntu/mtls-certs"
+mkdir -p "$CERT_DIR"
 
 function get_base64_secrets {
 	local secret_id=$1
 	/usr/local/bin/aws secretsmanager get-secret-value --secret-id "$secret_id" | jq --raw-output '.SecretBinary,.SecretString | select(. != null)'
 }
 
-echo "[$(date +"%FT%T")] [Terraform Enterprise] Installing AWS CLI..." 
-curl --noproxy '*' "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m | grep -q 'arm\|aarch' && echo 'aarch64' || echo 'x86_64').zip" -o "awscliv2.zip" > /dev/null 2>&1
-unzip awscliv2.zip > /dev/null 2>&1
-./aws/install > /dev/null 2>&1
-rm -f ./awscliv2.zip
-rm -rf ./aws
+echo "🔐 Decoding secrets..."
+get_secret "$POSTGRES_CLIENT_CERT" | base64 -d > "$CERT_DIR/server.crt"
+get_secret "$POSTGRES_CLIENT_KEY"  | base64 -d > "$CERT_DIR/server.key"
+get_secret "$POSTGRES_CLIENT_CA"   | base64 -d > "$CERT_DIR/ca.crt"
 
-CERT_DIR="/home/ubuntu/mtls-certs"
-mkdir -p "$CERT_DIR"
-
-SERVER_KEY="$CERT_DIR/server.key"
-SERVER_CRT="$CERT_DIR/server.crt"
-CA="$CERT_DIR/ca.crt"
-
-# Decode and write certificates
-echo "===== Decoding postgres_client_cert ====="
-get_base64_secrets "$POSTGRES_CLIENT_CERT" | base64 -d > "$SERVER_CRT"
-cat "$SERVER_CRT"
-
-echo "===== Decoding postgres_client_key ====="
-get_base64_secrets "$POSTGRES_CLIENT_KEY" | base64 -d > "$SERVER_KEY"
-cat "$SERVER_KEY"
-
-echo "===== Decoding postgres_client_ca ====="
-get_base64_secrets "$POSTGRES_CLIENT_CA" | base64 -d > "$CA"
-cat "$CA"
-
-chmod 600 "$SERVER_KEY"
-chown ubuntu:ubuntu "$CERT_DIR"/*
-echo "✅ Certificates generated in $CERT_DIR"
-
-# Add user to docker group
-usermod -aG docker ubuntu
+chmod 600 "$CERT_DIR/"*
+chown ubuntu:ubuntu "$CERT_DIR/"*
 
 # Remove old container if exists
-if docker ps -a --format '{{.Names}}' | grep -qw postgres; then
-  echo "Removing existing 'postgres' container..."
-  docker rm -f postgres
-fi
+docker rm -f postgres 2>/dev/null || true
 
-echo "🚀 Starting PostgreSQL container..."
+echo "🚀 Starting PostgreSQL container with mounted certs..."
 docker run -d \
   --name postgres \
   -p 5432:5432 \
-  -e POSTGRES_USER=$POSTGRES_USER \
-  -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
-  -e POSTGRES_DB=$POSTGRES_DB \
-  postgres:16 || { echo "❌ Docker run failed"; exit 1; }
+  -v "$CERT_DIR:/certs:ro" \
+  -e POSTGRES_USER="$POSTGRES_USER" \
+  -e POSTGRES_PASSWORD="$POSTGRES_PASSWORD" \
+  -e POSTGRES_DB="$POSTGRES_DB" \
+  postgres:16
 
-sleep 5
-
-if ! docker ps | grep -qw postgres; then
-  echo "❌ Container failed to start."
-  docker logs postgres
-  exit 1
-fi
-
-echo "✅ Postgres container is running."
-
-# Check certs exist
-for f in server.crt server.key ca.crt; do
-  [[ -f "$CERT_DIR/$f" ]] || { echo "❌ Missing $f in $CERT_DIR"; exit 1; }
-done
-
-head "$SERVER_CRT"
-head "$SERVER_KEY"
-# Verify cert and key match
-echo "🔍 Verifying key and cert match..."
-openssl x509 -noout -modulus -in "$SERVER_CRT" | openssl md5
-openssl rsa  -noout -modulus -in "$SERVER_KEY" | openssl md5
-
-# Wait for PostgreSQL to be ready for config
-echo "⏳ Waiting for PostgreSQL container to initialize..."
+echo "⏳ Waiting for PostgreSQL to initialize..."
 sleep 30
 
-# Copy certs into the container
-docker exec postgres mkdir -p /var/lib/postgresql/certs
-docker cp "$SERVER_CRT" postgres:/var/lib/postgresql/certs/
-docker cp "$SERVER_KEY" postgres:/var/lib/postgresql/certs/
-docker cp "$CA"         postgres:/var/lib/postgresql/certs/
-
-# Set permissions
-docker exec postgres bash -c "chown postgres:postgres /var/lib/postgresql/certs/* && chmod 600 /var/lib/postgresql/certs/server.key"
-
-# Configure PostgreSQL for SSL
-docker exec postgres bash -c "echo \"
+echo "🔧 Configuring PostgreSQL for SSL..."
+docker exec postgres bash -c "cat >> /var/lib/postgresql/data/postgresql.conf" <<EOF
 ssl = on
-ssl_cert_file = '/var/lib/postgresql/certs/server.crt'
-ssl_key_file = '/var/lib/postgresql/certs/server.key'
-ssl_ca_file = '/var/lib/postgresql/certs/ca.crt'
-\" >> /var/lib/postgresql/data/postgresql.conf"
+ssl_cert_file = '/certs/server.crt'
+ssl_key_file = '/certs/server.key'
+ssl_ca_file = '/certs/ca.crt'
+EOF
 
-# Update pg_hba.conf
-docker exec postgres bash -c "echo \"
+docker exec postgres bash -c "cat >> /var/lib/postgresql/data/pg_hba.conf" <<EOF
 hostssl all all 0.0.0.0/0 cert clientcert=verify-full
 hostssl all all 0.0.0.0/0 md5
-\" >> /var/lib/postgresql/data/pg_hba.conf"
+EOF
 
 docker restart postgres
-echo "🔄 Postgres container restarted with SSL config."
 
-# Wait for port readiness
-echo "⏳ Waiting for PostgreSQL to listen on port 5432..."
-start_time=$(date +%s)
-while ! nc -z localhost 5432; do
-  sleep 1
-  (( $(date +%s) - start_time > 180 )) && echo "❌ Timeout: PostgreSQL not listening." && exit 1
-done
+echo "✅ PostgreSQL restarted with mTLS configuration."
 
-# Wait for PostgreSQL readiness
-echo "⏳ Waiting for PostgreSQL to be ready..."
-start_time=$(date +%s)
-until docker exec postgres pg_isready -U postgres > /dev/null 2>&1; do
+# Wait until PostgreSQL is up
+echo "⏳ Waiting for PostgreSQL to become ready..."
+timeout=180
+start=$(date +%s)
+while ! docker exec postgres pg_isready -U "$POSTGRES_USER" >/dev/null 2>&1; do
   sleep 1
-  (( $(date +%s) - start_time > 180 )) && echo "❌ Timeout: PostgreSQL not ready." && docker logs postgres && exit 1
+  [[ $(( $(date +%s) - start )) -gt $timeout ]] && echo "❌ Timeout waiting for PostgreSQL" && docker logs postgres && exit 1
 done
 
 echo "✅ PostgreSQL with mTLS is fully up and running."
-
-echo
-echo "👉 Connect using:"
