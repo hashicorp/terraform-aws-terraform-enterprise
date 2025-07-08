@@ -16,7 +16,7 @@ rm -rf aws awscliv2.zip > /dev/null 2>&1
 CERT_DIR="/home/ubuntu/mtls-certs"
 mkdir -p "$CERT_DIR"
 
-function get_base64_secrets {
+function get_secret {
 	local secret_id=$1
 	/usr/local/bin/aws secretsmanager get-secret-value --secret-id "$secret_id" | jq --raw-output '.SecretBinary,.SecretString | select(. != null)'
 }
