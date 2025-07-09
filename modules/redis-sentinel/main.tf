@@ -16,7 +16,7 @@ resource "random_pet" "redis_username" {
   count = var.redis_authentication_mode == "USER_AND_PASSWORD" ? 1 : 0
 }
 
-resource "random_password" "sentinel_password" {
+resource "random_password" "redis_sentinel_password" {
   count            = contains(["USER_AND_PASSWORD", "PASSWORD"], var.sentinel_authentication_mode) ? 1 : 0
   length           = 16
   special          = true
