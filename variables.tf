@@ -197,33 +197,33 @@ variable "sentinel_authentication_mode" {
 }
 
 variable "sentinel_enabled" {
-  type          = bool
-  default       = false
-  description   = "sentinel is not enabled"
+  type        = bool
+  default     = false
+  description = "sentinel is not enabled"
 }
 
 variable "sentinel_hosts" {
-  type          = list(string)
-  default       = []
-  description   = "The host/port combinations for available Redis sentinel endpoints."
+  type        = list(string)
+  default     = []
+  description = "The host/port combinations for available Redis sentinel endpoints."
 }
 
 variable "sentinel_leader" {
-  type          = string
-  default       = null
-  description   = "The name of the Redis Sentinel leader"
+  type        = string
+  default     = null
+  description = "The name of the Redis Sentinel leader"
 }
 
 variable "sentinel_username" {
-  type          = string
-  default       = null
-  description   = "the username to authenticate to Redis sentinel"
+  type        = string
+  default     = null
+  description = "the username to authenticate to Redis sentinel"
 }
 
 variable "sentinel_password" {
-  type          = string
-  default       = null
-  description   = "the password to authenticate to Redis sentinel"
+  type        = string
+  default     = null
+  description = "the password to authenticate to Redis sentinel"
 }
 
 # Postgres

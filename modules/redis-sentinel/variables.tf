@@ -105,21 +105,21 @@ variable "redis_sentinel_leader_name" {
 }
 
 variable "redis_sentinel_hosts" {
-  type          = list(string)
-  default       = []
-  description   = "The host/port combinations for available Redis sentinel endpoints."
+  type        = list(string)
+  default     = []
+  description = "The host/port combinations for available Redis sentinel endpoints."
 }
 
 variable "redis_sentinel_username" {
-  type          = string
-  default       = null
-  description   = "the username to authenticate to Redis sentinel"
+  type        = string
+  default     = null
+  description = "the username to authenticate to Redis sentinel"
 }
 
 variable "redis_sentinel_password" {
-  type          = string
-  default       = null
-  description   = "the password to authenticate to Redis sentinel"
+  type        = string
+  default     = null
+  description = "the password to authenticate to Redis sentinel"
 }
 
 variable "redis_authentication_mode" {
