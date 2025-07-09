@@ -143,7 +143,7 @@ resource "null_resource" "postgres_db_cert_generation" {
     type        = "ssh"
     user        = "ubuntu"
     private_key = tls_private_key.postgres_db_ssh_key.private_key_pem
-    host        = aws_instance.postgres_db_instance.public_ip
+    host        = aws_route53_record.postgres_db_dns.fqdn
   }
 
   provisioner "file" {
