@@ -107,14 +107,14 @@ resource "aws_instance" "postgres_db_instance" {
     Name = "Terraform-Postgres-mTLS"
   }
 
-  # user_data = templatefile("${path.module}/templates/certificate_generate.sh", {
-  #   POSTGRES_USER        = var.db_username
-  #   POSTGRES_PASSWORD    = "postgres_postgres"
-  #   POSTGRES_DB          = var.db_name
-  #   POSTGRES_CLIENT_CERT = var.postgres_client_certificate_secret_id
-  #   POSTGRES_CLIENT_KEY  = var.postgres_client_key_secret_id
-  #   POSTGRES_CLIENT_CA   = var.postgres_ca_certificate_secret_id
-  # })
+  user_data = templatefile("${path.module}/templates/certificate_generate.sh", {
+    POSTGRES_USER        = var.db_username
+    POSTGRES_PASSWORD    = "postgres_postgres"
+    POSTGRES_DB          = var.db_name
+    POSTGRES_CLIENT_CERT = var.postgres_client_certificate_secret_id
+    POSTGRES_CLIENT_KEY  = var.postgres_client_key_secret_id
+    POSTGRES_CLIENT_CA   = var.postgres_ca_certificate_secret_id
+  })
 }
 
 resource "local_file" "postgres_db_private_key" {
@@ -133,30 +133,30 @@ resource "aws_key_pair" "ec2_key" {
 }
 
 
-resource "null_resource" "postgres_db_cert_generation" {
-  depends_on = [aws_route53_record.postgres_db_dns]
+# resource "null_resource" "postgres_db_cert_generation" {
+#   depends_on = [aws_route53_record.postgres_db_dns]
 
-  triggers = {
-    instance_ip = aws_instance.postgres_db_instance.public_ip
-  }
+#   triggers = {
+#     instance_ip = aws_instance.postgres_db_instance.public_ip
+#   }
 
-  connection {
-    type        = "ssh"
-    user        = "ubuntu"
-    private_key = tls_private_key.postgres_db_ssh_key.private_key_pem
-    host        = aws_route53_record.postgres_db_dns.fqdn
-  }
+#   connection {
+#     type        = "ssh"
+#     user        = "ubuntu"
+#     private_key = tls_private_key.postgres_db_ssh_key.private_key_pem
+#     host        = aws_route53_record.postgres_db_dns.fqdn
+#   }
 
-  provisioner "file" {
-    source      = "${path.module}/templates/certificate_generate.sh"
-    destination = "/home/ubuntu/certificate_generate.sh"
-  }
+#   provisioner "file" {
+#     source      = "${path.module}/templates/certificate_generate.sh"
+#     destination = "/home/ubuntu/certificate_generate.sh"
+#   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "sleep 60",
-      "chmod +x /home/ubuntu/certificate_generate.sh",
-      "sudo POSTGRES_PASSWORD='postgres_postgres' POSTGRES_USER=${var.db_username} POSTGRES_DB=${var.db_name} POSTGRES_CLIENT_CERT=${var.postgres_client_certificate_secret_id} POSTGRES_CLIENT_KEY=${var.postgres_client_key_secret_id} POSTGRES_CLIENT_CA=${var.postgres_ca_certificate_secret_id} /home/ubuntu/certificate_generate.sh"
-    ]
-  }
-}
+#   provisioner "remote-exec" {
+#     inline = [
+#       "sleep 60",
+#       "chmod +x /home/ubuntu/certificate_generate.sh",
+#       "sudo POSTGRES_PASSWORD='postgres_postgres' POSTGRES_USER=${var.db_username} POSTGRES_DB=${var.db_name} POSTGRES_CLIENT_CERT=${var.postgres_client_certificate_secret_id} POSTGRES_CLIENT_KEY=${var.postgres_client_key_secret_id} POSTGRES_CLIENT_CA=${var.postgres_ca_certificate_secret_id} /home/ubuntu/certificate_generate.sh"
+#     ]
+#   }
+# }
