@@ -95,7 +95,7 @@ resource "aws_instance" "postgres_db_instance" {
   vpc_security_group_ids      = [aws_security_group.postgres_db_sg.id]
   iam_instance_profile        = var.aws_iam_instance_profile
   key_name                    = aws_key_pair.ec2_key.key_name
-  subnet_id                   = var.network_subnets_private[0]
+  subnet_id                   = var.network_public_subnets[0]
   root_block_device {
     volume_type           = "gp3"
     volume_size           = 100
@@ -143,7 +143,7 @@ resource "null_resource" "postgres_db_cert_generation" {
     type        = "ssh"
     user        = "ubuntu"
     private_key = tls_private_key.postgres_db_ssh_key.private_key_pem
-    host        = aws_route53_record.postgres_db_dns.fqdn
+    host        = aws_instance.postgres_db_instance.public_ip
   }
 
   provisioner "file" {

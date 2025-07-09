@@ -27,6 +27,12 @@ variable "network_subnets_private" {
   type        = list(string)
 }
 
+variable "network_public_subnets" {
+  default     = []
+  description = "A list of the identities of the public subnetworks in which resources will be deployed."
+  type        = list(string)
+}
+
 variable "friendly_name_prefix" {
   type        = string
   description = "(Required) Friendly name prefix used for tagging and naming AWS resources."
