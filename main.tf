@@ -91,7 +91,7 @@ module "redis" {
   redis_encryption_in_transit = var.redis_encryption_in_transit
   redis_encryption_at_rest    = var.redis_encryption_at_rest
   redis_use_password_auth     = var.redis_use_password_auth
-  redis_port                  = var.redis_encryption_in_transit ? "6380" : "6379"
+  redis_port                  = var.redis_encryption_in_transit ? "6380" : "6379"  
 }
 
 # -----------------------------------------------------------------------------
@@ -102,6 +102,10 @@ module "redis_sentinel" {
   count  = var.enable_redis_sentinel ? 1 : 0
   source = "./modules/redis-sentinel"
 
+  redis_sentinel_hosts                   = var.sentinel_hosts
+  redis_sentinel_leader_name             = var.sentinel_leader
+  redis_sentinel_username                = var.sentinel_username
+  redis_sentinel_password                = var.sentinel_password
   domain_name                            = var.domain_name
   redis_authentication_mode              = var.redis_authentication_mode
   sentinel_authentication_mode           = var.sentinel_authentication_mode
