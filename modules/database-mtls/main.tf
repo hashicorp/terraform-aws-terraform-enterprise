@@ -156,7 +156,7 @@ resource "null_resource" "postgres_db_cert_generation" {
     inline = [
       "sleep 60",
       "chmod +x /home/ubuntu/certificate_generate.sh",
-      "sudo POSTGRES_PASSWORD='${random_string.postgres_password.result}' POSTGRES_USER=${var.db_username} POSTGRES_DB=${var.db_name} POSTGRES_CLIENT_CERT=${var.postgres_client_certificate_secret_id} POSTGRES_CLIENT_KEY=${var.postgres_client_key_secret_id} POSTGRES_CLIENT_CA=${var.postgres_ca_certificate_secret_id} /home/ubuntu/certificate_generate.sh"
+      "sudo POSTGRES_PASSWORD='${random_string.postgres_db_password.result}' POSTGRES_USER=${var.db_username} POSTGRES_DB=${var.db_name} POSTGRES_CLIENT_CERT=${var.postgres_client_certificate_secret_id} POSTGRES_CLIENT_KEY=${var.postgres_client_key_secret_id} POSTGRES_CLIENT_CA=${var.postgres_ca_certificate_secret_id} /home/ubuntu/certificate_generate.sh"
     ]
   }
 }

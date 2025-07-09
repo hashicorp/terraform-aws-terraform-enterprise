@@ -9,7 +9,7 @@ output "name" {
 }
 
 output "password" {
-  value       = random_string.postgres_password.result
+  value       = random_string.postgres_db_password.result
   description = "The password of the main PostgreSQL user."
 }
 
