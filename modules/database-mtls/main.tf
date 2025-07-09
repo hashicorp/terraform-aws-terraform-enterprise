@@ -95,7 +95,7 @@ resource "aws_instance" "postgres_db_instance" {
   vpc_security_group_ids      = [aws_security_group.postgres_db_sg.id]
   iam_instance_profile        = var.aws_iam_instance_profile
   key_name                    = aws_key_pair.ec2_key.key_name
-
+  subnet_id = var.network_subnet_private[0]
   root_block_device {
     volume_type           = "gp3"
     volume_size           = 100
