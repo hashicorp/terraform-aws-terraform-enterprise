@@ -132,8 +132,6 @@ resource "aws_key_pair" "ec2_key" {
   public_key = tls_private_key.postgres_db_ssh_key.public_key_openssh
 }
 
-module.postgres_mtls.module.database_mtls.aws_route53_record.postgres_db_dns, module.postgres_mtls.module.database_mtls.aws_instance.postgres_db_instance
-
 
 # resource "null_resource" "postgres_db_cert_generation" {
 #   depends_on = [aws_route53_record.postgres_db_dns]
