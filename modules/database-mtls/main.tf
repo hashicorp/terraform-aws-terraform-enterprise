@@ -4,42 +4,42 @@ resource "random_string" "postgres_db_password" {
   override_special = "#$%&*"
 }
 
-resource "aws_lb" "redis_lb" {
-  name                             = "${var.friendly_name_prefix}-redis-nlb"
-  internal                         = true
-  load_balancer_type               = "network"
-  subnets                          = var.network_subnets_private
-  enable_cross_zone_load_balancing = true
-  security_groups = [
-    aws_security_group.postgres_db_sg.id,
-  ]
-}
+# resource "aws_lb" "redis_lb" {
+#   name                             = "${var.friendly_name_prefix}-redis-nlb"
+#   internal                         = true
+#   load_balancer_type               = "network"
+#   subnets                          = var.network_subnets_private
+#   enable_cross_zone_load_balancing = true
+#   security_groups = [
+#     aws_security_group.postgres_db_sg.id,
+#   ]
+# }
 
-resource "aws_lb_target_group" "redis_tg" {
-  name     = "${var.friendly_name_prefix}-redis-tg-5432"
-  port     = 5432
-  protocol = "TCP"
-  vpc_id   = var.network_id
+# resource "aws_lb_target_group" "redis_tg" {
+#   name     = "${var.friendly_name_prefix}-redis-tg-5432"
+#   port     = 5432
+#   protocol = "TCP"
+#   vpc_id   = var.network_id
 
-  health_check {
-    protocol = "TCP"
-  }
-}
+#   health_check {
+#     protocol = "TCP"
+#   }
+# }
 
 
 # Network Load Balancer Listener and Target Group for Redis
 # ---------------------------------------------------------
 
-resource "aws_lb_listener" "redis_listener_redis" {
-  load_balancer_arn = aws_lb.redis_lb.arn
-  port              = 5432
-  protocol          = "TCP"
+# resource "aws_lb_listener" "redis_listener_redis" {
+#   load_balancer_arn = aws_lb.redis_lb.arn
+#   port              = 5432
+#   protocol          = "TCP"
 
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.redis_tg.arn
-  }
-}
+#   default_action {
+#     type             = "forward"
+#     target_group_arn = aws_lb_target_group.redis_tg.arn
+#   }
+# }
 
 data "aws_route53_zone" "postgres_zone" {
   name         = var.domain_name
@@ -133,7 +133,7 @@ resource "aws_key_pair" "ec2_key" {
 }
 
 resource "null_resource" "postgres_db_cert_generation" {
-  depends_on = [aws_instance.postgres_db_instance]
+  depends_on = [aws_route53_record.postgres_db_dns]
 
   triggers = {
     instance_ip = aws_instance.postgres_db_instance.public_ip
