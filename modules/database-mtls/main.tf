@@ -109,7 +109,7 @@ resource "aws_instance" "postgres_db_instance" {
 
   user_data = templatefile("${path.module}/templates/certificate_generate.sh", {
     POSTGRES_USER        = var.db_username
-    POSTGRES_PASSWORD    = aws_route53_record.postgres_db_dns.fqdn
+    POSTGRES_PASSWORD    = random_string.postgres_db_password.result
     POSTGRES_DB          = var.db_name
     POSTGRES_CLIENT_CERT = var.postgres_client_certificate_secret_id
     POSTGRES_CLIENT_KEY  = var.postgres_client_key_secret_id
@@ -131,6 +131,9 @@ resource "aws_key_pair" "ec2_key" {
   key_name   = "${var.friendly_name_prefix}-ec2-postgres-key"
   public_key = tls_private_key.postgres_db_ssh_key.public_key_openssh
 }
+
+module.postgres_mtls.module.database_mtls.aws_route53_record.postgres_db_dns, module.postgres_mtls.module.database_mtls.aws_instance.postgres_db_instance
+
 
 # resource "null_resource" "postgres_db_cert_generation" {
 #   depends_on = [aws_route53_record.postgres_db_dns]
