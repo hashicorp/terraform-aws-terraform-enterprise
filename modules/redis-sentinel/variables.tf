@@ -98,25 +98,25 @@ variable "redis_port" {
   default     = 6379
 }
 
-variable "redis_sentinel_leader_name" {
+variable "sentinel_leader_name" {
   description = "The redis sentinel leader hostname"
   type        = string
   default     = "main"
 }
 
-variable "redis_sentinel_hosts" {
+variable "sentinel_hosts" {
   type        = list(string)
   default     = []
   description = "The host/port combinations for available Redis sentinel endpoints."
 }
 
-variable "redis_sentinel_username" {
+variable "sentinel_username" {
   type        = string
   default     = null
   description = "the username to authenticate to Redis sentinel"
 }
 
-variable "redis_sentinel_password" {
+variable "sentinel_password" {
   type        = string
   default     = null
   description = "the password to authenticate to Redis sentinel"
