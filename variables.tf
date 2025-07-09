@@ -196,12 +196,6 @@ variable "sentinel_authentication_mode" {
   }
 }
 
-variable "sentinel_enabled" {
-  type        = bool
-  default     = false
-  description = "sentinel is not enabled"
-}
-
 variable "sentinel_hosts" {
   type        = list(string)
   default     = []
