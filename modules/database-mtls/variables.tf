@@ -22,6 +22,11 @@ variable "network_id" {
   type        = string
 }
 
+variable "network_subnets_private" {
+  description = "A list of the identities of the private subnetworks in which the EC2 autoscaling group will be deployed."
+  type        = list(string)
+}
+
 variable "friendly_name_prefix" {
   type        = string
   description = "(Required) Friendly name prefix used for tagging and naming AWS resources."

@@ -167,7 +167,7 @@ module "database_mtls" {
   postgres_client_key_secret_id         = var.postgres_client_key_secret_id
   postgres_ca_certificate_secret_id     = var.postgres_ca_certificate_secret_id
   aws_iam_instance_profile              = module.service_accounts.iam_instance_profile.name
-
+  network_subnets_private               = local.network_private_subnets
 }
 
 # -----------------------------------------------------------------------------
