@@ -68,7 +68,8 @@ resource "aws_security_group_rule" "postgres_db_ingress" {
   from_port         = 5432
   to_port           = 5432
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  # cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks = var.network_private_subnet_cidrs
 }
 
 resource "aws_security_group_rule" "postgres_db_ssh_ingress" {
@@ -77,7 +78,8 @@ resource "aws_security_group_rule" "postgres_db_ssh_ingress" {
   from_port         = 22
   to_port           = 22
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  # cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks = var.network_private_subnet_cidrs
 }
 
 resource "aws_security_group_rule" "postgres_db_egress" {
@@ -86,7 +88,8 @@ resource "aws_security_group_rule" "postgres_db_egress" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
+  # cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks = var.network_private_subnet_cidrs
 }
 
 resource "aws_instance" "postgres_db_instance" {
