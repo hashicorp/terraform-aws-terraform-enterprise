@@ -174,6 +174,26 @@ module "database" {
 }
 
 # -----------------------------------------------------------------------------
+# EC2 PostreSQL container with mTLS
+# -----------------------------------------------------------------------------
+module "database_mtls" {
+  source = "./modules/database-mtls"
+  count  = var.db_use_mtls ? 1 : 0
+
+  domain_name                           = var.domain_name
+  db_name                               = var.db_name
+  db_parameters                         = var.db_parameters
+  db_username                           = var.db_username
+  friendly_name_prefix                  = var.friendly_name_prefix
+  network_id                            = local.network_id
+  postgres_client_certificate_secret_id = var.postgres_client_certificate_secret_id
+  postgres_client_key_secret_id         = var.postgres_client_key_secret_id
+  postgres_ca_certificate_secret_id     = var.postgres_ca_certificate_secret_id
+  aws_iam_instance_profile              = module.service_accounts.iam_instance_profile.name
+  network_public_subnets                = local.network_public_subnets
+}
+
+# -----------------------------------------------------------------------------
 # AWS Aurora PostreSQL Database Cluster
 # -----------------------------------------------------------------------------
 module "aurora_database" {
