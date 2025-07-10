@@ -308,7 +308,7 @@ module "tfe_init_fdo" {
   redis_client_certificate_secret_id = var.redis_client_certificate_secret_id == null ? null : var.redis_client_certificate_secret_id
   redis_client_key_secret_id         = var.redis_client_key_secret_id == null ? null : var.redis_client_key_secret_id
 
-  enable_postgres_mtls                  = true
+  enable_postgres_mtls                  = var.db_use_mtls
   postgres_ca_certificate_secret_id     = var.postgres_ca_certificate_secret_id == null ? null : var.postgres_ca_certificate_secret_id
   postgres_client_certificate_secret_id = var.postgres_client_certificate_secret_id == null ? null : var.postgres_client_certificate_secret_id
   postgres_client_key_secret_id         = var.postgres_client_key_secret_id == null ? null : var.postgres_client_key_secret_id
