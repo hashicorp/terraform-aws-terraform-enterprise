@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euxo pipefail
+set -eu pipefail
 
 apt-get update -y && apt-get install -y docker.io postgresql-client openssl unzip jq
 systemctl enable --now docker
