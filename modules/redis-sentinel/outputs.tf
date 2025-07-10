@@ -6,12 +6,12 @@ output "hostname" {
   description = "The IP address of the primary node in the Redis Elasticache replication group."
 }
 
-output "redis_password" {
+output "password" {
   value       = local.redis_password
   description = "The password which is required to authenticate to Redis server."
 }
 
-output "redis_username" {
+output "username" {
   value       = local.redis_username
   description = "The username which is required to authenticate to Redis server."
 }
