@@ -29,19 +29,22 @@ data "aws_kms_key" "main" {
 module "service_accounts" {
   source = "./modules/service_accounts"
 
-  ca_certificate_secret_id           = var.ca_certificate_secret_id
-  friendly_name_prefix               = var.friendly_name_prefix
-  existing_iam_instance_role_name    = var.existing_iam_instance_role_name
-  existing_iam_instance_profile_name = var.existing_iam_instance_profile_name
-  iam_role_policy_arns               = var.iam_role_policy_arns
-  enable_airgap                      = local.enable_airgap
-  tfe_license_secret_id              = var.tfe_license_secret_id
-  kms_key_arn                        = local.kms_key_arn
-  vm_certificate_secret_id           = var.vm_certificate_secret_id
-  redis_ca_certificate_secret_id     = var.redis_ca_certificate_secret_id
-  redis_client_certificate_secret_id = var.redis_client_certificate_secret_id
-  redis_client_key_secret_id         = var.redis_client_key_secret_id
-  vm_key_secret_id                   = var.vm_key_secret_id
+  ca_certificate_secret_id              = var.ca_certificate_secret_id
+  friendly_name_prefix                  = var.friendly_name_prefix
+  existing_iam_instance_role_name       = var.existing_iam_instance_role_name
+  existing_iam_instance_profile_name    = var.existing_iam_instance_profile_name
+  iam_role_policy_arns                  = var.iam_role_policy_arns
+  enable_airgap                         = local.enable_airgap
+  tfe_license_secret_id                 = var.tfe_license_secret_id
+  kms_key_arn                           = local.kms_key_arn
+  vm_certificate_secret_id              = var.vm_certificate_secret_id
+  redis_ca_certificate_secret_id        = var.redis_ca_certificate_secret_id
+  redis_client_certificate_secret_id    = var.redis_client_certificate_secret_id
+  redis_client_key_secret_id            = var.redis_client_key_secret_id
+  postgres_client_certificate_secret_id = var.postgres_client_certificate_secret_id
+  postgres_client_key_secret_id         = var.postgres_client_key_secret_id
+  postgres_ca_certificate_secret_id     = var.postgres_ca_certificate_secret_id
+  vm_key_secret_id                      = var.vm_key_secret_id
 }
 
 # -----------------------------------------------------------------------------
@@ -234,11 +237,15 @@ module "runtime_container_engine_config" {
   iact_time_limit      = var.iact_subnet_time_limit
   run_pipeline_image   = var.run_pipeline_image
 
-  database_name       = local.database.name
-  database_user       = local.database.username
-  database_password   = local.database.password
-  database_host       = local.database.endpoint
-  database_parameters = local.database.parameters
+  database_name             = local.database.name
+  database_user             = local.database.username
+  database_password         = local.database.password
+  database_host             = local.database.endpoint
+  database_parameters       = local.database.parameters
+  database_use_mtls         = var.db_use_mtls
+  database_ca_cert_file     = "/etc/ssl/private/terraform-enterprise/postgres/ca.crt"
+  database_client_cert_file = "/etc/ssl/private/terraform-enterprise/postgres/cert.crt"
+  database_client_key_file  = "/etc/ssl/private/terraform-enterprise/postgres/key.key"
 
   storage_type                         = "s3"
   s3_access_key_id                     = var.aws_access_key_id
@@ -300,6 +307,11 @@ module "tfe_init_fdo" {
   redis_ca_certificate_secret_id     = var.redis_ca_certificate_secret_id == null ? null : var.redis_ca_certificate_secret_id
   redis_client_certificate_secret_id = var.redis_client_certificate_secret_id == null ? null : var.redis_client_certificate_secret_id
   redis_client_key_secret_id         = var.redis_client_key_secret_id == null ? null : var.redis_client_key_secret_id
+
+  enable_postgres_mtls                  = true
+  postgres_ca_certificate_secret_id     = var.postgres_ca_certificate_secret_id == null ? null : var.postgres_ca_certificate_secret_id
+  postgres_client_certificate_secret_id = var.postgres_client_certificate_secret_id == null ? null : var.postgres_client_certificate_secret_id
+  postgres_client_key_secret_id         = var.postgres_client_key_secret_id == null ? null : var.postgres_client_key_secret_id
 
   proxy_ip       = var.proxy_ip != null ? var.proxy_ip : null
   proxy_port     = var.proxy_ip != null ? var.proxy_port : null
