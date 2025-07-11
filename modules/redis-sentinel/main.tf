@@ -28,7 +28,7 @@ resource "random_pet" "sentinel_username" {
 }
 
 
-resource "aws_launch_template" "redis_sentinel_leader" {
+resource "aws_launch_template" "sentinel_leader" {
   name_prefix            = "${var.friendly_name_prefix}-redis-sentinel-leader"
   image_id               = data.aws_ami.ubuntu.id
   instance_type          = var.instance_type
@@ -90,7 +90,7 @@ resource "aws_autoscaling_group" "redis_sentinel" {
   health_check_type         = var.health_check_type
 
   launch_template {
-    id      = aws_launch_template.redis_sentinel_leader.id
+    id      = aws_launch_template.sentinel_leader.id
     version = "$Latest"
   }
 
