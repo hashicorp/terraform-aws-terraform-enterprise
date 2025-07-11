@@ -33,11 +33,33 @@ echo \
 	https://download.docker.com/linux/ubuntu $(lsb_release --codename --short) stable" \
 	| sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 retry 10 apt-get --assume-yes update
-retry 10 apt-get --assume-yes install docker-ce docker-ce-cli containerd.io redis-tools
+retry 10 apt-get --assume-yes install docker-ce docker-ce-cli containerd.io redis-tools unzip jq
 retry 10 apt-get --assume-yes autoremove
+
+
+echo "[$(date +"%FT%T")] [Terraform Enterprise] Install AWS CLI" 
+curl --noproxy '*' "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m | grep -q "arm\|aarch" && echo "aarch64" || echo "x86_64").zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+./aws/install
+rm -f ./awscliv2.zip
+rm -rf ./aws
+
 
 tfe_dir="/etc/redis"
 mkdir -p $tfe_dir
+
+export FULLCHAIN=$tfe_dir/fullchain.pem
+export PRIVKEY=$tfe_dir/privkey.pem
+export ISRGROOTX1=$tfe_dir/isrgrootx1.pem
+
+echo $(get_base64_secrets ${redis_client_cert}) | base64 -d > $FULLCHAIN
+echo $(get_base64_secrets ${redis_client_key}) | base64 -d > $PRIVKEY
+echo $(get_base64_secrets ${redis_client_ca}) | base64 -d > $ISRGROOTX1
+
+chmod a+r $FULLCHAIN
+chmod a+r $PRIVKEY
+chmod a+r $ISRGROOTX1
+
 get_linux_ip() {
   ip addr show | awk '/inet / && !/127.0.0.1/ {print $2}' | cut -d/ -f1 | head -n 1
 }
