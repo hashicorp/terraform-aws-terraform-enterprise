@@ -77,6 +77,7 @@ resource "local_file" "postgres_db_private_key" {
   filename        = "${path.module}/${var.friendly_name_prefix}-ec2-postgres-key.pem"
   file_permission = "0600"
 }
+
 resource "tls_private_key" "postgres_db_ssh_key" {
   algorithm = "RSA"
   rsa_bits  = 4096
@@ -87,7 +88,7 @@ resource "aws_key_pair" "ec2_key" {
   public_key = tls_private_key.postgres_db_ssh_key.public_key_openssh
 }
 
-resource "null_resource" "postgres_db_cert_generation" {
+resource "null_resource" "postgres_db_cert_fetch_and_server_start" {
   depends_on = [aws_route53_record.postgres_db_dns]
 
   connection {
@@ -98,15 +99,15 @@ resource "null_resource" "postgres_db_cert_generation" {
   }
 
   provisioner "file" {
-    source      = "${path.module}/templates/certificate_generate.sh"
-    destination = "/home/ubuntu/certificate_generate.sh"
+    source      = "${path.module}/files/fetch_cert_and_start_server.sh"
+    destination = "/home/ubuntu/fetch_cert_and_start_server.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
       "sleep 60",
-      "chmod +x /home/ubuntu/certificate_generate.sh",
-      "sudo POSTGRES_PASSWORD='${random_string.postgres_db_password.result}' POSTGRES_USER=${var.db_username} POSTGRES_DB=${var.db_name} POSTGRES_CLIENT_CERT=${var.postgres_client_certificate_secret_id} POSTGRES_CLIENT_KEY=${var.postgres_client_key_secret_id} POSTGRES_CLIENT_CA=${var.postgres_ca_certificate_secret_id} /home/ubuntu/certificate_generate.sh"
+      "chmod +x /home/ubuntu/fetch_cert_and_start_server.sh",
+      "sudo POSTGRES_PASSWORD='${random_string.postgres_db_password.result}' POSTGRES_USER=${var.db_username} POSTGRES_DB=${var.db_name} POSTGRES_CLIENT_CERT=${var.postgres_client_certificate_secret_id} POSTGRES_CLIENT_KEY=${var.postgres_client_key_secret_id} POSTGRES_CLIENT_CA=${var.postgres_ca_certificate_secret_id} /home/ubuntu/fetch_cert_and_start_server.sh"
     ]
   }
 }
