@@ -2,10 +2,10 @@
 # SPDX-License-Identifier: MPL-2.0
 
 locals {
-  redis_username           = try(random_pet.redis_username[0].id, null)
-  redis_password           = try(random_password.redis_password[0].result, null)
-  sentinel_username        = try(random_pet.sentinel_username[0].id, null)
-  sentinel_password        = try(random_password.sentinel_password[0].result, null)
+  redis_username           = try(random_pet.redis_username[0].id, "")
+  redis_password           = try(random_password.redis_password[0].result, "")
+  sentinel_username        = try(random_pet.sentinel_username[0].id, "")
+  sentinel_password        = try(random_password.sentinel_password[0].result, "")
   redis_user_data_template = "${path.module}/files/script.sh"
   redis_leader_user_data = templatefile(local.redis_user_data_template, {
     redis_init = base64encode(file(local.redis_init_path))
