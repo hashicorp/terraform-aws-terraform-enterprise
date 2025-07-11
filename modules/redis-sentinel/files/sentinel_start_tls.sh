@@ -32,7 +32,7 @@ sentinel resolve-hostnames yes
 tls-replication yes
 tls-cert-file /certs/fullchain.pem
 tls-key-file /certs/privkey.pem
-tls-ca-cert-file /certs/fullchain.pem
+tls-ca-cert-file /certs/isrgrootx1.pem
 tls-auth-clients yes
 sentinel announce-ip ${HOST_IP}
 sentinel announce-port 26380
