@@ -43,7 +43,13 @@ services:
       - $${REDIS_CONF}:/opt/redis/redis.conf
       - $${REDIS_INIT}:/opt/redis/init.sh
     healthcheck:
-      test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "${redis_port}", "-a", "'${redis_password}'", "ping" ]
+      test: [ 
+        "CMD", 
+        "redis-cli", 
+        "-h", "localhost", 
+        "-p", "${redis_port}", 
+        %{if (redis_password != null && redis_password != "")}"-a", "'${redis_password}'",%{endif}
+        "ping" ]
       interval: 1s
       timeout: 5s
       retries: 5
@@ -67,7 +73,13 @@ services:
       - $${REDIS_CONF}:/opt/redis/redis.conf
       - $${REDIS_INIT}:/opt/redis/init.sh
     healthcheck:
-      test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "${redis_port}", "-a", "'${redis_password}'", "ping" ]
+      test: [ 
+        "CMD", 
+        "redis-cli",
+        "-h", "localhost",
+        "-p", "${redis_port}",
+        %{if (redis_password != null && redis_password != "")}"-a", "'${redis_password}'",%{endif}
+        "ping" ]
       interval: 1s
       timeout: 5s
       retries: 5
