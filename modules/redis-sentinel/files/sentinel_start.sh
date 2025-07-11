@@ -20,7 +20,9 @@ port ${redis_sentinel_port}
 sentinel monitor ${redis_sentinel_leader_name} $${HOST_IP} ${redis_port+1} 1
 
 # Sentinel auth
+%{if (redis_sentinel_password != null && redis_sentinel_password != "")}
 requirepass ${redis_sentinel_password}
+%{endif}
 %{if (redis_sentinel_password != null && redis_sentinel_password != "") && (redis_sentinel_username != null && redis_sentinel_username != "")}
 user ${redis_sentinel_username} on >${redis_sentinel_password} ~* &* +@all
 %{endif}
