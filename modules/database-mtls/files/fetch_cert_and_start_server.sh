@@ -25,9 +25,6 @@ get_secret "$POSTGRES_CLIENT_CA"   | base64 -d > "$CERT_DIR/ca.crt"
 chmod 600 "$CERT_DIR/"*
 chown ubuntu:ubuntu "$CERT_DIR/"*
 
-# Remove old container if exists
-# docker rm -f postgres 2>/dev/null || true
-
 docker volume create postgres-certs
 
 docker run --rm \
