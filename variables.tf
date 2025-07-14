@@ -196,6 +196,12 @@ variable "sentinel_authentication_mode" {
   }
 }
 
+variable "sentinel_leader" {
+  type        = string
+  default     = "main"
+  description = "The name of the Redis Sentinel leader"
+}
+
 # Postgres
 # --------
 variable "db_name" {
