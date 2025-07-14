@@ -105,6 +105,7 @@ module "redis_sentinel" {
   count  = var.enable_redis_sentinel ? 1 : 0
   source = "./modules/redis-sentinel"
 
+  sentinel_leader                        = var.sentinel_leader
   domain_name                            = var.domain_name
   redis_authentication_mode              = var.redis_authentication_mode
   sentinel_authentication_mode           = var.sentinel_authentication_mode
