@@ -16,7 +16,7 @@ locals {
       redis_username = local.redis_username
       redis_password = local.redis_password
     }))
-    compose = var.enable_sentinel_mtls ? base64encode(templatefile(local.compose_path, {
+    compose = var.enable_sentinel_mtls ? base64encode(templatefile(local.compose_path_tls, {
       redis_sentinel_port = var.redis_sentinel_port
       redis_port          = var.redis_port
       })) : base64encode(templatefile(local.compose_path, {
@@ -40,7 +40,7 @@ locals {
   })
   sentinel_start_script_tls_path = "${path.module}/files/sentinel_start_tls.sh"
   sentinel_start_script_path     = "${path.module}/files/sentinel_start.sh"
-  compose_path_tls                   = "${path.module}/files/compose-tls.yaml"
+  compose_path_tls               = "${path.module}/files/compose-tls.yaml"
   compose_path                   = "${path.module}/files/compose.yaml"
   redis_conf_path                = "${path.module}/files/redis.conf"
   redis_init_path                = "${path.module}/files/redis-init.sh"
