@@ -40,6 +40,7 @@ locals {
   })
   sentinel_start_script_tls_path = "${path.module}/files/sentinel_start_tls.sh"
   sentinel_start_script_path     = "${path.module}/files/sentinel_start.sh"
+  compose_path_tls                   = "${path.module}/files/compose-tls.yaml"
   compose_path                   = "${path.module}/files/compose.yaml"
   redis_conf_path                = "${path.module}/files/redis.conf"
   redis_init_path                = "${path.module}/files/redis-init.sh"
