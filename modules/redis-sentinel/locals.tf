@@ -11,6 +11,7 @@ locals {
     redis_client_cert = var.redis_client_certificate_secret_id
     redis_client_key  = var.redis_client_key_secret_id
     redis_client_ca   = var.redis_ca_certificate_secret_id
+    enable_sentinel_mtls = var.enable_sentinel_mtls
     redis_init = base64encode(file(local.redis_init_path))
     redis_conf = base64encode(templatefile(local.redis_conf_path, {
       redis_username = local.redis_username

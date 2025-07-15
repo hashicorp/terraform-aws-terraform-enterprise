@@ -26,6 +26,7 @@ function retry {
 }
 
 
+
 curl --noproxy '*' --fail --silent --show-error --location https://download.docker.com/linux/ubuntu/gpg \
 	| gpg --dearmor --output /usr/share/keyrings/docker-archive-keyring.gpg
 echo \
@@ -44,6 +45,7 @@ unzip awscliv2.zip
 rm -f ./awscliv2.zip
 rm -rf ./aws
 
+%{ if enable_sentinel_mtls ~}
 
 tfe_dir="/etc/redis"
 mkdir -p $tfe_dir
@@ -59,6 +61,8 @@ echo $(get_base64_secrets ${redis_client_ca}) | base64 -d > $ISRGROOTX1
 chmod a+r $FULLCHAIN
 chmod a+r $PRIVKEY
 chmod a+r $ISRGROOTX1
+
+%{ endif ~}
 
 get_linux_ip() {
   ip addr show | awk '/inet / && !/127.0.0.1/ {print $2}' | cut -d/ -f1 | head -n 1
