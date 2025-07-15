@@ -103,6 +103,7 @@ module "redis_sentinel" {
   source = "./modules/redis-sentinel"
 
   redis_ca_certificate_secret_id         = var.redis_ca_certificate_secret_id
+  enable_sentinel_mtls                   = var.enable_sentinel_mtls
   redis_client_certificate_secret_id     = var.redis_client_certificate_secret_id
   redis_client_key_secret_id             = var.redis_client_key_secret_id
   domain_name                            = var.domain_name
