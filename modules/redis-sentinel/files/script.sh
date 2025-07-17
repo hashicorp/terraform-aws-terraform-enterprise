@@ -25,7 +25,16 @@ function retry {
 
 }
 
+%{ if enable_sentinel_mtls ~}
 
+function get_base64_secrets {
+	local secret_id=$1
+	# OS: Agnostic
+	# Description: Pull the Base 64 encoded secrets from AWS Secrets Manager
+
+	/usr/local/bin/aws secretsmanager get-secret-value --secret-id $secret_id | jq --raw-output '.SecretBinary,.SecretString | select(. != null)'
+}
+%{ endif ~}
 
 curl --noproxy '*' --fail --silent --show-error --location https://download.docker.com/linux/ubuntu/gpg \
 	| gpg --dearmor --output /usr/share/keyrings/docker-archive-keyring.gpg
