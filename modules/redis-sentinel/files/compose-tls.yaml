@@ -27,11 +27,6 @@ services:
       - $${FULLCHAIN}:/certs/fullchain.pem
       - $${PRIVKEY}:/certs/privkey.pem
       - $${ISRGROOTX1}:/certs/isrgrootx1.pem
-    healthcheck:
-      test: [ "CMD", "redis-cli", "-h", "localhost", "ping" ]
-      interval: 1s
-      timeout: 5s
-      retries: 5
 
   redis-follower-1:
     image: redis:7
@@ -60,11 +55,6 @@ services:
       - $${FULLCHAIN}:/certs/fullchain.pem
       - $${PRIVKEY}:/certs/privkey.pem
       - $${ISRGROOTX1}:/certs/isrgrootx1.pem
-    healthcheck:
-      test: [ "CMD", "redis-cli", "-h", "localhost", "-p", "${redis_port}", "ping" ]
-      interval: 1s
-      timeout: 5s
-      retries: 5
 
   redis-follower-2:
     image: redis:7
@@ -93,11 +83,6 @@ services:
       - $${FULLCHAIN}:/certs/fullchain.pem
       - $${PRIVKEY}:/certs/privkey.pem
       - $${ISRGROOTX1}:/certs/isrgrootx1.pem
-    healthcheck:
-      test: ["CMD", "redis-cli", "-p", "6379", "--tls", "--cert", "/certs/fullchain.pem", "--key", "/certs/privkey.pem", "--cacert", "/certs/fullchain.pem", "-h", "localhost", "ping"]
-      interval: 1s
-      timeout: 5s
-      retries: 5
 
   sentinel-1:
     image: redis:7
@@ -118,11 +103,6 @@ services:
     entrypoint: [ "/usr/local/bin/entrypoint.sh" ]
     environment:
       - HOST_IP=$${HOST_IP}
-    healthcheck:
-      test: ["CMD", "redis-cli", "-p", "6379", "--tls", "--cert", "/certs/fullchain.pem", "--key", "/certs/privkey.pem", "--cacert", "/certs/fullchain.pem", "-h", "localhost", "ping"]
-      interval: 5s
-      timeout: 10s
-      retries: 5
 
   sentinel-2:
     image: redis:7
@@ -143,8 +123,3 @@ services:
     entrypoint: [ "/usr/local/bin/entrypoint.sh" ]
     environment:
       - HOST_IP=$${HOST_IP}
-    healthcheck:
-      test: ["CMD", "redis-cli", "-p", "6379", "--tls", "--cert", "/certs/fullchain.pem", "--key", "/certs/privkey.pem", "--cacert", "/certs/fullchain.pem", "-h", "localhost", "ping"]
-      interval: 5s
-      timeout: 10s
-      retries: 5
