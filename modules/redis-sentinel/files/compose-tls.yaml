@@ -21,6 +21,12 @@ services:
     ]
     ports:
       - "${redis_port+1}:${redis_port}"
+    healthcheck:
+      test: ["CMD", "redis-cli","--tls", "--cert", "/certs/fullchain.pem", "--key", "/certs/privkey.pem", "--cacert", "/certs/isrgrootx1.pem", "-h", "localhost", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 30s
     volumes:
       - $${REDIS_CONF}:/opt/redis/redis.conf
       - $${REDIS_INIT}:/opt/redis/init.sh
@@ -49,6 +55,8 @@ services:
         condition: service_healthy
     ports:
       - "${redis_port+2}:${redis_port}"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "6379", "--tls", "--cert", "/certs/fullchain.pem", "--key", "/certs/privkey.pem", "--cacert", "/certs/isrgrootx1.pem", "-h", "localhost", "ping"]
     volumes:
       - $${REDIS_CONF}:/opt/redis/redis.conf
       - $${REDIS_INIT}:/opt/redis/init.sh
@@ -77,6 +85,8 @@ services:
         condition: service_healthy
     ports:
       - "${redis_port+3}:${redis_port}"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "6379", "--tls", "--cert", "/certs/fullchain.pem", "--key", "/certs/privkey.pem", "--cacert", "/certs/isrgrootx1.pem", "-h", "localhost", "ping"]
     volumes:
       - $${REDIS_CONF}:/opt/redis/redis.conf
       - $${REDIS_INIT}:/opt/redis/init.sh
