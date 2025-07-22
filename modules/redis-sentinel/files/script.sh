@@ -54,10 +54,12 @@ unzip awscliv2.zip
 rm -f ./awscliv2.zip
 rm -rf ./aws
 
-%{ if enable_sentinel_mtls ~}
+
 
 tfe_dir="/etc/redis"
 mkdir -p $tfe_dir
+
+%{ if enable_sentinel_mtls ~}
 
 export FULLCHAIN=$tfe_dir/fullchain.pem
 export PRIVKEY=$tfe_dir/privkey.pem
