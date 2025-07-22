@@ -259,9 +259,13 @@ variable "allow_multiple_azs" {
 }
 
 variable "db_use_mtls" {
+  description = "Enable mTLS database."
   type        = bool
-  description = "Whether or not to use mutual TLS to access database. Defaults to false if no value is given."
-  default     = false
+
+  validation {
+    condition     = !(var.enable_aurora && var.db_use_mtls)
+    error_message = "Both enable_aurora and db_use_mtls cannot be set to true at the same time."
+  }
 }
 
 variable "postgres_ca_certificate_secret_id" {
@@ -285,9 +289,13 @@ variable "postgres_client_key_secret_id" {
 # Aurora
 # ------
 variable "enable_aurora" {
-  default     = false
+  description = "Enable Aurora database."
   type        = bool
-  description = "Create aurora cluster for RDS instances"
+
+  validation {
+    condition     = !(var.enable_aurora && var.db_use_mtls)
+    error_message = "Both enable_aurora and db_use_mtls cannot be set to true at the same time."
+  }
 }
 
 variable "aurora_cluster_instance_enable_single" {
