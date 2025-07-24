@@ -39,13 +39,13 @@ services:
     entrypoint: ["/opt/redis/init.sh"]
     command: [
       "redis-server",
+      "/etc/redis/redis.conf",
       "--tls-port 6379",
       "--port 0",
       "--tls-cert-file", "/certs/fullchain.pem",
       "--tls-key-file", "/certs/privkey.pem",
       "--tls-ca-cert-file", "/certs/isrgrootx1.pem",
       "--tls-auth-clients yes",
-      "/etc/redis/redis.conf",
       "--replicaof", "redis", "${redis_port}",
       "--replica-announce-ip", "$${HOST_IP}",
       "--replica-announce-port", "${redis_port+2}"
