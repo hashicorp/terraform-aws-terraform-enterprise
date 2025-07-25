@@ -9,6 +9,7 @@ locals {
   enable_database_module       = local.enable_external && var.enable_aurora == false && var.db_use_mtls == false
   enable_object_storage_module = local.enable_external
   enable_redis_module          = var.operational_mode == "active-active"
+  redis_mtls_enabled           = var.enable_redis_mtls || var.enable_sentinel_mtls
   fdo_operational_mode         = var.operational_mode
   ami_id                       = local.default_ami_id ? data.aws_ami.ubuntu.id : var.ami_id
   default_ami_id               = var.ami_id == null
@@ -63,7 +64,7 @@ locals {
     aws_elasticache_subnet_group_name = null
     aws_security_group_redis          = null
   }
-  redis = var.enable_redis_sentinel ? module.redis_sentinel[0] : var.enable_redis_mtls ? module.redis_mtls[0] : try(module.redis[0], local.redis_default)
+  redis = var.enable_redis_sentinel || var.enable_sentinel_mtls ? module.redis_sentinel[0] : var.enable_redis_mtls ? module.redis_mtls[0] : try(module.redis[0], local.redis_default)
 
   no_proxy = concat([
     "127.0.0.1",
