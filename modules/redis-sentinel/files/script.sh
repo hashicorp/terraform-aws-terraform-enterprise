@@ -79,7 +79,7 @@ get_linux_ip() {
   ip addr show | awk '/inet / && !/127.0.0.1/ {print $2}' | cut -d/ -f1 | head -n 1
 }
 export HOST_IP=$(get_linux_ip)
-export SENTINEL_ENTRYPOINT=$tfe_dir/senitnel.sh
+export SENTINEL_ENTRYPOINT=$tfe_dir/sentinel.sh
 export REDIS_CONF=$tfe_dir/redis.conf
 export REDIS_INIT=$tfe_dir/redis-init.sh
 echo ${compose} | base64 -d > $tfe_dir/compose.yaml
