@@ -26,7 +26,7 @@ locals {
       redis_port          = var.redis_port
     }))
     sentinel_start_script = var.enable_sentinel_mtls ? base64encode(templatefile(local.sentinel_start_script_tls_path, {
-      redis_sentinel_leader_name = var.redis_sentinel_leader_name
+      redis_sentinel_leader_name = var.redis_sentinel_leader
       redis_sentinel_port        = var.redis_sentinel_port
       redis_port                 = var.redis_port
       })) : base64encode(templatefile(local.sentinel_start_script_path, {
