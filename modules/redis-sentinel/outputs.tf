@@ -42,7 +42,7 @@ output "sentinel_hosts" {
 }
 
 output "sentinel_leader" {
-  value       = var.redis_sentinel_leader_name
+  value       = var.sentinel_leader
   description = "The name of the Redis Sentinel leader"
 }
 

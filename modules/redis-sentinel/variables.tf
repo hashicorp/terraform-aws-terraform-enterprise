@@ -98,7 +98,7 @@ variable "redis_port" {
   default     = 6379
 }
 
-variable "redis_sentinel_leader_name" {
+variable "sentinel_leader" {
   description = "The redis sentinel leader hostname"
   type        = string
   default     = "main"

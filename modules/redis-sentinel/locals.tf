@@ -32,7 +32,7 @@ locals {
       })) : base64encode(templatefile(local.sentinel_start_script_path, {
       redis_sentinel_password    = local.sentinel_password
       redis_sentinel_username    = local.sentinel_username
-      redis_sentinel_leader_name = var.redis_sentinel_leader_name
+      redis_sentinel_leader_name = var.sentinel_leader
       redis_sentinel_port        = var.redis_sentinel_port
       redis_port                 = var.redis_port
       redis_password             = local.redis_password
