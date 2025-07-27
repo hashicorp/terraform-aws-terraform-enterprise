@@ -126,7 +126,7 @@ variable "sentinel_authentication_mode" {
 variable "redis_use_password_auth" {
   description = "A boolean which indicates if password authentication is required by the Redis"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "enable_sentinel_mtls" {
