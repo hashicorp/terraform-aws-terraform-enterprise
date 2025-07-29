@@ -33,8 +33,6 @@ tls-cert-file /certs/fullchain.pem
 tls-key-file /certs/privkey.pem
 tls-ca-cert-file /certs/isrgrootx1.pem
 tls-auth-clients yes
-sentinel announce-ip $${HOST_IP}
-sentinel announce-port 26380
 EOF
 
 # Start Redis Sentinel in the foreground
