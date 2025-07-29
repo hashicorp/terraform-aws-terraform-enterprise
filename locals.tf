@@ -7,6 +7,7 @@ locals {
   enable_external              = var.operational_mode == "external" || var.operational_mode == "active-active"
   enable_disk                  = var.operational_mode == "disk"
   enable_database_module       = local.enable_external && var.enable_aurora == false && var.db_use_mtls == false
+  enable_explorer_database_module       = local.enable_external && var.db_use_mtls == false && var.explorer_db_name != null
   enable_object_storage_module = local.enable_external
   enable_redis_module          = var.operational_mode == "active-active"
   fdo_operational_mode         = var.operational_mode
