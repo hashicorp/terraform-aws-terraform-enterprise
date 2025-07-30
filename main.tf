@@ -292,11 +292,11 @@ module "runtime_container_engine_config" {
   database_client_cert_file = "/etc/ssl/private/terraform-enterprise/postgres/cert.crt"
   database_client_key_file  = "/etc/ssl/private/terraform-enterprise/postgres/key.key"
 
-  explorer_database_name        = module.explorer_database.name
-  explorer_database_user        = module.explorer_database.username
-  explorer_database_password    = module.explorer_database.password
-  explorer_database_host        = module.explorer_database.endpoint
-  explorer_database_parameters  = module.explorer_database.parameters
+  explorer_database_name       = module.explorer_database.name
+  explorer_database_user       = module.explorer_database.username
+  explorer_database_password   = module.explorer_database.password
+  explorer_database_host       = module.explorer_database.endpoint
+  explorer_database_parameters = module.explorer_database.parameters
 
   storage_type                         = "s3"
   s3_access_key_id                     = var.aws_access_key_id
