@@ -2,22 +2,23 @@
 # SPDX-License-Identifier: MPL-2.0
 
 locals {
-  kms_key_arn                  = data.aws_kms_key.main.arn
-  enable_airgap                = var.airgap_url == null && var.tfe_license_bootstrap_airgap_package_path != null
-  enable_external              = var.operational_mode == "external" || var.operational_mode == "active-active"
-  enable_disk                  = var.operational_mode == "disk"
-  enable_database_module       = local.enable_external && var.enable_aurora == false && var.db_use_mtls == false
-  enable_object_storage_module = local.enable_external
-  enable_redis_module          = var.operational_mode == "active-active"
-  fdo_operational_mode         = var.operational_mode
-  ami_id                       = local.default_ami_id ? data.aws_ami.ubuntu.id : var.ami_id
-  default_ami_id               = var.ami_id == null
-  fqdn                         = "${var.tfe_subdomain}.${var.domain_name}"
-  iam_principal                = { arn = try(var.object_storage_iam_user.arn, module.service_accounts.iam_role.arn) }
-  network_id                   = var.deploy_vpc ? module.networking[0].network_id : var.network_id
-  network_private_subnets      = var.deploy_vpc ? module.networking[0].network_private_subnets : var.network_private_subnets
-  network_public_subnets       = var.deploy_vpc ? module.networking[0].network_public_subnets : var.network_public_subnets
-  network_private_subnet_cidrs = var.deploy_vpc ? module.networking[0].network_private_subnet_cidrs : var.network_private_subnet_cidrs
+  kms_key_arn                     = data.aws_kms_key.main.arn
+  enable_airgap                   = var.airgap_url == null && var.tfe_license_bootstrap_airgap_package_path != null
+  enable_external                 = var.operational_mode == "external" || var.operational_mode == "active-active"
+  enable_disk                     = var.operational_mode == "disk"
+  enable_database_module          = local.enable_external && var.enable_aurora == false && var.db_use_mtls == false
+  enable_explorer_database_module = local.enable_external && var.db_use_mtls == false && var.explorer_db_name != null
+  enable_object_storage_module    = local.enable_external
+  enable_redis_module             = var.operational_mode == "active-active"
+  fdo_operational_mode            = var.operational_mode
+  ami_id                          = local.default_ami_id ? data.aws_ami.ubuntu.id : var.ami_id
+  default_ami_id                  = var.ami_id == null
+  fqdn                            = "${var.tfe_subdomain}.${var.domain_name}"
+  iam_principal                   = { arn = try(var.object_storage_iam_user.arn, module.service_accounts.iam_role.arn) }
+  network_id                      = var.deploy_vpc ? module.networking[0].network_id : var.network_id
+  network_private_subnets         = var.deploy_vpc ? module.networking[0].network_private_subnets : var.network_private_subnets
+  network_public_subnets          = var.deploy_vpc ? module.networking[0].network_public_subnets : var.network_public_subnets
+  network_private_subnet_cidrs    = var.deploy_vpc ? module.networking[0].network_private_subnet_cidrs : var.network_private_subnet_cidrs
 
   default_database = {
     name       = null
