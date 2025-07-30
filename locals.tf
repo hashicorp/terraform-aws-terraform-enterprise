@@ -20,6 +20,8 @@ locals {
   network_public_subnets          = var.deploy_vpc ? module.networking[0].network_public_subnets : var.network_public_subnets
   network_private_subnet_cidrs    = var.deploy_vpc ? module.networking[0].network_private_subnet_cidrs : var.network_private_subnet_cidrs
 
+  explorer_database = try(module.explorer_database[0], local.default_database)
+
   default_database = {
     name       = null
     password   = null
