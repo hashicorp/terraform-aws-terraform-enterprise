@@ -175,6 +175,30 @@ module "database" {
 }
 
 # -----------------------------------------------------------------------------
+# AWS PostreSQL Explorer Database
+# -----------------------------------------------------------------------------
+module "explorer_database" {
+  source = "./modules/database"
+  count  = local.enable_explorer_database_module ? 1 : 0
+
+  db_size                      = var.explorer_db_size
+  db_backup_retention          = var.db_backup_retention
+  db_backup_window             = var.db_backup_window
+  db_name                      = var.explorer_db_name
+  db_parameters                = var.explorer_db_parameters
+  db_username                  = var.explorer_db_username
+  engine_version               = var.postgres_engine_version
+  friendly_name_prefix         = var.friendly_name_prefix
+  network_id                   = local.network_id
+  network_private_subnet_cidrs = var.network_private_subnet_cidrs
+  network_subnets_private      = local.network_private_subnets
+  tfe_instance_sg              = module.vm.tfe_instance_sg
+  kms_key_arn                  = local.kms_key_arn
+  allow_major_version_upgrade  = var.allow_major_version_upgrade
+  allow_multiple_azs           = var.allow_multiple_azs
+}
+
+# -----------------------------------------------------------------------------
 # EC2 PostreSQL container with mTLS
 # -----------------------------------------------------------------------------
 module "database_mtls" {
@@ -267,6 +291,12 @@ module "runtime_container_engine_config" {
   database_ca_cert_file     = "/etc/ssl/private/terraform-enterprise/postgres/ca.crt"
   database_client_cert_file = "/etc/ssl/private/terraform-enterprise/postgres/cert.crt"
   database_client_key_file  = "/etc/ssl/private/terraform-enterprise/postgres/key.key"
+
+  explorer_database_name       = local.explorer_database.name
+  explorer_database_user       = local.explorer_database.username
+  explorer_database_password   = local.explorer_database.password
+  explorer_database_host       = local.explorer_database.endpoint
+  explorer_database_parameters = local.explorer_database.parameters
 
   storage_type                         = "s3"
   s3_access_key_id                     = var.aws_access_key_id
