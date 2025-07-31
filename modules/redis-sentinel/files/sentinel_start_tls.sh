@@ -16,7 +16,7 @@ mkdir -p /etc/redis
 
 # Generate the sentinel.conf file
 cat <<EOF > /etc/redis/sentinel.conf
-sentinel monitor ${redis_sentinel_leader_name} $${HOST_IP} ${redis_port} 1
+sentinel monitor ${redis_sentinel_leader_name} $${HOST_IP} ${redis_port+1} 1
 
 sentinel resolve-hostnames yes
 sentinel down-after-milliseconds ${redis_sentinel_leader_name} 5000
