@@ -109,6 +109,8 @@ services:
     entrypoint: [ "/usr/local/bin/entrypoint.sh" ]
     environment:
       - HOST_IP=$${HOST_IP}
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "26379", "--tls", "--cert", "/certs/fullchain.pem", "--key", "/certs/privkey.pem", "--cacert", "/certs/isrgrootx1.pem", "-h", "localhost", "ping"]
 
   sentinel-2:
     image: redis:7
@@ -129,3 +131,5 @@ services:
     entrypoint: [ "/usr/local/bin/entrypoint.sh" ]
     environment:
       - HOST_IP=$${HOST_IP}
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "26379", "--tls", "--cert", "/certs/fullchain.pem", "--key", "/certs/privkey.pem", "--cacert", "/certs/isrgrootx1.pem", "-h", "localhost", "ping"]
