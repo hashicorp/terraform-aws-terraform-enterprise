@@ -8,17 +8,17 @@ data "aws_route53_zone" "tfe" {
   private_zone = false
 }
 
-# resource "aws_route53_record" "sentinel" {
-#   zone_id = data.aws_route53_zone.tfe.zone_id
-#   name    = "${var.friendly_name_prefix}-redis-sentinel"
-#   type    = "A"
+resource "aws_route53_record" "sentinel" {
+  zone_id = data.aws_route53_zone.tfe.zone_id
+  name    = "${var.friendly_name_prefix}-redis-sentinel"
+  type    = "A"
 
-#   alias {
-#     name                   = aws_lb.redis_sentinel_lb.dns_name
-#     zone_id                = aws_lb.redis_sentinel_lb.zone_id
-#     evaluate_target_health = true
-#   }
-# }
+  alias {
+    name                   = aws_lb.redis_sentinel_lb.dns_name
+    zone_id                = aws_lb.redis_sentinel_lb.zone_id
+    evaluate_target_health = true
+  }
+}
 
 # Network Load Balancer for Redis Sentinel cluster
 # ------------------------------------------------

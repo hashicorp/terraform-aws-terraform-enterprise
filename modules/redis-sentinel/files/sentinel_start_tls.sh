@@ -11,6 +11,7 @@ if [ -z "$${HOST_IP}" ]; then
   exit 1
 fi
 
+hostname=$(hostname -f)
 # Create the /etc/redis directory if it doesn't exist
 mkdir -p /etc/redis
 
