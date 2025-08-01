@@ -54,7 +54,9 @@ unzip awscliv2.zip
 rm -f ./awscliv2.zip
 rm -rf ./aws
 
+# add hostname to resolve.conf
 
+echo ${hostname} > /etc/resolv.conf
 
 tfe_dir="/etc/redis"
 mkdir -p $tfe_dir

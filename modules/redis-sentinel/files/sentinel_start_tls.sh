@@ -5,18 +5,18 @@
 
 set -e
 
-# Fail if required environment variables are not set
-if [ -z "$${HOSTNAME_FULL}" ]; then
-  echo "ERROR: HOSTNAME_FULL environment variable is required"
-  exit 1
-fi
+# # Fail if required environment variables are not set
+# if [ -z "$${HOSTNAME_FULL}" ]; then
+#   echo "ERROR: HOSTNAME_FULL environment variable is required"
+#   exit 1
+# fi
 
 # Create the /etc/redis directory if it doesn't exist
 mkdir -p /etc/redis
 
 # Generate the sentinel.conf file
 cat <<EOF > /etc/redis/sentinel.conf
-sentinel monitor ${redis_sentinel_leader_name} $${HOSTNAME_FULL} ${redis_port+1} 1
+sentinel monitor ${redis_sentinel_leader_name} ${hostname} ${redis_port+1} 1
 
 sentinel announce-hostnames yes
 sentinel down-after-milliseconds ${redis_sentinel_leader_name} 5000
