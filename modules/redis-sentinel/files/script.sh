@@ -78,6 +78,8 @@ chmod a+r $ISRGROOTX1
 get_linux_ip() {
   ip addr show | awk '/inet / && !/127.0.0.1/ {print $2}' | cut -d/ -f1 | head -n 1
 }
+
+export HOSTNAME_FULL=$(hostname -f)
 export HOST_IP=$(get_linux_ip)
 export SENTINEL_ENTRYPOINT=$tfe_dir/sentinel.sh
 export REDIS_CONF=$tfe_dir/redis.conf
