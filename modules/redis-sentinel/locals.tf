@@ -8,17 +8,30 @@ locals {
   sentinel_password        = try(random_password.sentinel_password[0].result, null)
   redis_user_data_template = "${path.module}/files/script.sh"
   redis_leader_user_data = templatefile(local.redis_user_data_template, {
-    redis_init = base64encode(file(local.redis_init_path))
+    redis_client_cert    = var.redis_client_certificate_secret_id
+    redis_client_key     = var.redis_client_key_secret_id
+    redis_client_ca      = var.redis_ca_certificate_secret_id
+    enable_sentinel_mtls = var.enable_sentinel_mtls
+    redis_init           = base64encode(file(local.redis_init_path))
     redis_conf = base64encode(templatefile(local.redis_conf_path, {
       redis_username = local.redis_username
       redis_password = local.redis_password
     }))
-    compose = base64encode(templatefile(local.compose_path, {
+    lbname = "${aws_route53_record.sentinel.fqdn}"
+    compose = var.enable_sentinel_mtls ? base64encode(templatefile(local.compose_path_tls, {
+      redis_sentinel_port = var.redis_sentinel_port
+      redis_port          = var.redis_port
+      })) : base64encode(templatefile(local.compose_path, {
       redis_password      = local.redis_password
       redis_sentinel_port = var.redis_sentinel_port
       redis_port          = var.redis_port
     }))
-    sentinel_start_script = base64encode(templatefile(local.sentinel_start_script_path, {
+    sentinel_start_script = var.enable_sentinel_mtls ? base64encode(templatefile(local.sentinel_start_script_tls_path, {
+      redis_sentinel_leader_name = var.sentinel_leader
+      redis_sentinel_port        = var.redis_sentinel_port
+      redis_port                 = var.redis_port
+      lbname                     = "${aws_route53_record.sentinel.fqdn}"
+      })) : base64encode(templatefile(local.sentinel_start_script_path, {
       redis_sentinel_password    = local.sentinel_password
       redis_sentinel_username    = local.sentinel_username
       redis_sentinel_leader_name = var.sentinel_leader
@@ -28,10 +41,12 @@ locals {
       redis_username             = local.redis_username
     }))
   })
-  sentinel_start_script_path = "${path.module}/files/sentinel_start.sh"
-  compose_path               = "${path.module}/files/compose.yaml"
-  redis_conf_path            = "${path.module}/files/redis.conf"
-  redis_init_path            = "${path.module}/files/redis-init.sh"
+  sentinel_start_script_tls_path = "${path.module}/files/sentinel_start_tls.sh"
+  sentinel_start_script_path     = "${path.module}/files/sentinel_start.sh"
+  compose_path_tls               = "${path.module}/files/compose-tls.yaml"
+  compose_path                   = "${path.module}/files/compose.yaml"
+  redis_conf_path                = "${path.module}/files/redis.conf"
+  redis_init_path                = "${path.module}/files/redis-init.sh"
   tags = concat(
     [
       {

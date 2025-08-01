@@ -77,7 +77,7 @@ module "networking" {
 # -----------------------------------------------------------------------------
 module "redis" {
   source = "./modules/redis"
-  count  = local.enable_redis_module && var.enable_redis_sentinel == false || local.enable_redis_module && var.enable_redis_mtls == false ? 1 : 0
+  count  = local.enable_redis_module && var.enable_redis_sentinel == false || local.enable_redis_module && local.redis_mtls_enabled == false ? 1 : 0
 
   active_active                = var.operational_mode == "active-active"
   friendly_name_prefix         = var.friendly_name_prefix
@@ -102,9 +102,13 @@ module "redis" {
 # -----------------------------------------------------------------------------
 
 module "redis_sentinel" {
-  count  = var.enable_redis_sentinel ? 1 : 0
+  count  = var.enable_redis_sentinel || var.enable_sentinel_mtls ? 1 : 0
   source = "./modules/redis-sentinel"
 
+  redis_ca_certificate_secret_id         = var.redis_ca_certificate_secret_id
+  enable_sentinel_mtls                   = var.enable_sentinel_mtls
+  redis_client_certificate_secret_id     = var.redis_client_certificate_secret_id
+  redis_client_key_secret_id             = var.redis_client_key_secret_id
   sentinel_leader                        = var.sentinel_leader
   domain_name                            = var.domain_name
   redis_authentication_mode              = var.redis_authentication_mode
@@ -319,6 +323,7 @@ module "runtime_container_engine_config" {
   redis_sentinel_user        = local.redis.sentinel_username
   redis_sentinel_password    = local.redis.sentinel_password
   redis_use_mtls             = var.enable_redis_mtls
+  enable_sentinel_mtls       = var.enable_sentinel_mtls
   redis_ca_cert_path         = "/etc/ssl/private/terraform-enterprise/redis/cacert.pem"
   redis_client_cert_path     = "/etc/ssl/private/terraform-enterprise/redis/cert.pem"
   redis_client_key_path      = "/etc/ssl/private/terraform-enterprise/redis/key.pem"
@@ -354,6 +359,7 @@ module "tfe_init_fdo" {
   certificate_secret_id    = var.vm_certificate_secret_id == null ? null : var.vm_certificate_secret_id
   key_secret_id            = var.vm_key_secret_id == null ? null : var.vm_key_secret_id
 
+  enable_sentinel_mtls               = var.enable_sentinel_mtls
   enable_redis_mtls                  = var.enable_redis_mtls
   redis_ca_certificate_secret_id     = var.redis_ca_certificate_secret_id == null ? null : var.redis_ca_certificate_secret_id
   redis_client_certificate_secret_id = var.redis_client_certificate_secret_id == null ? null : var.redis_client_certificate_secret_id

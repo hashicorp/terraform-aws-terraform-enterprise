@@ -122,6 +122,12 @@ variable "enable_redis_mtls" {
   default     = false
 }
 
+variable "enable_sentinel_mtls" {
+  type        = bool
+  description = "Enable Redis mTLS."
+  default     = false
+}
+
 variable "redis_client_key_secret_id" {
   type        = string
   description = "The secrets manager secret ID of the Base64 & PEM encoded private key for redis."

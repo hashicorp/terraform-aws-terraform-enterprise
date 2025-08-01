@@ -1,0 +1,135 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
+# Description: This file contains the docker-compose configuration for the redis-sentinel module.  
+services:
+  redis:
+    image: redis:7
+    entrypoint: ["/opt/redis/init.sh"]
+    command: [
+      "redis-server",
+      "/etc/redis/redis.conf",
+      "--tls-port 6379",
+      "--port 0",
+      "--tls-cert-file", "/certs/fullchain.pem",
+      "--tls-key-file", "/certs/privkey.pem",
+      "--tls-ca-cert-file", "/certs/isrgrootx1.pem",
+      "--tls-auth-clients yes",
+      "--appendonly", "yes",
+      "--replica-announce-ip", "$${HOST_IP}",
+      "--replica-announce-port", "${redis_port+1}"
+    ]
+    ports:
+      - "${redis_port+1}:${redis_port}"
+    healthcheck:
+      test: ["CMD", "redis-cli","--tls", "--cert", "/certs/fullchain.pem", "--key", "/certs/privkey.pem", "--cacert", "/certs/isrgrootx1.pem", "-h", "localhost", "ping"]
+    volumes:
+      - $${REDIS_CONF}:/opt/redis/redis.conf
+      - $${REDIS_INIT}:/opt/redis/init.sh
+      - $${FULLCHAIN}:/certs/fullchain.pem
+      - $${PRIVKEY}:/certs/privkey.pem
+      - $${ISRGROOTX1}:/certs/isrgrootx1.pem
+
+  redis-follower-1:
+    image: redis:7
+    entrypoint: ["/opt/redis/init.sh"]
+    command: [
+      "redis-server",
+      "/etc/redis/redis.conf",
+      "--replicaof", "redis", "${redis_port}",
+      "--replica-announce-ip", "$${HOST_IP}",
+      "--replica-announce-port", "${redis_port+2}",
+      "--tls-port 6379",
+      "--port 0",
+      "--tls-cert-file", "/certs/fullchain.pem",
+      "--tls-key-file", "/certs/privkey.pem",
+      "--tls-ca-cert-file", "/certs/isrgrootx1.pem",
+      "--tls-auth-clients yes",
+    ]
+    depends_on:
+      redis:
+        condition: service_healthy
+    ports:
+      - "${redis_port+2}:${redis_port}"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "6379", "--tls", "--cert", "/certs/fullchain.pem", "--key", "/certs/privkey.pem", "--cacert", "/certs/isrgrootx1.pem", "-h", "localhost", "ping"]
+    volumes:
+      - $${REDIS_CONF}:/opt/redis/redis.conf
+      - $${REDIS_INIT}:/opt/redis/init.sh
+      - $${FULLCHAIN}:/certs/fullchain.pem
+      - $${PRIVKEY}:/certs/privkey.pem
+      - $${ISRGROOTX1}:/certs/isrgrootx1.pem
+
+  redis-follower-2:
+    image: redis:7
+    entrypoint: ["/opt/redis/init.sh"]
+    command: [
+      "redis-server",
+      "/etc/redis/redis.conf",
+      "--replicaof", "redis", "${redis_port}",
+      "--replica-announce-ip", "$${HOST_IP}",
+      "--replica-announce-port", "${redis_port+3}",
+      "--tls-port 6379",
+      "--port 0",
+      "--tls-cert-file", "/certs/fullchain.pem",
+      "--tls-key-file", "/certs/privkey.pem",
+      "--tls-ca-cert-file", "/certs/isrgrootx1.pem",
+      "--tls-auth-clients yes",
+    ]
+    depends_on:
+      redis:
+        condition: service_healthy
+    ports:
+      - "${redis_port+3}:${redis_port}"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "6379", "--tls", "--cert", "/certs/fullchain.pem", "--key", "/certs/privkey.pem", "--cacert", "/certs/isrgrootx1.pem", "-h", "localhost", "ping"]
+    volumes:
+      - $${REDIS_CONF}:/opt/redis/redis.conf
+      - $${REDIS_INIT}:/opt/redis/init.sh
+      - $${FULLCHAIN}:/certs/fullchain.pem
+      - $${PRIVKEY}:/certs/privkey.pem
+      - $${ISRGROOTX1}:/certs/isrgrootx1.pem
+
+  sentinel-1:
+    image: redis:7
+    depends_on:
+      redis:
+        condition: service_healthy
+      redis-follower-1:
+        condition: service_healthy
+      redis-follower-2:
+        condition: service_healthy
+    ports:
+      - "${redis_sentinel_port}:${redis_sentinel_port}"
+    volumes:
+      - $${SENTINEL_ENTRYPOINT}:/usr/local/bin/entrypoint.sh
+      - $${FULLCHAIN}:/certs/fullchain.pem
+      - $${PRIVKEY}:/certs/privkey.pem
+      - $${ISRGROOTX1}:/certs/isrgrootx1.pem
+    entrypoint: [ "/usr/local/bin/entrypoint.sh" ]
+    environment:
+      - HOST_IP=$${HOST_IP}
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "26379", "--tls", "--cert", "/certs/fullchain.pem", "--key", "/certs/privkey.pem", "--cacert", "/certs/isrgrootx1.pem", "-h", "localhost", "ping"]
+
+  sentinel-2:
+    image: redis:7
+    depends_on:
+      redis:
+        condition: service_healthy
+      redis-follower-1:
+        condition: service_healthy
+      redis-follower-2:
+        condition: service_healthy
+    ports:
+      - "${redis_sentinel_port+1}:${redis_sentinel_port}"
+    volumes:
+      - $${SENTINEL_ENTRYPOINT}:/usr/local/bin/entrypoint.sh
+      - $${FULLCHAIN}:/certs/fullchain.pem
+      - $${PRIVKEY}:/certs/privkey.pem
+      - $${ISRGROOTX1}:/certs/isrgrootx1.pem
+    entrypoint: [ "/usr/local/bin/entrypoint.sh" ]
+    environment:
+      - HOST_IP=$${HOST_IP}
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "26379", "--tls", "--cert", "/certs/fullchain.pem", "--key", "/certs/privkey.pem", "--cacert", "/certs/isrgrootx1.pem", "-h", "localhost", "ping"]

@@ -126,5 +126,29 @@ variable "sentinel_authentication_mode" {
 variable "redis_use_password_auth" {
   description = "A boolean which indicates if password authentication is required by the Redis"
   type        = bool
-  default     = true
+  default     = false
+}
+
+variable "enable_sentinel_mtls" {
+  description = "A boolean which indicates if mTLS is enabled for Redis Sentinel instances."
+  type        = bool
+  default     = false
+}
+
+variable "redis_client_key_secret_id" {
+  type        = string
+  default     = false
+  description = "The secrets manager secret ID of the Base64 & PEM encoded private key for redis."
+}
+
+variable "redis_client_certificate_secret_id" {
+  type        = string
+  default     = false
+  description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for redis."
+}
+
+variable "redis_ca_certificate_secret_id" {
+  type        = string
+  default     = false
+  description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for redis."
 }

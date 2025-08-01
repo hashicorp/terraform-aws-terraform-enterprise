@@ -66,7 +66,7 @@ locals {
     aws_elasticache_subnet_group_name = null
     aws_security_group_redis          = null
   }
-  redis = var.enable_redis_sentinel ? module.redis_sentinel[0] : var.enable_redis_mtls ? module.redis_mtls[0] : try(module.redis[0], local.redis_default)
+  redis = var.enable_redis_sentinel || var.enable_sentinel_mtls ? module.redis_sentinel[0] : var.enable_redis_mtls ? module.redis_mtls[0] : try(module.redis[0], local.redis_default)
 
   no_proxy = concat([
     "127.0.0.1",
