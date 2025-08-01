@@ -56,7 +56,7 @@ rm -rf ./aws
 
 # add hostname to resolve.conf
 
-echo ${hostname} > /etc/resolv.conf
+echo ${hostname} >> /etc/hosts
 
 tfe_dir="/etc/redis"
 mkdir -p $tfe_dir
