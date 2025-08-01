@@ -288,6 +288,35 @@ variable "postgres_client_key_secret_id" {
   default     = null
 }
 
+# Explorer DB
+# -----------
+
+variable "explorer_db_name" {
+  default     = null
+  type        = string
+  description = "PostgreSQL instance name for Explorer."
+}
+
+variable "explorer_db_username" {
+  default     = "hashicorp"
+  type        = string
+  description = "PostgreSQL instance username for Explorer. No special characters."
+}
+
+variable "explorer_db_parameters" {
+  type        = string
+  description = "PostgreSQL server parameters for the connection URI for Explorer. Used to configure the PostgreSQL connection."
+  default     = "sslmode=require"
+}
+
+variable "explorer_db_size" {
+  type        = string
+  default     = "db.m5.large"
+  description = "PostgreSQL instance size for Explorer."
+}
+
+
+
 # Aurora
 # ------
 variable "enable_aurora" {
@@ -339,7 +368,7 @@ variable "aurora_db_username" {
 
 variable "aurora_postgres_engine_version" {
   type        = string
-  default     = "16.2"
+  default     = "16.9"
   description = "Aurora PostgreSQL version."
 }
 
