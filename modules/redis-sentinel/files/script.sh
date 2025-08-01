@@ -54,9 +54,9 @@ unzip awscliv2.zip
 rm -f ./awscliv2.zip
 rm -rf ./aws
 
-# add hostname to resolve.conf
+# add lbname to resolve.conf
 
-echo ${hostname} >> /etc/hosts
+echo "127.0.0.1 ${lbname}" >> /etc/hosts
 
 tfe_dir="/etc/redis"
 mkdir -p $tfe_dir
