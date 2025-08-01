@@ -17,7 +17,7 @@ locals {
       redis_username = local.redis_username
       redis_password = local.redis_password
     }))
-    lbname                   = "${aws_route53_record.sentinel.fqdn}"
+    lbname = "${aws_route53_record.sentinel.fqdn}"
     compose = var.enable_sentinel_mtls ? base64encode(templatefile(local.compose_path_tls, {
       redis_sentinel_port = var.redis_sentinel_port
       redis_port          = var.redis_port
@@ -30,7 +30,7 @@ locals {
       redis_sentinel_leader_name = var.sentinel_leader
       redis_sentinel_port        = var.redis_sentinel_port
       redis_port                 = var.redis_port
-      lbname                   = "${aws_route53_record.sentinel.fqdn}"
+      lbname                     = "${aws_route53_record.sentinel.fqdn}"
       })) : base64encode(templatefile(local.sentinel_start_script_path, {
       redis_sentinel_password    = local.sentinel_password
       redis_sentinel_username    = local.sentinel_username
