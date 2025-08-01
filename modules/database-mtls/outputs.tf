@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 output "endpoint" {
   value       = aws_route53_record.postgres_db_dns.fqdn
   description = "The connection endpoint of the PostgreSQL RDS instance in address format."

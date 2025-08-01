@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 set -eu pipefail
 
 apt-get update -y && apt-get install -y docker.io postgresql-client openssl unzip jq
