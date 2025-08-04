@@ -10,6 +10,7 @@ locals {
   enable_explorer_database_module = local.enable_external && var.db_use_mtls == false && var.explorer_db_name != null
   enable_object_storage_module    = local.enable_external
   enable_redis_module             = var.operational_mode == "active-active"
+  redis_mtls_enabled              = var.enable_redis_mtls
   fdo_operational_mode            = var.operational_mode
   ami_id                          = local.default_ami_id ? data.aws_ami.ubuntu.id : var.ami_id
   default_ami_id                  = var.ami_id == null
