@@ -268,6 +268,10 @@ variable "db_use_mtls" {
   type        = bool
   description = "Whether or not to use mutual TLS to access database. Defaults to false if no value is given."
   default     = false
+  validation {
+    condition     = !(var.db_use_mtls && var.enable_aurora)
+    error_message = "db_use_mtls and enable_aurora cannot be true at the same time"
+  }
 }
 
 variable "postgres_ca_certificate_secret_id" {

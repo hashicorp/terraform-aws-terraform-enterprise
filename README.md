@@ -14,9 +14,9 @@ As the goal for this main module is to provide a drop-in solution for installing
 
 This module is intended to run in an AWS account with minimal preparation, however it does have the following pre-requisites:
 
-### Terraform version >= 0.14
+### Terraform version >= 1.9.0
 
-This module requires Terraform version `0.14` or greater to be installed on the running machine.
+This module requires Terraform version `1.9.0` or greater to be installed on the running machine.
 
 ### Credentials / Permissions
 
