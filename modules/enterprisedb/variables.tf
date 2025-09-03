@@ -2,32 +2,32 @@
 # SPDX-License-Identifier: MPL-2.0
 
 variable "default_ami_id" {
-  description = "The identity of the AMI which will be used to provision the TFE EC2 instance(s)."
+  description = "The identity of the AMI which will be used to provision the EDB EC2 instance(s)."
   type        = string
 }
 
 variable "user_data_base64" {
-  description = "A Base64 encoded user data script to be executed when launching the TFE EC2 instance(s)."
+  description = "A Base64 encoded user data script to be executed when launching the EDB EC2 instance(s)."
   type        = string
 }
 
 variable "aws_lb" {
-  description = "The identity of the security group attached to the load balancer which will be authorized to communicate with the TFE EC2 instance(s)."
+  description = "The identity of the security group attached to the load balancer which will be authorized to communicate with the EDB EC2 instance(s)."
   type        = string
 }
 
-variable "aws_lb_target_group_tfe_tg_443_arn" {
-  description = "The Amazon Resource Name of the load balancer target group for traffic on port 443 which will be backed by the TFE EC2 autoscaling group."
+variable "aws_lb_target_group_edb_tg_443_arn" {
+  description = "The Amazon Resource Name of the load balancer target group for traffic on port 443 which will be backed by the EDB EC2 autoscaling group."
   type        = string
 }
 
-variable "aws_lb_target_group_tfe_tg_8800_arn" {
-  description = "The Amazon Resource Name of the load balancer target group for traffic on port 8800 which will be backed by the TFE EC2 autoscaling group."
+variable "aws_lb_target_group_edb_tg_8800_arn" {
+  description = "The Amazon Resource Name of the load balancer target group for traffic on port 8800 which will be backed by the EDB EC2 autoscaling group."
   type        = string
 }
 
-variable "aws_lb_target_group_tfe_tg_admin_api_arn" {
-  description = "The Amazon Resource Name of the load balancer target group for traffic on the Admin API HTTPS port which will be backed by the TFE EC2 autoscaling group."
+variable "aws_lb_target_group_edb_tg_admin_api_arn" {
+  description = "The Amazon Resource Name of the load balancer target group for traffic on the Admin API HTTPS port which will be backed by the EDB EC2 autoscaling group."
   type        = string
 }
 
@@ -37,7 +37,7 @@ variable "admin_api_https_port" {
 }
 
 variable "aws_iam_instance_profile" {
-  description = "The name of the IAM instance profile to be associated with the TFE EC2 instance(s)."
+  description = "The name of the IAM instance profile to be associated with the EDB EC2 instance(s)."
   type        = string
 }
 
@@ -48,12 +48,12 @@ variable "active_active" {
 
 variable "ami_id" {
   type        = string
-  description = "AMI ID to use for TFE instances"
+  description = "AMI ID to use for EDB instances"
 }
 
 variable "enable_ssh" {
   type        = bool
-  description = "Whether to open port 22 on the TFE instance for SSH access."
+  description = "Whether to open port 22 on the EDB instance for SSH access."
 }
 
 variable "friendly_name_prefix" {
@@ -79,17 +79,12 @@ variable "health_check_type" {
 
 
 variable "instance_type" {
-  description = "The instance type of TFE EC2 instance(s) to create."
+  description = "The instance type of EDB EC2 instance(s) to create."
   type        = string
 }
 
-variable "is_replicated_deployment" {
-  type        = bool
-  description = "TFE will be installed using a Replicated license and deployment method."
-}
-
 variable "network_id" {
-  description = "The identity of the VPC in which the security group attached to the TFE EC2 instance will be delpoyed."
+  description = "The identity of the VPC in which the security group attached to the EDB EC2 instance will be delpoyed."
   type        = string
 }
 
