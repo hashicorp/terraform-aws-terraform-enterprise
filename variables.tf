@@ -270,7 +270,7 @@ variable "db_use_mtls" {
   default     = false
   validation {
     condition     = !(var.db_use_mtls && var.enable_aurora)
-    error_message = "db_use_mtls and enable_aurora cannot be true at the same time"
+    error_message = "Both db_use_mtls and enable_aurora cannot be true at the same time."
   }
 }
 

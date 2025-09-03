@@ -24,9 +24,9 @@ jobs:
         persist-credentials: false
 
     - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
+      uses: hashicorp/setup-terraform@v3
       with:
-        terraform_version: 0.14.7
+        terraform_version: 1.9.0
 
     - name: Format all .tf files recursively
       run: |
@@ -46,9 +46,9 @@ jobs:
         persist-credentials: false
 
     - name: Setup Terraform Lint
-      uses: terraform-linters/setup-tflint@ba6bb2989f94daf58a4cc6eac2c1ca7398a678bf # v3.0.0
+      uses: terraform-linters/setup-tflint@ae78205cfffec9e8d93fd2b3115c7e9d3166d4b6 # v5.0.0
       with:
-        tflint_version: v0.26.0
+        tflint_version: v0.59.1
 
     - name: Lint root module
       run: |
