@@ -36,7 +36,6 @@ locals {
   standard_db     = try(module.database[0], local.default_database)
 
   selected_database = (
-    var.enable_aurora && var.db_use_mtls ? error("Both enable_aurora and db_use_mtls cannot be true.") :
     var.enable_aurora ? local.aurora_database :
     var.db_use_mtls ? local.mtls_database :
     local.standard_db
