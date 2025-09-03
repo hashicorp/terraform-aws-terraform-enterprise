@@ -52,7 +52,7 @@ jobs:
 
     - name: Lint root module
       run: |
-        tflint --config ${{ github.workspace }}/.tflint.hcl ${{ github.workspace }}
+        tflint --config ${{ github.workspace }}/.tflint.hcl --chdir ${{ github.workspace }}
 
     - name: Lint modules directory in a loop
       run: |
@@ -60,7 +60,7 @@ jobs:
         do
           tflint \
             --config ${{ github.workspace }}/.tflint.hcl \
-            ${{ github.workspace }}/${m}
+            --chdir ${{ github.workspace }}/${m}
         done
 
     - name: Lint tests directory in a loop
@@ -69,7 +69,7 @@ jobs:
         do
           tflint \
             --config ${{ github.workspace }}/.tflint.hcl \
-            ${{ github.workspace }}/${m}
+            --chdir ${{ github.workspace }}/${m}
         done
 
     - name: Lint examples directory in a loop
@@ -78,5 +78,5 @@ jobs:
         do
           tflint \
             --config ${{ github.workspace }}/.tflint.hcl \
-            ${{ github.workspace }}/${m}
+            --chdir ${{ github.workspace }}/${m}
         done
