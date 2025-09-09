@@ -372,6 +372,15 @@ variable "aurora_postgres_engine_version" {
   description = "Aurora PostgreSQL version."
 }
 
+# EnterpriseDB
+# ------
+variable "enable_edb" {
+  default     = false
+  type        = bool
+  description = "Create EnterpriseDB cluster for RDS instances"
+}
+
+
 # Userdata
 # --------
 variable "bypass_preflight_checks" {

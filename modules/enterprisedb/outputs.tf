@@ -11,6 +11,4 @@ output "enterprisedb_autoscaling_group" {
   value = aws_autoscaling_group.enterprisedb_asg
 
   description = "The autoscaling group which hosts the EnterpriseDB instance(s)."
-  # This output is marked as sensitive to work around a bug in Terraform 0.14
-  sensitive = true
 }
