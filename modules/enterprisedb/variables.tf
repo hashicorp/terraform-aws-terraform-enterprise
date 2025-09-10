@@ -31,6 +31,11 @@ variable "aws_iam_instance_profile" {
   type        = string
 }
 
+variable "admin_api_https_port" {
+  type        = number
+  description = "Port application listens on for Admin API HTTPS."
+}
+
 variable "active_active" {
   type        = bool
   description = "Flag for active-active configuation: true for active-active, false for standalone"
