@@ -54,7 +54,7 @@ resource "aws_launch_template" "enterprisedb" {
   name_prefix            = "${var.friendly_name_prefix}-edb-ec2-asg-launch-template-"
   image_id               = var.ami_id
   instance_type          = var.instance_type
-  user_data              = local.tfe_user_data
+  user_data              = base64encode(local.tfe_user_data)
   key_name               = var.key_name
   vpc_security_group_ids = [aws_security_group.enterprisedb_instance.id]
 
