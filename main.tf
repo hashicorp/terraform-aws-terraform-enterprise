@@ -573,6 +573,8 @@ module "edb" {
   network_subnets_private                  = local.network_private_subnets
   network_private_subnet_cidrs             = local.network_private_subnet_cidrs
   node_count                               = var.node_count
-  user_data_base64                         = module.tfe_init_fdo[0].tfe_userdata_base64_encoded
+
+  registry_password                        = var.registry_password
+  registry_username                        = var.registry_username
 }
 

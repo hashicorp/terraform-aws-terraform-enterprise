@@ -6,11 +6,6 @@ variable "default_ami_id" {
   type        = string
 }
 
-variable "user_data_base64" {
-  description = "A Base64 encoded user data script to be executed when launching the EDB EC2 instance(s)."
-  type        = string
-}
-
 variable "aws_lb" {
   description = "The identity of the security group attached to the load balancer which will be authorized to communicate with the EDB EC2 instance(s)."
   type        = string
@@ -157,4 +152,16 @@ variable "ebs_snapshot_id" {
 variable "enable_disk" {
   type        = bool
   description = "Will you be attaching an EBS block device for a Mounted Disk Installation?"
+}
+
+variable "registry_password" {
+  default     = null
+  description = "The password for the docker registry from which to pull the enterprise container images."
+  type        = string
+}
+
+variable "registry_username" {
+  default     = null
+  description = "The username for the docker registry from which to pull the enterprisedb container images."
+  type        = string
 }
