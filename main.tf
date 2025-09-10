@@ -491,25 +491,6 @@ module "load_balancer" {
   ssl_policy                     = var.ssl_policy
 }
 
-module "elb_load_balancer" {
-  count  = var.enable_edb ? 1 : 0
-  source = "./modules/application_load_balancer"
-
-  active_active                  = var.operational_mode == "active-active"
-  admin_dashboard_ingress_ranges = var.admin_dashboard_ingress_ranges
-  admin_api_https_port           = var.admin_api_https_port
-  certificate_arn                = var.acm_certificate_arn
-  domain_name                    = var.domain_name
-  friendly_name_prefix           = var.friendly_name_prefix
-  fqdn                           = local.fqdn
-  load_balancing_scheme          = var.load_balancing_scheme
-  network_id                     = local.network_id
-  network_public_subnets         = local.network_public_subnets
-  network_private_subnets        = local.network_private_subnets
-  ssl_policy                     = var.ssl_policy
-}
-
-
 module "private_tcp_load_balancer" {
   count  = var.load_balancing_scheme == "PRIVATE_TCP" ? 1 : 0
   source = "./modules/network_load_balancer"
