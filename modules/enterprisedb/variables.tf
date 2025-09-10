@@ -26,11 +26,6 @@ variable "aws_lb_target_group_edb_tg_admin_api_arn" {
   type        = string
 }
 
-variable "admin_api_https_port" {
-  type        = number
-  description = "Port application listens on for Admin API HTTPS."
-}
-
 variable "aws_iam_instance_profile" {
   description = "The name of the IAM instance profile to be associated with the EDB EC2 instance(s)."
   type        = string
