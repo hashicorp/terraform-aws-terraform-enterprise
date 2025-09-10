@@ -574,7 +574,7 @@ module "edb" {
   network_private_subnet_cidrs             = local.network_private_subnet_cidrs
   node_count                               = var.node_count
 
-  registry_password                        = var.registry_password
-  registry_username                        = var.registry_username
+  registry_password = var.registry_password
+  registry_username = var.registry_username
 }
 
