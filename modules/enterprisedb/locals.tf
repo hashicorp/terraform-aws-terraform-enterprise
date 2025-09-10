@@ -3,13 +3,13 @@
 
 locals {
   user_data_template = "${path.module}/templates/aws.ubuntu.docker.edb.sh.tpl"
-  compose = file("${path.module}/templates/compose.yaml")
+  compose            = file("${path.module}/templates/compose.yaml")
   tfe_user_data = templatefile(
     local.user_data_template,
     {
-      registry_username             = var.registry_username
-      registry_password             = var.registry_password
-      docker_compose_yaml           = base64encode(yamlencode(local.compose))
+      registry_username   = var.registry_username
+      registry_password   = var.registry_password
+      docker_compose_yaml = base64encode(yamlencode(local.compose))
     }
   )
   tags = concat(
