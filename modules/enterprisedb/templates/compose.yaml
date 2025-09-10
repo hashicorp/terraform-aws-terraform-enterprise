@@ -1,4 +1,3 @@
----
 services:
   postgres:
     image: quay.io/hashicorp/enterprisedb:latest
