@@ -9,7 +9,7 @@ locals {
     {
       registry_username   = var.registry_username
       registry_password   = var.registry_password
-      docker_compose_yaml = base64encode(yamlencode(local.compose))
+      docker_compose_yaml = base64encode(local.compose)
     }
   )
   tags = concat(
