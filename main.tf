@@ -515,7 +515,7 @@ module "edb_load_balancer" {
   admin_api_https_port           = var.admin_api_https_port
   certificate_arn                = var.acm_certificate_arn
   domain_name                    = var.domain_name
-  friendly_name_prefix           = var.friendly_name_prefix + "-edb"
+  friendly_name_prefix           = "${var.friendly_name_prefix}-edb"
   fqdn                           = local.fqdn
   load_balancing_scheme          = var.load_balancing_scheme
   network_id                     = local.network_id
