@@ -516,7 +516,7 @@ module "edb_load_balancer" {
   certificate_arn                = var.acm_certificate_arn
   domain_name                    = var.domain_name
   friendly_name_prefix           = "${var.friendly_name_prefix}-edb"
-  fqdn                           = local.fqdn
+  fqdn                           = "${var.tfe_subdomain}-edb.${var.domain_name}"
   load_balancing_scheme          = var.load_balancing_scheme
   network_id                     = local.network_id
   network_public_subnets         = local.network_public_subnets
