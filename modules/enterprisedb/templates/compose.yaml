@@ -11,6 +11,13 @@ services:
         target: /var/lib/postgresql/data
     ports:
       - 5432:5432
+  # Simple web server to test connectivity
+  nginx:
+    image: nginx:latest
+    ports:
+      - 80:80
+    depends_on:
+      - postgres
 
 volumes:
   postgres:

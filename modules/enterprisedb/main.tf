@@ -114,14 +114,10 @@ resource "aws_autoscaling_group" "enterprisedb_asg" {
   max_size            = var.node_count
   desired_capacity    = var.node_count
   vpc_zone_identifier = var.network_subnets_private
-  target_group_arns = var.active_active ? [
+  target_group_arns = [
     var.aws_lb_target_group_edb_tg_443_arn,
-    var.aws_lb_target_group_edb_tg_admin_api_arn,
-    ] : [
-    var.aws_lb_target_group_edb_tg_8800_arn,
-    var.aws_lb_target_group_edb_tg_443_arn,
-    var.aws_lb_target_group_edb_tg_admin_api_arn,
-  ]
+    var.aws_lb_target_group_edb_tg_80_arn,
+    ] 
   # Increases grace period for any AMI that is not the default Ubuntu
   # since RHEL has longer startup time
   health_check_grace_period = local.health_check_grace_period

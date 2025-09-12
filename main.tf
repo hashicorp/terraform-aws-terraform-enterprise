@@ -508,7 +508,7 @@ module "private_tcp_load_balancer" {
 
 module "edb_load_balancer" {
   count  = var.enable_edb ? 1 : 0
-  source = "./modules/application_load_balancer"
+  source = "./modules/edb_application_load_balancer"
 
   active_active                  = var.operational_mode == "active-active"
   admin_dashboard_ingress_ranges = var.admin_dashboard_ingress_ranges
@@ -569,8 +569,7 @@ module "edb" {
   ami_id                                   = local.ami_id
   aws_lb                                   = var.load_balancing_scheme == "PRIVATE_TCP" ? null : module.edb_load_balancer[0].aws_lb_security_group
   aws_lb_target_group_edb_tg_443_arn       = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_443_arn : module.edb_load_balancer[0].aws_lb_target_group_tfe_tg_443_arn
-  aws_lb_target_group_edb_tg_8800_arn      = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn : module.edb_load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn
-  aws_lb_target_group_edb_tg_admin_api_arn = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_admin_api_arn : module.edb_load_balancer[0].aws_lb_target_group_tfe_tg_admin_api_arn
+  aws_lb_target_group_edb_tg_80_arn        = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn : module.edb_load_balancer[0].aws_lb_target_group_tfe_tg_80_arn
   asg_tags                                 = var.asg_tags
   ec2_launch_template_tag_specifications   = var.ec2_launch_template_tag_specifications
   default_ami_id                           = local.default_ami_id

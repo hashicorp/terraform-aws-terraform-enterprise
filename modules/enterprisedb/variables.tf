@@ -16,13 +16,8 @@ variable "aws_lb_target_group_edb_tg_443_arn" {
   type        = string
 }
 
-variable "aws_lb_target_group_edb_tg_8800_arn" {
-  description = "The Amazon Resource Name of the load balancer target group for traffic on port 8800 which will be backed by the EDB EC2 autoscaling group."
-  type        = string
-}
-
-variable "aws_lb_target_group_edb_tg_admin_api_arn" {
-  description = "The Amazon Resource Name of the load balancer target group for traffic on the Admin API HTTPS port which will be backed by the EDB EC2 autoscaling group."
+variable "aws_lb_target_group_edb_tg_80_arn" {
+  description = "The Amazon Resource Name of the load balancer target group for traffic on port 80 which will be backed by the EDB EC2 autoscaling group."
   type        = string
 }
 
@@ -66,7 +61,6 @@ variable "health_check_type" {
     error_message = "Must be one of [ELB, EC2]."
   }
 }
-
 
 variable "instance_type" {
   description = "The instance type of EDB EC2 instance(s) to create."
