@@ -11,11 +11,6 @@ variable "aws_lb" {
   type        = string
 }
 
-variable "aws_lb_target_group_edb_tg_443_arn" {
-  description = "The Amazon Resource Name of the load balancer target group for traffic on port 443 which will be backed by the EDB EC2 autoscaling group."
-  type        = string
-}
-
 variable "aws_lb_target_group_edb_tg_80_arn" {
   description = "The Amazon Resource Name of the load balancer target group for traffic on port 80 which will be backed by the EDB EC2 autoscaling group."
   type        = string

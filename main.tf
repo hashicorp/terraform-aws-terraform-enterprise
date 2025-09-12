@@ -568,8 +568,7 @@ module "edb" {
   aws_iam_instance_profile                 = module.service_accounts.iam_instance_profile.name
   ami_id                                   = local.ami_id
   aws_lb                                   = var.load_balancing_scheme == "PRIVATE_TCP" ? null : module.edb_load_balancer[0].aws_lb_security_group
-  aws_lb_target_group_edb_tg_443_arn       = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_443_arn : module.edb_load_balancer[0].aws_lb_target_group_tfe_tg_443_arn
-  aws_lb_target_group_edb_tg_80_arn        = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn : module.edb_load_balancer[0].aws_lb_target_group_tfe_tg_80_arn
+  aws_lb_target_group_edb_tg_80_arn        = var.load_balancing_scheme == "PRIVATE_TCP" ? module.private_tcp_load_balancer[0].aws_lb_target_group_tfe_tg_8800_arn : module.edb_load_balancer[0].aws_lb_target_group_edb_tg_80_arn
   asg_tags                                 = var.asg_tags
   ec2_launch_template_tag_specifications   = var.ec2_launch_template_tag_specifications
   default_ami_id                           = local.default_ami_id
