@@ -32,6 +32,17 @@ resource "aws_security_group_rule" "ssh_inbound" {
   cidr_blocks              = var.aws_lb == null ? var.network_private_subnet_cidrs : null
 }
 
+resource "aws_security_group_rule" "http_inbound" {
+
+  security_group_id        = aws_security_group.enterprisedb_instance.id
+  type                     = "ingress"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
+  source_security_group_id = var.aws_lb
+  cidr_blocks              = var.aws_lb == null ? var.network_private_subnet_cidrs : null
+}
+
 resource "aws_security_group_rule" "enterprisedb_inbound" {
   security_group_id = aws_security_group.enterprisedb_instance.id
   type              = "ingress"
@@ -116,6 +127,7 @@ resource "aws_autoscaling_group" "enterprisedb_asg" {
   vpc_zone_identifier = var.network_subnets_private
   target_group_arns = [
     var.aws_lb_target_group_edb_tg_80_arn,
+    var.aws_lb_target_group_edb_tg_5432_arn,
     ] 
   # Increases grace period for any AMI that is not the default Ubuntu
   # since RHEL has longer startup time
