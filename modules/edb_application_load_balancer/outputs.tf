@@ -13,6 +13,12 @@ output "aws_lb_target_group_edb_tg_80_arn" {
   description = "The Amazon Resource Name of the load balancer target group for traffic on port 80."
 }
 
+output "aws_lb_target_group_edb_tg_5432_arn" {
+  value = aws_lb_target_group.edb_tg_5432.arn
+
+  description = "The Amazon Resource Name of the load balancer target group for traffic on port 5432."
+}
+
 output "load_balancer_address" {
   value = aws_lb.edb_lb.dns_name
 

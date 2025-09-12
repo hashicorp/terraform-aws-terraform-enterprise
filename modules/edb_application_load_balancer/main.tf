@@ -112,7 +112,7 @@ resource "aws_lb_target_group" "edb_tg_5432" {
   health_check {
     path     = "/"
     protocol = "HTTPS"
-    matcher  = "200-599"
+    matcher  = "200-499"
   }
 }
 

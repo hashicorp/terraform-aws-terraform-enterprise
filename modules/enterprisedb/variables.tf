@@ -16,6 +16,11 @@ variable "aws_lb_target_group_edb_tg_80_arn" {
   type        = string
 }
 
+variable "aws_lb_target_group_edb_tg_5432_arn" {
+  description = "The Amazon Resource Name of the load balancer target group for traffic on port 5432 which will be backed by the EDB EC2 autoscaling group."
+  type        = string
+}
+
 variable "aws_iam_instance_profile" {
   description = "The name of the IAM instance profile to be associated with the EDB EC2 instance(s)."
   type        = string
