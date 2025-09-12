@@ -140,6 +140,9 @@ resource "aws_launch_template" "enterprisedb" {
 
   }
   vpc_security_group_ids = [aws_security_group.enterprisedb_instance.id]
+  tags = { for item in local.tags :
+    keys(item)[0] => values(item)[0]
+  }
   lifecycle {
     create_before_destroy = true
   }
