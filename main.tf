@@ -506,24 +506,6 @@ module "private_tcp_load_balancer" {
   ssl_policy              = var.ssl_policy
 }
 
-module "edb_load_balancer" {
-  count  = var.enable_edb ? 1 : 0
-  source = "./modules/edb_application_load_balancer"
-
-  active_active                  = var.operational_mode == "active-active"
-  admin_dashboard_ingress_ranges = var.admin_dashboard_ingress_ranges
-  admin_api_https_port           = var.admin_api_https_port
-  certificate_arn                = var.acm_certificate_arn
-  domain_name                    = var.domain_name
-  friendly_name_prefix           = "${var.friendly_name_prefix}-edb"
-  fqdn                           = "${var.tfe_subdomain}-edb.${var.domain_name}"
-  load_balancing_scheme          = var.load_balancing_scheme
-  network_id                     = local.network_id
-  network_public_subnets         = local.network_public_subnets
-  network_private_subnets        = local.network_private_subnets
-  ssl_policy                     = var.ssl_policy
-}
-
 
 module "vm" {
   source = "./modules/vm"
@@ -567,9 +549,6 @@ module "edb" {
   active_active                            = var.operational_mode == "active-active"
   aws_iam_instance_profile                 = module.service_accounts.iam_instance_profile.name
   ami_id                                   = local.ami_id
-  aws_lb                                   = var.load_balancing_scheme == "PRIVATE_TCP" ? null : module.edb_load_balancer[0].aws_lb_security_group
-  aws_lb_target_group_edb_tg_80_arn        = var.load_balancing_scheme == "PRIVATE_TCP" ? null : module.edb_load_balancer[0].aws_lb_target_group_edb_tg_80_arn
-  aws_lb_target_group_edb_tg_5432_arn      = var.load_balancing_scheme == "PRIVATE_TCP" ? null : module.edb_load_balancer[0].aws_lb_target_group_edb_tg_5432_arn
   asg_tags                                 = var.asg_tags
   ec2_launch_template_tag_specifications   = var.ec2_launch_template_tag_specifications
   default_ami_id                           = local.default_ami_id
@@ -582,14 +561,11 @@ module "edb" {
   ebs_delete_on_termination                = var.ebs_delete_on_termination
   ebs_snapshot_id                          = var.ebs_snapshot_id
   friendly_name_prefix                     = var.friendly_name_prefix
-  health_check_grace_period                = var.health_check_grace_period
-  health_check_type                        = var.health_check_type
   instance_type                            = var.instance_type
   key_name                                 = var.key_name
   network_id                               = local.network_id
   network_subnets_private                  = local.network_private_subnets
   network_private_subnet_cidrs             = local.network_private_subnet_cidrs
-  node_count                               = var.node_count
 
   registry_password = var.registry_password
   registry_username = var.registry_username

@@ -6,21 +6,6 @@ variable "default_ami_id" {
   type        = string
 }
 
-variable "aws_lb" {
-  description = "The identity of the security group attached to the load balancer which will be authorized to communicate with the EDB EC2 instance(s)."
-  type        = string
-}
-
-variable "aws_lb_target_group_edb_tg_80_arn" {
-  description = "The Amazon Resource Name of the load balancer target group for traffic on port 80 which will be backed by the EDB EC2 autoscaling group."
-  type        = string
-}
-
-variable "aws_lb_target_group_edb_tg_5432_arn" {
-  description = "The Amazon Resource Name of the load balancer target group for traffic on port 5432 which will be backed by the EDB EC2 autoscaling group."
-  type        = string
-}
-
 variable "aws_iam_instance_profile" {
   description = "The name of the IAM instance profile to be associated with the EDB EC2 instance(s)."
   type        = string
@@ -46,22 +31,6 @@ variable "friendly_name_prefix" {
   description = "(Required) Friendly name prefix used for tagging and naming AWS resources."
 }
 
-variable "health_check_grace_period" {
-  description = "The health grace period aws provides to allow for an instance to pass its health check."
-  type        = number
-}
-
-variable "health_check_type" {
-  description = "Type of health check to perform on the instance."
-  type        = string
-  default     = "ELB"
-
-  validation {
-    condition     = contains(["ELB", "EC2"], var.health_check_type)
-    error_message = "Must be one of [ELB, EC2]."
-  }
-}
-
 variable "instance_type" {
   description = "The instance type of EDB EC2 instance(s) to create."
   type        = string
@@ -75,11 +44,6 @@ variable "network_id" {
 variable "network_subnets_private" {
   description = "A list of the identities of the private subnetworks in which the EC2 autoscaling group will be deployed."
   type        = list(string)
-}
-
-variable "node_count" {
-  type        = number
-  description = "The number of nodes you want in your autoscaling group (1 for standalone, 2 for active-active configuration)"
 }
 
 variable "asg_tags" {

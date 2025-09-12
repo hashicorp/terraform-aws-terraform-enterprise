@@ -30,9 +30,9 @@ resource "aws_security_group_rule" "edb_lb_allow_inbound_postgres" {
   type              = "ingress"
   from_port         = 5432
   to_port           = 5432
-  protocol          = "tcp"
+  protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
-  description       = "Allow Postgres (port 80) traffic inbound to EDB LB"
+  description       = "Allow Postgres (port 5432) traffic inbound to EDB LB"
   security_group_id = aws_security_group.edb_lb_allow.id
 }
 

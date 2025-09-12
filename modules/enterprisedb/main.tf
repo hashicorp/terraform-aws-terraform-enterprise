@@ -15,8 +15,8 @@ resource "aws_security_group_rule" "enterprisedb_ui" {
   from_port                = 443
   to_port                  = 443
   protocol                 = "tcp"
-  source_security_group_id = var.aws_lb
-  cidr_blocks              = var.aws_lb == null ? var.network_private_subnet_cidrs : null
+  source_security_group_id = null
+  cidr_blocks              = ["0.0.0.0/0"]
 }
 
 
@@ -28,8 +28,8 @@ resource "aws_security_group_rule" "ssh_inbound" {
   from_port                = 22
   to_port                  = 22
   protocol                 = "tcp"
-  source_security_group_id = var.aws_lb
-  cidr_blocks              = var.aws_lb == null ? var.network_private_subnet_cidrs : null
+  source_security_group_id = null
+  cidr_blocks              = ["0.0.0.0/0"]
 }
 
 resource "aws_security_group_rule" "http_inbound" {
@@ -39,8 +39,19 @@ resource "aws_security_group_rule" "http_inbound" {
   from_port                = 80
   to_port                  = 80
   protocol                 = "tcp"
-  source_security_group_id = var.aws_lb
-  cidr_blocks              = var.aws_lb == null ? var.network_private_subnet_cidrs : null
+  source_security_group_id = null
+  cidr_blocks              = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "postgres_inbound" {
+
+  security_group_id        = aws_security_group.enterprisedb_instance.id
+  type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "-1"
+  source_security_group_id = null
+  cidr_blocks              = ["0.0.0.0/0"]
 }
 
 resource "aws_security_group_rule" "enterprisedb_inbound" {
@@ -119,35 +130,17 @@ resource "aws_launch_template" "enterprisedb" {
   }
 }
 
-resource "aws_autoscaling_group" "enterprisedb_asg" {
-  name                = "${var.friendly_name_prefix}-edb-asg"
-  min_size            = var.node_count
-  max_size            = var.node_count
-  desired_capacity    = var.node_count
-  vpc_zone_identifier = var.network_subnets_private
-  target_group_arns = [
-    var.aws_lb_target_group_edb_tg_80_arn,
-    ] 
-  # Increases grace period for any AMI that is not the default Ubuntu
-  # since RHEL has longer startup time
-  health_check_grace_period = local.health_check_grace_period
-  health_check_type         = var.health_check_type
-
+ resource "aws_instance" "edb_server" {
+  ami           = "ami-06ea12056fee6f52f"
+  instance_type = "m5.xlarge"
+  subnet_id = var.network_subnets_private[0]
   launch_template {
     id      = aws_launch_template.enterprisedb.id
     version = "$Latest"
+
   }
-
-  dynamic "tag" {
-    for_each = local.tags
-
-    content {
-      key                 = tag.value["key"]
-      value               = tag.value["value"]
-      propagate_at_launch = tag.value["propagate_at_launch"]
-    }
-  }
-
+  vpc_security_group_ids = [aws_security_group.enterprisedb_instance.id]
+  tags = local.tags
   lifecycle {
     create_before_destroy = true
   }
