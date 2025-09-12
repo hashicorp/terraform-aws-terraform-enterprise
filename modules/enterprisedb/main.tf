@@ -127,7 +127,6 @@ resource "aws_autoscaling_group" "enterprisedb_asg" {
   vpc_zone_identifier = var.network_subnets_private
   target_group_arns = [
     var.aws_lb_target_group_edb_tg_80_arn,
-    var.aws_lb_target_group_edb_tg_5432_arn,
     ] 
   # Increases grace period for any AMI that is not the default Ubuntu
   # since RHEL has longer startup time
