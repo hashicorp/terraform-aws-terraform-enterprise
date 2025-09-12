@@ -12,7 +12,7 @@ locals {
       docker_compose_yaml = base64encode(local.compose)
     }
   )
-  tags = concat(
+  tags = tomap(concat(
     [
       {
         key                 = "Name"
@@ -27,6 +27,7 @@ locals {
         propagate_at_launch = true
       }
     ]
+  )
   )
   default_health_check_grace_period = var.default_ami_id ? 900 : 1500
 }
