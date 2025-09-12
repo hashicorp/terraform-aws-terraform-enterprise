@@ -107,6 +107,8 @@ variable "enable_disk" {
   description = "Will you be attaching an EBS block device for a Mounted Disk Installation?"
 }
 
+# Registry Credentials
+# -------------------------
 variable "registry_password" {
   default     = null
   description = "The password for the docker registry from which to pull the enterprise container images."
@@ -117,4 +119,12 @@ variable "registry_username" {
   default     = null
   description = "The username for the docker registry from which to pull the enterprisedb container images."
   type        = string
+}
+
+# Database
+# -------------------------
+
+variable "db_parameters" {
+  type        = string
+  description = "PostgreSQL server parameters for the connection URI. Used to configure the PostgreSQL connection (e.g. sslmode=require)."
 }

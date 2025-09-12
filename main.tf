@@ -546,26 +546,27 @@ module "edb" {
   count  = var.enable_edb ? 1 : 0
   source = "./modules/enterprisedb"
 
-  active_active                            = var.operational_mode == "active-active"
-  aws_iam_instance_profile                 = module.service_accounts.iam_instance_profile.name
-  ami_id                                   = local.ami_id
-  asg_tags                                 = var.asg_tags
-  ec2_launch_template_tag_specifications   = var.ec2_launch_template_tag_specifications
-  default_ami_id                           = local.default_ami_id
-  enable_disk                              = local.enable_disk
-  enable_ssh                               = var.enable_ssh
-  ebs_device_name                          = var.ebs_device_name
-  ebs_volume_size                          = var.ebs_volume_size
-  ebs_volume_type                          = var.ebs_volume_type
-  ebs_iops                                 = var.ebs_iops
-  ebs_delete_on_termination                = var.ebs_delete_on_termination
-  ebs_snapshot_id                          = var.ebs_snapshot_id
-  friendly_name_prefix                     = var.friendly_name_prefix
-  instance_type                            = var.instance_type
-  key_name                                 = var.key_name
-  network_id                               = local.network_id
-  network_subnets_private                  = local.network_private_subnets
-  network_private_subnet_cidrs             = local.network_private_subnet_cidrs
+  active_active                          = var.operational_mode == "active-active"
+  aws_iam_instance_profile               = module.service_accounts.iam_instance_profile.name
+  ami_id                                 = local.ami_id
+  asg_tags                               = var.asg_tags
+  ec2_launch_template_tag_specifications = var.ec2_launch_template_tag_specifications
+  default_ami_id                         = local.default_ami_id
+  enable_disk                            = local.enable_disk
+  enable_ssh                             = var.enable_ssh
+  ebs_device_name                        = var.ebs_device_name
+  ebs_volume_size                        = var.ebs_volume_size
+  ebs_volume_type                        = var.ebs_volume_type
+  ebs_iops                               = var.ebs_iops
+  ebs_delete_on_termination              = var.ebs_delete_on_termination
+  ebs_snapshot_id                        = var.ebs_snapshot_id
+  friendly_name_prefix                   = var.friendly_name_prefix
+  instance_type                          = var.instance_type
+  key_name                               = var.key_name
+  network_id                             = local.network_id
+  network_subnets_private                = local.network_private_subnets
+  network_private_subnet_cidrs           = local.network_private_subnet_cidrs
+  db_parameters                          = var.db_parameters
 
   registry_password = var.registry_password
   registry_username = var.registry_username

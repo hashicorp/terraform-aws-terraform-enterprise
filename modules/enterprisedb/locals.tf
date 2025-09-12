@@ -28,6 +28,6 @@ locals {
       }
     ]
   )
-  tag_map = { for tag in local.tags : tag.key => tag.value }
+  tag_map                           = { for tag in local.tags : tag.key => tag.value }
   default_health_check_grace_period = var.default_ami_id ? 900 : 1500
 }
