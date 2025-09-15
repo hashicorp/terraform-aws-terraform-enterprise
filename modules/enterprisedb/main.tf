@@ -131,7 +131,7 @@ resource "aws_launch_template" "enterprisedb" {
 }
 
 resource "aws_instance" "edb_server" {
-  ami           = "ami-06ea12056fee6f52f"
+  ami           = var.ami_id
   instance_type = "m5.xlarge"
   subnet_id     = var.network_subnets_private[0]
   launch_template {
