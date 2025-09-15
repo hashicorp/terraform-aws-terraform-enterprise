@@ -1,11 +1,6 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
-variable "default_ami_id" {
-  description = "The identity of the AMI which will be used to provision the EDB EC2 instance(s)."
-  type        = string
-}
-
 variable "aws_iam_instance_profile" {
   description = "The name of the IAM instance profile to be associated with the EDB EC2 instance(s)."
   type        = string

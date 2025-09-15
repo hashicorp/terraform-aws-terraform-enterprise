@@ -28,5 +28,5 @@ locals {
       }
     ]
   )
-  tag_map                           = { for tag in local.tags : tag.key => tag.value }
+  tag_map = { for tag in local.tags : tag.key => tag.value }
 }

@@ -546,12 +546,10 @@ module "edb" {
   count  = var.enable_edb ? 1 : 0
   source = "./modules/enterprisedb"
 
-  active_active                          = var.operational_mode == "active-active"
   aws_iam_instance_profile               = module.service_accounts.iam_instance_profile.name
   ami_id                                 = local.ami_id
   asg_tags                               = var.asg_tags
   ec2_launch_template_tag_specifications = var.ec2_launch_template_tag_specifications
-  default_ami_id                         = local.default_ami_id
   enable_disk                            = local.enable_disk
   enable_ssh                             = var.enable_ssh
   ebs_device_name                        = var.ebs_device_name
@@ -565,7 +563,6 @@ module "edb" {
   key_name                               = var.key_name
   network_id                             = local.network_id
   network_subnets_private                = local.network_private_subnets
-  network_private_subnet_cidrs           = local.network_private_subnet_cidrs
   db_parameters                          = "sslmode=disable"
 
   registry_password = var.registry_password
