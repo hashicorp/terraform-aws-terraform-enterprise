@@ -11,11 +11,6 @@ variable "aws_iam_instance_profile" {
   type        = string
 }
 
-variable "active_active" {
-  type        = bool
-  description = "Flag for active-active configuation: true for active-active, false for standalone"
-}
-
 variable "ami_id" {
   type        = string
   description = "AMI ID to use for EDB instances"
@@ -50,11 +45,6 @@ variable "asg_tags" {
   type        = map(string)
   description = "(Optional) Map of tags only used for the autoscaling group. If you are using the AWS provider's default_tags, please note that it tags every taggable resource except for the autoscaling group, therefore this variable may be used to duplicate the key/value pairs in the default_tags if you wish."
   default     = {}
-}
-
-variable "network_private_subnet_cidrs" {
-  type        = list(string)
-  description = "(Optional) List of private subnet CIDR ranges to create in VPC."
 }
 
 variable "key_name" {
