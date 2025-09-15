@@ -1,0 +1,115 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
+variable "aws_iam_instance_profile" {
+  description = "The name of the IAM instance profile to be associated with the EDB EC2 instance(s)."
+  type        = string
+}
+
+variable "ami_id" {
+  type        = string
+  description = "AMI ID to use for EDB instances"
+}
+
+variable "enable_ssh" {
+  type        = bool
+  description = "Whether to open port 22 on the EDB instance for SSH access."
+}
+
+variable "friendly_name_prefix" {
+  type        = string
+  description = "(Required) Friendly name prefix used for tagging and naming AWS resources."
+}
+
+variable "instance_type" {
+  description = "The instance type of EDB EC2 instance(s) to create."
+  type        = string
+}
+
+variable "network_id" {
+  description = "The identity of the VPC in which the security group attached to the EDB EC2 instance will be delpoyed."
+  type        = string
+}
+
+variable "network_subnets_private" {
+  description = "A list of the identities of the private subnetworks in which the EC2 autoscaling group will be deployed."
+  type        = list(string)
+}
+
+variable "asg_tags" {
+  type        = map(string)
+  description = "(Optional) Map of tags only used for the autoscaling group. If you are using the AWS provider's default_tags, please note that it tags every taggable resource except for the autoscaling group, therefore this variable may be used to duplicate the key/value pairs in the default_tags if you wish."
+  default     = {}
+}
+
+variable "key_name" {
+  description = "The name of the key pair to be used for SSH access to the EC2 instance(s)."
+  type        = string
+}
+
+variable "ec2_launch_template_tag_specifications" {
+  description = "(Optional) List of tag specifications to apply to the launch template."
+  type = list(object({
+    resource_type = string
+    tags          = map(string)
+  }))
+}
+
+# Mounted Disk Installation
+# -------------------------
+variable "ebs_device_name" {
+  type        = string
+  description = "(Required if Mounted Disk installation) The name of the device to mount."
+}
+
+variable "ebs_volume_size" {
+  type        = number
+  description = "(Optional if Mounted Disk installation) The size of the volume in gigabytes."
+}
+
+variable "ebs_volume_type" {
+  type        = string
+  description = "(Optional if Mounted Disk installation) (Optional) The type of volume. Can be 'standard', 'gp2', 'gp3', 'st1', 'sc1' or 'io1'. "
+}
+
+variable "ebs_iops" {
+  type        = number
+  description = "(Optional) The amount of provisioned IOPS. This must be set with a volume_type of 'io1'."
+}
+
+variable "ebs_delete_on_termination" {
+  type        = bool
+  description = "(Optional if Mounted Disk installation) Whether the volume should be destroyed on instance termination."
+}
+
+variable "ebs_snapshot_id" {
+  type        = string
+  description = "(Optional) The Snapshot ID to mount (instead of a new volume)"
+}
+
+variable "enable_disk" {
+  type        = bool
+  description = "Will you be attaching an EBS block device for a Mounted Disk Installation?"
+}
+
+# Registry Credentials
+# -------------------------
+variable "registry_password" {
+  default     = null
+  description = "The password for the docker registry from which to pull the enterprise container images."
+  type        = string
+}
+
+variable "registry_username" {
+  default     = null
+  description = "The username for the docker registry from which to pull the enterprisedb container images."
+  type        = string
+}
+
+# Database
+# -------------------------
+
+variable "db_parameters" {
+  type        = string
+  description = "PostgreSQL server parameters for the connection URI. Used to configure the PostgreSQL connection (e.g. sslmode=require)."
+}

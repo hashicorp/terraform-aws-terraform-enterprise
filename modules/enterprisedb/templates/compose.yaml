@@ -1,0 +1,23 @@
+services:
+  postgres:
+    image: quay.io/hashicorp/enterprisedb:latest
+    environment:
+      POSTGRES_USER: hashicorp
+      POSTGRES_PASSWORD: hashicorp
+      POSTGRES_DB: hashicorp
+    volumes:
+      - type: volume
+        source: postgres
+        target: /var/lib/postgresql/data
+    ports:
+      - 5432:5432
+  # Simple web server to test connectivity
+  nginx:
+    image: nginx:latest
+    ports:
+      - 80:80
+    depends_on:
+      - postgres
+
+volumes:
+  postgres:

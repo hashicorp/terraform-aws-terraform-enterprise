@@ -62,7 +62,7 @@ variable "friendly_name_prefix" {
 }
 
 variable "health_check_grace_period" {
-  description = "The health grace period aws provides to allow for an instance to pass it's health check."
+  description = "The health grace period aws provides to allow for an instance to pass its health check."
   type        = number
 }
 
