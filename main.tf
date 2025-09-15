@@ -566,7 +566,7 @@ module "edb" {
   network_id                             = local.network_id
   network_subnets_private                = local.network_private_subnets
   network_private_subnet_cidrs           = local.network_private_subnet_cidrs
-  db_parameters                          = var.db_parameters
+  db_parameters                          = ""
 
   registry_password = var.registry_password
   registry_username = var.registry_username
