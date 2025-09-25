@@ -16,6 +16,12 @@ variable "db_username" {
   description = "PostgreSQL instance username. No special characters."
 }
 
+variable "db_parameters" {
+  type        = string
+  description = "PostgreSQL server parameters for the connection URI. Used to configure the PostgreSQL connection (e.g. sslmode=require)."
+  default     = ""
+}
+
 variable "network_id" {
   description = "The identity of the VPC in which the security group attached to the PostgreSQL instance will be deployed."
   type        = string
