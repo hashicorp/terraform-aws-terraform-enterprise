@@ -20,9 +20,7 @@ data "aws_ami" "ubuntu" {
 }
 
 data "aws_kms_key" "main" {
-  kemodule "settings" {
-  source = "./modules/settings"
-  count  = var.is_replicated_deployment ? 0 : 1d = var.kms_key_arn
+  key_id = var.kms_key_arn
 }
 
 # -----------------------------------------------------------------------------
@@ -409,7 +407,7 @@ module "tfe_init_fdo" {
 # TFE and Replicated settings to pass to the tfe_init_replicated module for replicated deployment
 # --------------------------------------------------------------------------------------------
 module "settings" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=main"
+  source = "./modules/settings"
   count  = var.is_replicated_deployment ? 1 : 0
 
   # TFE Base Configuration
