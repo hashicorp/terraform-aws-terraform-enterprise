@@ -20,7 +20,9 @@ data "aws_ami" "ubuntu" {
 }
 
 data "aws_kms_key" "main" {
-  key_id = var.kms_key_arn
+  kemodule "settings" {
+  source = "./modules/settings"
+  count  = var.is_replicated_deployment ? 0 : 1d = var.kms_key_arn
 }
 
 # -----------------------------------------------------------------------------
@@ -270,7 +272,7 @@ module "aurora_database" {
 # Docker Compose File Config for TFE on instance(s) using Flexible Deployment Options
 # ------------------------------------------------------------------------------------
 module "runtime_container_engine_config" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=main"
+  source = "./modules/runtime_container_engine_config"
   count  = var.is_replicated_deployment ? 0 : 1
 
   tfe_license = var.hc_license
@@ -303,15 +305,17 @@ module "runtime_container_engine_config" {
   iact_time_limit      = var.iact_subnet_time_limit
   run_pipeline_image   = var.run_pipeline_image
 
-  database_name             = local.database.name
-  database_user             = local.database.username
-  database_password         = local.database.password
-  database_host             = local.database.endpoint
-  database_parameters       = local.database.parameters
-  database_use_mtls         = var.db_use_mtls
-  database_ca_cert_file     = "/etc/ssl/private/terraform-enterprise/postgres/ca.crt"
-  database_client_cert_file = "/etc/ssl/private/terraform-enterprise/postgres/cert.crt"
-  database_client_key_file  = "/etc/ssl/private/terraform-enterprise/postgres/key.key"
+  database_name                    = local.database.name
+  database_user                    = local.database.username
+  database_password                = local.database.password
+  database_host                    = local.database.endpoint
+  database_parameters              = local.database.parameters
+  database_use_mtls                = var.db_use_mtls
+  database_ca_cert_file            = "/etc/ssl/private/terraform-enterprise/postgres/ca.crt"
+  database_client_cert_file        = "/etc/ssl/private/terraform-enterprise/postgres/cert.crt"
+  database_client_key_file         = "/etc/ssl/private/terraform-enterprise/postgres/key.key"
+  database_passwordless_aws_use_iam = var.postgres_enable_iam_auth && !var.postgres_use_password_auth
+  database_passwordless_aws_region = var.postgres_enable_iam_auth && !var.postgres_use_password_auth ? data.aws_region.current.name : ""
 
   explorer_database_name       = local.explorer_database.name
   explorer_database_user       = local.explorer_database.username
@@ -360,7 +364,7 @@ module "runtime_container_engine_config" {
 # AWS cloud init used to install and configure TFE on instance(s) using Flexible Deployment Options
 # --------------------------------------------------------------------------------------------------
 module "tfe_init_fdo" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
+  source = "./modules/tfe_init"
   count  = var.is_replicated_deployment ? 0 : 1
 
   cloud             = "aws"
@@ -467,7 +471,7 @@ module "settings" {
 # AWS user data / cloud init used to install and configure TFE on instance(s)
 # -----------------------------------------------------------------------------
 module "tfe_init_replicated" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init_replicated?ref=main"
+  source = "./modules/tfe_init_replicated"
   count  = var.is_replicated_deployment ? 1 : 0
 
   # TFE & Replicated Configuration data

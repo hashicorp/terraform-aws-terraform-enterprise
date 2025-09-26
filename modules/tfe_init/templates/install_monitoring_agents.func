@@ -1,0 +1,45 @@
+%{ if enable_monitoring && cloud == "azurerm" ~}
+function install_monitoring_agents {
+	local log_pathname=$1
+	:
+}
+%{ endif ~}
+
+%{ if enable_monitoring && cloud == "aws" ~}
+function install_monitoring_agents {
+	local log_pathname=$1
+	:
+}
+%{ endif ~}
+
+%{ if enable_monitoring && cloud == "google" ~}
+function install_monitoring_agents {
+	local log_pathname=$1
+
+	monitoring_agent_url="https://dl.google.com/cloudagents/add-monitoring-agent-repo.sh"
+	monitoring_agent_pathname="/tmp/add-monitoring-agent-repo.sh"
+
+	echo "[Terraform Enterprise] Downloading Cloud Monitoring agent script from '$monitoring_agent_url' to '$monitoring_agent_pathname'" | tee -a $log_pathname
+	monitoring_agent_url="https://dl.google.com/cloudagents/add-monitoring-agent-repo.sh"
+	monitoring_agent_pathname="/tmp/add-monitoring-agent-repo.sh"
+
+	echo "[Terraform Enterprise] Downloading Cloud Monitoring agent script from '$monitoring_agent_url' to '$monitoring_agent_pathname'" | tee -a $log_pathname
+	curl -sS -o $monitoring_agent_pathname $monitoring_agent_url
+
+	echo "[Terraform Enterprise] Executing Cloud Monitoring agent script at '$monitoring_agent_pathname'" | tee -a $log_pathname
+	chmod +x $monitoring_agent_pathname
+	bash $monitoring_agent_pathname
+
+	echo "[Terraform Enterprise] Installing Cloud Monitoring agent" | tee -a $log_pathname
+	%{ if distribution == "ubuntu" ~}
+	apt-get --assume-yes update
+	apt-get --assume-yes install stackdriver-agent
+	apt-get --assume-yes autoremove
+	%{ else ~}
+	yum install --assumeyes stackdriver-agent
+	%{ endif ~}
+
+	echo "[Terraform Enterprise] Starting Cloud Monitoring agent service" | tee -a $log_pathname
+	service stackdriver-agent start
+}
+%{ endif ~}

@@ -1,0 +1,20 @@
+%{ if distribution == "rhel" ~}
+function install_jq {
+	local log_pathname=$1
+	# OS: RHEL/CentOS
+	# Description: Install jq JSON processor using yum package manager
+
+	echo "[$(date +"%FT%T")] [Terraform Enterprise] Install JQ" | tee -a $log_pathname
+	yum install --assumeyes jq
+}
+%{ else ~}
+function install_jq {
+	local log_pathname=$1
+	# OS: Ubuntu/Debian
+	# Description: Install jq JSON processor using apt package manager
+
+	echo "[$(date +"%FT%T")] [Terraform Enterprise] Install JQ" | tee -a $log_pathname
+	retry 10 apt-get --assume-yes update
+	retry 10 apt-get --assume-yes install jq
+}
+%{ endif ~}

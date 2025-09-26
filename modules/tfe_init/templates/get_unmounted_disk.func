@@ -1,0 +1,33 @@
+# Function to get the name of an attached disk that does not have a mount point
+get_unmounted_disk() {
+    # Get all block devices
+    local all_devices=$(lsblk -rno NAME,TYPE,MOUNTPOINT)
+    
+    # Find all disks
+    echo "$all_devices" | while read -r name type mountpoint; do
+        if [[ "$type" == "disk" ]]; then
+            # Check if the disk itself is mounted or used as swap
+            if [[ -n "$mountpoint" ]] || swapon --show=NAME --noheadings | grep -q "^/dev/$name$"; then
+                continue
+            fi
+            
+            # Check if any partitions of this disk are mounted or used as swap
+            local has_mounted_partitions=false
+            while read -r part_name part_type part_mountpoint; do
+                # Check if this is a partition of the current disk
+                if [[ "$part_name" =~ ^${name}p?[0-9]+$ ]] && [[ "$part_type" == "part" ]]; then
+                    if [[ -n "$part_mountpoint" ]] || swapon --show=NAME --noheadings | grep -q "^/dev/$part_name$"; then
+                        has_mounted_partitions=true
+                        break
+                    fi
+                fi
+            done <<< "$all_devices"
+            
+            # If no partitions are mounted, this disk is available
+            if [[ "$has_mounted_partitions" == "false" ]]; then
+                echo "$name"
+                return 0
+            fi
+        fi
+    done
+}
