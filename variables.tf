@@ -270,6 +270,18 @@ variable "db_use_mtls" {
   default     = false
 }
 
+variable "postgres_enable_iam_auth" {
+  type        = bool
+  description = "Whether to enable IAM authentication for PostgreSQL. Used for passwordless authentication."
+  default     = false
+}
+
+variable "postgres_use_password_auth" {
+  type        = bool
+  description = "Whether to use password authentication for PostgreSQL. Set to false for passwordless authentication."
+  default     = true
+}
+
 variable "postgres_ca_certificate_secret_id" {
   type        = string
   description = "The secrets manager secret ID of the Base64 & PEM encoded certificate for postgres."

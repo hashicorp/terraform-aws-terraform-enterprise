@@ -1,0 +1,60 @@
+%{ if cloud == "aws" ~}
+function install_packages {
+	local log_pathname=$1
+	# OS: Agnostic
+	# Description: Install AWS packages
+
+	%{ if distribution == "rhel" || distribution == "amazon-linux-2023" ~}
+		echo "[$(date +"%FT%T")] [Terraform Enterprise] Install unzip with yum" | tee -a $log_pathname
+		yum install -y unzip
+
+		%{ if distribution == "rhel" ~}
+			echo "[$(date +"%FT%T")] [Terraform Enterprise] Install firewalld with yum" | tee -a $log_pathname
+			yum install -y firewalld
+
+			# Amazon Linux 2023 already has amazon-ssm-agent so install on rhel only
+			echo "[$(date +"%FT%T")] [Terraform Enterprise] Install ssm-agent with yum" | tee -a $log_pathname
+			yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+
+			systemctl enable firewalld
+			systemctl start firewalld
+		%{ endif ~}
+
+		%{ if distribution == "amazon-linux-2023" ~}
+			echo "[$(date +"%FT%T")] [Terraform Enterprise] Remove existing docker and install v24 with yum" | tee -a $log_pathname
+			yum -y remove docker
+			yum clean packages
+			yum -y install docker-24.0.5-1.amzn2023.0.3 bc
+
+			systemctl start docker
+			systemctl enable docker
+		%{ endif ~}
+
+		systemctl enable amazon-ssm-agent
+		systemctl start amazon-ssm-agent
+	%{ else ~}
+		echo "[$(date +"%FT%T")] [Terraform Enterprise] Install unzip with apt-get" | tee -a $log_pathname
+		retry 10 apt-get update -y
+		retry 10 apt-get install -y unzip
+	%{ endif ~}
+
+	echo "[$(date +"%FT%T")] [Terraform Enterprise] Install AWS CLI" | tee -a $log_pathname
+	curl --noproxy '*' "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m | grep -q "arm\|aarch" && echo "aarch64" || echo "x86_64").zip" -o "awscliv2.zip"
+	unzip awscliv2.zip
+	./aws/install
+	rm -f ./awscliv2.zip
+	rm -rf ./aws
+}
+%{ endif ~}
+
+%{ if cloud == "azurerm" ~}
+function install_packages {
+	:
+}
+%{ endif ~}
+
+%{ if cloud == "google" ~}
+install_packages () {
+	:
+}
+%{ endif ~}
