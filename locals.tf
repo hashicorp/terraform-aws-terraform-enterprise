@@ -6,7 +6,7 @@ locals {
   enable_airgap                   = var.airgap_url == null && var.tfe_license_bootstrap_airgap_package_path != null
   enable_external                 = var.operational_mode == "external" || var.operational_mode == "active-active"
   enable_disk                     = var.operational_mode == "disk"
-  enable_database_module          = local.enable_external && var.enable_aurora == false && var.db_use_mtls == false && var.enable_edb == false && !(var.postgres_enable_iam_auth && !var.postgres_use_password_auth)
+  enable_database_module          = local.enable_external && var.enable_aurora == false && var.db_use_mtls == false && var.enable_edb == false
   enable_explorer_database_module = local.enable_external && var.db_use_mtls == false && var.explorer_db_name != null
   enable_object_storage_module    = local.enable_external
   enable_redis_module             = var.operational_mode == "active-active"
@@ -33,7 +33,6 @@ locals {
 
   aurora_database       = try(module.aurora_database[0], local.default_database)
   mtls_database         = try(module.database_mtls[0], local.default_database)
-  postgres_passwordless = try(module.postgres_passwordless[0], local.default_database)
   enterprise_db         = try(module.edb[0], local.default_database)
   standard_db           = try(module.database[0], local.default_database)
 
@@ -43,7 +42,6 @@ locals {
     var.db_use_mtls && var.postgres_enable_iam_auth ? error("Both db_use_mtls and postgres_enable_iam_auth cannot be true.") :
     var.enable_aurora ? local.aurora_database :
     var.db_use_mtls ? local.mtls_database :
-    var.postgres_enable_iam_auth && !var.postgres_use_password_auth ? local.postgres_passwordless :
     var.enable_edb ? local.enterprise_db :
     local.standard_db
   )
