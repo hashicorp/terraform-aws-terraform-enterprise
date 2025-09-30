@@ -45,6 +45,7 @@ module "service_accounts" {
   postgres_client_key_secret_id         = var.postgres_client_key_secret_id
   postgres_ca_certificate_secret_id     = var.postgres_ca_certificate_secret_id
   vm_key_secret_id                      = var.vm_key_secret_id
+  redis_enable_iam_auth                 = var.redis_enable_iam_auth
 }
 
 # -----------------------------------------------------------------------------
@@ -94,6 +95,7 @@ module "redis" {
   redis_encryption_in_transit = var.redis_encryption_in_transit
   redis_encryption_at_rest    = var.redis_encryption_at_rest
   redis_use_password_auth     = var.redis_use_password_auth
+  redis_enable_iam_auth       = var.redis_enable_iam_auth
   redis_port                  = var.redis_encryption_in_transit ? "6380" : "6379"
 }
 
@@ -327,6 +329,8 @@ module "runtime_container_engine_config" {
   redis_ca_cert_path         = "/etc/ssl/private/terraform-enterprise/redis/cacert.pem"
   redis_client_cert_path     = "/etc/ssl/private/terraform-enterprise/redis/cert.pem"
   redis_client_key_path      = "/etc/ssl/private/terraform-enterprise/redis/key.pem"
+  redis_passwordless_aws_use_iam = var.redis_enable_iam_auth && !var.redis_use_password_auth
+  redis_passwordless_aws_region = var.redis_enable_iam_auth && !var.redis_use_password_auth ? data.aws_region.current.name : ""
 
 
   trusted_proxies = local.trusted_proxies

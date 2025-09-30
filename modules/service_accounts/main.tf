@@ -114,3 +114,34 @@ resource "aws_iam_policy" "kms_policy" {
     ]
   })
 }
+
+# Redis IAM authentication policy
+resource "aws_iam_role_policy_attachment" "redis_iam_policy" {
+  count = var.existing_iam_instance_profile_name == null && var.redis_enable_iam_auth ? 1 : 0
+
+  role       = local.iam_instance_role.name
+  policy_arn = aws_iam_policy.redis_iam_policy[0].arn
+}
+
+resource "aws_iam_policy" "redis_iam_policy" {
+  count = var.existing_iam_instance_profile_name == null && var.redis_enable_iam_auth ? 1 : 0
+
+  name = "${var.friendly_name_prefix}-redis-iam"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "elasticache:Connect"
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+        Condition = {
+          StringEquals = {
+            "elasticache:Username" = "${var.friendly_name_prefix}-iam-user"
+          }
+        }
+      },
+    ]
+  })
+}
