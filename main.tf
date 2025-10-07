@@ -161,21 +161,21 @@ module "database" {
   source = "./modules/database"
   count  = local.enable_database_module ? 1 : 0
 
-  db_size                      = var.db_size
-  db_backup_retention          = var.db_backup_retention
-  db_backup_window             = var.db_backup_window
-  db_name                      = var.db_name
-  db_parameters                = var.db_parameters
-  db_username                  = var.db_username
-  engine_version               = var.postgres_engine_version
-  friendly_name_prefix         = var.friendly_name_prefix
-  network_id                   = local.network_id
-  network_private_subnet_cidrs = var.network_private_subnet_cidrs
-  network_subnets_private      = local.network_private_subnets
-  tfe_instance_sg              = module.vm.tfe_instance_sg
-  kms_key_arn                  = local.kms_key_arn
-  allow_major_version_upgrade  = var.allow_major_version_upgrade
-  allow_multiple_azs           = var.allow_multiple_azs
+  db_size                            = var.db_size
+  db_backup_retention                = var.db_backup_retention
+  db_backup_window                   = var.db_backup_window
+  db_name                            = var.db_name
+  db_parameters                      = var.db_parameters
+  db_username                        = var.db_username
+  engine_version                     = var.postgres_engine_version
+  friendly_name_prefix               = var.friendly_name_prefix
+  network_id                         = local.network_id
+  network_private_subnet_cidrs       = var.network_private_subnet_cidrs
+  network_subnets_private            = local.network_private_subnets
+  tfe_instance_sg                    = module.vm.tfe_instance_sg
+  kms_key_arn                        = local.kms_key_arn
+  allow_major_version_upgrade        = var.allow_major_version_upgrade
+  allow_multiple_azs                 = var.allow_multiple_azs
   enable_iam_database_authentication = var.postgres_enable_iam_auth && !var.postgres_use_password_auth
 }
 
@@ -287,17 +287,17 @@ module "runtime_container_engine_config" {
   iact_time_limit      = var.iact_subnet_time_limit
   run_pipeline_image   = var.run_pipeline_image
 
-  database_name                    = local.database.name
-  database_user                    = local.database.username
-  database_password                = local.database.password
-  database_host                    = local.database.endpoint
-  database_parameters              = local.database.parameters
-  database_use_mtls                = var.db_use_mtls
-  database_ca_cert_file            = "/etc/ssl/private/terraform-enterprise/postgres/ca.crt"
-  database_client_cert_file        = "/etc/ssl/private/terraform-enterprise/postgres/cert.crt"
-  database_client_key_file         = "/etc/ssl/private/terraform-enterprise/postgres/key.key"
+  database_name                     = local.database.name
+  database_user                     = local.database.username
+  database_password                 = local.database.password
+  database_host                     = local.database.endpoint
+  database_parameters               = local.database.parameters
+  database_use_mtls                 = var.db_use_mtls
+  database_ca_cert_file             = "/etc/ssl/private/terraform-enterprise/postgres/ca.crt"
+  database_client_cert_file         = "/etc/ssl/private/terraform-enterprise/postgres/cert.crt"
+  database_client_key_file          = "/etc/ssl/private/terraform-enterprise/postgres/key.key"
   database_passwordless_aws_use_iam = var.postgres_enable_iam_auth && !var.postgres_use_password_auth
-  database_passwordless_aws_region = var.postgres_enable_iam_auth && !var.postgres_use_password_auth ? data.aws_region.current.name : ""
+  database_passwordless_aws_region  = var.postgres_enable_iam_auth && !var.postgres_use_password_auth ? data.aws_region.current.name : ""
 
   explorer_database_name       = local.explorer_database.name
   explorer_database_user       = local.explorer_database.username
