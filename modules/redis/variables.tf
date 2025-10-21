@@ -82,3 +82,9 @@ variable "redis_use_password_auth" {
   type        = bool
   description = "Determine if a password is required for Redis."
 }
+
+variable "redis_enable_iam_auth" {
+  type        = bool
+  description = "Whether to enable IAM authentication for Redis. Used for passwordless authentication."
+  default     = false
+}

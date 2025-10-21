@@ -208,6 +208,12 @@ variable "sentinel_leader" {
   description = "The name of the Redis Sentinel leader"
 }
 
+variable "redis_enable_iam_auth" {
+  type        = bool
+  description = "Whether to enable IAM authentication for Redis. Used for passwordless authentication."
+  default     = false
+}
+
 # Postgres
 # --------
 variable "db_name" {
@@ -268,6 +274,18 @@ variable "db_use_mtls" {
   type        = bool
   description = "Whether or not to use mutual TLS to access database. Defaults to false if no value is given."
   default     = false
+}
+
+variable "postgres_enable_iam_auth" {
+  type        = bool
+  description = "Whether to enable IAM authentication for PostgreSQL. Used for passwordless authentication."
+  default     = false
+}
+
+variable "postgres_use_password_auth" {
+  type        = bool
+  description = "Whether to use password authentication for PostgreSQL. Set to false for passwordless authentication."
+  default     = true
 }
 
 variable "postgres_ca_certificate_secret_id" {

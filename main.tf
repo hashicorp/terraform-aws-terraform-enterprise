@@ -45,6 +45,7 @@ module "service_accounts" {
   postgres_client_key_secret_id         = var.postgres_client_key_secret_id
   postgres_ca_certificate_secret_id     = var.postgres_ca_certificate_secret_id
   vm_key_secret_id                      = var.vm_key_secret_id
+  redis_enable_iam_auth                 = var.redis_enable_iam_auth
 }
 
 # -----------------------------------------------------------------------------
@@ -94,6 +95,7 @@ module "redis" {
   redis_encryption_in_transit = var.redis_encryption_in_transit
   redis_encryption_at_rest    = var.redis_encryption_at_rest
   redis_use_password_auth     = var.redis_use_password_auth
+  redis_enable_iam_auth       = var.redis_enable_iam_auth
   redis_port                  = var.redis_encryption_in_transit ? "6380" : "6379"
 }
 
@@ -161,21 +163,22 @@ module "database" {
   source = "./modules/database"
   count  = local.enable_database_module ? 1 : 0
 
-  db_size                      = var.db_size
-  db_backup_retention          = var.db_backup_retention
-  db_backup_window             = var.db_backup_window
-  db_name                      = var.db_name
-  db_parameters                = var.db_parameters
-  db_username                  = var.db_username
-  engine_version               = var.postgres_engine_version
-  friendly_name_prefix         = var.friendly_name_prefix
-  network_id                   = local.network_id
-  network_private_subnet_cidrs = var.network_private_subnet_cidrs
-  network_subnets_private      = local.network_private_subnets
-  tfe_instance_sg              = module.vm.tfe_instance_sg
-  kms_key_arn                  = local.kms_key_arn
-  allow_major_version_upgrade  = var.allow_major_version_upgrade
-  allow_multiple_azs           = var.allow_multiple_azs
+  db_size                            = var.db_size
+  db_backup_retention                = var.db_backup_retention
+  db_backup_window                   = var.db_backup_window
+  db_name                            = var.db_name
+  db_parameters                      = var.db_parameters
+  db_username                        = var.db_username
+  engine_version                     = var.postgres_engine_version
+  friendly_name_prefix               = var.friendly_name_prefix
+  network_id                         = local.network_id
+  network_private_subnet_cidrs       = var.network_private_subnet_cidrs
+  network_subnets_private            = local.network_private_subnets
+  tfe_instance_sg                    = module.vm.tfe_instance_sg
+  kms_key_arn                        = local.kms_key_arn
+  allow_major_version_upgrade        = var.allow_major_version_upgrade
+  allow_multiple_azs                 = var.allow_multiple_azs
+  enable_iam_database_authentication = var.postgres_enable_iam_auth && !var.postgres_use_password_auth
 }
 
 # -----------------------------------------------------------------------------
@@ -253,7 +256,7 @@ module "aurora_database" {
 # Docker Compose File Config for TFE on instance(s) using Flexible Deployment Options
 # ------------------------------------------------------------------------------------
 module "runtime_container_engine_config" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=pravi/IND-5776-aws-postgres-redis-combined"
   count  = var.is_replicated_deployment ? 0 : 1
 
   tfe_license = var.hc_license
@@ -286,15 +289,17 @@ module "runtime_container_engine_config" {
   iact_time_limit      = var.iact_subnet_time_limit
   run_pipeline_image   = var.run_pipeline_image
 
-  database_name             = local.database.name
-  database_user             = local.database.username
-  database_password         = local.database.password
-  database_host             = local.database.endpoint
-  database_parameters       = local.database.parameters
-  database_use_mtls         = var.db_use_mtls
-  database_ca_cert_file     = "/etc/ssl/private/terraform-enterprise/postgres/ca.crt"
-  database_client_cert_file = "/etc/ssl/private/terraform-enterprise/postgres/cert.crt"
-  database_client_key_file  = "/etc/ssl/private/terraform-enterprise/postgres/key.key"
+  database_name                     = local.database.name
+  database_user                     = local.database.username
+  database_password                 = local.database.password
+  database_host                     = local.database.endpoint
+  database_parameters               = local.database.parameters
+  database_use_mtls                 = var.db_use_mtls
+  database_ca_cert_file             = "/etc/ssl/private/terraform-enterprise/postgres/ca.crt"
+  database_client_cert_file         = "/etc/ssl/private/terraform-enterprise/postgres/cert.crt"
+  database_client_key_file          = "/etc/ssl/private/terraform-enterprise/postgres/key.key"
+  database_passwordless_aws_use_iam = var.postgres_enable_iam_auth && !var.postgres_use_password_auth
+  database_passwordless_aws_region  = var.postgres_enable_iam_auth && !var.postgres_use_password_auth ? data.aws_region.current.name : ""
 
   explorer_database_name       = local.explorer_database.name
   explorer_database_user       = local.explorer_database.username
@@ -327,6 +332,8 @@ module "runtime_container_engine_config" {
   redis_ca_cert_path         = "/etc/ssl/private/terraform-enterprise/redis/cacert.pem"
   redis_client_cert_path     = "/etc/ssl/private/terraform-enterprise/redis/cert.pem"
   redis_client_key_path      = "/etc/ssl/private/terraform-enterprise/redis/key.pem"
+  redis_passwordless_aws_use_iam = var.redis_enable_iam_auth && !var.redis_use_password_auth
+  redis_passwordless_aws_region = var.redis_enable_iam_auth && !var.redis_use_password_auth ? data.aws_region.current.name : ""
 
 
   trusted_proxies = local.trusted_proxies
@@ -343,7 +350,7 @@ module "runtime_container_engine_config" {
 # AWS cloud init used to install and configure TFE on instance(s) using Flexible Deployment Options
 # --------------------------------------------------------------------------------------------------
 module "tfe_init_fdo" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=pravi/IND-5776-aws-postgres-redis-combined"
   count  = var.is_replicated_deployment ? 0 : 1
 
   cloud             = "aws"
@@ -388,7 +395,7 @@ module "tfe_init_fdo" {
 # TFE and Replicated settings to pass to the tfe_init_replicated module for replicated deployment
 # --------------------------------------------------------------------------------------------
 module "settings" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=pravi/IND-5776-aws-postgres-redis-combined"
   count  = var.is_replicated_deployment ? 1 : 0
 
   # TFE Base Configuration
@@ -450,7 +457,7 @@ module "settings" {
 # AWS user data / cloud init used to install and configure TFE on instance(s)
 # -----------------------------------------------------------------------------
 module "tfe_init_replicated" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init_replicated?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init_replicated?ref=pravi/IND-5776-aws-postgres-redis-combined"
   count  = var.is_replicated_deployment ? 1 : 0
 
   # TFE & Replicated Configuration data

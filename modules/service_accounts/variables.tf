@@ -98,3 +98,9 @@ variable "postgres_client_key_secret_id" {
   default     = null
   description = "The secrets manager secret ID of the Base64 & PEM encoded private key for postgres."
 }
+
+variable "redis_enable_iam_auth" {
+  type        = bool
+  description = "Whether to enable IAM authentication for Redis. Used for passwordless authentication."
+  default     = false
+}
