@@ -87,39 +87,3 @@ resource "aws_db_instance" "postgresql" {
   # Enable IAM database authentication if requested
   iam_database_authentication_enabled = var.enable_iam_database_authentication
 }
-
-# Create IAM database user when IAM authentication is enabled
-resource "null_resource" "create_iam_db_user" {
-  count = var.enable_iam_database_authentication ? 1 : 0
-
-  triggers = {
-    db_instance_id = aws_db_instance.postgresql.id
-    iam_user_name  = "${var.friendly_name_prefix}-iam-user"
-  }
-
-  provisioner "local-exec" {
-    command = <<-EOT
-      # Wait for RDS instance to be available
-      aws rds wait db-instance-available --db-instance-identifier ${aws_db_instance.postgresql.id}
-      
-      # Create IAM database user
-      PGPASSWORD="${random_string.postgresql_password.result}" psql \
-        -h "${aws_db_instance.postgresql.endpoint}" \
-        -U "${var.db_username}" \
-        -d "${var.db_name}" \
-        -c "DO \$\$ BEGIN
-          IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${var.friendly_name_prefix}-iam-user') THEN
-            CREATE USER \"${var.friendly_name_prefix}-iam-user\";
-          END IF;
-        END \$\$;
-        GRANT rds_iam TO \"${var.friendly_name_prefix}-iam-user\";
-        GRANT ALL PRIVILEGES ON DATABASE \"${var.db_name}\" TO \"${var.friendly_name_prefix}-iam-user\";
-        GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"${var.friendly_name_prefix}-iam-user\";
-        GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO \"${var.friendly_name_prefix}-iam-user\";
-        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO \"${var.friendly_name_prefix}-iam-user\";
-        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO \"${var.friendly_name_prefix}-iam-user\";"
-    EOT
-  }
-
-  depends_on = [aws_db_instance.postgresql]
-}
