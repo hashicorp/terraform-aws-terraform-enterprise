@@ -104,3 +104,15 @@ variable "redis_enable_iam_auth" {
   description = "Whether to enable IAM authentication for Redis. Used for passwordless authentication."
   default     = false
 }
+
+variable "postgres_enable_iam_auth" {
+  type        = bool
+  description = "Whether to enable IAM authentication for PostgreSQL. Used for passwordless authentication."
+  default     = false
+}
+
+variable "db_username" {
+  type        = string
+  description = "The username for the PostgreSQL database used for IAM authentication"
+  default     = ""
+}

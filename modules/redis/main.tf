@@ -3,7 +3,7 @@
 
 locals {
   redis_use_password_auth = var.redis_use_password_auth || var.redis_authentication_mode == "PASSWORD"
-  redis_use_iam_auth = var.redis_enable_iam_auth && !var.redis_use_password_auth
+  redis_use_iam_auth      = var.redis_enable_iam_auth && !var.redis_use_password_auth
 }
 
 resource "random_id" "redis_password" {
@@ -66,19 +66,19 @@ resource "aws_elasticache_subnet_group" "tfe" {
 
 # ElastiCache User for IAM authentication
 resource "aws_elasticache_user" "iam_user" {
-  count       = var.active_active && local.redis_use_iam_auth ? 1 : 0
-  user_id     = "${var.friendly_name_prefix}-iam-user"
-  user_name   = "${var.friendly_name_prefix}-iam-user"
-  
+  count     = var.active_active && local.redis_use_iam_auth ? 1 : 0
+  user_id   = "${var.friendly_name_prefix}-iam-user"
+  user_name = "${var.friendly_name_prefix}-iam-user"
+
   # For IAM authentication, we don't set passwords but use IAM policies
   authentication_mode {
     type = "iam"
   }
-  
+
   # Access string for Redis commands - allow all commands for TFE
   access_string = "on ~* &* +@all"
   engine        = "REDIS"
-  
+
   tags = {
     Name = "${var.friendly_name_prefix}-redis-iam-user"
   }
@@ -86,11 +86,11 @@ resource "aws_elasticache_user" "iam_user" {
 
 # ElastiCache User Group for IAM authentication
 resource "aws_elasticache_user_group" "iam_group" {
-  count          = var.active_active && local.redis_use_iam_auth ? 1 : 0
-  engine         = "REDIS"
-  user_group_id  = "${var.friendly_name_prefix}-iam-group"
-  user_ids       = [aws_elasticache_user.iam_user[0].user_id]
-  
+  count         = var.active_active && local.redis_use_iam_auth ? 1 : 0
+  engine        = "REDIS"
+  user_group_id = "${var.friendly_name_prefix}-iam-group"
+  user_ids      = [aws_elasticache_user.iam_user[0].user_id]
+
   tags = {
     Name = "${var.friendly_name_prefix}-redis-iam-group"
   }
@@ -121,7 +121,7 @@ resource "aws_elasticache_replication_group" "redis" {
 
   at_rest_encryption_enabled = var.redis_encryption_at_rest
   kms_key_id                 = var.redis_encryption_at_rest ? var.kms_key_arn : null
-  
+
   # IAM authentication configuration
   user_group_ids = local.redis_use_iam_auth ? [aws_elasticache_user_group.iam_group[0].user_group_id] : null
 }

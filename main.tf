@@ -46,6 +46,8 @@ module "service_accounts" {
   postgres_ca_certificate_secret_id     = var.postgres_ca_certificate_secret_id
   vm_key_secret_id                      = var.vm_key_secret_id
   redis_enable_iam_auth                 = var.redis_enable_iam_auth
+  postgres_enable_iam_auth              = var.postgres_enable_iam_auth && !var.postgres_use_password_auth
+  db_username                           = var.db_username
 }
 
 # -----------------------------------------------------------------------------
@@ -317,23 +319,23 @@ module "runtime_container_engine_config" {
   s3_server_side_encryption_kms_key_id = local.kms_key_arn
   s3_use_instance_profile              = var.aws_access_key_id == null ? "1" : "0"
 
-  redis_host                 = local.redis.hostname
-  redis_user                 = local.redis.username
-  redis_password             = local.redis.password
-  redis_use_tls              = local.redis.use_tls
-  redis_use_auth             = local.redis.use_password_auth
-  redis_use_sentinel         = var.enable_redis_sentinel
-  redis_sentinel_hosts       = local.redis.sentinel_hosts
-  redis_sentinel_leader_name = local.redis.sentinel_leader
-  redis_sentinel_user        = local.redis.sentinel_username
-  redis_sentinel_password    = local.redis.sentinel_password
-  redis_use_mtls             = var.enable_redis_mtls
-  enable_sentinel_mtls       = var.enable_sentinel_mtls
-  redis_ca_cert_path         = "/etc/ssl/private/terraform-enterprise/redis/cacert.pem"
-  redis_client_cert_path     = "/etc/ssl/private/terraform-enterprise/redis/cert.pem"
-  redis_client_key_path      = "/etc/ssl/private/terraform-enterprise/redis/key.pem"
+  redis_host                     = local.redis.hostname
+  redis_user                     = local.redis.username
+  redis_password                 = local.redis.password
+  redis_use_tls                  = local.redis.use_tls
+  redis_use_auth                 = local.redis.use_password_auth
+  redis_use_sentinel             = var.enable_redis_sentinel
+  redis_sentinel_hosts           = local.redis.sentinel_hosts
+  redis_sentinel_leader_name     = local.redis.sentinel_leader
+  redis_sentinel_user            = local.redis.sentinel_username
+  redis_sentinel_password        = local.redis.sentinel_password
+  redis_use_mtls                 = var.enable_redis_mtls
+  enable_sentinel_mtls           = var.enable_sentinel_mtls
+  redis_ca_cert_path             = "/etc/ssl/private/terraform-enterprise/redis/cacert.pem"
+  redis_client_cert_path         = "/etc/ssl/private/terraform-enterprise/redis/cert.pem"
+  redis_client_key_path          = "/etc/ssl/private/terraform-enterprise/redis/key.pem"
   redis_passwordless_aws_use_iam = var.redis_enable_iam_auth && !var.redis_use_password_auth
-  redis_passwordless_aws_region = var.redis_enable_iam_auth && !var.redis_use_password_auth ? data.aws_region.current.name : ""
+  redis_passwordless_aws_region  = var.redis_enable_iam_auth && !var.redis_use_password_auth ? data.aws_region.current.name : ""
 
 
   trusted_proxies = local.trusted_proxies
