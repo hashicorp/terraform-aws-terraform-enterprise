@@ -84,33 +84,15 @@ resource "aws_elasticache_user" "iam_user" {
   }
 }
 
-# Default user required by ElastiCache user groups
-resource "aws_elasticache_user" "default_user" {
-  count     = var.active_active && local.redis_use_iam_auth ? 1 : 0
-  user_id   = "default"
-  user_name = "default"
-
-  # Default user with no access - required for user group creation
-  authentication_mode {
-    type = "no-password-required"
-  }
-
-  # Deny all access for the default user since we're using IAM auth
-  access_string = "off ~* &* -@all"
-  engine        = "REDIS"
-
-  tags = {
-    Name = "${var.friendly_name_prefix}-redis-default-user"
-  }
-}
-
 # ElastiCache User Group for IAM authentication
+# Note: AWS ElastiCache requires the "default" user to be present in every user group
+# We reference it by name, as it's automatically created by AWS
 resource "aws_elasticache_user_group" "iam_group" {
   count         = var.active_active && local.redis_use_iam_auth ? 1 : 0
   engine        = "REDIS"
   user_group_id = "${var.friendly_name_prefix}-iam-group"
   user_ids = [
-    aws_elasticache_user.default_user[0].user_id,
+    "default",
     aws_elasticache_user.iam_user[0].user_id
   ]
 
