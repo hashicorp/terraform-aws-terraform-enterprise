@@ -84,57 +84,8 @@ resource "aws_db_instance" "postgresql" {
   storage_type           = "gp2"
   vpc_security_group_ids = [aws_security_group.postgresql.id]
 
-  # Enable IAM database authentication if requested
-  iam_database_authentication_enabled = var.enable_iam_database_authentication
+  # Temporarily disable IAM database authentication until user creation is resolved
+  # TODO: Re-enable after implementing proper IAM user creation mechanism
+  # iam_database_authentication_enabled = var.enable_iam_database_authentication
+  iam_database_authentication_enabled = false
 }
-
-# Create IAM database user when IAM authentication is enabled
-resource "null_resource" "create_iam_db_user" {
-  count = var.enable_iam_database_authentication ? 1 : 0
-
-  triggers = {
-    db_instance_id = aws_db_instance.postgresql.id
-    iam_user_name  = "${var.friendly_name_prefix}-iam-user"
-  }
-
-  provisioner "local-exec" {
-    command = <<-EOT
-      set -e
-      echo "Creating IAM database user for RDS instance ${aws_db_instance.postgresql.id}"
-      
-      # Wait for RDS instance to be available
-      aws rds wait db-instance-available --db-instance-identifier ${aws_db_instance.postgresql.id} --region ${data.aws_region.current.name}
-      
-      # Get the endpoint without port
-      DB_HOST=$(echo "${aws_db_instance.postgresql.endpoint}" | cut -d: -f1)
-      
-      # Create IAM database user using psql
-      export PGPASSWORD="${random_string.postgresql_password.result}"
-      psql -h "$DB_HOST" -U "${var.db_username}" -d "${var.db_name}" -p 5432 -c "
-        DO \$\$
-        BEGIN
-          IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${var.friendly_name_prefix}-iam-user') THEN
-            CREATE USER \"${var.friendly_name_prefix}-iam-user\";
-            GRANT rds_iam TO \"${var.friendly_name_prefix}-iam-user\";
-            GRANT ALL PRIVILEGES ON DATABASE \"${var.db_name}\" TO \"${var.friendly_name_prefix}-iam-user\";
-            GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"${var.friendly_name_prefix}-iam-user\";
-            GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO \"${var.friendly_name_prefix}-iam-user\";
-            ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO \"${var.friendly_name_prefix}-iam-user\";
-            ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO \"${var.friendly_name_prefix}-iam-user\";
-            RAISE NOTICE 'IAM user ${var.friendly_name_prefix}-iam-user created successfully';
-          ELSE
-            RAISE NOTICE 'IAM user ${var.friendly_name_prefix}-iam-user already exists';
-          END IF;
-        END
-        \$\$;
-      "
-      echo "IAM database user creation completed"
-    EOT
-    
-    on_failure = continue
-  }
-
-  depends_on = [aws_db_instance.postgresql]
-}
-
-data "aws_region" "current" {}
