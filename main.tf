@@ -323,7 +323,7 @@ module "runtime_container_engine_config" {
   redis_user                     = local.redis.username
   redis_password                 = local.redis.password
   redis_use_tls                  = local.redis.use_tls
-  redis_use_auth                 = local.redis.use_password_auth
+  redis_use_auth                 = local.redis.use_password_auth || (var.redis_enable_iam_auth && !var.redis_use_password_auth)
   redis_use_sentinel             = var.enable_redis_sentinel
   redis_sentinel_hosts           = local.redis.sentinel_hosts
   redis_sentinel_leader_name     = local.redis.sentinel_leader
