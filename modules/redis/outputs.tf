@@ -11,8 +11,8 @@ output "password" {
 }
 
 output "username" {
-  value       = null
-  description = "The username which is required to create connections with the Redis Elasticache replication group. Defaults to null to maintain the output interface with the redis-sentinel module."
+  value       = try(aws_elasticache_user.iam_user[0].user_name, null)
+  description = "The username which is required to create connections with the Redis Elasticache replication group. Returns IAM username when IAM auth is enabled, otherwise null to maintain the output interface with the redis-sentinel module."
 }
 
 output "redis_port" {
