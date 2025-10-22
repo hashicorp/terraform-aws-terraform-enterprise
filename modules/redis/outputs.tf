@@ -6,8 +6,8 @@ output "hostname" {
 }
 
 output "password" {
-  value       = try(random_id.redis_password[0].hex, "")
-  description = "The password which is required to create connections with the Redis Elasticache replication group."
+  value       = try(random_id.redis_password[0].hex, null)
+  description = "The password which is required to create connections with the Redis Elasticache replication group. Returns null when using IAM authentication."
 }
 
 output "username" {
