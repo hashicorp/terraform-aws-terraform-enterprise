@@ -76,8 +76,8 @@ resource "aws_elasticache_user" "iam_user" {
   }
 
   # Access string for Redis commands - IAM auth compatible
-  # Use a simpler access string that works reliably with IAM authentication
-  access_string = "on ~* +@all -@dangerous"
+  # Use default access string for TFE with IAM authentication
+  access_string = "on ~* &* +@all"
   engine        = "REDIS"
 
   tags = {
