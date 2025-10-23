@@ -1,15 +1,6 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
-terraform {
-  required_providers {
-    postgresql = {
-      source  = "cyrilgdn/postgresql"
-      version = "~> 1.0"
-    }
-  }
-}
-
 # PostgreSQL provider configuration for IAM user management
 provider "postgresql" {
   count = var.enable_iam_database_authentication ? 1 : 0
