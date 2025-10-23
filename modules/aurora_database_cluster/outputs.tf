@@ -27,3 +27,8 @@ output "parameters" {
   description = "PostgreSQL server parameters for the connection URI."
 }
 
+output "identifier" {
+  value       = aws_rds_cluster.aurora_postgresql.cluster_identifier
+  description = "The database identifier of the PostgreSQL Aurora cluster."
+}
+
