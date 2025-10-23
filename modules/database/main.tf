@@ -1,16 +1,6 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
-# PostgreSQL provider configuration for IAM user management
-provider "postgresql" {
-  host     = aws_db_instance.postgresql.address
-  port     = aws_db_instance.postgresql.port
-  database = aws_db_instance.postgresql.db_name
-  username = aws_db_instance.postgresql.username
-  password = aws_db_instance.postgresql.password
-  sslmode  = "require"
-}
-
 resource "random_string" "postgresql_password" {
   length           = 128
   special          = true
@@ -98,39 +88,27 @@ resource "aws_db_instance" "postgresql" {
   iam_database_authentication_enabled = var.enable_iam_database_authentication
 }
 
-# Create PostgreSQL IAM user using PostgreSQL provider
-resource "postgresql_role" "iam_user" {
+# Create IAM database user using psql command when IAM auth is enabled
+resource "null_resource" "create_iam_user" {
   count = var.enable_iam_database_authentication ? 1 : 0
-  
-  name     = "${var.friendly_name_prefix}_iam_user"
-  login    = true
-  
-  # Grant necessary permissions for TFE
-  # Note: Additional grants may be needed depending on TFE requirements
+
+  provisioner "local-exec" {
+    command = <<-EOT
+      export PGPASSWORD="${aws_db_instance.postgresql.password}"
+      psql -h ${aws_db_instance.postgresql.address} \
+           -p ${aws_db_instance.postgresql.port} \
+           -U ${aws_db_instance.postgresql.username} \
+           -d ${aws_db_instance.postgresql.db_name} \
+           -c "CREATE USER \"${var.friendly_name_prefix}_iam_user\"; GRANT rds_iam TO \"${var.friendly_name_prefix}_iam_user\"; GRANT ALL PRIVILEGES ON DATABASE ${aws_db_instance.postgresql.db_name} TO \"${var.friendly_name_prefix}_iam_user\"; GRANT ALL PRIVILEGES ON SCHEMA public TO \"${var.friendly_name_prefix}_iam_user\";"
+    EOT
+  }
+
+  depends_on = [aws_db_instance.postgresql]
+
+  triggers = {
+    db_instance_id = aws_db_instance.postgresql.id
+    iam_user_name  = "${var.friendly_name_prefix}_iam_user"
+  }
 }
 
-# Grant database permissions to IAM user
-resource "postgresql_grant" "iam_user_database" {
-  count = var.enable_iam_database_authentication ? 1 : 0
-  
-  database    = aws_db_instance.postgresql.db_name
-  role        = postgresql_role.iam_user[0].name
-  schema      = "public"
-  object_type = "database"
-  privileges  = ["CONNECT", "CREATE"]
-  
-  depends_on = [postgresql_role.iam_user]
-}
 
-# Grant schema permissions to IAM user
-resource "postgresql_grant" "iam_user_schema" {
-  count = var.enable_iam_database_authentication ? 1 : 0
-  
-  database    = aws_db_instance.postgresql.db_name
-  role        = postgresql_role.iam_user[0].name
-  schema      = "public"
-  object_type = "schema"
-  privileges  = ["USAGE", "CREATE"]
-  
-  depends_on = [postgresql_role.iam_user]
-}

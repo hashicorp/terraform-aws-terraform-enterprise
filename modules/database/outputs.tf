@@ -18,7 +18,7 @@ output "password" {
 }
 
 output "username" {
-  value       = var.enable_iam_database_authentication ? postgresql_role.iam_user[0].name : aws_db_instance.postgresql.username
+  value       = var.enable_iam_database_authentication ? "${var.friendly_name_prefix}_iam_user" : aws_db_instance.postgresql.username
   description = "The name of the PostgreSQL user. Returns IAM user when IAM auth is enabled, otherwise the main database user."
 }
 
