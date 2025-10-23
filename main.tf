@@ -300,9 +300,9 @@ module "runtime_container_engine_config" {
   database_ca_cert_file             = "/etc/ssl/private/terraform-enterprise/postgres/ca.crt"
   database_client_cert_file         = "/etc/ssl/private/terraform-enterprise/postgres/cert.crt"
   database_client_key_file          = "/etc/ssl/private/terraform-enterprise/postgres/key.key"
-  # Temporarily disable PostgreSQL IAM authentication until user creation is resolved
-  database_passwordless_aws_use_iam = false
-  database_passwordless_aws_region  = ""
+  # Enable PostgreSQL IAM authentication for isolated testing
+  database_passwordless_aws_use_iam = var.postgres_enable_iam_auth && !var.postgres_use_password_auth
+  database_passwordless_aws_region  = var.postgres_enable_iam_auth && !var.postgres_use_password_auth ? data.aws_region.current.name : ""
 
   explorer_database_name       = local.explorer_database.name
   explorer_database_user       = local.explorer_database.username

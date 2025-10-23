@@ -1,6 +1,30 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
+terraform {
+  required_providers {
+    postgresql = {
+      source  = "cyrilgdn/postgresql"
+      version = "~> 1.0"
+    }
+  }
+}
+
+# PostgreSQL provider configuration for IAM user management
+provider "postgresql" {
+  count = var.enable_iam_database_authentication ? 1 : 0
+  
+  host     = aws_db_instance.postgresql.address
+  port     = aws_db_instance.postgresql.port
+  database = aws_db_instance.postgresql.db_name
+  username = aws_db_instance.postgresql.username
+  password = aws_db_instance.postgresql.password
+  sslmode  = "require"
+  
+  # Wait for RDS instance to be available
+  depends_on = [aws_db_instance.postgresql]
+}
+
 resource "random_string" "postgresql_password" {
   length           = 128
   special          = true
@@ -84,8 +108,46 @@ resource "aws_db_instance" "postgresql" {
   storage_type           = "gp2"
   vpc_security_group_ids = [aws_security_group.postgresql.id]
 
-  # Temporarily disable IAM database authentication until user creation is resolved
-  # TODO: Re-enable after implementing proper IAM user creation mechanism
-  # iam_database_authentication_enabled = var.enable_iam_database_authentication
-  iam_database_authentication_enabled = false
+  # Enable IAM database authentication for PostgreSQL passwordless auth
+  iam_database_authentication_enabled = var.enable_iam_database_authentication
+}
+
+# Create PostgreSQL IAM user using PostgreSQL provider
+resource "postgresql_role" "iam_user" {
+  count = var.enable_iam_database_authentication ? 1 : 0
+  
+  provider = postgresql[0]
+  name     = "${var.friendly_name_prefix}_iam_user"
+  login    = true
+  
+  # Grant necessary permissions for TFE
+  # Note: Additional grants may be needed depending on TFE requirements
+}
+
+# Grant database permissions to IAM user
+resource "postgresql_grant" "iam_user_database" {
+  count = var.enable_iam_database_authentication ? 1 : 0
+  
+  provider    = postgresql[0]
+  database    = aws_db_instance.postgresql.db_name
+  role        = postgresql_role.iam_user[0].name
+  schema      = "public"
+  object_type = "database"
+  privileges  = ["CONNECT", "CREATE"]
+  
+  depends_on = [postgresql_role.iam_user]
+}
+
+# Grant schema permissions to IAM user
+resource "postgresql_grant" "iam_user_schema" {
+  count = var.enable_iam_database_authentication ? 1 : 0
+  
+  provider    = postgresql[0]
+  database    = aws_db_instance.postgresql.db_name
+  role        = postgresql_role.iam_user[0].name
+  schema      = "public"
+  object_type = "schema"
+  privileges  = ["USAGE", "CREATE"]
+  
+  depends_on = [postgresql_role.iam_user]
 }

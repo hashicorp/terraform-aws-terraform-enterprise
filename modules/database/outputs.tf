@@ -12,14 +12,14 @@ output "name" {
 }
 
 output "password" {
-  value       = aws_db_instance.postgresql.password
-  description = "The password of the main PostgreSQL user."
+  value       = var.enable_iam_database_authentication ? null : aws_db_instance.postgresql.password
+  description = "The password of the PostgreSQL user. Returns null when IAM authentication is enabled."
   sensitive   = true
 }
 
 output "username" {
-  value       = aws_db_instance.postgresql.username
-  description = "The name of the main PostgreSQL user."
+  value       = var.enable_iam_database_authentication ? postgresql_role.iam_user[0].name : aws_db_instance.postgresql.username
+  description = "The name of the PostgreSQL user. Returns IAM user when IAM auth is enabled, otherwise the main database user."
 }
 
 output "parameters" {
