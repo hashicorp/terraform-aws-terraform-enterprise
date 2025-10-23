@@ -3,17 +3,12 @@
 
 # PostgreSQL provider configuration for IAM user management
 provider "postgresql" {
-  count = var.enable_iam_database_authentication ? 1 : 0
-  
   host     = aws_db_instance.postgresql.address
   port     = aws_db_instance.postgresql.port
   database = aws_db_instance.postgresql.db_name
   username = aws_db_instance.postgresql.username
   password = aws_db_instance.postgresql.password
   sslmode  = "require"
-  
-  # Wait for RDS instance to be available
-  depends_on = [aws_db_instance.postgresql]
 }
 
 resource "random_string" "postgresql_password" {
@@ -107,7 +102,6 @@ resource "aws_db_instance" "postgresql" {
 resource "postgresql_role" "iam_user" {
   count = var.enable_iam_database_authentication ? 1 : 0
   
-  provider = postgresql[0]
   name     = "${var.friendly_name_prefix}_iam_user"
   login    = true
   
@@ -119,7 +113,6 @@ resource "postgresql_role" "iam_user" {
 resource "postgresql_grant" "iam_user_database" {
   count = var.enable_iam_database_authentication ? 1 : 0
   
-  provider    = postgresql[0]
   database    = aws_db_instance.postgresql.db_name
   role        = postgresql_role.iam_user[0].name
   schema      = "public"
@@ -133,7 +126,6 @@ resource "postgresql_grant" "iam_user_database" {
 resource "postgresql_grant" "iam_user_schema" {
   count = var.enable_iam_database_authentication ? 1 : 0
   
-  provider    = postgresql[0]
   database    = aws_db_instance.postgresql.db_name
   role        = postgresql_role.iam_user[0].name
   schema      = "public"
