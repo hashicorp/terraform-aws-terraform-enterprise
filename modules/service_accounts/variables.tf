@@ -122,3 +122,9 @@ variable "db_identifier" {
   description = "The database identifier for PostgreSQL IAM authentication"
   default     = ""
 }
+
+variable "db_resource_id" {
+  type        = string
+  description = "The DBI resource ID for PostgreSQL IAM authentication (required for proper ARN format)"
+  default     = ""
+}

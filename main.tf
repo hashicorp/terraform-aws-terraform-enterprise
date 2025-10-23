@@ -51,6 +51,9 @@ module "service_accounts" {
   db_identifier = local.enable_database_module ? module.database[0].identifier : (
     var.enable_aurora ? module.aurora_database[0].identifier : ""
   )
+  db_resource_id = local.enable_database_module ? module.database[0].dbi_resource_id : (
+    var.enable_aurora ? module.aurora_database[0].dbi_resource_id : ""
+  )
 }
 
 # -----------------------------------------------------------------------------
