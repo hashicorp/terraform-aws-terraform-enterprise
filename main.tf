@@ -48,6 +48,7 @@ module "service_accounts" {
   redis_enable_iam_auth                 = var.redis_enable_iam_auth
   postgres_enable_iam_auth              = var.postgres_enable_iam_auth && !var.postgres_use_password_auth
   db_username                           = var.db_username
+  db_identifier                         = local.enable_database_module ? module.database[0].identifier : ""
 }
 
 # -----------------------------------------------------------------------------

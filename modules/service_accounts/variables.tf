@@ -116,3 +116,9 @@ variable "db_username" {
   description = "The username for the PostgreSQL database used for IAM authentication"
   default     = ""
 }
+
+variable "db_identifier" {
+  type        = string
+  description = "The database identifier for PostgreSQL IAM authentication"
+  default     = ""
+}

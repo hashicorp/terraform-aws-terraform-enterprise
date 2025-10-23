@@ -88,27 +88,6 @@ resource "aws_db_instance" "postgresql" {
   iam_database_authentication_enabled = var.enable_iam_database_authentication
 }
 
-# Create IAM database user using psql command when IAM auth is enabled
-resource "null_resource" "create_iam_user" {
-  count = var.enable_iam_database_authentication ? 1 : 0
 
-  provisioner "local-exec" {
-    command = <<-EOT
-      export PGPASSWORD="${aws_db_instance.postgresql.password}"
-      psql -h ${aws_db_instance.postgresql.address} \
-           -p ${aws_db_instance.postgresql.port} \
-           -U ${aws_db_instance.postgresql.username} \
-           -d ${aws_db_instance.postgresql.db_name} \
-           -c "CREATE USER \"${var.friendly_name_prefix}_iam_user\"; GRANT rds_iam TO \"${var.friendly_name_prefix}_iam_user\"; GRANT ALL PRIVILEGES ON DATABASE ${aws_db_instance.postgresql.db_name} TO \"${var.friendly_name_prefix}_iam_user\"; GRANT ALL PRIVILEGES ON SCHEMA public TO \"${var.friendly_name_prefix}_iam_user\";"
-    EOT
-  }
-
-  depends_on = [aws_db_instance.postgresql]
-
-  triggers = {
-    db_instance_id = aws_db_instance.postgresql.id
-    iam_user_name  = "${var.friendly_name_prefix}_iam_user"
-  }
-}
 
 
