@@ -75,8 +75,9 @@ resource "aws_elasticache_user" "iam_user" {
     type = "iam"
   }
 
-  # Access string for Redis commands - allow all commands for TFE
-  access_string = "on ~* &* +@all"
+  # Access string for Redis commands - IAM auth compatible
+  # Use a simpler access string that works reliably with IAM authentication
+  access_string = "on ~* +@all -@dangerous"
   engine        = "REDIS"
 
   tags = {
@@ -129,4 +130,10 @@ resource "aws_elasticache_replication_group" "redis" {
 
   # IAM authentication configuration
   user_group_ids = local.redis_use_iam_auth ? [aws_elasticache_user_group.iam_group[0].user_group_id] : null
+
+  # Ensure proper dependency ordering for IAM authentication
+  depends_on = [
+    aws_elasticache_user_group.iam_group,
+    aws_elasticache_user.iam_user
+  ]
 }
