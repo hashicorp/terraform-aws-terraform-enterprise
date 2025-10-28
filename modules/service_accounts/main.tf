@@ -166,7 +166,7 @@ resource "aws_iam_policy" "postgres_iam_policy" {
           "rds-db:connect"
         ]
         Effect   = "Allow"
-        Resource = "arn:aws:rds-db:*:*:dbuser:${var.db_resource_id}/${var.db_username}"
+        Resource = "arn:aws:rds-db:*:*:dbuser:${var.db_resource_id}/${var.db_iam_username != "" ? var.db_iam_username : var.db_username}"
       },
     ]
   })

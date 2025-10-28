@@ -48,6 +48,7 @@ module "service_accounts" {
   redis_enable_iam_auth                 = var.redis_enable_iam_auth
   postgres_enable_iam_auth              = var.postgres_enable_iam_auth && !var.postgres_use_password_auth
   db_username                           = var.db_username
+  db_iam_username                       = var.db_iam_username != null ? var.db_iam_username : ""
   db_identifier = local.enable_database_module ? module.database[0].identifier : (
     var.enable_aurora ? module.aurora_database[0].identifier : ""
   )
@@ -298,7 +299,7 @@ module "runtime_container_engine_config" {
   run_pipeline_image   = var.run_pipeline_image
 
   database_name                     = local.database.name
-  database_user                     = local.database.username
+  database_user                     = var.postgres_enable_iam_auth && var.db_iam_username != null ? var.db_iam_username : local.database.username
   database_password                 = var.postgres_use_password_auth ? local.database.password : ""
   database_host                     = local.database.endpoint
   database_parameters               = local.database.parameters
