@@ -12,8 +12,8 @@ output "name" {
 }
 
 output "password" {
-  value       = var.enable_iam_database_authentication ? null : aws_db_instance.postgresql.password
-  description = "The password of the PostgreSQL user. Returns null when IAM authentication is enabled."
+  value       = aws_db_instance.postgresql.password
+  description = "The password of the PostgreSQL master user. Required for creating IAM-enabled database users."
   sensitive   = true
 }
 
