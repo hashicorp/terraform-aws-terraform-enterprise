@@ -299,7 +299,7 @@ module "runtime_container_engine_config" {
 
   database_name                     = local.database.name
   database_user                     = local.database.username
-  database_password                 = local.database.password
+  database_password                 = var.postgres_use_password_auth ? local.database.password : ""
   database_host                     = local.database.endpoint
   database_parameters               = local.database.parameters
   database_use_mtls                 = var.db_use_mtls
@@ -328,14 +328,14 @@ module "runtime_container_engine_config" {
 
   redis_host                     = local.redis.hostname
   redis_user                     = local.redis.username
-  redis_password                 = local.redis.password
+  redis_password                 = var.redis_use_password_auth ? local.redis.password : ""
   redis_use_tls                  = local.redis.use_tls
   redis_use_auth                 = local.redis.use_password_auth || (var.redis_enable_iam_auth && !var.redis_use_password_auth)
   redis_use_sentinel             = var.enable_redis_sentinel
   redis_sentinel_hosts           = local.redis.sentinel_hosts
   redis_sentinel_leader_name     = local.redis.sentinel_leader
   redis_sentinel_user            = local.redis.sentinel_username
-  redis_sentinel_password        = local.redis.sentinel_password
+  redis_sentinel_password        = var.redis_use_password_auth ? local.redis.sentinel_password : ""
   redis_use_mtls                 = var.enable_redis_mtls
   enable_sentinel_mtls           = var.enable_sentinel_mtls
   redis_ca_cert_path             = "/etc/ssl/private/terraform-enterprise/redis/cacert.pem"

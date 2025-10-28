@@ -88,6 +88,11 @@ resource "aws_db_instance" "postgresql" {
   iam_database_authentication_enabled = var.enable_iam_database_authentication
 }
 
+# Note: When IAM authentication is enabled, the database user must have the rds_iam role.
+# For the master user (created by RDS), AWS automatically grants this role when IAM authentication is enabled.
+# If using a different username, that user must be created and granted rds_iam role separately.
+# This typically happens during TFE initialization or through a separate database migration process.
+
 
 
 
