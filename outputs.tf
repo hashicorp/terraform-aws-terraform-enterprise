@@ -141,3 +141,21 @@ output "tfe_autoscaling_group_name" {
   description = "The name of the autoscaling group for TFE instances."
 }
 
+output "database_username" {
+  value       = local.database.username
+  description = "The master username for the PostgreSQL database."
+  sensitive   = true
+}
+
+output "database_password" {
+  value       = local.database.password
+  description = "The master password for the PostgreSQL database."
+  sensitive   = true
+}
+
+output "database_name" {
+  value       = local.database.name
+  description = "The name of the PostgreSQL database."
+  sensitive   = true
+}
+
