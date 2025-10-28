@@ -90,3 +90,54 @@ output "s3_bucket" {
   value       = local.object_storage.s3_bucket
   description = "S3 bucket name"
 }
+
+# IAM and Database outputs for debugging passwordless authentication
+output "iam_role_name" {
+  value       = module.service_accounts.iam_role.name
+  description = "The name of the IAM role attached to TFE EC2 instances."
+}
+
+output "iam_instance_profile_name" {
+  value       = module.service_accounts.iam_instance_profile.name
+  description = "The name of the IAM instance profile attached to TFE EC2 instances."
+}
+
+output "database_endpoint" {
+  value       = local.database.endpoint
+  description = "The connection endpoint of the PostgreSQL database."
+  sensitive   = true
+}
+
+output "database_dbi_resource_id" {
+  value = local.enable_database_module ? module.database[0].dbi_resource_id : (
+    var.enable_aurora ? module.aurora_database[0].dbi_resource_id : ""
+  )
+  description = "The DBI resource ID of the PostgreSQL database (required for IAM authentication policy)."
+}
+
+output "redis_endpoint" {
+  value       = local.redis.hostname
+  description = "The connection endpoint of the Redis instance."
+  sensitive   = true
+}
+
+output "redis_iam_username" {
+  value       = local.redis.username
+  description = "The IAM username for Redis authentication (if IAM auth is enabled)."
+}
+
+output "postgres_iam_policy_arn" {
+  value       = module.service_accounts.postgres_iam_policy_arn
+  description = "The ARN of the PostgreSQL IAM authentication policy, if created."
+}
+
+output "redis_iam_policy_arn" {
+  value       = module.service_accounts.redis_iam_policy_arn
+  description = "The ARN of the Redis IAM authentication policy, if created."
+}
+
+output "tfe_autoscaling_group_name" {
+  value       = module.vm.tfe_autoscaling_group.name
+  description = "The name of the autoscaling group for TFE instances."
+}
+

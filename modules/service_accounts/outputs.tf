@@ -12,3 +12,13 @@ output "iam_role" {
 
   description = "The IAM role associated with the instance profile."
 }
+
+output "postgres_iam_policy_arn" {
+  value       = try(aws_iam_policy.postgres_iam_policy[0].arn, "")
+  description = "The ARN of the PostgreSQL IAM authentication policy, if created."
+}
+
+output "redis_iam_policy_arn" {
+  value       = try(aws_iam_policy.redis_iam_policy[0].arn, "")
+  description = "The ARN of the Redis IAM authentication policy, if created."
+}
