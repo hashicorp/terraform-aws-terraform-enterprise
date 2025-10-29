@@ -889,3 +889,9 @@ variable "extern_vault_token_renew" {
   type        = number
   description = "(Optional if var.extern_vault_enable = true) How often (in seconds) to renew the Vault token."
 }
+
+variable "release_test_unique_id" {
+  type        = string
+  default     = ""
+  description = "(Set up in Workspace) Unique ID for the release test run to identify GHA runs and workspaces GHA run ID - run number - run attempt"
+}
