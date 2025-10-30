@@ -90,3 +90,31 @@ output "s3_bucket" {
   value       = local.object_storage.s3_bucket
   description = "S3 bucket name"
 }
+
+# Database outputs for PostgreSQL passwordless authentication
+output "database_endpoint" {
+  value       = local.enable_database_module ? module.database[0].endpoint : (var.enable_aurora ? module.aurora_database[0].endpoint : "")
+  description = "The PostgreSQL database endpoint."
+}
+
+output "database_name" {
+  value       = local.enable_database_module ? module.database[0].name : (var.enable_aurora ? module.aurora_database[0].name : "")
+  description = "The PostgreSQL database name."
+}
+
+output "database_username" {
+  value       = local.enable_database_module ? module.database[0].username : (var.enable_aurora ? module.aurora_database[0].username : "")
+  description = "The PostgreSQL database username."
+  sensitive   = true
+}
+
+output "database_password" {
+  value       = local.enable_database_module ? module.database[0].password : (var.enable_aurora ? module.aurora_database[0].password : "")
+  description = "The PostgreSQL database password."
+  sensitive   = true
+}
+
+output "postgres_iam_policy_arn" {
+  value       = module.service_accounts.postgres_iam_policy_arn
+  description = "The ARN of the PostgreSQL IAM authentication policy, if created."
+}
