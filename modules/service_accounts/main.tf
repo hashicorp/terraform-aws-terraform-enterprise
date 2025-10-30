@@ -114,3 +114,38 @@ resource "aws_iam_policy" "kms_policy" {
     ]
   })
 }
+
+# PostgreSQL IAM authentication policy
+resource "aws_iam_policy" "postgres_iam_policy" {
+  count = var.postgres_enable_iam_auth ? 1 : 0
+
+  name_prefix = "${var.friendly_name_prefix}-tfe-postgres-iam"
+  description = "IAM policy for PostgreSQL database authentication"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "rds-db:connect"
+        ]
+        Resource = [
+          "arn:aws:rds-db:*:*:dbuser:${var.db_identifier}/${var.db_iam_username}"
+        ]
+      }
+    ]
+  })
+
+  tags = {
+    Name = "${var.friendly_name_prefix}-tfe-postgres-iam-policy"
+  }
+}
+
+# Attach PostgreSQL IAM policy to the instance role
+resource "aws_iam_role_policy_attachment" "postgres_iam_policy_attachment" {
+  count = var.postgres_enable_iam_auth && var.existing_iam_instance_profile_name == null ? 1 : 0
+
+  role       = local.iam_instance_role.name
+  policy_arn = aws_iam_policy.postgres_iam_policy[0].arn
+}

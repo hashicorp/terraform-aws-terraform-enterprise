@@ -98,3 +98,40 @@ variable "postgres_client_key_secret_id" {
   default     = null
   description = "The secrets manager secret ID of the Base64 & PEM encoded private key for postgres."
 }
+
+# IAM Authentication variables
+variable "redis_enable_iam_auth" {
+  type        = bool
+  default     = false
+  description = "Whether to enable IAM authentication for Redis."
+}
+
+variable "postgres_enable_iam_auth" {
+  type        = bool
+  default     = false
+  description = "Whether to enable IAM authentication for PostgreSQL."
+}
+
+variable "db_username" {
+  type        = string
+  default     = ""
+  description = "The master username for the database."
+}
+
+variable "db_iam_username" {
+  type        = string
+  default     = ""
+  description = "The IAM username for database authentication."
+}
+
+variable "db_identifier" {
+  type        = string
+  default     = ""
+  description = "The database identifier."
+}
+
+variable "db_resource_id" {
+  type        = string
+  default     = ""
+  description = "The database resource ID."
+}
