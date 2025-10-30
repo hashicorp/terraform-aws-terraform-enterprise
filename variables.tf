@@ -228,6 +228,11 @@ variable "db_username" {
   description = "PostgreSQL instance username. No special characters."
 }
 
+variable "db_iam_username" {
+  default     = null
+  type        = string
+  description = "PostgreSQL IAM username for TFE connection when IAM auth is enabled. If null, uses db_username. No special characters."
+}
 
 variable "db_backup_retention" {
   type        = number
