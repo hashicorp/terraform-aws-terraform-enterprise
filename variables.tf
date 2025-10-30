@@ -896,15 +896,3 @@ variable "extern_vault_token_renew" {
   type        = number
   description = "(Optional if var.extern_vault_enable = true) How often (in seconds) to renew the Vault token."
 }
-
-variable "redis_passwordless_azure_use_msi" {
-  description = "Use Azure Managed Service Identity for Redis passwordless authentication"
-  type        = bool
-  default     = false
-}
-
-variable "redis_passwordless_azure_client_id" {
-  description = "Azure client ID for Redis passwordless authentication"
-  type        = string
-  default     = null
-}
