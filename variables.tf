@@ -208,6 +208,12 @@ variable "sentinel_leader" {
   description = "The name of the Redis Sentinel leader"
 }
 
+variable "redis_enable_iam_auth" {
+  type        = bool
+  description = "Whether to enable IAM authentication for Redis. Used for passwordless authentication."
+  default     = false
+}
+
 # Postgres
 # --------
 variable "db_name" {
@@ -220,6 +226,12 @@ variable "db_username" {
   default     = "hashicorp"
   type        = string
   description = "PostgreSQL instance username. No special characters."
+}
+
+variable "db_iam_username" {
+  default     = null
+  type        = string
+  description = "PostgreSQL IAM username for TFE connection when IAM auth is enabled. If null, uses db_username. No special characters."
 }
 
 variable "db_backup_retention" {
@@ -901,16 +913,4 @@ variable "db_iam_username" {
   type        = string
   default     = null
   description = "The IAM username for database authentication. Required when postgres_enable_iam_auth is true."
-}
-
-variable "redis_passwordless_azure_use_msi" {
-  description = "Use Azure Managed Service Identity for Redis passwordless authentication"
-  type        = bool
-  default     = false
-}
-
-variable "redis_passwordless_azure_client_id" {
-  description = "Azure client ID for Redis passwordless authentication"
-  type        = string
-  default     = null
 }

@@ -342,6 +342,8 @@ module "runtime_container_engine_config" {
   redis_ca_cert_path             = "/etc/ssl/private/terraform-enterprise/redis/cacert.pem"
   redis_client_cert_path         = "/etc/ssl/private/terraform-enterprise/redis/cert.pem"
   redis_client_key_path          = "/etc/ssl/private/terraform-enterprise/redis/key.pem"
+  redis_passwordless_azure_use_msi = var.redis_passwordless_azure_use_msi
+  redis_passwordless_azure_client_id = var.redis_passwordless_azure_client_id
 
 
   trusted_proxies = local.trusted_proxies
