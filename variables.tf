@@ -897,7 +897,14 @@ variable "extern_vault_token_renew" {
   description = "(Optional if var.extern_vault_enable = true) How often (in seconds) to renew the Vault token."
 }
 
+variable "redis_passwordless_azure_use_msi" {
+  description = "Use Azure Managed Service Identity for Redis passwordless authentication"
+  type        = bool
+  default     = false
+}
+
+variable "redis_passwordless_azure_client_id" {
+  description = "Azure client ID for Redis passwordless authentication"
   type        = string
   default     = null
-  description = "The IAM username for database authentication. Required when postgres_enable_iam_auth is true."
 }
