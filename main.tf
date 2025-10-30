@@ -45,6 +45,16 @@ module "service_accounts" {
   postgres_client_key_secret_id         = var.postgres_client_key_secret_id
   postgres_ca_certificate_secret_id     = var.postgres_ca_certificate_secret_id
   vm_key_secret_id                      = var.vm_key_secret_id
+  redis_enable_iam_auth                 = var.redis_enable_iam_auth
+  postgres_enable_iam_auth              = var.postgres_enable_iam_auth && !var.postgres_use_password_auth
+  db_username                           = var.db_username
+  db_iam_username                       = var.db_iam_username != null ? var.db_iam_username : ""
+  db_identifier = local.enable_database_module ? module.database[0].identifier : (
+    var.enable_aurora ? module.aurora_database[0].identifier : ""
+  )
+  db_resource_id = local.enable_database_module ? module.database[0].dbi_resource_id : (
+    var.enable_aurora ? module.aurora_database[0].dbi_resource_id : ""
+  )
 }
 
 # -----------------------------------------------------------------------------
@@ -94,6 +104,7 @@ module "redis" {
   redis_encryption_in_transit = var.redis_encryption_in_transit
   redis_encryption_at_rest    = var.redis_encryption_at_rest
   redis_use_password_auth     = var.redis_use_password_auth
+  redis_enable_iam_auth       = var.redis_enable_iam_auth
   redis_port                  = var.redis_encryption_in_transit ? "6380" : "6379"
 }
 
@@ -254,7 +265,7 @@ module "aurora_database" {
 # Docker Compose File Config for TFE on instance(s) using Flexible Deployment Options
 # ------------------------------------------------------------------------------------
 module "runtime_container_engine_config" {
-  source = "./modules/runtime_container_engine_config"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/runtime_container_engine_config?ref=pravi-postgres-passwordless"
   count  = var.is_replicated_deployment ? 0 : 1
 
   tfe_license = var.hc_license
@@ -288,14 +299,15 @@ module "runtime_container_engine_config" {
   run_pipeline_image   = var.run_pipeline_image
 
   database_name                     = local.database.name
-  database_user                     = local.database.username
-  database_password                 = local.database.password
+  database_user                     = var.postgres_enable_iam_auth && var.db_iam_username != null ? var.db_iam_username : local.database.username
+  database_password                 = var.postgres_use_password_auth ? local.database.password : ""
   database_host                     = local.database.endpoint
   database_parameters               = local.database.parameters
   database_use_mtls                 = var.db_use_mtls
   database_ca_cert_file             = "/etc/ssl/private/terraform-enterprise/postgres/ca.crt"
   database_client_cert_file         = "/etc/ssl/private/terraform-enterprise/postgres/cert.crt"
   database_client_key_file          = "/etc/ssl/private/terraform-enterprise/postgres/key.key"
+  # Enable PostgreSQL IAM authentication for isolated testing
   database_passwordless_aws_use_iam = var.postgres_enable_iam_auth && !var.postgres_use_password_auth
   database_passwordless_aws_region  = var.postgres_enable_iam_auth && !var.postgres_use_password_auth ? data.aws_region.current.name : ""
 
@@ -315,21 +327,21 @@ module "runtime_container_engine_config" {
   s3_server_side_encryption_kms_key_id = local.kms_key_arn
   s3_use_instance_profile              = var.aws_access_key_id == null ? "1" : "0"
 
-  redis_host                 = local.redis.hostname
-  redis_user                 = local.redis.username
-  redis_password             = local.redis.password
-  redis_use_tls              = local.redis.use_tls
-  redis_use_auth             = local.redis.use_password_auth
-  redis_use_sentinel         = var.enable_redis_sentinel
-  redis_sentinel_hosts       = local.redis.sentinel_hosts
-  redis_sentinel_leader_name = local.redis.sentinel_leader
-  redis_sentinel_user        = local.redis.sentinel_username
-  redis_sentinel_password    = local.redis.sentinel_password
-  redis_use_mtls             = var.enable_redis_mtls
-  enable_sentinel_mtls       = var.enable_sentinel_mtls
-  redis_ca_cert_path         = "/etc/ssl/private/terraform-enterprise/redis/cacert.pem"
-  redis_client_cert_path     = "/etc/ssl/private/terraform-enterprise/redis/cert.pem"
-  redis_client_key_path      = "/etc/ssl/private/terraform-enterprise/redis/key.pem"
+  redis_host                     = local.redis.hostname
+  redis_user                     = local.redis.username
+  redis_password                 = var.redis_use_password_auth ? local.redis.password : ""
+  redis_use_tls                  = local.redis.use_tls
+  redis_use_auth                 = local.redis.use_password_auth || (var.redis_enable_iam_auth && !var.redis_use_password_auth)
+  redis_use_sentinel             = var.enable_redis_sentinel
+  redis_sentinel_hosts           = local.redis.sentinel_hosts
+  redis_sentinel_leader_name     = local.redis.sentinel_leader
+  redis_sentinel_user            = local.redis.sentinel_username
+  redis_sentinel_password        = var.redis_use_password_auth ? local.redis.sentinel_password : ""
+  redis_use_mtls                 = var.enable_redis_mtls
+  enable_sentinel_mtls           = var.enable_sentinel_mtls
+  redis_ca_cert_path             = "/etc/ssl/private/terraform-enterprise/redis/cacert.pem"
+  redis_client_cert_path         = "/etc/ssl/private/terraform-enterprise/redis/cert.pem"
+  redis_client_key_path          = "/etc/ssl/private/terraform-enterprise/redis/key.pem"
 
 
   trusted_proxies = local.trusted_proxies
@@ -346,7 +358,7 @@ module "runtime_container_engine_config" {
 # AWS cloud init used to install and configure TFE on instance(s) using Flexible Deployment Options
 # --------------------------------------------------------------------------------------------------
 module "tfe_init_fdo" {
-  source = "./modules/tfe_init"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=pravi-postgres-passwordless"
   count  = var.is_replicated_deployment ? 0 : 1
 
   cloud             = "aws"
@@ -391,7 +403,7 @@ module "tfe_init_fdo" {
 # TFE and Replicated settings to pass to the tfe_init_replicated module for replicated deployment
 # --------------------------------------------------------------------------------------------
 module "settings" {
-  source = "./modules/settings"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/settings?ref=pravi-postgres-passwordless"
   count  = var.is_replicated_deployment ? 1 : 0
 
   # TFE Base Configuration
@@ -453,7 +465,7 @@ module "settings" {
 # AWS user data / cloud init used to install and configure TFE on instance(s)
 # -----------------------------------------------------------------------------
 module "tfe_init_replicated" {
-  source = "./modules/tfe_init_replicated"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init_replicated?ref=pravi-postgres-passwordless"
   count  = var.is_replicated_deployment ? 1 : 0
 
   # TFE & Replicated Configuration data
