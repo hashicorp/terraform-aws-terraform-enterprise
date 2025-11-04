@@ -114,3 +114,29 @@ resource "aws_iam_policy" "kms_policy" {
     ]
   })
 }
+
+# PostgreSQL IAM authentication policy
+resource "aws_iam_role_policy_attachment" "postgres_iam_policy" {
+  count = var.existing_iam_instance_profile_name == null && var.postgres_enable_iam_auth ? 1 : 0
+
+  role       = local.iam_instance_role.name
+  policy_arn = aws_iam_policy.postgres_iam_policy[0].arn
+}
+
+resource "aws_iam_policy" "postgres_iam_policy" {
+  count = var.existing_iam_instance_profile_name == null && var.postgres_enable_iam_auth ? 1 : 0
+
+  name = "${var.friendly_name_prefix}-postgres-iam"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "rds-db:connect"
+        ]
+        Effect   = "Allow"
+        Resource = "arn:aws:rds-db:*:*:dbuser:*/${var.postgres_iam_username}"
+      },
+    ]
+  })
+}

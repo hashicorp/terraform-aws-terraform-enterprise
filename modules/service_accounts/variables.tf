@@ -98,3 +98,15 @@ variable "postgres_client_key_secret_id" {
   default     = null
   description = "The secrets manager secret ID of the Base64 & PEM encoded private key for postgres."
 }
+
+variable "postgres_enable_iam_auth" {
+  type        = bool
+  description = "Enable IAM database authentication for PostgreSQL passwordless authentication."
+  default     = false
+}
+
+variable "postgres_iam_username" {
+  type        = string
+  description = "IAM database username for PostgreSQL IAM authentication."
+  default     = "tfe_iam_user"
+}

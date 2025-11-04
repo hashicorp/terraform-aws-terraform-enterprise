@@ -264,6 +264,18 @@ variable "allow_multiple_azs" {
   default     = true
 }
 
+variable "postgres_enable_iam_auth" {
+  type        = bool
+  description = "Enable IAM database authentication for PostgreSQL passwordless authentication."
+  default     = false
+}
+
+variable "postgres_iam_username" {
+  type        = string
+  description = "IAM database username for PostgreSQL passwordless authentication."
+  default     = "tfe_iam_user"
+}
+
 variable "db_use_mtls" {
   type        = bool
   description = "Whether or not to use mutual TLS to access database. Defaults to false if no value is given."

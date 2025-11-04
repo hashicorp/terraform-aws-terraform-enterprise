@@ -44,6 +44,8 @@ module "service_accounts" {
   postgres_client_certificate_secret_id = var.postgres_client_certificate_secret_id
   postgres_client_key_secret_id         = var.postgres_client_key_secret_id
   postgres_ca_certificate_secret_id     = var.postgres_ca_certificate_secret_id
+  postgres_enable_iam_auth              = var.postgres_enable_iam_auth
+  postgres_iam_username                 = var.postgres_iam_username
   vm_key_secret_id                      = var.vm_key_secret_id
 }
 
@@ -161,21 +163,22 @@ module "database" {
   source = "./modules/database"
   count  = local.enable_database_module ? 1 : 0
 
-  db_size                      = var.db_size
-  db_backup_retention          = var.db_backup_retention
-  db_backup_window             = var.db_backup_window
-  db_name                      = var.db_name
-  db_parameters                = var.db_parameters
-  db_username                  = var.db_username
-  engine_version               = var.postgres_engine_version
-  friendly_name_prefix         = var.friendly_name_prefix
-  network_id                   = local.network_id
-  network_private_subnet_cidrs = var.network_private_subnet_cidrs
-  network_subnets_private      = local.network_private_subnets
-  tfe_instance_sg              = module.vm.tfe_instance_sg
-  kms_key_arn                  = local.kms_key_arn
-  allow_major_version_upgrade  = var.allow_major_version_upgrade
-  allow_multiple_azs           = var.allow_multiple_azs
+  db_size                             = var.db_size
+  db_backup_retention                 = var.db_backup_retention
+  db_backup_window                    = var.db_backup_window
+  db_name                             = var.db_name
+  db_parameters                       = var.db_parameters
+  db_username                         = var.db_username
+  engine_version                      = var.postgres_engine_version
+  friendly_name_prefix                = var.friendly_name_prefix
+  network_id                          = local.network_id
+  network_private_subnet_cidrs        = var.network_private_subnet_cidrs
+  network_subnets_private             = local.network_private_subnets
+  tfe_instance_sg                     = module.vm.tfe_instance_sg
+  kms_key_arn                         = local.kms_key_arn
+  allow_major_version_upgrade         = var.allow_major_version_upgrade
+  allow_multiple_azs                  = var.allow_multiple_azs
+  enable_iam_database_authentication  = var.postgres_enable_iam_auth
 }
 
 # -----------------------------------------------------------------------------
