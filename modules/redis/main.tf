@@ -126,7 +126,9 @@ resource "aws_elasticache_replication_group" "redis" {
   # Password used to access a password protected server.
   # Can be specified only if transit_encryption_enabled = true.
   auth_token                 = var.redis_encryption_in_transit && local.redis_use_password_auth ? random_id.redis_password[0].hex : null
-  transit_encryption_enabled = var.redis_encryption_in_transit
+  
+  # Transit encryption is required when using user groups (IAM authentication)
+  transit_encryption_enabled = var.redis_encryption_in_transit || local.redis_use_iam_auth
 
   at_rest_encryption_enabled = var.redis_encryption_at_rest
   kms_key_id                 = var.redis_encryption_at_rest ? var.kms_key_arn : null
