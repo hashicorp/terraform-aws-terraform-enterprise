@@ -331,6 +331,7 @@ module "runtime_container_engine_config" {
   redis_client_key_path      = "/etc/ssl/private/terraform-enterprise/redis/key.pem"
   redis_passwordless_aws_use_iam = var.redis_enable_iam_auth && !var.redis_use_password_auth
   redis_passwordless_aws_region = var.redis_enable_iam_auth && !var.redis_use_password_auth ? data.aws_region.current.name : ""
+  redis_passwordless_aws_host_name = var.redis_enable_iam_auth && !var.redis_use_password_auth ? local.redis.hostname : ""
 
 
   trusted_proxies = local.trusted_proxies
