@@ -73,7 +73,7 @@ resource "aws_elasticache_user" "default_user" {
 
   # Default user configuration for user group requirement
   authentication_mode {
-    type = "no-password"
+    type = "no-password-required"
   }
 
   # Standard access string for default user - allows basic Redis operations
