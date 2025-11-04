@@ -65,18 +65,19 @@ resource "aws_elasticache_subnet_group" "tfe" {
 }
 
 # ElastiCache Default User (required for user groups)
+# AWS requires a user named "default" to exist in every user group
 resource "aws_elasticache_user" "default_user" {
   count     = var.active_active && local.redis_use_iam_auth ? 1 : 0
   user_id   = "default"
   user_name = "default"
 
-  # Default user with minimal access for user group requirement
+  # Default user configuration for user group requirement
   authentication_mode {
     type = "no-password"
   }
 
-  # Minimal access string for default user
-  access_string = "on ~* &* -@all +@read"
+  # Standard access string for default user - allows basic Redis operations
+  access_string = "on ~* &* +@all"
   engine        = "REDIS"
 
   tags = {
