@@ -64,27 +64,6 @@ resource "aws_elasticache_subnet_group" "tfe" {
   subnet_ids = var.network_subnets_private
 }
 
-# ElastiCache Default User (required for user groups)
-# AWS requires a user named "default" to exist in every user group
-resource "aws_elasticache_user" "default_user" {
-  count     = var.active_active && local.redis_use_iam_auth ? 1 : 0
-  user_id   = "default"
-  user_name = "default"
-
-  # Default user configuration for user group requirement
-  authentication_mode {
-    type = "no-password-required"
-  }
-
-  # Standard access string for default user - allows basic Redis operations
-  access_string = "on ~* &* +@all"
-  engine        = "REDIS"
-
-  tags = {
-    Name = "${var.friendly_name_prefix}-redis-default-user"
-  }
-}
-
 # ElastiCache User for IAM authentication
 resource "aws_elasticache_user" "iam_user" {
   count     = var.active_active && local.redis_use_iam_auth ? 1 : 0
@@ -107,13 +86,13 @@ resource "aws_elasticache_user" "iam_user" {
 }
 
 # ElastiCache User Group for IAM authentication
-# Note: AWS ElastiCache requires the "default" user to be present in every user group
+# Note: AWS ElastiCache has a built-in "default" user that must be included in user groups
 resource "aws_elasticache_user_group" "iam_group" {
   count         = var.active_active && local.redis_use_iam_auth ? 1 : 0
   engine        = "REDIS"
   user_group_id = "${var.friendly_name_prefix}-iam-group"
   user_ids = [
-    aws_elasticache_user.default_user[0].user_id,
+    "default",  # Built-in AWS ElastiCache default user
     aws_elasticache_user.iam_user[0].user_id
   ]
 
@@ -122,7 +101,6 @@ resource "aws_elasticache_user_group" "iam_group" {
   }
 
   depends_on = [
-    aws_elasticache_user.default_user,
     aws_elasticache_user.iam_user
   ]
 }
@@ -159,7 +137,6 @@ resource "aws_elasticache_replication_group" "redis" {
   # Ensure proper dependency ordering for IAM authentication
   depends_on = [
     aws_elasticache_user_group.iam_group,
-    aws_elasticache_user.default_user,
     aws_elasticache_user.iam_user
   ]
 }
