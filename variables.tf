@@ -182,6 +182,12 @@ variable "redis_use_password_auth" {
   default     = false
 }
 
+variable "redis_passwordless_aws_use_iam" {
+  type        = bool
+  description = "Whether to use AWS IAM authentication for Redis passwordless access."
+  default     = false
+}
+
 variable "redis_authentication_mode" {
   description = "The authentincation mode for redis server instances.  Must be one of [USER_AND_PASSWORD, PASSWORD, NONE]."
   type        = string
@@ -206,12 +212,6 @@ variable "sentinel_leader" {
   type        = string
   default     = "main"
   description = "The name of the Redis Sentinel leader"
-}
-
-variable "redis_enable_iam_auth" {
-  type        = bool
-  description = "Whether to enable IAM authentication for Redis. Used for passwordless authentication."
-  default     = false
 }
 
 # Postgres

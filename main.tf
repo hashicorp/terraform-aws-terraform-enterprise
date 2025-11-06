@@ -312,12 +312,13 @@ module "runtime_container_engine_config" {
   s3_server_side_encryption_kms_key_id = local.kms_key_arn
   s3_use_instance_profile              = var.aws_access_key_id == null ? "1" : "0"
 
-  redis_host                 = local.redis.hostname
-  redis_user                 = local.redis.username
-  redis_password             = local.redis.password
-  redis_use_tls              = local.redis.use_tls
-  redis_use_auth             = local.redis.use_password_auth
-  redis_use_sentinel         = var.enable_redis_sentinel
+  redis_host                    = local.redis.hostname
+  redis_user                    = local.redis.username
+  redis_password                = local.redis.password
+  redis_use_tls                 = local.redis.use_tls
+  redis_use_auth                = local.redis.use_password_auth
+  redis_passwordless_aws_use_iam = var.redis_passwordless_aws_use_iam
+  redis_use_sentinel            = var.enable_redis_sentinel
   redis_sentinel_hosts       = local.redis.sentinel_hosts
   redis_sentinel_leader_name = local.redis.sentinel_leader
   redis_sentinel_user        = local.redis.sentinel_username
