@@ -208,6 +208,12 @@ variable "sentinel_leader" {
   description = "The name of the Redis Sentinel leader"
 }
 
+variable "redis_enable_iam_auth" {
+  type        = bool
+  description = "Whether to enable IAM authentication for Redis. Used for passwordless authentication."
+  default     = false
+}
+
 # Postgres
 # --------
 variable "db_name" {
