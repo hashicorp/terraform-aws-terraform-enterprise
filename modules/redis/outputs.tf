@@ -6,13 +6,29 @@ output "hostname" {
 }
 
 output "password" {
-  value       = try(random_id.redis_password[0].hex, "")
-  description = "The password which is required to create connections with the Redis Elasticache replication group."
+  value       = try(random_id.redis_password[0].hex, null)
+  description = "The password which is required to create connections with the Redis Elasticache replication group. Returns null when using IAM authentication."
 }
 
 output "username" {
-  value       = null
-  description = "The username which is required to create connections with the Redis Elasticache replication group. Defaults to null to maintain the output interface with the redis-sentinel module."
+  value       = try(aws_elasticache_user.iam_user[0].user_name, null)
+  description = "The username which is required to create connections with the Redis Elasticache replication group. Returns IAM username when IAM auth is enabled, otherwise null to maintain the output interface with the redis-sentinel module."
+}
+
+# DEBUG: Redis IAM username debug
+output "debug_redis_iam_auth_enabled" {
+  value       = local.redis_use_iam_auth
+  description = "DEBUG: Whether Redis IAM auth is enabled"
+}
+
+output "debug_redis_iam_user_name" {
+  value       = try(aws_elasticache_user.iam_user[0].user_name, "NOT_CREATED")
+  description = "DEBUG: The actual Redis IAM username created"
+}
+
+output "debug_redis_iam_user_id" {
+  value       = try(aws_elasticache_user.iam_user[0].user_id, "NOT_CREATED")
+  description = "DEBUG: The actual Redis IAM user ID created"
 }
 
 output "redis_port" {

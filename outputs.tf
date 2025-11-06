@@ -90,3 +90,35 @@ output "s3_bucket" {
   value       = local.object_storage.s3_bucket
   description = "S3 bucket name"
 }
+
+# DEBUG: Redis configuration debug outputs
+output "debug_redis_config" {
+  value = {
+    redis_enable_iam_auth        = var.redis_enable_iam_auth
+    redis_use_password_auth      = var.redis_use_password_auth
+    redis_hostname               = local.redis.hostname
+    redis_username               = local.redis.username
+    redis_password_set           = local.redis.password != null ? "YES" : "NO"
+    redis_use_tls                = local.redis.use_tls
+    redis_iam_auth_condition     = var.redis_enable_iam_auth && !var.redis_use_password_auth
+  }
+  description = "DEBUG: Complete Redis configuration for troubleshooting"
+}
+
+output "debug_redis_username_chain" {
+  value = {
+    raw_redis_username           = local.redis.username
+    redis_user_var_passed        = var.redis_enable_iam_auth && !var.redis_use_password_auth ? local.redis.hostname : ""
+    friendly_name_prefix         = var.friendly_name_prefix
+  }
+  description = "DEBUG: Redis username propagation chain"
+}
+
+output "debug_module_values" {
+  value = {
+    redis_passwordless_aws_use_iam      = var.redis_enable_iam_auth && !var.redis_use_password_auth
+    redis_passwordless_aws_region       = var.redis_enable_iam_auth && !var.redis_use_password_auth ? data.aws_region.current.name : ""
+    redis_passwordless_aws_host_name    = var.redis_enable_iam_auth && !var.redis_use_password_auth ? local.redis.hostname : ""
+  }
+  description = "DEBUG: Values passed to terraform-random-tfe-utility module"
+}
