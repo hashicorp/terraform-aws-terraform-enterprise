@@ -223,23 +223,6 @@ module "database_mtls" {
 }
 
 # -----------------------------------------------------------------------------
-# EC2 PostgreSQL container with passwordless authentication
-# -----------------------------------------------------------------------------
-module "postgres_passwordless" {
-  source = "./modules/postgres-passwordless"
-  count  = var.postgres_enable_iam_auth && !var.postgres_use_password_auth ? 1 : 0
-
-  domain_name              = var.domain_name
-  db_name                  = var.db_name
-  db_username              = var.db_username
-  db_parameters            = var.db_parameters
-  friendly_name_prefix     = var.friendly_name_prefix
-  network_id               = local.network_id
-  aws_iam_instance_profile = module.service_accounts.iam_instance_profile.name
-  network_public_subnets   = local.network_public_subnets
-}
-
-# -----------------------------------------------------------------------------
 # AWS Aurora PostgreSQL Database Cluster
 # -----------------------------------------------------------------------------
 module "aurora_database" {
