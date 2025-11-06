@@ -13,12 +13,25 @@ output "name" {
 
 output "password" {
   value       = aws_db_instance.postgresql.password
-  description = "The password of the main PostgreSQL user."
+  description = "The password of the PostgreSQL master user. Required for creating IAM-enabled database users."
+  sensitive   = true
 }
 
 output "username" {
   value       = aws_db_instance.postgresql.username
   description = "The name of the main PostgreSQL user."
+}
+
+
+
+output "identifier" {
+  value       = aws_db_instance.postgresql.identifier
+  description = "The database identifier of the PostgreSQL RDS instance."
+}
+
+output "dbi_resource_id" {
+  value       = aws_db_instance.postgresql.resource_id
+  description = "The DBI resource ID of the PostgreSQL RDS instance for IAM authentication."
 }
 
 output "parameters" {
