@@ -77,3 +77,21 @@ variable "allow_multiple_azs" {
   description = "Determine Amazon RDS Postgres deployment strategy."
   default     = true
 }
+
+variable "postgres_enable_iam_auth" {
+  type        = bool
+  description = "Enable PostgreSQL IAM authentication."
+  default     = false
+}
+
+variable "postgres_use_password_auth" {
+  type        = bool
+  description = "Use password authentication for PostgreSQL. When false, IAM authentication is used."
+  default     = true
+}
+
+variable "db_iam_username" {
+  type        = string
+  description = "PostgreSQL IAM username for authentication."
+  default     = ""
+}

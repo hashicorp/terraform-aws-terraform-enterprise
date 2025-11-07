@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: MPL-2.0
 
 resource "random_string" "postgresql_password" {
+  count            = var.postgres_use_password_auth ? 1 : 0
   length           = 128
   special          = true
   override_special = "!#$%&*()-_=+[]{}<>?"
@@ -58,7 +59,8 @@ resource "aws_db_instance" "postgresql" {
   allocated_storage = 20
   engine            = "postgres"
   instance_class    = var.db_size
-  password          = random_string.postgresql_password.result
+  # Only set password when using password authentication
+  password          = var.postgres_use_password_auth ? random_string.postgresql_password[0].result : null
   # no special characters allowed
   username = var.db_username
 
@@ -83,4 +85,7 @@ resource "aws_db_instance" "postgresql" {
   kms_key_id             = var.kms_key_arn
   storage_type           = "gp2"
   vpc_security_group_ids = [aws_security_group.postgresql.id]
+  
+  # Enable IAM authentication when postgres_enable_iam_auth is true
+  iam_database_authentication_enabled = var.postgres_enable_iam_auth
 }
