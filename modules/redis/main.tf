@@ -92,7 +92,7 @@ resource "aws_elasticache_user_group" "iam_group" {
   engine        = "REDIS"
   user_group_id = "${var.friendly_name_prefix}-iam-group"
   user_ids = [
-    "default",  # Built-in AWS ElastiCache default user
+    "default", # Built-in AWS ElastiCache default user
     aws_elasticache_user.iam_user[0].user_id
   ]
 
@@ -125,8 +125,8 @@ resource "aws_elasticache_replication_group" "redis" {
 
   # Password used to access a password protected server.
   # Can be specified only if transit_encryption_enabled = true.
-  auth_token                 = var.redis_encryption_in_transit && local.redis_use_password_auth ? random_id.redis_password[0].hex : null
-  
+  auth_token = var.redis_encryption_in_transit && local.redis_use_password_auth ? random_id.redis_password[0].hex : null
+
   # Transit encryption is required when using user groups (IAM authentication)
   transit_encryption_enabled = var.redis_encryption_in_transit || local.redis_use_iam_auth
 

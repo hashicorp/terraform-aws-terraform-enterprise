@@ -1,14 +1,5 @@
-# Copyright (c) HashiCorp, Inmodule "hcp_vault" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//fixtures/test_hcp_vault?ref=pravi/IND-5861"
-
-  hcp_vault_cluster_id              = local.test_name
-  hcp_vault_cluster_hvn_id          = "team-tfe-dev-hvn"
-  hcp_vault_cluster_public_endpoint = true
-  hcp_vault_cluster_tier            = "standard_medium"
-
-  vault_role_name   = local.test_name
-  vault_policy_name = "dev-team"
-}icense-Identifier: MPL-2.0
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
 
 # Random string to prepend resources
 # ----------------------------------
@@ -37,7 +28,7 @@ module "kms" {
 }
 
 module "hcp_vault" {
-  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//fixtures/test_hcp_vault?ref=main"
+  source = "git::https://github.com/hashicorp/terraform-random-tfe-utility//fixtures/test_hcp_vault?ref=pravi/IND-5861"
 
   hcp_vault_cluster_id              = local.test_name
   hcp_vault_cluster_hvn_id          = "team-tfe-dev-hvn"
