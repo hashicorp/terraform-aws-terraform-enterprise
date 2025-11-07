@@ -176,6 +176,10 @@ module "database" {
   kms_key_arn                  = local.kms_key_arn
   allow_major_version_upgrade  = var.allow_major_version_upgrade
   allow_multiple_azs           = var.allow_multiple_azs
+  # PostgreSQL IAM authentication
+  postgres_enable_iam_auth     = var.postgres_enable_iam_auth
+  postgres_use_password_auth   = var.postgres_use_password_auth
+  db_iam_username              = var.db_iam_username
 }
 
 # -----------------------------------------------------------------------------
@@ -295,6 +299,8 @@ module "runtime_container_engine_config" {
   database_ca_cert_file     = "/etc/ssl/private/terraform-enterprise/postgres/ca.crt"
   database_client_cert_file = "/etc/ssl/private/terraform-enterprise/postgres/cert.crt"
   database_client_key_file  = "/etc/ssl/private/terraform-enterprise/postgres/key.key"
+  # PostgreSQL IAM authentication  
+  database_passwordless_aws_use_iam = local.database_passwordless_aws_use_iam
 
   explorer_database_name       = local.explorer_database.name
   explorer_database_user       = local.explorer_database.username

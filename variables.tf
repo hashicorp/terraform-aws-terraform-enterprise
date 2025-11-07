@@ -288,6 +288,24 @@ variable "postgres_client_key_secret_id" {
   default     = null
 }
 
+variable "postgres_enable_iam_auth" {
+  type        = bool
+  description = "Enable AWS IAM authentication for PostgreSQL. When enabled, disables password authentication."
+  default     = false
+}
+
+variable "postgres_use_password_auth" {
+  type        = bool
+  description = "Whether to use password authentication for PostgreSQL. When false and postgres_enable_iam_auth is true, uses IAM authentication."
+  default     = true
+}
+
+variable "db_iam_username" {
+  type        = string
+  description = "The IAM database username to use for PostgreSQL IAM authentication. Only used when postgres_enable_iam_auth is true."
+  default     = "tfe_rds_iam_user"
+}
+
 # Explorer DB
 # -----------
 

@@ -90,3 +90,20 @@ output "s3_bucket" {
   value       = local.object_storage.s3_bucket
   description = "S3 bucket name"
 }
+
+# PostgreSQL Passwordless Debug Output
+output "postgres_passwordless_debug" {
+  value = {
+    postgres_enable_iam_auth          = var.postgres_enable_iam_auth
+    postgres_use_password_auth        = var.postgres_use_password_auth
+    db_iam_username                   = var.db_iam_username
+    database_passwordless_aws_use_iam = local.database_passwordless_aws_use_iam
+    database_config_summary = {
+      name       = local.database.name
+      username   = local.database.username
+      endpoint   = local.database.endpoint
+      parameters = local.database.parameters
+    }
+  }
+  description = "Debug output for PostgreSQL passwordless configuration"
+}
