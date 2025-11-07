@@ -12,7 +12,7 @@ output "name" {
 }
 
 output "password" {
-  value       = aws_db_instance.postgresql.password
+  value       = var.postgres_use_password_auth ? aws_db_instance.postgresql.password : ""
   description = "The password of the main PostgreSQL user."
 }
 
