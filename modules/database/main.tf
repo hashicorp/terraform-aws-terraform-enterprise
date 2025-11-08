@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MPL-2.0
 
 resource "random_string" "postgresql_password" {
-  count            = var.postgres_use_password_auth ? 1 : 0
+  # Always generate a password as AWS RDS requires it even for IAM auth
   length           = 128
   special          = true
   override_special = "!#$%&*()-_=+[]{}<>?"
@@ -59,8 +59,8 @@ resource "aws_db_instance" "postgresql" {
   allocated_storage = 20
   engine            = "postgres"
   instance_class    = var.db_size
-  # Only set password when using password authentication
-  password          = var.postgres_use_password_auth ? random_string.postgresql_password[0].result : null
+  # AWS RDS requires a password even for IAM auth, but IAM takes precedence when enabled
+  password          = random_string.postgresql_password.result
   # no special characters allowed
   username = var.db_username
 
