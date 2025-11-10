@@ -44,6 +44,7 @@ module "service_accounts" {
   postgres_client_certificate_secret_id = var.postgres_client_certificate_secret_id
   postgres_client_key_secret_id         = var.postgres_client_key_secret_id
   postgres_ca_certificate_secret_id     = var.postgres_ca_certificate_secret_id
+  postgres_iam_username                 = var.db_iam_username
   vm_key_secret_id                      = var.vm_key_secret_id
 }
 
