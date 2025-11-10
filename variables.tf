@@ -306,6 +306,18 @@ variable "db_iam_username" {
   default     = "tfe_rds_iam_user"
 }
 
+variable "database_passwordless_aws_use_iam" {
+  type        = bool
+  description = "Whether to use AWS IAM authentication for PostgreSQL database connections. When true, enables passwordless database authentication."
+  default     = false
+}
+
+variable "database_passwordless_aws_region" {
+  type        = string
+  description = "AWS region for IAM database authentication. Required when database_passwordless_aws_use_iam is true."
+  default     = ""
+}
+
 # Explorer DB
 # -----------
 
