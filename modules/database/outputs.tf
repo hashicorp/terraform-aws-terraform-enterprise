@@ -25,3 +25,8 @@ output "parameters" {
   value       = var.db_parameters
   description = "PostgreSQL server parameters for the connection URI."
 }
+
+output "iam_user_setup_status" {
+  value = var.postgres_enable_iam_auth && var.db_iam_username != "" ? "IAM user ${var.db_iam_username} configured for PostgreSQL IAM authentication" : "IAM authentication not enabled"
+  description = "Status of PostgreSQL IAM user setup"
+}

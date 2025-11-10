@@ -89,3 +89,72 @@ resource "aws_db_instance" "postgresql" {
   # Enable IAM authentication when postgres_enable_iam_auth is true
   iam_database_authentication_enabled = var.postgres_enable_iam_auth
 }
+
+# Database user setup for IAM authentication
+# Creates the IAM database user in PostgreSQL and grants rds_iam role
+resource "null_resource" "postgresql_iam_user_init" {
+  # Only create when IAM authentication is enabled and IAM username is provided
+  count = var.postgres_enable_iam_auth && var.db_iam_username != "" ? 1 : 0
+
+  depends_on = [aws_db_instance.postgresql]
+
+  # Use triggers to recreate if key parameters change
+  triggers = {
+    db_endpoint    = aws_db_instance.postgresql.endpoint
+    iam_username   = var.db_iam_username
+    db_username    = aws_db_instance.postgresql.username
+    db_name        = aws_db_instance.postgresql.db_name
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOT
+      #!/bin/bash
+      set -e
+
+      echo "Setting up PostgreSQL IAM user: ${var.db_iam_username}"
+      export PGPASSWORD="${random_string.postgresql_password.result}"
+      
+      # Wait for database to be ready
+      max_attempts=30
+      attempt=0
+      until psql -h ${aws_db_instance.postgresql.endpoint} -U ${aws_db_instance.postgresql.username} -d ${aws_db_instance.postgresql.db_name} -c "SELECT 1;" &>/dev/null; do
+        attempt=$((attempt + 1))
+        if [ $attempt -ge $max_attempts ]; then
+          echo "ERROR: Database not ready after $max_attempts attempts"
+          exit 1
+        fi
+        echo "Waiting for PostgreSQL to be ready... (attempt $attempt/$max_attempts)"
+        sleep 10
+      done
+      
+      echo "Database is ready, creating IAM user..."
+      
+      # Create IAM user and grant rds_iam role
+      psql -h ${aws_db_instance.postgresql.endpoint} -U ${aws_db_instance.postgresql.username} -d ${aws_db_instance.postgresql.db_name} -v ON_ERROR_STOP=1 << 'EOSQL'
+      DO $$
+      BEGIN
+        -- Check if user exists
+        IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${var.db_iam_username}') THEN
+          -- Create the IAM user
+          EXECUTE 'CREATE USER "' || '${var.db_iam_username}' || '"';
+          
+          -- Grant rds_iam role (this role exists automatically in RDS PostgreSQL with IAM auth enabled)
+          EXECUTE 'GRANT rds_iam TO "' || '${var.db_iam_username}' || '"';
+          
+          -- Grant necessary database permissions
+          EXECUTE 'GRANT CONNECT ON DATABASE "' || current_database() || '" TO "' || '${var.db_iam_username}' || '"';
+          
+          RAISE NOTICE 'Successfully created IAM user: ${var.db_iam_username}';
+        ELSE
+          RAISE NOTICE 'IAM user already exists: ${var.db_iam_username}';
+        END IF;
+      END
+      $$;
+      EOSQL
+      
+      echo "IAM user setup completed successfully"
+    EOT
+
+    interpreter = ["bash", "-c"]
+  }
+}
