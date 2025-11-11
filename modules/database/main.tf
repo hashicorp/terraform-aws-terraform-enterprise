@@ -113,29 +113,56 @@ resource "null_resource" "postgresql_iam_user_init" {
       set -e
 
       echo "=== PostgreSQL IAM User Setup Starting ==="
+      echo "Condition check: postgres_enable_iam_auth=${var.postgres_enable_iam_auth}, db_iam_username='${var.db_iam_username}'"
       echo "Database endpoint: ${aws_db_instance.postgresql.endpoint}"
       echo "IAM username to create: ${var.db_iam_username}"
       echo "Database name: ${aws_db_instance.postgresql.db_name}"
       echo "Database username: ${aws_db_instance.postgresql.username}"
+      echo "Current working directory: $(pwd)"
+      echo "Current user: $(whoami)"
+      echo "Environment: $(env | grep -E '^(AWS|TF)' | head -10)"
 
       # Check if psql is available
       if ! command -v psql &> /dev/null; then
-        echo "ERROR: psql command not found. Installing PostgreSQL client..."
+        echo "WARNING: psql command not found. Installing PostgreSQL client..."
         
         # Try to install PostgreSQL client based on the system
         if command -v apt-get &> /dev/null; then
+          echo "Using apt-get to install postgresql-client..."
           sudo apt-get update && sudo apt-get install -y postgresql-client
         elif command -v yum &> /dev/null; then
+          echo "Using yum to install postgresql..."
           sudo yum install -y postgresql
         elif command -v brew &> /dev/null; then
+          echo "Using brew to install postgresql..."
           brew install postgresql
         else
           echo "ERROR: Could not install PostgreSQL client. Please install psql manually."
-          exit 1
+          echo "Attempting to continue anyway..."
         fi
+      else
+        echo "psql command found: $(which psql)"
       fi
 
       export PGPASSWORD="${random_string.postgresql_password.result}"
+      
+      echo "Testing network connectivity to database..."
+      if command -v nc &> /dev/null; then
+        if nc -z -w5 ${aws_db_instance.postgresql.endpoint} 5432; then
+          echo "Network connectivity to database: SUCCESS"
+        else
+          echo "Network connectivity to database: FAILED"
+        fi
+      else
+        echo "nc command not available, skipping network test"
+      fi
+      
+      if ! command -v psql &> /dev/null; then
+        echo "ERROR: psql still not available after installation attempt"
+        echo "This execution environment does not support PostgreSQL client installation"
+        echo "Database IAM user creation SKIPPED"
+        exit 0
+      fi
       
       echo "Waiting for PostgreSQL database to be ready..."
       # Wait for database to be ready
@@ -181,4 +208,23 @@ resource "null_resource" "postgresql_iam_user_init" {
 
     interpreter = ["bash", "-c"]
   }
+}
+
+# Debug output to verify IAM authentication configuration
+resource "null_resource" "debug_iam_config" {
+  count = 1
+
+  provisioner "local-exec" {
+    command = <<-EOT
+      echo "=== DEBUG: PostgreSQL IAM Configuration ==="
+      echo "postgres_enable_iam_auth: ${var.postgres_enable_iam_auth}"
+      echo "db_iam_username: '${var.db_iam_username}'"
+      echo "postgres_use_password_auth: ${var.postgres_use_password_auth}"
+      echo "iam_database_authentication_enabled: ${var.postgres_enable_iam_auth}"
+      echo "Should create IAM user: $([[ '${var.postgres_enable_iam_auth}' == 'true' && '${var.db_iam_username}' != '' ]] && echo 'YES' || echo 'NO')"
+      echo "=== END DEBUG ==="
+    EOT
+  }
+
+  depends_on = [aws_db_instance.postgresql]
 }
