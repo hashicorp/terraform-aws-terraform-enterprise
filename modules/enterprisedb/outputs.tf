@@ -36,3 +36,4 @@ output "postgres_iam_setup_ssm_document" {
   value = null
   description = "SSM Document information for PostgreSQL IAM user setup (manual execution required)"
 }
+# Type fix verification
