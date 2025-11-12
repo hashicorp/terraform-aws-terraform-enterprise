@@ -46,10 +46,14 @@ locals {
     local.standard_db
   )
 
-  database = local.selected_database
-
   # PostgreSQL IAM authentication flag
   database_passwordless_aws_use_iam = var.database_passwordless_aws_use_iam || (var.postgres_enable_iam_auth && !var.postgres_use_password_auth)
+
+  # Override database configuration for IAM authentication
+  database = local.database_passwordless_aws_use_iam ? merge(local.selected_database, {
+    username = var.db_iam_username
+    password = null  # No password for IAM authentication
+  }) : local.selected_database
 
   object_storage = try(
     module.object_storage[0],
