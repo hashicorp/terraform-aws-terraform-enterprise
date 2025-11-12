@@ -293,8 +293,10 @@ module "runtime_container_engine_config" {
   run_pipeline_image   = var.run_pipeline_image
 
   database_name             = local.database.name
-  database_user             = local.database.username
-  database_password         = local.database.password
+  # Use IAM username when IAM authentication is enabled, otherwise use admin username
+  database_user             = local.database_passwordless_aws_use_iam ? var.db_iam_username : local.database.username
+  # Use null password when IAM authentication is enabled, otherwise use admin password
+  database_password         = local.database_passwordless_aws_use_iam ? null : local.database.password
   database_host             = local.database.endpoint
   database_parameters       = local.database.parameters
   database_use_mtls         = var.db_use_mtls
@@ -428,8 +430,10 @@ module "settings" {
   # Database
   pg_dbname   = local.database.name
   pg_netloc   = local.database.endpoint
-  pg_user     = local.database.username
-  pg_password = local.database.password
+  # Use IAM username when IAM authentication is enabled, otherwise use admin username
+  pg_user     = local.database_passwordless_aws_use_iam ? var.db_iam_username : local.database.username
+  # Use null password when IAM authentication is enabled, otherwise use admin password  
+  pg_password = local.database_passwordless_aws_use_iam ? null : local.database.password
 
   # Redis
   redis_host              = local.redis.hostname
