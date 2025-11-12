@@ -393,6 +393,15 @@ module "tfe_init" {
   tfe_image                = var.tfe_image
   podman_kube_yaml         = module.runtime_container_engine_config[0].podman_kube_yaml
   docker_compose_yaml      = module.runtime_container_engine_config[0].docker_compose_yaml
+
+  # Database configuration for PostgreSQL IAM user creation
+  database_host                     = local.database.endpoint  
+  database_name                     = local.database.name
+  admin_database_username           = local.database.username
+  admin_database_password           = local.database.password
+  database_iam_username             = var.db_iam_username
+  database_passwordless_aws_use_iam = local.database_passwordless_aws_use_iam
+  database_passwordless_aws_region  = var.database_passwordless_aws_region
 }
 
 # --------------------------------------------------------------------------------------------
