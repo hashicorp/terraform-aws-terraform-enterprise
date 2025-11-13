@@ -295,8 +295,8 @@ module "runtime_container_engine_config" {
   database_name             = local.database.name
   # Use IAM username when IAM authentication is enabled, otherwise use admin username
   database_user             = local.database_passwordless_aws_use_iam ? var.db_iam_username : local.database.username
-  # For IAM auth, set a special placeholder that TFE recognizes
-  database_password         = local.database_passwordless_aws_use_iam ? "IAM_AUTH" : local.database.password
+  # Don't set database password for IAM auth - it will be excluded from environment variables
+  database_password         = local.database_passwordless_aws_use_iam ? null : local.database.password
   database_host             = local.database.endpoint
   database_parameters       = local.database.parameters
   database_use_mtls         = var.db_use_mtls
