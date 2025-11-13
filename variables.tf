@@ -248,7 +248,7 @@ variable "db_size" {
 
 variable "postgres_engine_version" {
   type        = string
-  default     = "16"
+  default     = "16.10"
   description = "PostgreSQL version."
 }
 
@@ -398,7 +398,7 @@ variable "aurora_db_username" {
 
 variable "aurora_postgres_engine_version" {
   type        = string
-  default     = "16.9"
+  default     = "16.10"
   description = "Aurora PostgreSQL version."
 }
 
