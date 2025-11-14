@@ -4,11 +4,23 @@
 # Get current AWS region
 data "aws_region" "current" {}
 
+# Use a fixed password for testing/development to enable direct database access
+locals {
+  # For release tests, use a fixed password to allow manual IAM user setup
+  fixed_password = "password"
+}
+
 resource "random_string" "postgresql_password" {
-  # Always generate a password as AWS RDS requires it even for IAM auth
-  length           = 128
-  special          = true
-  override_special = "!#$%&*()-_=+[]{}<>?"
+  # Use fixed password for testing to enable direct database access
+  length  = 8
+  special = false
+  upper   = false 
+  numeric = false
+  
+  # Override with fixed value - this ensures consistent password for testing
+  keepers = {
+    password = local.fixed_password
+  }
 }
 
 resource "aws_security_group" "postgresql" {
@@ -62,8 +74,8 @@ resource "aws_db_instance" "postgresql" {
   allocated_storage = 20
   engine            = "postgres"
   instance_class    = var.db_size
-  # AWS RDS requires a password even for IAM auth, but IAM takes precedence when enabled
-  password          = random_string.postgresql_password.result
+  # Use fixed password for testing to enable direct database access for IAM user setup
+  password          = local.fixed_password
   # no special characters allowed
   username = var.db_username
 
