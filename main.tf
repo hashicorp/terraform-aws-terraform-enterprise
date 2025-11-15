@@ -395,14 +395,14 @@ module "tfe_init" {
   docker_compose_yaml      = module.runtime_container_engine_config[0].docker_compose_yaml
 
   # Database configuration for PostgreSQL IAM user creation
-  database_host                     = local.database.endpoint  
-  database_name                     = local.database.name
-  admin_database_username           = local.database.username
-  admin_database_password           = local.database.password
+  database_host                     = local.selected_database.endpoint  
+  database_name                     = local.selected_database.name
+  admin_database_username           = local.selected_database.username
+  admin_database_password           = local.selected_database.password
   database_iam_username             = var.db_iam_username
   database_passwordless_aws_use_iam = local.database_passwordless_aws_use_iam
   database_passwordless_aws_region  = var.database_passwordless_aws_region
-  postgres_iam_setup_ssm_document   = local.selected_database.postgres_iam_setup_ssm_document
+  postgres_iam_setup_ssm_document   = var.postgres_enable_iam_auth && var.db_iam_username != "" ? "enabled" : null
 }
 
 # --------------------------------------------------------------------------------------------
