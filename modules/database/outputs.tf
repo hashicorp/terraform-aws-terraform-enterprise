@@ -32,9 +32,6 @@ output "iam_user_setup_status" {
 }
 
 output "postgres_iam_setup_ssm_document" {
-  value = var.postgres_enable_iam_auth && var.db_iam_username != "" ? {
-    document_name = aws_ssm_document.postgres_iam_user_setup[0].name
-    document_arn  = aws_ssm_document.postgres_iam_user_setup[0].arn
-  } : null
-  description = "SSM Document information for PostgreSQL IAM user setup (manual execution required)"
+  value = var.postgres_enable_iam_auth && var.db_iam_username != "" ? aws_ssm_document.postgres_iam_user_setup[0].name : null
+  description = "SSM Document name for PostgreSQL IAM user setup (automated execution during instance startup)"
 }
