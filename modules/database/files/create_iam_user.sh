@@ -47,29 +47,22 @@ EOF
 # Clean up any dirty migration states for terraform-registry
 echo "Cleaning up terraform-registry migration state..."
 psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d "$DB_NAME" <<EOF
--- Check and clean up terraform-registry migration state
+-- Clean up terraform-registry migration state
 -- The terraform-registry service uses schema_migrations table to track its own migrations
 -- If migrations are in a dirty state, we need to reset them
 
--- Check if schema_migrations table exists
-DO \$\$
-BEGIN
-    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'schema_migrations' AND table_schema = 'public') THEN
-        -- Delete any dirty migration records that might be causing issues
-        DELETE FROM schema_migrations WHERE dirty = true;
-        
-        -- If we're stuck on version 4, reset to a clean state
-        UPDATE schema_migrations SET dirty = false WHERE version = 4 AND dirty = true;
-        
-        -- Show current migration state
-        SELECT 'Current schema_migrations state:' as info;
-        SELECT version, dirty FROM schema_migrations ORDER BY version;
-        
-        RAISE NOTICE 'Cleaned up terraform-registry migration state';
-    ELSE
-        RAISE NOTICE 'schema_migrations table does not exist yet - will be created by registry service';
-    END IF;
-END \$\$;
+-- First, drop and recreate the schema_migrations table to ensure clean state
+DROP TABLE IF EXISTS schema_migrations CASCADE;
+
+-- Create a fresh schema_migrations table (the registry service will populate it)
+CREATE TABLE IF NOT EXISTS schema_migrations (
+    version bigint NOT NULL,
+    dirty boolean NOT NULL,
+    PRIMARY KEY (version)
+);
+
+-- Log the action
+SELECT 'Forced clean state for terraform-registry migrations' as migration_status;
 EOF
 
 # Create IAM user in PostgreSQL
