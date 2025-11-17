@@ -244,15 +244,16 @@ resource "null_resource" "create_iam_db_user" {
     }
     command = <<EOT
 # Install PostgreSQL client if not present
-if ! command -v psql &> /dev/null; then
+if ! command -v psql > /dev/null 2>&1; then
     echo "PostgreSQL client not found. Installing..."
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        sudo apt-get update && sudo apt-get install -y postgresql-client
-    elif [[ "$OSTYPE" == "darwin"* ]]; then
+    if [ -f /etc/debian_version ]; then
+        apt-get update && apt-get install -y postgresql-client
+    elif command -v brew > /dev/null 2>&1; then
         brew install postgresql
     else
-        echo "Please install PostgreSQL client manually"
-        exit 1
+        echo "ERROR: Cannot install PostgreSQL client automatically"
+        echo "The IAM user will be created via user_data script instead."
+        exit 0
     fi
 fi
 
@@ -260,7 +261,7 @@ echo "[$(date '+%Y-%m-%d %H:%M:%S')] Starting PostgreSQL IAM user creation for $
 
 # Wait for database to be available
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Waiting for database ${aws_db_instance.postgresql.address} to be ready..."
-for i in {1..60}; do
+for i in $(seq 1 60); do
   if timeout 30 psql "host=${aws_db_instance.postgresql.address} port=${aws_db_instance.postgresql.port} user=${var.db_username} dbname=${var.db_name} sslmode=require" -c "SELECT version();" >/dev/null 2>&1; then
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] Database connection successful after $i attempts"
     break
