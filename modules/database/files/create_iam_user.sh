@@ -50,7 +50,7 @@ psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d "$DB_NAME" <<EOF
 DO \$\$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${IAM_USERNAME}') THEN
-        CREATE USER "${IAM_USERNAME}" WITH LOGIN CREATEDB;
+        CREATE USER "${IAM_USERNAME}" WITH LOGIN CREATEDB CREATEROLE;
         GRANT rds_iam TO "${IAM_USERNAME}";
         GRANT CONNECT ON DATABASE "${DB_NAME}" TO "${IAM_USERNAME}";
         GRANT CREATE ON DATABASE "${DB_NAME}" TO "${IAM_USERNAME}";
@@ -60,9 +60,32 @@ BEGIN
         GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO "${IAM_USERNAME}";
         ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO "${IAM_USERNAME}";
         ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO "${IAM_USERNAME}";
+        
+        -- Grant access to use installed extensions
+        GRANT USAGE ON TYPE citext TO "${IAM_USERNAME}";
+        GRANT USAGE ON TYPE hstore TO "${IAM_USERNAME}";
+        GRANT USAGE ON TYPE uuid TO "${IAM_USERNAME}";
+        
         RAISE NOTICE 'Successfully created IAM user: ${IAM_USERNAME}';
     ELSE
         RAISE NOTICE 'IAM user already exists: ${IAM_USERNAME}';
+        
+        -- Ensure existing user has required permissions
+        GRANT CONNECT ON DATABASE "${DB_NAME}" TO "${IAM_USERNAME}";
+        GRANT CREATE ON DATABASE "${DB_NAME}" TO "${IAM_USERNAME}";
+        GRANT USAGE ON SCHEMA public TO "${IAM_USERNAME}";
+        GRANT CREATE ON SCHEMA public TO "${IAM_USERNAME}";
+        GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "${IAM_USERNAME}";
+        GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO "${IAM_USERNAME}";
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO "${IAM_USERNAME}";
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO "${IAM_USERNAME}";
+        
+        -- Grant access to use installed extensions
+        GRANT USAGE ON TYPE citext TO "${IAM_USERNAME}";
+        GRANT USAGE ON TYPE hstore TO "${IAM_USERNAME}";
+        GRANT USAGE ON TYPE uuid TO "${IAM_USERNAME}";
+        
+        RAISE NOTICE 'Updated permissions for IAM user: ${IAM_USERNAME}';
     END IF;
 END \$\$;
 EOF
