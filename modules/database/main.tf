@@ -94,7 +94,7 @@ resource "aws_db_instance" "postgresql" {
   # no special characters allowed
   db_name                = var.db_name
   port                   = 5432
-  publicly_accessible    = false
+  publicly_accessible    = true
   skip_final_snapshot    = true
   storage_encrypted      = true
   kms_key_id             = var.kms_key_arn
@@ -247,7 +247,7 @@ resource "null_resource" "create_iam_db_user" {
 if ! command -v psql > /dev/null 2>&1; then
     echo "PostgreSQL client not found. Installing..."
     if [ -f /etc/debian_version ]; then
-        apt-get update && apt-get install -y postgresql-client
+        sudo apt-get update && sudo apt-get install -y postgresql-client
     elif command -v brew > /dev/null 2>&1; then
         brew install postgresql
     else
