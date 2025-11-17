@@ -231,9 +231,101 @@ resource "aws_ssm_document" "postgres_iam_user_setup" {
   }
 }
 
-# Note: PostgreSQL IAM user creation is handled by user_data script
-# in the EC2 instances since local-exec doesn't have network access
-# to RDS instances in private subnets.
+# Create IAM user in PostgreSQL database automatically
+# This assumes Terraform runner has network access to RDS (via bastion/VPN)
+resource "null_resource" "create_iam_db_user" {
+  count = var.postgres_enable_iam_auth ? 1 : 0
+  
+  depends_on = [aws_db_instance.postgresql]
+
+  provisioner "local-exec" {
+    environment = {
+      PGPASSWORD = local.fixed_password
+    }
+    command = <<EOT
+# Install PostgreSQL client if not present
+if ! command -v psql &> /dev/null; then
+    echo "PostgreSQL client not found. Installing..."
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        sudo apt-get update && sudo apt-get install -y postgresql-client
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        brew install postgresql
+    else
+        echo "Please install PostgreSQL client manually"
+        exit 1
+    fi
+fi
+
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Starting PostgreSQL IAM user creation for ${var.db_iam_username}"
+
+# Wait for database to be available
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Waiting for database ${aws_db_instance.postgresql.address} to be ready..."
+for i in {1..60}; do
+  if timeout 30 psql "host=${aws_db_instance.postgresql.address} port=${aws_db_instance.postgresql.port} user=${var.db_username} dbname=${var.db_name} sslmode=require" -c "SELECT version();" >/dev/null 2>&1; then
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Database connection successful after $i attempts"
+    break
+  else
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Database connection attempt $i/60 failed, retrying in 10 seconds..."
+    sleep 10
+  fi
+  
+  if [ $i -eq 60 ]; then
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: Could not connect to database after 60 attempts"
+    echo "This may be due to network access issues. The IAM user will be created via user_data script instead."
+    exit 0  # Don't fail the terraform apply
+  fi
+done
+
+# Create IAM user with proper permissions
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Creating IAM user: ${var.db_iam_username}"
+if psql "host=${aws_db_instance.postgresql.address} port=${aws_db_instance.postgresql.port} user=${var.db_username} dbname=${var.db_name} sslmode=require" -c "
+DO \$\$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${var.db_iam_username}') THEN
+        CREATE USER \"${var.db_iam_username}\" WITH LOGIN;
+        GRANT rds_iam TO \"${var.db_iam_username}\";
+        GRANT CONNECT ON DATABASE \"${var.db_name}\" TO \"${var.db_iam_username}\";
+        GRANT USAGE ON SCHEMA public TO \"${var.db_iam_username}\";
+        GRANT CREATE ON SCHEMA public TO \"${var.db_iam_username}\";
+        GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"${var.db_iam_username}\";
+        GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO \"${var.db_iam_username}\";
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO \"${var.db_iam_username}\";
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO \"${var.db_iam_username}\";
+        RAISE NOTICE 'Successfully created IAM user: ${var.db_iam_username}';
+    ELSE
+        RAISE NOTICE 'IAM user already exists: ${var.db_iam_username}';
+    END IF;
+END \$\$;" 2>&1; then
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] IAM user setup completed successfully"
+    
+    # Verify user creation
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Verifying IAM user creation..."
+    psql "host=${aws_db_instance.postgresql.address} port=${aws_db_instance.postgresql.port} user=${var.db_username} dbname=${var.db_name} sslmode=require" -c "
+SELECT 
+    usename as username,
+    usesuper as is_superuser,
+    usecreatedb as can_create_db,
+    userepl as can_replicate
+FROM pg_user 
+WHERE usename = '${var.db_iam_username}';" 2>&1
+else
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: Failed to create IAM user via Terraform"
+    echo "The IAM user will be created via user_data script instead."
+    exit 0  # Don't fail the terraform apply
+fi
+EOT
+  }
+
+  # Trigger recreation if database endpoint changes
+  triggers = {
+    database_endpoint = aws_db_instance.postgresql.address
+    database_username = var.db_iam_username
+  }
+}
+
+# Note: This null_resource attempts to create the IAM user from Terraform runner.
+# If it fails due to network access, the user_data script will handle it instead.
+# This provides redundancy - either Terraform creates the user, or EC2 does.
 #
 # The PostgreSQL IAM user creation is essential for IAM authentication to work.
 # Without it, the TFE application will not be able to authenticate to the database.
