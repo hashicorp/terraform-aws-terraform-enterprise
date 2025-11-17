@@ -214,8 +214,8 @@ module "explorer_database" {
   postgres_use_password_auth = true
   db_iam_username            = ""
   # EC2 instance for database connectivity
-  network_public_subnets   = local.network_public_subnets
-  aws_iam_instance_profile = local.database_iam_instance_profile
+  network_public_subnets   = [""]
+  aws_iam_instance_profile = ""
 }
 
 # -----------------------------------------------------------------------------
