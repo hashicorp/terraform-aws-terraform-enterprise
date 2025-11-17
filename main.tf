@@ -215,8 +215,7 @@ module "explorer_database" {
   db_iam_username            = ""
   # EC2 instance for database connectivity
   network_public_subnets   = local.network_public_subnets
-  network_public_subnets   = [""]
-  aws_iam_instance_profile = ""
+  aws_iam_instance_profile = local.database_iam_instance_profile
 }
 
 # -----------------------------------------------------------------------------
