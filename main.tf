@@ -315,7 +315,7 @@ module "runtime_container_engine_config" {
   database_client_key_file  = "/etc/ssl/private/terraform-enterprise/postgres/key.key"
   # PostgreSQL IAM authentication  
   database_passwordless_aws_use_iam = local.database_passwordless_aws_use_iam
-  database_passwordless_aws_region  = var.database_passwordless_aws_region
+  database_passwordless_aws_region  = data.aws_region.current.name
 
   explorer_database_name       = local.explorer_database.name
   explorer_database_user       = local.explorer_database.username
