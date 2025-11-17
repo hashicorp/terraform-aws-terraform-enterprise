@@ -30,17 +30,6 @@ output "network_private_subnet_cidrs" {
   sensitive = true
 }
 
-# Database Test VM (for debugging connectivity)
-output "database_test_vm_ip" {
-  value       = local.enable_database_module ? module.database[0].test_vm_public_ip : "Not available - database module not enabled"
-  description = "Public IP of the database test VM for manual connectivity testing."
-}
-
-output "database_test_vm_ssh_command" {
-  value       = local.enable_database_module ? module.database[0].test_vm_connection_command : "Not available - database module not enabled"
-  description = "SSH command to connect to the database test VM."
-}
-
 # Security Groups
 output "tfe_instance_sg" {
   value       = module.vm.tfe_instance_sg
