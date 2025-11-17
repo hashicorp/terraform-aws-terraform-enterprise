@@ -231,8 +231,6 @@ resource "aws_ssm_document" "postgres_iam_user_setup" {
   }
 }
 
-# Create IAM user in PostgreSQL database automatically
-# This assumes Terraform runner has network access to RDS (via bastion/VPN)
 resource "null_resource" "create_iam_db_user" {
   count = var.postgres_enable_iam_auth ? 1 : 0
   
@@ -247,40 +245,44 @@ resource "null_resource" "create_iam_db_user" {
 if ! command -v psql > /dev/null 2>&1; then
     echo "PostgreSQL client not found. Installing..."
     if [ -f /etc/debian_version ]; then
-        # Try different package management approaches
-        if command -v apt-get > /dev/null 2>&1; then
-            echo "Attempting package installation with apt-get..."
-            if sudo apt-get update > /dev/null 2>&1 && sudo apt-get install -y postgresql-client > /dev/null 2>&1; then
-                echo "Successfully installed postgresql-client via apt-get"
-            elif apt-get update > /dev/null 2>&1 && apt-get install -y postgresql-client > /dev/null 2>&1; then
-                echo "Successfully installed postgresql-client via apt-get (without sudo)"
-            else
-                echo "WARN: Could not install PostgreSQL client via apt-get (permission denied or package manager locked)"
-                echo "The IAM user will be created via user_data script during EC2 startup instead."
-                exit 0
-            fi
-        fi
+        apt-get update && apt-get install -y postgresql-client
     elif command -v brew > /dev/null 2>&1; then
-        if brew install postgresql > /dev/null 2>&1; then
-            echo "Successfully installed postgresql via brew"
-        else
-            echo "WARN: Could not install PostgreSQL client via brew"
-            echo "The IAM user will be created via user_data script during EC2 startup instead."
-            exit 0
-        fi
+        brew install postgresql
     else
-        echo "WARN: No supported package manager found"
-        echo "The IAM user will be created via user_data script during EC2 startup instead."
+        echo "ERROR: Cannot install PostgreSQL client automatically"
+        echo "The IAM user will be created via user_data script instead."
         exit 0
     fi
 fi
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Starting PostgreSQL IAM user creation for ${var.db_iam_username}"
 
-# Wait for database to be available
+# Wait for database to be available with enhanced error logging
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Waiting for database ${aws_db_instance.postgresql.address} to be ready..."
-for i in $(seq 1 60); do
-  if timeout 30 psql "host=${aws_db_instance.postgresql.address} port=${aws_db_instance.postgresql.port} user=${var.db_username} dbname=${var.db_name} sslmode=require" -c "SELECT version();" >/dev/null 2>&1; then
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Connection details:"
+echo "  Host: ${aws_db_instance.postgresql.address}"
+echo "  Port: ${aws_db_instance.postgresql.port}"
+echo "  Username: ${var.db_username}"
+echo "  Database: ${var.db_name}"
+echo "  SSL Mode: require"
+
+for i in $(seq 1 10); do
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] Attempting connection $i/10..."
+  
+  # Test basic network connectivity first
+  if command -v nc >/dev/null 2>&1; then
+    if ! nc -z ${aws_db_instance.postgresql.address} ${aws_db_instance.postgresql.port} 2>/dev/null; then
+      echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: Cannot reach ${aws_db_instance.postgresql.address}:${aws_db_instance.postgresql.port} (network/firewall issue)"
+    else
+      echo "[$(date '+%Y-%m-%d %H:%M:%S')] Network connectivity to ${aws_db_instance.postgresql.address}:${aws_db_instance.postgresql.port} is OK"
+    fi
+  fi
+  
+  # Try database connection with detailed error capture
+  psql_output=$(timeout 30 psql "host=${aws_db_instance.postgresql.address} port=${aws_db_instance.postgresql.port} user=${var.db_username} dbname=${var.db_name} sslmode=require" -c "SELECT version();" 2>&1)
+  psql_exit_code=$?
+  
+  if [ $psql_exit_code -eq 0 ]; then
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] Database connection successful after $i attempts"
     break
   else
@@ -288,7 +290,7 @@ for i in $(seq 1 60); do
     sleep 10
   fi
   
-  if [ $i -eq 60 ]; then
+  if [ $i -eq 10 ]; then
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: Could not connect to database after 60 attempts"
     echo "This may be due to network access issues. The IAM user will be created via user_data script instead."
     exit 0  # Don't fail the terraform apply
