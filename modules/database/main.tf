@@ -231,80 +231,9 @@ resource "aws_ssm_document" "postgres_iam_user_setup" {
   }
 }
 
-# Create IAM user in PostgreSQL database automatically
-resource "null_resource" "create_iam_db_user" {
-  count = var.postgres_enable_iam_auth ? 1 : 0
-  
-  depends_on = [aws_db_instance.postgresql]
-
-  provisioner "local-exec" {
-    environment = {
-      PGPASSWORD = local.fixed_password
-    }
-    command = <<EOT
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] Starting PostgreSQL IAM user creation for ${var.db_iam_username}"
-
-# Wait for database to be available
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] Waiting for database ${aws_db_instance.postgresql.address} to be ready..."
-for i in {1..60}; do
-  if psql "host=${aws_db_instance.postgresql.address} port=${aws_db_instance.postgresql.port} user=${var.db_username} dbname=${var.db_name} sslmode=require" -c "SELECT version();" >/dev/null 2>&1; then
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Database connection successful after $i attempts"
-    break
-  else
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Database connection attempt $i/60 failed, retrying in 10 seconds..."
-    sleep 10
-  fi
-done
-
-# Create IAM user with proper permissions
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] Creating IAM user: ${var.db_iam_username}"
-psql "host=${aws_db_instance.postgresql.address} port=${aws_db_instance.postgresql.port} user=${var.db_username} dbname=${var.db_name} sslmode=require" -c "
-DO \$\$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${var.db_iam_username}') THEN
-        CREATE USER \"${var.db_iam_username}\" WITH LOGIN;
-        GRANT rds_iam TO \"${var.db_iam_username}\";
-        GRANT CONNECT ON DATABASE \"${var.db_name}\" TO \"${var.db_iam_username}\";
-        GRANT USAGE ON SCHEMA public TO \"${var.db_iam_username}\";
-        GRANT CREATE ON SCHEMA public TO \"${var.db_iam_username}\";
-        GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"${var.db_iam_username}\";
-        GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO \"${var.db_iam_username}\";
-        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO \"${var.db_iam_username}\";
-        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO \"${var.db_iam_username}\";
-        RAISE NOTICE 'Successfully created IAM user: ${var.db_iam_username}';
-    ELSE
-        RAISE NOTICE 'IAM user already exists: ${var.db_iam_username}';
-    END IF;
-END \$\$;"
-
-# Verify user creation
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] Verifying IAM user creation..."
-psql "host=${aws_db_instance.postgresql.address} port=${aws_db_instance.postgresql.port} user=${var.db_username} dbname=${var.db_name} sslmode=require" -c "
-SELECT 
-    usename as username,
-    usesuper as is_superuser,
-    usecreatedb as can_create_db,
-    userepl as can_replicate
-FROM pg_user 
-WHERE usename = '${var.db_iam_username}';"
-
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] PostgreSQL IAM user setup completed successfully"
-EOT
-  }
-
-  # Trigger recreation if database endpoint changes
-  triggers = {
-    database_endpoint = aws_db_instance.postgresql.address
-    database_username = var.db_iam_username
-  }
-}
-
-# Note: For PostgreSQL IAM authentication to work, we need to either:
-# 1. Create the IAM user in PostgreSQL after the instance is running, OR
-# 2. Use the EC2 instance to create the user via user-data script
-# 
-# The null_resource above automatically creates the IAM user after the database is available.
-# The SSM document approach is also available for manual/scripted execution.
+# Note: PostgreSQL IAM user creation is handled by user_data script
+# in the EC2 instances since local-exec doesn't have network access
+# to RDS instances in private subnets.
 #
 # The PostgreSQL IAM user creation is essential for IAM authentication to work.
 # Without it, the TFE application will not be able to authenticate to the database.
