@@ -72,6 +72,15 @@ resource "aws_security_group_rule" "postgresql_ingress" {
   cidr_blocks       = var.network_private_subnet_cidrs
 }
 
+resource "aws_security_group_rule" "postgresql_ec2_ingress" {
+  security_group_id        = aws_security_group.postgresql.id
+  type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.postgresql.id
+}
+
 resource "aws_security_group_rule" "postgresql_egress" {
   security_group_id = aws_security_group.postgresql.id
   type              = "egress"
@@ -146,7 +155,7 @@ resource "aws_security_group_rule" "postgres_db_ssh_ingress" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-resource "aws_security_group_rule" "postgres_db_internet_egress" {
+resource "aws_security_group_rule" "postgres_db_egress" {
   security_group_id = aws_security_group.postgresql.id
   type              = "egress"
   from_port         = 0
