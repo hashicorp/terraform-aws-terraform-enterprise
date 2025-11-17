@@ -179,12 +179,12 @@ module "database" {
   allow_major_version_upgrade  = var.allow_major_version_upgrade
   allow_multiple_azs           = var.allow_multiple_azs
   # PostgreSQL IAM authentication
-  postgres_enable_iam_auth     = var.postgres_enable_iam_auth
-  postgres_use_password_auth   = var.postgres_use_password_auth
-  db_iam_username              = var.db_iam_username
+  postgres_enable_iam_auth   = var.postgres_enable_iam_auth
+  postgres_use_password_auth = var.postgres_use_password_auth
+  db_iam_username            = var.db_iam_username
   # EC2 instance for database connectivity
-  network_public_subnets       = local.network_public_subnets
-  aws_iam_instance_profile     = local.database_iam_instance_profile
+  network_public_subnets   = local.network_public_subnets
+  aws_iam_instance_profile = module.service_accounts.iam_instance_profile.name
 }
 
 # -----------------------------------------------------------------------------
@@ -209,6 +209,13 @@ module "explorer_database" {
   kms_key_arn                  = local.kms_key_arn
   allow_major_version_upgrade  = var.allow_major_version_upgrade
   allow_multiple_azs           = var.allow_multiple_azs
+  # PostgreSQL IAM authentication (disabled for explorer)
+  postgres_enable_iam_auth   = false
+  postgres_use_password_auth = true
+  db_iam_username            = ""
+  # EC2 instance for database connectivity
+  network_public_subnets   = local.network_public_subnets
+  aws_iam_instance_profile = local.database_iam_instance_profile
 }
 
 # -----------------------------------------------------------------------------
@@ -295,9 +302,9 @@ module "runtime_container_engine_config" {
   iact_time_limit      = var.iact_subnet_time_limit
   run_pipeline_image   = var.run_pipeline_image
 
-  database_name             = local.database.name
+  database_name = local.database.name
   # Use IAM username when IAM authentication is enabled, otherwise use admin username
-  database_user             = local.database_passwordless_aws_use_iam ? var.db_iam_username : local.database.username
+  database_user = local.database_passwordless_aws_use_iam ? var.db_iam_username : local.database.username
   # Don't set database password for IAM auth - it will be excluded from environment variables
   database_password         = local.database_passwordless_aws_use_iam ? null : local.database.password
   database_host             = local.database.endpoint
@@ -398,7 +405,7 @@ module "tfe_init" {
   docker_compose_yaml      = module.runtime_container_engine_config[0].docker_compose_yaml
 
   # Database configuration for PostgreSQL IAM user creation
-  database_host                     = local.selected_database.endpoint  
+  database_host                     = local.selected_database.endpoint
   database_name                     = local.selected_database.name
   admin_database_username           = local.selected_database.username
   admin_database_password           = local.selected_database.password
@@ -440,10 +447,10 @@ module "settings" {
   bypass_preflight_checks                   = var.bypass_preflight_checks
 
   # Database
-  pg_dbname   = local.database.name
-  pg_netloc   = local.database.endpoint
+  pg_dbname = local.database.name
+  pg_netloc = local.database.endpoint
   # Use IAM username when IAM authentication is enabled, otherwise use admin username
-  pg_user     = local.database_passwordless_aws_use_iam ? var.db_iam_username : local.database.username
+  pg_user = local.database_passwordless_aws_use_iam ? var.db_iam_username : local.database.username
   # Use null password when IAM authentication is enabled, otherwise use admin password  
   pg_password = local.database_passwordless_aws_use_iam ? null : local.database.password
 
