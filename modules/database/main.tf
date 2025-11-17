@@ -122,8 +122,6 @@ resource "aws_db_instance" "postgresql" {
 }
 
 resource "tls_private_key" "postgres_db_ssh_key" {
-
-resource "tls_private_key" "postgres_db_ssh_key" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
