@@ -247,12 +247,30 @@ resource "null_resource" "create_iam_db_user" {
 if ! command -v psql > /dev/null 2>&1; then
     echo "PostgreSQL client not found. Installing..."
     if [ -f /etc/debian_version ]; then
-        sudo apt-get update && sudo apt-get install -y postgresql-client
+        # Try different package management approaches
+        if command -v apt-get > /dev/null 2>&1; then
+            echo "Attempting package installation with apt-get..."
+            if sudo apt-get update > /dev/null 2>&1 && sudo apt-get install -y postgresql-client > /dev/null 2>&1; then
+                echo "Successfully installed postgresql-client via apt-get"
+            elif apt-get update > /dev/null 2>&1 && apt-get install -y postgresql-client > /dev/null 2>&1; then
+                echo "Successfully installed postgresql-client via apt-get (without sudo)"
+            else
+                echo "WARN: Could not install PostgreSQL client via apt-get (permission denied or package manager locked)"
+                echo "The IAM user will be created via user_data script during EC2 startup instead."
+                exit 0
+            fi
+        fi
     elif command -v brew > /dev/null 2>&1; then
-        brew install postgresql
+        if brew install postgresql > /dev/null 2>&1; then
+            echo "Successfully installed postgresql via brew"
+        else
+            echo "WARN: Could not install PostgreSQL client via brew"
+            echo "The IAM user will be created via user_data script during EC2 startup instead."
+            exit 0
+        fi
     else
-        echo "ERROR: Cannot install PostgreSQL client automatically"
-        echo "The IAM user will be created via user_data script instead."
+        echo "WARN: No supported package manager found"
+        echo "The IAM user will be created via user_data script during EC2 startup instead."
         exit 0
     fi
 fi
