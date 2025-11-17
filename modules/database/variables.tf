@@ -95,3 +95,13 @@ variable "db_iam_username" {
   description = "PostgreSQL IAM username for authentication."
   default     = ""
 }
+
+variable "network_public_subnets" {
+  description = "A list of the identities of the public subnetworks for the EC2 instance."
+  type        = list(string)
+}
+
+variable "aws_iam_instance_profile" {
+  description = "The IAM instance profile to attach to the EC2 instance."
+  type        = string
+}
