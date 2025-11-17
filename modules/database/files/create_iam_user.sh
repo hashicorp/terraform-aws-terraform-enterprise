@@ -34,35 +34,24 @@ done
 
 # Create IAM user in PostgreSQL
 echo "Creating IAM user: ${IAM_USERNAME}"
-psql "host=${DB_HOST} port=${DB_PORT} user=${DB_USERNAME} dbname=${DB_NAME} sslmode=require" -c "
+psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d "$DB_NAME" <<EOF
 DO \$\$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${IAM_USERNAME}') THEN
-        CREATE USER \"${IAM_USERNAME}\" WITH LOGIN;
-        GRANT rds_iam TO \"${IAM_USERNAME}\";
-        GRANT CONNECT ON DATABASE \"${DB_NAME}\" TO \"${IAM_USERNAME}\";
-        GRANT USAGE ON SCHEMA public TO \"${IAM_USERNAME}\";
-        GRANT CREATE ON SCHEMA public TO \"${IAM_USERNAME}\";
-        GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"${IAM_USERNAME}\";
-        GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO \"${IAM_USERNAME}\";
-        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO \"${IAM_USERNAME}\";
-        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO \"${IAM_USERNAME}\";
+        CREATE USER "${IAM_USERNAME}" WITH LOGIN;
+        GRANT rds_iam TO "${IAM_USERNAME}";
+        GRANT CONNECT ON DATABASE "${DB_NAME}" TO "${IAM_USERNAME}";
+        GRANT USAGE ON SCHEMA public TO "${IAM_USERNAME}";
+        GRANT CREATE ON SCHEMA public TO "${IAM_USERNAME}";
+        GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "${IAM_USERNAME}";
+        GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO "${IAM_USERNAME}";
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO "${IAM_USERNAME}";
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO "${IAM_USERNAME}";
         RAISE NOTICE 'Successfully created IAM user: ${IAM_USERNAME}';
     ELSE
         RAISE NOTICE 'IAM user already exists: ${IAM_USERNAME}';
     END IF;
 END \$\$;
-"
-
-# Verify user creation
-echo "Verifying IAM user creation..."
-psql "host=${DB_HOST} port=${DB_PORT} user=${DB_USERNAME} dbname=${DB_NAME} sslmode=require" -c "
-SELECT 
-    usename as username,
-    usesuper as is_superuser,
-    usecreatedb as can_create_db
-FROM pg_user 
-WHERE usename = '${IAM_USERNAME}';
-"
+EOF
 
 echo "IAM user setup completed successfully!"

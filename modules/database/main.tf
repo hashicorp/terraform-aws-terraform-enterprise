@@ -184,74 +184,13 @@ resource "aws_instance" "postgres_db_instance" {
   }
 }
 
-# Small test VM for database connectivity testing
-resource "aws_instance" "postgres_test_vm" {
-  ami                         = data.aws_ami.ubuntu.id
-  instance_type               = "t3.micro"
-  associate_public_ip_address = true
-  vpc_security_group_ids      = [aws_security_group.postgresql.id]
-  key_name                    = aws_key_pair.ec2_key.key_name
-  subnet_id                   = var.network_public_subnets[0]
-  
-  user_data = <<-EOF
-    #!/bin/bash
-    apt-get update
-    apt-get install -y postgresql-client netcat-openbsd
-    
-    # Create a test script
-    cat > /home/ubuntu/test_db.sh << 'SCRIPT'
-#!/bin/bash
-set -e
-
-echo "=== PostgreSQL Database Connectivity Test ==="
-echo "Test VM: $(hostname) - $(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)"
-echo "Database Host: ${aws_db_instance.postgresql.endpoint}"
-echo "Database Port: 5432"
-echo ""
-
-echo "1. Testing network connectivity with netcat..."
-if nc -zv ${aws_db_instance.postgresql.endpoint} 5432; then
-    echo "✅ Network connectivity: SUCCESS"
-else
-    echo "❌ Network connectivity: FAILED"
-    exit 1
-fi
-
-echo ""
-echo "2. Testing PostgreSQL connection..."
-if PGPASSWORD="password" psql "host=${aws_db_instance.postgresql.endpoint} port=5432 user=hashicorp dbname=hashicorp sslmode=require" -c "SELECT version();"; then
-    echo "✅ PostgreSQL connection: SUCCESS"
-else
-    echo "❌ PostgreSQL connection: FAILED"
-    exit 1
-fi
-
-echo ""
-echo "3. Testing database queries..."
-PGPASSWORD="password" psql "host=${aws_db_instance.postgresql.endpoint} port=5432 user=hashicorp dbname=hashicorp sslmode=require" << SQL
-\l
-\dt
-SELECT current_database(), current_user, inet_server_addr(), inet_server_port();
-SQL
-
-echo ""
-echo "🎉 All tests completed successfully!"
-SCRIPT
-
-    chmod +x /home/ubuntu/test_db.sh
-    chown ubuntu:ubuntu /home/ubuntu/test_db.sh
-  EOF
-
-  root_block_device {
-    volume_type           = "gp3"
-    volume_size           = 8
-    delete_on_termination = true
-    encrypted             = true
-  }
-
-  tags = {
-    Name = "PostgreSQL-Test-VM"
-  }
+resource "aws_security_group_rule" "postgres_db_egress" {
+  security_group_id = aws_security_group.postgresql.id
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
 }
 
 resource "null_resource" "create_iam_db_user" {
@@ -276,11 +215,5 @@ resource "null_resource" "create_iam_db_user" {
       "chmod +x /home/ubuntu/create_iam_user.sh",
       "sudo DB_PASSWORD='${local.fixed_password}' IAM_USERNAME=${var.db_iam_username} DB_PORT=${aws_db_instance.postgresql.port} DB_USERNAME=${var.db_username} DB_NAME=${var.db_name} DB_HOST=${aws_db_instance.postgresql.address} /home/ubuntu/create_iam_user.sh"
     ]
-  }
-
-  # Trigger recreation if database endpoint changes
-  triggers = {
-    database_endpoint = aws_db_instance.postgresql.address
-    database_username = var.db_iam_username
   }
 }
