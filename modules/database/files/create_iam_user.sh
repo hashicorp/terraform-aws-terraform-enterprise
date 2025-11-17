@@ -18,18 +18,14 @@ echo "Database: ${DB_NAME}"
 # Wait for database to be ready
 echo "Waiting for database to be available..."
 for i in {1..30}; do
-    if psql "host=${DB_HOST} port=${DB_PORT} user=${DB_USERNAME} dbname=${DB_NAME} sslmode=require" -c "SELECT 1;" >/dev/null 2>&1; then
+    if psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d "$DB_NAME" \
+           -c "SELECT 1;" >/dev/null 2>&1; then
         echo "Database is ready!"
-        break
-    else
-        echo "Attempt $i/30: Database not ready, waiting 10 seconds..."
-        sleep 10
+        exit 0
     fi
-    
-    if [ $i -eq 30 ]; then
-        echo "ERROR: Database not available after 30 attempts"
-        exit 1
-    fi
+
+    echo "Attempt $i/30: Database not ready, waiting 10 seconds..."
+    sleep 10
 done
 
 # Create IAM user in PostgreSQL
