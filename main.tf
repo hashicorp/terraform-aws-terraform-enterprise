@@ -402,7 +402,7 @@ module "tfe_init" {
   database_iam_username             = var.db_iam_username
   database_passwordless_aws_use_iam = local.database_passwordless_aws_use_iam
   database_passwordless_aws_region  = var.database_passwordless_aws_region
-  postgres_iam_setup_ssm_document   = var.postgres_enable_iam_auth && var.db_iam_username != "" ? "enabled" : null
+  # Note: PostgreSQL IAM user creation is now handled by null_resource in database module
 }
 
 # --------------------------------------------------------------------------------------------
