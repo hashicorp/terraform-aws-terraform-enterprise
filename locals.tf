@@ -30,7 +30,6 @@ locals {
     username   = null
     parameters = null
     iam_user_setup_status = null
-    postgres_iam_setup_ssm_document = null
   }
 
   aurora_database = try(module.aurora_database[0], local.default_database)

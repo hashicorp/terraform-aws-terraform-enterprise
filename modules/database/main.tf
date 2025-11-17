@@ -105,6 +105,9 @@ resource "aws_db_instance" "postgresql" {
   iam_database_authentication_enabled = var.postgres_enable_iam_auth
 }
 
+resource "null_resource" "create_iam_db_user" {
+}
+
 # Database user setup for IAM authentication - Using SSM Run Command approach
 # This creates an SSM document that can be executed on EC2 instances with proper credentials
 resource "aws_ssm_document" "postgres_iam_user_setup" {
