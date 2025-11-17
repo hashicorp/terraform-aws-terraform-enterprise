@@ -233,7 +233,7 @@ resource "aws_ssm_document" "postgres_iam_user_setup" {
 
 # Create IAM user in PostgreSQL database automatically
 resource "null_resource" "create_iam_db_user" {
-  count = var.iam_database_authentication_enabled ? 1 : 0
+  count = var.postgres_enable_iam_auth ? 1 : 0
   
   depends_on = [aws_db_instance.postgresql]
 
@@ -242,12 +242,12 @@ resource "null_resource" "create_iam_db_user" {
       PGPASSWORD = local.fixed_password
     }
     command = <<EOT
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] Starting PostgreSQL IAM user creation for ${var.database_iam_username}"
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Starting PostgreSQL IAM user creation for ${var.db_iam_username}"
 
 # Wait for database to be available
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Waiting for database ${aws_db_instance.postgresql.address} to be ready..."
 for i in {1..60}; do
-  if psql "host=${aws_db_instance.postgresql.address} port=${aws_db_instance.postgresql.port} user=${var.master_database_username} dbname=${var.database_name} sslmode=require" -c "SELECT version();" >/dev/null 2>&1; then
+  if psql "host=${aws_db_instance.postgresql.address} port=${aws_db_instance.postgresql.port} user=${var.db_username} dbname=${var.db_name} sslmode=require" -c "SELECT version();" >/dev/null 2>&1; then
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] Database connection successful after $i attempts"
     break
   else
@@ -257,36 +257,36 @@ for i in {1..60}; do
 done
 
 # Create IAM user with proper permissions
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] Creating IAM user: ${var.database_iam_username}"
-psql "host=${aws_db_instance.postgresql.address} port=${aws_db_instance.postgresql.port} user=${var.master_database_username} dbname=${var.database_name} sslmode=require" -c "
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Creating IAM user: ${var.db_iam_username}"
+psql "host=${aws_db_instance.postgresql.address} port=${aws_db_instance.postgresql.port} user=${var.db_username} dbname=${var.db_name} sslmode=require" -c "
 DO \$\$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${var.database_iam_username}') THEN
-        CREATE USER \"${var.database_iam_username}\" WITH LOGIN;
-        GRANT rds_iam TO \"${var.database_iam_username}\";
-        GRANT CONNECT ON DATABASE \"${var.database_name}\" TO \"${var.database_iam_username}\";
-        GRANT USAGE ON SCHEMA public TO \"${var.database_iam_username}\";
-        GRANT CREATE ON SCHEMA public TO \"${var.database_iam_username}\";
-        GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"${var.database_iam_username}\";
-        GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO \"${var.database_iam_username}\";
-        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO \"${var.database_iam_username}\";
-        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO \"${var.database_iam_username}\";
-        RAISE NOTICE 'Successfully created IAM user: ${var.database_iam_username}';
+    IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${var.db_iam_username}') THEN
+        CREATE USER \"${var.db_iam_username}\" WITH LOGIN;
+        GRANT rds_iam TO \"${var.db_iam_username}\";
+        GRANT CONNECT ON DATABASE \"${var.db_name}\" TO \"${var.db_iam_username}\";
+        GRANT USAGE ON SCHEMA public TO \"${var.db_iam_username}\";
+        GRANT CREATE ON SCHEMA public TO \"${var.db_iam_username}\";
+        GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"${var.db_iam_username}\";
+        GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO \"${var.db_iam_username}\";
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO \"${var.db_iam_username}\";
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO \"${var.db_iam_username}\";
+        RAISE NOTICE 'Successfully created IAM user: ${var.db_iam_username}';
     ELSE
-        RAISE NOTICE 'IAM user already exists: ${var.database_iam_username}';
+        RAISE NOTICE 'IAM user already exists: ${var.db_iam_username}';
     END IF;
 END \$\$;"
 
 # Verify user creation
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Verifying IAM user creation..."
-psql "host=${aws_db_instance.postgresql.address} port=${aws_db_instance.postgresql.port} user=${var.master_database_username} dbname=${var.database_name} sslmode=require" -c "
+psql "host=${aws_db_instance.postgresql.address} port=${aws_db_instance.postgresql.port} user=${var.db_username} dbname=${var.db_name} sslmode=require" -c "
 SELECT 
     usename as username,
     usesuper as is_superuser,
     usecreatedb as can_create_db,
     userepl as can_replicate
 FROM pg_user 
-WHERE usename = '${var.database_iam_username}';"
+WHERE usename = '${var.db_iam_username}';"
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] PostgreSQL IAM user setup completed successfully"
 EOT
@@ -295,7 +295,7 @@ EOT
   # Trigger recreation if database endpoint changes
   triggers = {
     database_endpoint = aws_db_instance.postgresql.address
-    database_username = var.database_iam_username
+    database_username = var.db_iam_username
   }
 }
 
