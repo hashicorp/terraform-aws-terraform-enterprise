@@ -44,23 +44,9 @@ CREATE EXTENSION IF NOT EXISTS citext;
 SELECT extname FROM pg_extension WHERE extname IN ('hstore', 'uuid-ossp', 'citext');
 EOF
 
-# Create a separate database for the IAM user to avoid migration conflicts
-echo "Creating separate database for IAM user: ${IAM_USERNAME}_db"
-psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d postgres <<EOF
--- Create a dedicated database for the IAM user
-CREATE DATABASE "${IAM_USERNAME}_db" WITH OWNER = "${DB_USERNAME}";
-
--- Install required extensions in the new database
-\\c "${IAM_USERNAME}_db"
-
-CREATE EXTENSION IF NOT EXISTS hstore;
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-CREATE EXTENSION IF NOT EXISTS citext;
-EOF
-
-# Create IAM user and grant permissions on the new database
+# Create IAM user first
 echo "Creating IAM user: ${IAM_USERNAME}"
-psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d "${IAM_USERNAME}_db" <<EOF
+psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d "$DB_NAME" <<EOF
 DO \$\$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${IAM_USERNAME}') THEN
@@ -71,6 +57,22 @@ BEGIN
         RAISE NOTICE 'IAM user already exists: ${IAM_USERNAME}';
     END IF;
 END \$\$;
+EOF
+
+# Create a separate database for the IAM user with IAM user as owner
+echo "Creating separate database for IAM user: ${IAM_USERNAME}_db"
+psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d postgres <<EOF
+-- Create a dedicated database for the IAM user with IAM user as owner
+CREATE DATABASE "${IAM_USERNAME}_db" WITH OWNER = "${IAM_USERNAME}";
+EOF
+
+# Install required extensions in the new database and grant permissions
+echo "Setting up IAM database with extensions and permissions"
+psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d "${IAM_USERNAME}_db" <<EOF
+-- Install required extensions in the new database
+CREATE EXTENSION IF NOT EXISTS hstore;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS citext;
 
 -- Grant permissions on the dedicated database
 GRANT CONNECT ON DATABASE "${IAM_USERNAME}_db" TO "${IAM_USERNAME}";
