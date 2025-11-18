@@ -18,7 +18,7 @@ echo "Database: ${DB_NAME}"
 # Wait for database to be ready
 echo "Waiting for database to be available..."
 for i in {1..30}; do
-    if psql "host=${DB_HOST} port=${DB_PORT} user=${DB_USERNAME} dbname=${DB_NAME} sslmode=require" -c "SELECT 1;" >/dev/null 2>&1; then
+    if psql "host=${DB_HOST} port=${DB_PORT} user=${DB_USERNAME} dbname=postgres sslmode=require" -c "SELECT 1;" >/dev/null 2>&1; then
         echo "Database is ready!"
         break
     else
@@ -32,21 +32,9 @@ for i in {1..30}; do
     fi
 done
 
-# Install required PostgreSQL extensions
-echo "Installing required PostgreSQL extensions..."
-psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d "$DB_NAME" <<EOF
--- Create required extensions for Terraform Enterprise
-CREATE EXTENSION IF NOT EXISTS hstore;
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-CREATE EXTENSION IF NOT EXISTS citext;
-
--- Verify extensions are installed
-SELECT extname FROM pg_extension WHERE extname IN ('hstore', 'uuid-ossp', 'citext');
-EOF
-
 # Create IAM user and immediately create their own database
 echo "Creating IAM user: ${IAM_USERNAME}"
-psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d "$DB_NAME" <<EOF
+psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d postgres <<EOF
 DO \$\$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${IAM_USERNAME}') THEN
