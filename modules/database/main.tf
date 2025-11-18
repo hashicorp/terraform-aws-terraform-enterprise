@@ -204,16 +204,7 @@ resource "null_resource" "create_iam_db_user" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /home/ubuntu/create_iam_user.sh",
-      "sudo DB_PASSWORD='${local.fixed_password}' IAM_USERNAME=${var.db_iam_username} DB_PORT=${aws_db_instance.postgresql.port} DB_USERNAME=${var.db_username} DB_NAME=${var.db_name} DB_HOST=${aws_db_instance.postgresql.address} /home/ubuntu/create_iam_user.sh",
-      "cat /tmp/iam_db_name.txt"
+      "sudo DB_PASSWORD='${local.fixed_password}' IAM_USERNAME=${var.db_iam_username} DB_PORT=${aws_db_instance.postgresql.port} DB_USERNAME=${var.db_username} DB_NAME=${var.db_name} DB_HOST=${aws_db_instance.postgresql.address} /home/ubuntu/create_iam_user.sh"
     ]
   }
-}
-
-# Data source to get the IAM database name after creation
-data "external" "iam_db_name" {
-  count = var.postgres_enable_iam_auth ? 1 : 0
-  depends_on = [null_resource.create_iam_db_user]
-  
-  program = ["ssh", "-i", "/tmp/postgres_key.pem", "-o", "StrictHostKeyChecking=no", "ubuntu@${aws_instance.postgres_db_instance.public_ip}", "cat", "/tmp/iam_db_name.txt"]
 }

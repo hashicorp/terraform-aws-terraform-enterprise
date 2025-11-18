@@ -90,6 +90,3 @@ EOF
 
 echo "IAM user setup completed successfully with dedicated database!"
 echo "Database name: ${IAM_USERNAME}_db"
-
-# Output the database name for Terraform to use
-echo "${IAM_USERNAME}_db" > /tmp/iam_db_name.txt
