@@ -317,7 +317,7 @@ module "runtime_container_engine_config" {
   redis_password                 = local.redis.password
   redis_use_tls                  = local.redis.use_tls
   redis_use_auth                 = local.redis.use_password_auth
-  redis_passwordless_aws_use_iam = var.redis_passwordless_aws_use_iam
+  redis_passwordless_aws_use_instance_profile = var.redis_passwordless_aws_use_instance_profile
   redis_use_sentinel             = var.enable_redis_sentinel
   redis_sentinel_hosts           = local.redis.sentinel_hosts
   redis_sentinel_leader_name     = local.redis.sentinel_leader

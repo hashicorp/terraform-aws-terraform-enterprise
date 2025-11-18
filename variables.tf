@@ -182,10 +182,10 @@ variable "redis_use_password_auth" {
   default     = false
 }
 
-variable "redis_passwordless_aws_use_iam" {
-  type        = bool
-  description = "Whether to use AWS IAM authentication for Redis passwordless access."
+variable "redis_passwordless_aws_use_instance_profile" {
   default     = false
+  type        = bool
+  description = "Whether or not to use AWS IAM authentication to connect to Redis. Defaults to false if no value is given."
 }
 
 variable "redis_authentication_mode" {
