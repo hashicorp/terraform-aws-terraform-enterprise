@@ -302,7 +302,7 @@ module "runtime_container_engine_config" {
   iact_time_limit      = var.iact_subnet_time_limit
   run_pipeline_image   = var.run_pipeline_image
 
-  database_name = local.database_passwordless_aws_use_iam ? local.database.iam_database_name : local.database.name
+  database_name = local.database_iam_name
   # Use IAM username when IAM authentication is enabled, otherwise use admin username
   database_user = local.database_passwordless_aws_use_iam ? var.db_iam_username : local.database.username
   # Don't set database password for IAM auth - it will be excluded from environment variables
@@ -447,7 +447,7 @@ module "settings" {
   bypass_preflight_checks                   = var.bypass_preflight_checks
 
   # Database
-  pg_dbname = local.database_passwordless_aws_use_iam ? local.database.iam_database_name : local.database.name
+  pg_dbname = local.database_iam_name
   pg_netloc = local.database.endpoint
   # Use IAM username when IAM authentication is enabled, otherwise use admin username
   pg_user = local.database_passwordless_aws_use_iam ? var.db_iam_username : local.database.username

@@ -48,6 +48,9 @@ locals {
   # PostgreSQL IAM authentication flag
   database_passwordless_aws_use_iam = var.database_passwordless_aws_use_iam || (var.postgres_enable_iam_auth && !var.postgres_use_password_auth)
 
+  # Database IAM database name - only available from standard database module
+  database_iam_name = local.database_passwordless_aws_use_iam && !var.enable_aurora && !var.db_use_mtls && !var.enable_edb ? try(module.database[0].iam_database_name, local.database.name) : local.database.name
+
   # Database IAM instance profile - use the existing service account profile
   database_iam_instance_profile = module.service_accounts.iam_instance_profile.name
 
