@@ -40,8 +40,23 @@ CREATE EXTENSION IF NOT EXISTS hstore;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS citext;
 
--- Verify extensions are installed
-SELECT extname FROM pg_extension WHERE extname IN ('hstore', 'uuid-ossp', 'citext');
+-- Verify extensions are installed and available
+SELECT extname, nspname 
+FROM pg_extension e 
+JOIN pg_namespace n ON e.extnamespace = n.oid 
+WHERE extname IN ('hstore', 'uuid-ossp', 'citext');
+
+-- Ensure extensions are accessible from all schemas
+-- Grant USAGE on extension types to public to ensure global availability
+GRANT USAGE ON TYPE citext TO public;
+GRANT USAGE ON TYPE hstore TO public;
+GRANT USAGE ON TYPE uuid TO public;
+
+-- Verify types are accessible
+SELECT typname, typnamespace, n.nspname as schema_name
+FROM pg_type t
+JOIN pg_namespace n ON t.typnamespace = n.oid
+WHERE typname IN ('citext', 'hstore', 'uuid');
 EOF
 
 # Aggressive cleanup for terraform-registry migration state
@@ -55,6 +70,9 @@ WHERE datname = current_database()
   AND pid <> pg_backend_pid() 
   AND usename != 'rdsadmin';
 
+-- Wait a moment for connections to close
+SELECT pg_sleep(2);
+
 -- Clear all advisory locks forcefully
 SELECT 'Clearing all advisory locks...' as status;
 SELECT pg_advisory_unlock_all();
@@ -67,10 +85,14 @@ WHERE table_name IN ('schema_migrations', 'schema_version', 'gorp_migrations', '
 
 -- Show current content if schema_migrations exists
 DO \$\$
+DECLARE
+    rec RECORD;
 BEGIN
     IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'schema_migrations') THEN
         RAISE NOTICE 'Current schema_migrations content:';
-        PERFORM version, dirty FROM schema_migrations ORDER BY version;
+        FOR rec IN SELECT version, dirty FROM schema_migrations ORDER BY version LOOP
+            RAISE NOTICE 'Version: %, Dirty: %', rec.version, rec.dirty;
+        END LOOP;
     END IF;
 END \$\$;
 
@@ -82,15 +104,41 @@ DROP TABLE IF EXISTS migrations CASCADE;
 
 -- Drop and recreate terraform_registry schema if it exists
 DROP SCHEMA IF EXISTS terraform_registry CASCADE;
-CREATE SCHEMA IF NOT EXISTS terraform_registry;
+CREATE SCHEMA terraform_registry;
 GRANT ALL PRIVILEGES ON SCHEMA terraform_registry TO "${IAM_USERNAME}";
+GRANT USAGE ON SCHEMA terraform_registry TO "${IAM_USERNAME}";
+GRANT CREATE ON SCHEMA terraform_registry TO "${IAM_USERNAME}";
+
+-- Ensure extensions are available in terraform_registry schema
+-- Re-create extensions to ensure they're accessible from all schemas
+DROP EXTENSION IF EXISTS citext CASCADE;
+DROP EXTENSION IF EXISTS hstore CASCADE;
+DROP EXTENSION IF EXISTS "uuid-ossp" CASCADE;
+
+CREATE EXTENSION citext SCHEMA public;
+CREATE EXTENSION hstore SCHEMA public;
+CREATE EXTENSION "uuid-ossp" SCHEMA public;
+
+-- Grant explicit access to extension types
+GRANT USAGE ON TYPE citext TO "${IAM_USERNAME}";
+GRANT USAGE ON TYPE hstore TO "${IAM_USERNAME}";  
+GRANT USAGE ON TYPE uuid TO "${IAM_USERNAME}";
+GRANT USAGE ON TYPE citext TO public;
+GRANT USAGE ON TYPE hstore TO public;
+GRANT USAGE ON TYPE uuid TO public;
 
 -- Remove any stale locks specifically for golang-migrate
 -- golang-migrate uses advisory lock with classid 1410924490
 SELECT 'Clearing golang-migrate specific locks...' as status;
-SELECT pg_advisory_unlock(classid, objid) 
-FROM pg_locks 
-WHERE locktype = 'advisory' AND classid = 1410924490;
+DO \$\$
+DECLARE
+    lock_rec RECORD;
+BEGIN
+    FOR lock_rec IN SELECT classid, objid FROM pg_locks WHERE locktype = 'advisory' AND classid = 1410924490 LOOP
+        PERFORM pg_advisory_unlock(lock_rec.classid, lock_rec.objid);
+        RAISE NOTICE 'Released advisory lock: classid=%, objid=%', lock_rec.classid, lock_rec.objid;
+    END LOOP;
+END \$\$;
 
 -- Create completely fresh schema_migrations table with exact golang-migrate format
 SELECT 'Creating fresh schema_migrations table...' as status;
@@ -103,8 +151,11 @@ CREATE TABLE schema_migrations (
 GRANT ALL PRIVILEGES ON schema_migrations TO "${IAM_USERNAME}";
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "${IAM_USERNAME}";
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO "${IAM_USERNAME}";
-GRANT USAGE ON SCHEMA terraform_registry TO "${IAM_USERNAME}";
-GRANT CREATE ON SCHEMA terraform_registry TO "${IAM_USERNAME}";
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA terraform_registry TO "${IAM_USERNAME}";
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA terraform_registry TO "${IAM_USERNAME}";
+
+-- Set search_path to include both public and terraform_registry
+ALTER USER "${IAM_USERNAME}" SET search_path = public, terraform_registry;
 
 -- Reset any database-level configuration that might affect migrations
 SELECT 'Resetting database configuration...' as status;
@@ -116,6 +167,14 @@ SELECT 'FINAL STATE: Migration table structure:' as status;
 
 SELECT 'FINAL STATE: No existing migration records:' as status;
 SELECT COUNT(*) as migration_count FROM schema_migrations;
+
+SELECT 'FINAL STATE: Available extensions and types:' as status;
+SELECT e.extname, n.nspname as schema, t.typname
+FROM pg_extension e
+LEFT JOIN pg_namespace n ON e.extnamespace = n.oid
+LEFT JOIN pg_type t ON t.typname IN ('citext', 'hstore', 'uuid')
+WHERE e.extname IN ('hstore', 'uuid-ossp', 'citext')
+ORDER BY e.extname, t.typname;
 
 SELECT 'FINAL STATE: Available schemas:' as status;
 SELECT schema_name FROM information_schema.schemata WHERE schema_name NOT IN ('information_schema', 'pg_catalog', 'pg_toast');
