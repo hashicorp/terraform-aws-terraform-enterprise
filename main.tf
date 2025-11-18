@@ -312,22 +312,24 @@ module "runtime_container_engine_config" {
   s3_server_side_encryption_kms_key_id = local.kms_key_arn
   s3_use_instance_profile              = var.aws_access_key_id == null ? "1" : "0"
 
-  redis_host                     = local.redis.hostname
-  redis_user                     = local.redis.username
-  redis_password                 = local.redis.password
-  redis_use_tls                  = local.redis.use_tls
-  redis_use_auth                 = local.redis.use_password_auth
+  redis_host                                  = local.redis.hostname
+  redis_user                                  = local.redis.username
+  redis_password                              = local.redis.password
+  redis_use_tls                               = local.redis.use_tls
+  redis_use_auth                              = local.redis.use_password_auth
   redis_passwordless_aws_use_instance_profile = var.redis_passwordless_aws_use_instance_profile
-  redis_use_sentinel             = var.enable_redis_sentinel
-  redis_sentinel_hosts           = local.redis.sentinel_hosts
-  redis_sentinel_leader_name     = local.redis.sentinel_leader
-  redis_sentinel_user            = local.redis.sentinel_username
-  redis_sentinel_password        = local.redis.sentinel_password
-  redis_use_mtls                 = var.enable_redis_mtls
-  enable_sentinel_mtls           = var.enable_sentinel_mtls
-  redis_ca_cert_path             = var.enable_redis_mtls || var.enable_sentinel_mtls ? "/etc/ssl/private/terraform-enterprise/redis/cacert.pem" : null
-  redis_client_cert_path         = var.enable_redis_mtls || var.enable_sentinel_mtls ? "/etc/ssl/private/terraform-enterprise/redis/cert.pem" : null
-  redis_client_key_path          = var.enable_redis_mtls || var.enable_sentinel_mtls ? "/etc/ssl/private/terraform-enterprise/redis/key.pem" : null
+  redis_passwordless_aws_region               = var.redis_passwordless_aws_region
+  redis_passwordless_aws_host_name            = local.redis.hostname
+  redis_use_sentinel                          = var.enable_redis_sentinel
+  redis_sentinel_hosts                        = local.redis.sentinel_hosts
+  redis_sentinel_leader_name                  = local.redis.sentinel_leader
+  redis_sentinel_user                         = local.redis.sentinel_username
+  redis_sentinel_password                     = local.redis.sentinel_password
+  redis_use_mtls                              = var.enable_redis_mtls
+  enable_sentinel_mtls                        = var.enable_sentinel_mtls
+  redis_ca_cert_path                          = var.enable_redis_mtls || var.enable_sentinel_mtls ? "/etc/ssl/private/terraform-enterprise/redis/cacert.pem" : null
+  redis_client_cert_path                      = var.enable_redis_mtls || var.enable_sentinel_mtls ? "/etc/ssl/private/terraform-enterprise/redis/cert.pem" : null
+  redis_client_key_path                       = var.enable_redis_mtls || var.enable_sentinel_mtls ? "/etc/ssl/private/terraform-enterprise/redis/key.pem" : null
 
 
   trusted_proxies = local.trusted_proxies

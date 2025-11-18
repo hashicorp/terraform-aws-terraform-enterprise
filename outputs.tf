@@ -95,12 +95,12 @@ output "s3_bucket" {
 output "debug_redis_config" {
   value = {
     redis_passwordless_aws_use_instance_profile = var.redis_passwordless_aws_use_instance_profile
-    redis_use_password_auth        = var.redis_use_password_auth
-    redis_hostname                 = local.redis.hostname
-    redis_username                 = local.redis.username
-    redis_password_set             = local.redis.password != null ? "YES" : "NO"
-    redis_use_tls                  = local.redis.use_tls
-    redis_iam_auth_condition       = var.redis_passwordless_aws_use_instance_profile && !var.redis_use_password_auth
+    redis_use_password_auth                     = var.redis_use_password_auth
+    redis_hostname                              = local.redis.hostname
+    redis_username                              = local.redis.username
+    redis_password_set                          = local.redis.password != null ? "YES" : "NO"
+    redis_use_tls                               = local.redis.use_tls
+    redis_iam_auth_condition                    = var.redis_passwordless_aws_use_instance_profile && !var.redis_use_password_auth
   }
   description = "DEBUG: Complete Redis configuration for troubleshooting"
 }
@@ -116,9 +116,9 @@ output "debug_redis_username_chain" {
 
 output "debug_module_values" {
   value = {
-    redis_passwordless_aws_use_instance_profile   = var.redis_passwordless_aws_use_instance_profile && !var.redis_use_password_auth
-    redis_passwordless_aws_region    = var.redis_passwordless_aws_use_instance_profile && !var.redis_use_password_auth ? data.aws_region.current.name : ""
-    redis_passwordless_aws_host_name = var.redis_passwordless_aws_use_instance_profile && !var.redis_use_password_auth ? local.redis.hostname : ""
+    redis_passwordless_aws_use_instance_profile = var.redis_passwordless_aws_use_instance_profile && !var.redis_use_password_auth
+    redis_passwordless_aws_region               = var.redis_passwordless_aws_use_instance_profile && !var.redis_use_password_auth ? data.aws_region.current.name : ""
+    redis_passwordless_aws_host_name            = var.redis_passwordless_aws_use_instance_profile && !var.redis_use_password_auth ? local.redis.hostname : ""
   }
   description = "DEBUG: Values passed to terraform-random-tfe-utility module"
 }

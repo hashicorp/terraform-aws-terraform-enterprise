@@ -188,6 +188,12 @@ variable "redis_passwordless_aws_use_instance_profile" {
   description = "Whether or not to use AWS IAM authentication to connect to Redis. Defaults to false if no value is given."
 }
 
+variable "redis_passwordless_aws_region" {
+  default     = null
+  type        = string
+  description = "AWS Region of the AWS ElastiCache resource for Redis passwordless authentication."
+}
+
 variable "redis_authentication_mode" {
   description = "The authentincation mode for redis server instances.  Must be one of [USER_AND_PASSWORD, PASSWORD, NONE]."
   type        = string
