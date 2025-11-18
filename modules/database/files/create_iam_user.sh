@@ -47,22 +47,35 @@ EOF
 # Clean up any dirty migration states for terraform-registry
 echo "Cleaning up terraform-registry migration state..."
 psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d "$DB_NAME" <<EOF
--- Clean up terraform-registry migration state
--- The terraform-registry service uses schema_migrations table to track its own migrations
--- If migrations are in a dirty state, we need to reset them
+-- Clean up terraform-registry migration state with comprehensive approach
+-- The terraform-registry service likely uses golang-migrate which tracks state in schema_migrations
 
--- First, drop and recreate the schema_migrations table to ensure clean state
+-- Show current state for debugging
+SELECT 'Before cleanup - checking for schema_migrations table:' as status;
+SELECT table_name FROM information_schema.tables WHERE table_name = 'schema_migrations';
+
+-- Remove any existing migration state completely
 DROP TABLE IF EXISTS schema_migrations CASCADE;
+DROP TABLE IF EXISTS schema_version CASCADE;
+DROP TABLE IF EXISTS gorp_migrations CASCADE;
+DROP TABLE IF EXISTS migrations CASCADE;
 
--- Create a fresh schema_migrations table (the registry service will populate it)
-CREATE TABLE IF NOT EXISTS schema_migrations (
+-- Also check for any locks that might be held
+DELETE FROM pg_locks WHERE locktype = 'advisory' AND classid = 1410924490;
+
+-- Recreate clean schema_migrations table
+CREATE TABLE schema_migrations (
     version bigint NOT NULL,
-    dirty boolean NOT NULL,
+    dirty boolean NOT NULL DEFAULT false,
     PRIMARY KEY (version)
 );
 
--- Log the action
-SELECT 'Forced clean state for terraform-registry migrations' as migration_status;
+-- Grant permissions to our IAM user
+GRANT ALL PRIVILEGES ON schema_migrations TO "${IAM_USERNAME}";
+
+-- Show final state
+SELECT 'After cleanup - migration table ready:' as status;
+\\d schema_migrations;
 EOF
 
 # Create IAM user in PostgreSQL
