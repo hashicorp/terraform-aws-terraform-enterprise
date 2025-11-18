@@ -44,38 +44,81 @@ CREATE EXTENSION IF NOT EXISTS citext;
 SELECT extname FROM pg_extension WHERE extname IN ('hstore', 'uuid-ossp', 'citext');
 EOF
 
-# Clean up any dirty migration states for terraform-registry
-echo "Cleaning up terraform-registry migration state..."
+# Aggressive cleanup for terraform-registry migration state
+echo "Performing aggressive terraform-registry migration state cleanup..."
 psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d "$DB_NAME" <<EOF
--- Clean up terraform-registry migration state with comprehensive approach
--- The terraform-registry service likely uses golang-migrate which tracks state in schema_migrations
+-- Force terminate any active connections that might hold locks
+SELECT 'Terminating active database connections...' as status;
+SELECT pg_terminate_backend(pid) 
+FROM pg_stat_activity 
+WHERE datname = current_database() 
+  AND pid <> pg_backend_pid() 
+  AND usename != 'rdsadmin';
 
--- Show current state for debugging
-SELECT 'Before cleanup - checking for schema_migrations table:' as status;
-SELECT table_name FROM information_schema.tables WHERE table_name = 'schema_migrations';
+-- Clear all advisory locks forcefully
+SELECT 'Clearing all advisory locks...' as status;
+SELECT pg_advisory_unlock_all();
 
--- Remove any existing migration state completely
+-- Debug: Show current migration state
+SELECT 'DEBUG: Checking existing migration tables...' as status;
+SELECT table_name, table_schema 
+FROM information_schema.tables 
+WHERE table_name IN ('schema_migrations', 'schema_version', 'gorp_migrations', 'migrations');
+
+-- Show current content if schema_migrations exists
+DO \$\$
+BEGIN
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'schema_migrations') THEN
+        RAISE NOTICE 'Current schema_migrations content:';
+        PERFORM version, dirty FROM schema_migrations ORDER BY version;
+    END IF;
+END \$\$;
+
+-- Drop all possible migration tracking tables with CASCADE
 DROP TABLE IF EXISTS schema_migrations CASCADE;
-DROP TABLE IF EXISTS schema_version CASCADE;
+DROP TABLE IF EXISTS schema_version CASCADE; 
 DROP TABLE IF EXISTS gorp_migrations CASCADE;
 DROP TABLE IF EXISTS migrations CASCADE;
 
--- Also check for any locks that might be held
-DELETE FROM pg_locks WHERE locktype = 'advisory' AND classid = 1410924490;
+-- Drop and recreate terraform_registry schema if it exists
+DROP SCHEMA IF EXISTS terraform_registry CASCADE;
+CREATE SCHEMA IF NOT EXISTS terraform_registry;
+GRANT ALL PRIVILEGES ON SCHEMA terraform_registry TO "${IAM_USERNAME}";
 
--- Recreate clean schema_migrations table
+-- Remove any stale locks specifically for golang-migrate
+-- golang-migrate uses advisory lock with classid 1410924490
+SELECT 'Clearing golang-migrate specific locks...' as status;
+SELECT pg_advisory_unlock(classid, objid) 
+FROM pg_locks 
+WHERE locktype = 'advisory' AND classid = 1410924490;
+
+-- Create completely fresh schema_migrations table with exact golang-migrate format
+SELECT 'Creating fresh schema_migrations table...' as status;
 CREATE TABLE schema_migrations (
-    version bigint NOT NULL,
-    dirty boolean NOT NULL DEFAULT false,
-    PRIMARY KEY (version)
+    version bigint NOT NULL PRIMARY KEY,
+    dirty boolean NOT NULL DEFAULT false
 );
 
--- Grant permissions to our IAM user
+-- Grant comprehensive permissions to IAM user
 GRANT ALL PRIVILEGES ON schema_migrations TO "${IAM_USERNAME}";
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "${IAM_USERNAME}";
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO "${IAM_USERNAME}";
+GRANT USAGE ON SCHEMA terraform_registry TO "${IAM_USERNAME}";
+GRANT CREATE ON SCHEMA terraform_registry TO "${IAM_USERNAME}";
 
--- Show final state
-SELECT 'After cleanup - migration table ready:' as status;
+-- Reset any database-level configuration that might affect migrations
+SELECT 'Resetting database configuration...' as status;
+SELECT pg_reload_conf();
+
+-- Final verification
+SELECT 'FINAL STATE: Migration table structure:' as status;
 \\d schema_migrations;
+
+SELECT 'FINAL STATE: No existing migration records:' as status;
+SELECT COUNT(*) as migration_count FROM schema_migrations;
+
+SELECT 'FINAL STATE: Available schemas:' as status;
+SELECT schema_name FROM information_schema.schemata WHERE schema_name NOT IN ('information_schema', 'pg_catalog', 'pg_toast');
 EOF
 
 # Create IAM user in PostgreSQL
