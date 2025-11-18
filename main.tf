@@ -318,7 +318,7 @@ module "runtime_container_engine_config" {
   redis_user                                  = local.redis.username
   redis_password                              = local.redis.password
   redis_use_tls                               = local.redis.use_tls
-  redis_use_auth                              = local.redis.use_password_auth
+  redis_use_auth                              = local.redis.use_password_auth || var.redis_passwordless_aws_use_instance_profile
   redis_passwordless_aws_use_instance_profile = var.redis_passwordless_aws_use_instance_profile
   redis_passwordless_aws_region               = var.redis_passwordless_aws_region
   redis_passwordless_aws_host_name            = local.redis.hostname
