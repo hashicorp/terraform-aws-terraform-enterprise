@@ -54,9 +54,9 @@ EOF
 echo "Setting up extensions in IAM database: ${IAM_USERNAME}_db"
 psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d "${IAM_USERNAME}_db" <<EOF
 -- Install required extensions
-CREATE EXTENSION IF NOT EXISTS hstore;
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-CREATE EXTENSION IF NOT EXISTS citext;
+CREATE EXTENSION IF NOT EXISTS "hstore" WITH SCHEMA "rails";
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "rails";
+CREATE EXTENSION IF NOT EXISTS "citext" WITH SCHEMA "registry";
 
 -- Grant full privileges to the IAM user on their own database
 GRANT ALL PRIVILEGES ON DATABASE "${IAM_USERNAME}_db" TO "${IAM_USERNAME}";
