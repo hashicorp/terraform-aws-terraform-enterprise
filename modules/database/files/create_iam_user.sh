@@ -44,7 +44,7 @@ CREATE EXTENSION IF NOT EXISTS citext;
 SELECT extname FROM pg_extension WHERE extname IN ('hstore', 'uuid-ossp', 'citext');
 EOF
 
-# Create IAM user first
+# Create IAM user and immediately create their own database
 echo "Creating IAM user: ${IAM_USERNAME}"
 psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d "$DB_NAME" <<EOF
 DO \$\$
@@ -57,37 +57,26 @@ BEGIN
         RAISE NOTICE 'IAM user already exists: ${IAM_USERNAME}';
     END IF;
 END \$\$;
-EOF
 
-# Create a separate database for the IAM user with IAM user as owner
-echo "Creating separate database for IAM user: ${IAM_USERNAME}_db"
-psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d postgres <<EOF
--- Create a dedicated database for the IAM user with IAM user as owner
+-- Immediately create a separate database for the IAM user with IAM user as owner
 CREATE DATABASE "${IAM_USERNAME}_db" WITH OWNER = "${IAM_USERNAME}";
 EOF
 
-# Install required extensions in the new database and grant permissions
-echo "Setting up IAM database with extensions and permissions"
+# Install required extensions in the IAM user's database
+echo "Setting up extensions in IAM database: ${IAM_USERNAME}_db"
 psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" -d "${IAM_USERNAME}_db" <<EOF
--- Install required extensions in the new database
+-- Install required extensions
 CREATE EXTENSION IF NOT EXISTS hstore;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS citext;
 
--- Grant permissions on the dedicated database
-GRANT CONNECT ON DATABASE "${IAM_USERNAME}_db" TO "${IAM_USERNAME}";
-GRANT CREATE ON DATABASE "${IAM_USERNAME}_db" TO "${IAM_USERNAME}";
-GRANT USAGE ON SCHEMA public TO "${IAM_USERNAME}";
-GRANT CREATE ON SCHEMA public TO "${IAM_USERNAME}";
+-- Grant full privileges to the IAM user on their own database
+GRANT ALL PRIVILEGES ON DATABASE "${IAM_USERNAME}_db" TO "${IAM_USERNAME}";
+GRANT ALL PRIVILEGES ON SCHEMA public TO "${IAM_USERNAME}";
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "${IAM_USERNAME}";
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO "${IAM_USERNAME}";
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO "${IAM_USERNAME}";
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO "${IAM_USERNAME}";
-
--- Grant access to use installed extensions
-GRANT USAGE ON TYPE citext TO "${IAM_USERNAME}";
-GRANT USAGE ON TYPE hstore TO "${IAM_USERNAME}";
-GRANT USAGE ON TYPE uuid TO "${IAM_USERNAME}";
 EOF
 
 echo "IAM user setup completed successfully with dedicated database!"
