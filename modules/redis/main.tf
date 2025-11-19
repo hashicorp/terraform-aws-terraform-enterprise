@@ -64,6 +64,24 @@ resource "aws_elasticache_subnet_group" "tfe" {
   subnet_ids = var.network_subnets_private
 }
 
+# Disable the default user when using IAM authentication
+resource "aws_elasticache_user" "default_disabled" {
+  count     = var.active_active && local.redis_use_iam_auth ? 1 : 0
+  user_id   = "default"
+  user_name = "default"
+
+  authentication_mode {
+    type = "no-password"
+  }
+
+  access_string = "off ~* &* -@all"
+  engine        = "REDIS"
+
+  tags = {
+    Name = "${var.friendly_name_prefix}-redis-default-user-disabled"
+  }
+}
+
 # ElastiCache User for IAM authentication
 resource "aws_elasticache_user" "iam_user" {
   count     = var.active_active && local.redis_use_iam_auth ? 1 : 0
@@ -86,12 +104,13 @@ resource "aws_elasticache_user" "iam_user" {
 }
 
 # ElastiCache User Group for IAM authentication
-# Note: AWS ElastiCache has a built-in "default" user that must be included in user groups
+# AWS requires the "default" user to be included in all user groups
 resource "aws_elasticache_user_group" "iam_group" {
   count         = var.active_active && local.redis_use_iam_auth ? 1 : 0
   engine        = "REDIS"
   user_group_id = "${var.friendly_name_prefix}-iam-group"
   user_ids = [
+    "default",
     aws_elasticache_user.iam_user[0].user_id
   ]
 
