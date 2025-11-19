@@ -18,8 +18,8 @@ resource "aws_elasticache_subnet_group" "tfe" {
   subnet_ids = var.network_subnets_private
 }
 
-# Note: AWS ElastiCache automatically creates a built-in "default" user
-# When using IAM authentication, we include it in the user group but don't manage it explicitly
+# Note: For IAM authentication, we let AWS manage the built-in "default" user
+# We don't explicitly manage it since it's needed for IAM authentication with username "default"
 
 # ElastiCache User for IAM authentication
 resource "aws_elasticache_user" "iam_user" {
@@ -40,16 +40,18 @@ resource "aws_elasticache_user" "iam_user" {
   tags = {
     Name = "${var.friendly_name_prefix}-redis-iam-user"
   }
+
 }
 
 # ElastiCache User Group for IAM authentication
 # AWS requires the "default" user to be included in all user groups
+# We include both "default" (for IAM auth) and our custom IAM user
 resource "aws_elasticache_user_group" "iam_group" {
   count         = var.active_active && local.redis_use_iam_auth ? 1 : 0
   engine        = "REDIS"
   user_group_id = "${var.friendly_name_prefix}-iam-group"
   user_ids = [
-    "default",
+    "default",  # AWS-managed default user for IAM authentication
     aws_elasticache_user.iam_user[0].user_id
   ]
 
@@ -82,6 +84,7 @@ resource "aws_elasticache_replication_group" "redis" {
 
   # Password used to access a password protected server.
   # Can be specified only if transit_encryption_enabled = true.
+  # For IAM authentication, auth_token must be null to force IAM-only authentication
   auth_token = var.redis_encryption_in_transit && local.redis_use_password_auth ? random_id.redis_password[0].hex : null
 
   # Transit encryption is required when using user groups (IAM authentication)
