@@ -1,5 +1,14 @@
-# Copyright (c) HashiCorp, Inc.\n# SPDX-License-Identifier: MPL-2.0\n\nlocals {\n  redis_use_password_auth = var.redis_use_password_auth || var.redis_authentication_mode == \"PASSWORD\"\n  redis_use_iam_auth      = var.redis_enable_iam_auth && !var.redis_use_password_auth\n}\n\nresource \"random_id\" \"redis_password\" {\n  count       = var.active_active && local.redis_use_password_auth ? 1 : 0\n  byte_length = 16\n}
-  cidr_blocks       = var.network_private_subnet_cidrs
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
+locals {
+  redis_use_password_auth = var.redis_use_password_auth || var.redis_authentication_mode == "PASSWORD"
+  redis_use_iam_auth      = var.redis_enable_iam_auth && !var.redis_use_password_auth
+}
+
+resource "random_id" "redis_password" {
+  count       = var.active_active && local.redis_use_password_auth ? 1 : 0
+  byte_length = 16
 }
 
 resource "aws_elasticache_subnet_group" "tfe" {

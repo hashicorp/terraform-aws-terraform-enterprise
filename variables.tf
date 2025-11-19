@@ -647,7 +647,7 @@ variable "license_reporting_opt_out" {
 
 variable "node_count" {
   type        = number
-  default     = 1  # Reduced from 2 to 1 to save EC2 costs for release tests
+  default     = 1 # Reduced from 2 to 1 to save EC2 costs for release tests
   description = "The number of nodes you want in your autoscaling group"
 
   validation {
