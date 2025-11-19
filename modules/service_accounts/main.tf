@@ -138,7 +138,10 @@ resource "aws_iam_policy" "redis_iam_policy" {
         Resource = "*"
         Condition = {
           StringEquals = {
-            "elasticache:Username" = "${var.friendly_name_prefix}-iam-user"
+            "elasticache:Username" = [
+              "default",                                    # AWS-managed default user
+              "${var.friendly_name_prefix}-iam-user"       # Custom IAM user
+            ]
           }
         }
       },
