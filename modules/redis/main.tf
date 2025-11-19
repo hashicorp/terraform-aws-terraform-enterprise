@@ -1,6 +1,7 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
+# Redis module - simplified to reuse TFE security group instead of creating separate ones
 locals {
   redis_use_password_auth = var.redis_use_password_auth || var.redis_authentication_mode == "PASSWORD"
   redis_use_iam_auth      = var.redis_enable_iam_auth && !var.redis_use_password_auth
