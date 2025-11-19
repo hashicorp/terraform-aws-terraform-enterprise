@@ -69,6 +69,22 @@ variable "parameter_group_name" {
 
 variable "redis_enable_iam_auth" {
   type        = bool
-  description = "Whether to enable IAM authentication for Redis. Used for passwordless authentication."
+  description = "Enable IAM authentication for Redis ElastiCache."
   default     = false
+}
+
+# Security
+variable "redis_encryption_in_transit" {
+  type        = bool
+  description = "Determine whether Redis traffic is encrypted in transit."
+}
+
+variable "redis_encryption_at_rest" {
+  type        = bool
+  description = "Determine whether Redis data is encrypted at rest."
+}
+
+variable "redis_use_password_auth" {
+  type        = bool
+  description = "Determine if a password is required for Redis."
 }
