@@ -322,6 +322,7 @@ module "runtime_container_engine_config" {
   redis_passwordless_aws_use_instance_profile = var.redis_passwordless_aws_use_instance_profile && !var.redis_use_password_auth
   redis_passwordless_aws_region               = var.redis_passwordless_aws_region
   redis_passwordless_aws_host_name            = var.redis_passwordless_aws_use_instance_profile && !var.redis_use_password_auth ? local.redis.cluster_id : local.redis.hostname
+  redis_passwordless_aws_iam_user             = var.redis_passwordless_aws_use_instance_profile && !var.redis_use_password_auth ? local.redis.iam_user : null
   redis_use_sentinel                          = var.enable_redis_sentinel
   redis_sentinel_hosts                        = local.redis.sentinel_hosts
   redis_sentinel_leader_name                  = local.redis.sentinel_leader

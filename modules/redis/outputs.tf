@@ -69,3 +69,8 @@ output "cluster_id" {
   value       = var.active_active ? aws_elasticache_replication_group.redis[0].replication_group_id : ""
   description = "The Redis cluster ID for IAM authentication."
 }
+
+output "iam_user" {
+  value       = local.redis_use_iam_auth ? aws_elasticache_user.iam_user[0].user_name : null
+  description = "The custom IAM user for Redis IAM authentication."
+}
