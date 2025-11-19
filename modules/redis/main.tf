@@ -26,6 +26,9 @@ resource "aws_security_group_rule" "redis_tfe_ingress" {
   to_port                  = var.redis_port
   protocol                 = "tcp"
   source_security_group_id = var.tfe_instance_sg
+
+  # Ensure this rule allows TFE instance security group access to Redis
+  # This is critical for IAM authentication to work properly
 }
 
 resource "aws_security_group_rule" "redis_tfe_egress" {
