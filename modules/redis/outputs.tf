@@ -61,6 +61,6 @@ output "aws_elasticache_subnet_group_name" {
 }
 
 output "aws_security_group_redis" {
-  value       = var.active_active ? aws_security_group.redis[0].id : ""
-  description = "The identity of the security group attached to the Redis Elasticache replication group."
+  value       = var.active_active ? var.tfe_instance_sg : ""
+  description = "The identity of the security group used by Redis Elasticache replication group (shared with TFE instances)."
 }
