@@ -92,7 +92,6 @@ resource "aws_elasticache_user_group" "iam_group" {
   engine        = "REDIS"
   user_group_id = "${var.friendly_name_prefix}-iam-group"
   user_ids = [
-    "default", # Built-in AWS ElastiCache default user
     aws_elasticache_user.iam_user[0].user_id
   ]
 
