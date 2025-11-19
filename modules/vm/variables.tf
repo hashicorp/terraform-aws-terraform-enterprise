@@ -31,6 +31,12 @@ variable "aws_lb_target_group_tfe_tg_admin_api_arn" {
   type        = string
 }
 
+variable "existing_security_group_id" {
+  description = "(Optional) Existing security group ID to use for TFE instances. If provided, no new security group will be created."
+  type        = string
+  default     = null
+}
+
 variable "admin_api_https_port" {
   type        = number
   description = "Port application listens on for Admin API HTTPS."

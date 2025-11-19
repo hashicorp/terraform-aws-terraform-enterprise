@@ -1,63 +1,4 @@
-# Copyright (c) HashiCorp, Inc.
-# SPDX-License-Identifier: MPL-2.0
-
-locals {
-  redis_use_password_auth = var.redis_use_password_auth || var.redis_authentication_mode == "PASSWORD"
-  redis_use_iam_auth      = var.redis_enable_iam_auth && !var.redis_use_password_auth
-}
-
-resource "random_id" "redis_password" {
-  count       = var.active_active && local.redis_use_password_auth ? 1 : 0
-  byte_length = 16
-}
-
-resource "aws_security_group" "redis" {
-  count       = var.active_active ? 1 : 0
-  description = "The security group of the Redis deployment for TFE."
-  name        = "${var.friendly_name_prefix}-tfe-redis"
-  vpc_id      = var.network_id
-}
-
-resource "aws_security_group_rule" "redis_tfe_ingress" {
-  count                    = var.active_active ? 1 : 0
-  security_group_id        = aws_security_group.redis[0].id
-  type                     = "ingress"
-  from_port                = var.redis_port
-  to_port                  = var.redis_port
-  protocol                 = "tcp"
-  source_security_group_id = var.tfe_instance_sg
-
-  # Ensure this rule allows TFE instance security group access to Redis
-  # This is critical for IAM authentication to work properly
-}
-
-resource "aws_security_group_rule" "redis_tfe_egress" {
-  count                    = var.active_active ? 1 : 0
-  security_group_id        = aws_security_group.redis[0].id
-  type                     = "egress"
-  from_port                = 0
-  to_port                  = 0
-  protocol                 = "-1"
-  source_security_group_id = var.tfe_instance_sg
-}
-
-resource "aws_security_group_rule" "redis_ingress" {
-  count             = var.active_active ? 1 : 0
-  security_group_id = aws_security_group.redis[0].id
-  type              = "ingress"
-  from_port         = var.redis_port
-  to_port           = var.redis_port
-  protocol          = "tcp"
-  cidr_blocks       = var.network_private_subnet_cidrs
-}
-
-resource "aws_security_group_rule" "redis_egress" {
-  count             = var.active_active ? 1 : 0
-  security_group_id = aws_security_group.redis[0].id
-  type              = "egress"
-  from_port         = var.redis_port
-  to_port           = var.redis_port
-  protocol          = "tcp"
+# Copyright (c) HashiCorp, Inc.\n# SPDX-License-Identifier: MPL-2.0\n\nlocals {\n  redis_use_password_auth = var.redis_use_password_auth || var.redis_authentication_mode == \"PASSWORD\"\n  redis_use_iam_auth      = var.redis_enable_iam_auth && !var.redis_use_password_auth\n}\n\nresource \"random_id\" \"redis_password\" {\n  count       = var.active_active && local.redis_use_password_auth ? 1 : 0\n  byte_length = 16\n}
   cidr_blocks       = var.network_private_subnet_cidrs
 }
 
@@ -125,7 +66,7 @@ resource "aws_elasticache_replication_group" "redis" {
   engine_version             = var.engine_version
   parameter_group_name       = var.parameter_group_name
   port                       = var.redis_port
-  security_group_ids         = [aws_security_group.redis[0].id]
+  security_group_ids         = [var.tfe_instance_sg]  # Reuse TFE security group instead of creating separate one
   snapshot_retention_limit   = 0
   subnet_group_name          = aws_elasticache_subnet_group.tfe[0].name
 
