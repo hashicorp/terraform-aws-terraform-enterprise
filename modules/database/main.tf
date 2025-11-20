@@ -166,7 +166,7 @@ resource "aws_security_group_rule" "postgres_db_egress" {
 
 resource "aws_instance" "postgres_db_instance" {
   ami                         = data.aws_ami.ubuntu.id
-  instance_type               = "m5.xlarge"
+  instance_type               = "t3.micro"
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.postgresql.id]
   iam_instance_profile        = var.aws_iam_instance_profile
@@ -174,7 +174,7 @@ resource "aws_instance" "postgres_db_instance" {
   subnet_id                   = var.network_public_subnets[0]
   root_block_device {
     volume_type           = "gp3"
-    volume_size           = 100
+    volume_size           = 20
     delete_on_termination = true
     encrypted             = true
   }
