@@ -82,12 +82,10 @@ module "redis" {
   source = "./modules/redis"
   count  = local.enable_redis_module && var.enable_redis_sentinel == false || local.enable_redis_module && local.redis_mtls_enabled == false ? 1 : 0
 
-  active_active                = var.operational_mode == "active-active"
-  friendly_name_prefix         = var.friendly_name_prefix
-  network_id                   = local.network_id
-  network_private_subnet_cidrs = var.network_private_subnet_cidrs
-  network_subnets_private      = local.network_private_subnets
-  tfe_instance_sg              = module.vm.tfe_instance_sg
+  active_active           = var.operational_mode == "active-active"
+  friendly_name_prefix    = var.friendly_name_prefix
+  network_subnets_private = local.network_private_subnets
+  tfe_instance_sg         = module.vm.tfe_instance_sg
 
   cache_size           = var.redis_cache_size
   engine_version       = var.redis_engine_version

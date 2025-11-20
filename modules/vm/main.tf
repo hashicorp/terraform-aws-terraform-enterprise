@@ -4,7 +4,7 @@
 locals {
   # Use existing security group if provided, otherwise create new one
   use_existing_security_group = var.existing_security_group_id != null
-  security_group_id          = local.use_existing_security_group ? var.existing_security_group_id : aws_security_group.tfe_instance[0].id
+  security_group_id           = local.use_existing_security_group ? var.existing_security_group_id : aws_security_group.tfe_instance[0].id
 }
 
 ###############
@@ -17,8 +17,8 @@ resource "aws_security_group" "tfe_instance" {
 }
 
 resource "aws_security_group_rule" "tfe_ui" {
-  count = local.use_existing_security_group ? 0 : 1  # Skip rules if using existing SG
-  
+  count = local.use_existing_security_group ? 0 : 1 # Skip rules if using existing SG
+
   security_group_id        = local.security_group_id
   type                     = "ingress"
   from_port                = 443
@@ -29,7 +29,7 @@ resource "aws_security_group_rule" "tfe_ui" {
 }
 
 resource "aws_security_group_rule" "vault_cluster" {
-  count = var.active_active && !local.use_existing_security_group ? 1 : 0  # Skip if using existing SG
+  count = var.active_active && !local.use_existing_security_group ? 1 : 0 # Skip if using existing SG
 
   security_group_id        = local.security_group_id
   type                     = "ingress"
@@ -41,7 +41,7 @@ resource "aws_security_group_rule" "vault_cluster" {
 }
 
 resource "aws_security_group_rule" "ssh_inbound" {
-  count = var.enable_ssh && !local.use_existing_security_group ? 1 : 0  # Skip if using existing SG
+  count = var.enable_ssh && !local.use_existing_security_group ? 1 : 0 # Skip if using existing SG
 
   security_group_id        = local.security_group_id
   type                     = "ingress"
@@ -53,8 +53,8 @@ resource "aws_security_group_rule" "ssh_inbound" {
 }
 
 resource "aws_security_group_rule" "tfe_inbound" {
-  count = local.use_existing_security_group ? 0 : 1  # Skip if using existing SG
-  
+  count = local.use_existing_security_group ? 0 : 1 # Skip if using existing SG
+
   security_group_id = local.security_group_id
   type              = "ingress"
   from_port         = 0
@@ -64,8 +64,8 @@ resource "aws_security_group_rule" "tfe_inbound" {
 }
 
 resource "aws_security_group_rule" "tfe_outbound" {
-  count = local.use_existing_security_group ? 0 : 1  # Skip if using existing SG
-  
+  count = local.use_existing_security_group ? 0 : 1 # Skip if using existing SG
+
   security_group_id = local.security_group_id
   type              = "egress"
   from_port         = 0
@@ -75,8 +75,8 @@ resource "aws_security_group_rule" "tfe_outbound" {
 }
 
 resource "aws_security_group_rule" "tfe_dashboard" {
-  count = (!var.active_active || var.is_replicated_deployment) && !local.use_existing_security_group ? 1 : 0  # Skip if using existing SG
-  
+  count = (!var.active_active || var.is_replicated_deployment) && !local.use_existing_security_group ? 1 : 0 # Skip if using existing SG
+
   security_group_id        = local.security_group_id
   type                     = "ingress"
   from_port                = 8800
@@ -87,8 +87,8 @@ resource "aws_security_group_rule" "tfe_dashboard" {
 }
 
 resource "aws_security_group_rule" "tfe_admin_api" {
-  count = local.use_existing_security_group ? 0 : 1  # Skip if using existing SG
-  
+  count = local.use_existing_security_group ? 0 : 1 # Skip if using existing SG
+
   security_group_id        = local.security_group_id
   type                     = "ingress"
   from_port                = var.admin_api_https_port

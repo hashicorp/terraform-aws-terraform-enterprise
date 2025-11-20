@@ -51,7 +51,7 @@ resource "aws_elasticache_user_group" "iam_group" {
   engine        = "REDIS"
   user_group_id = "${var.friendly_name_prefix}-iam-group"
   user_ids = [
-    "default",  # AWS-managed default user for IAM authentication
+    "default", # AWS-managed default user for IAM authentication
     aws_elasticache_user.iam_user[0].user_id
   ]
 
@@ -78,7 +78,7 @@ resource "aws_elasticache_replication_group" "redis" {
   engine_version             = var.engine_version
   parameter_group_name       = var.parameter_group_name
   port                       = var.redis_port
-  security_group_ids         = [var.tfe_instance_sg]  # Reuse TFE security group instead of creating separate one
+  security_group_ids         = [var.tfe_instance_sg] # Reuse TFE security group instead of creating separate one
   snapshot_retention_limit   = 0
   subnet_group_name          = aws_elasticache_subnet_group.tfe[0].name
 
