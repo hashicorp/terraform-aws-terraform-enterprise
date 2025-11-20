@@ -1,6 +1,9 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
+data "aws_region" "current" {}
+data "aws_caller_identity" "current" {}
+
 resource "aws_iam_instance_profile" "tfe" {
   count = var.existing_iam_instance_profile_name == null ? 1 : 0
 
@@ -134,16 +137,12 @@ resource "aws_iam_policy" "redis_iam_policy" {
         Action = [
           "elasticache:Connect"
         ]
-        Effect   = "Allow"
-        Resource = "*"
-        Condition = {
-          StringEquals = {
-            "elasticache:Username" = [
-              "default",                                    # AWS-managed default user
-              "${var.friendly_name_prefix}-iam-user"       # Custom IAM user
-            ]
-          }
-        }
+        Effect = "Allow"
+        Resource = [
+          "arn:aws:elasticache:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:replicationgroup:${var.redis_replication_group_id}",
+          "arn:aws:elasticache:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:user:default",
+          "arn:aws:elasticache:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:user:${var.redis_iam_user_name}"
+        ]
       },
     ]
   })

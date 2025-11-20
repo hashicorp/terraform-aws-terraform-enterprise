@@ -46,6 +46,8 @@ module "service_accounts" {
   postgres_ca_certificate_secret_id     = var.postgres_ca_certificate_secret_id
   vm_key_secret_id                      = var.vm_key_secret_id
   redis_enable_iam_auth                 = var.redis_passwordless_aws_use_instance_profile
+  redis_replication_group_id            = local.redis.enabled ? local.redis.cluster_id : null
+  redis_iam_user_name                   = local.redis.enabled ? local.redis.iam_user : null
 }
 
 # -----------------------------------------------------------------------------

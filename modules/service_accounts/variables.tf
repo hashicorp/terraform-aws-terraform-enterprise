@@ -104,3 +104,15 @@ variable "redis_enable_iam_auth" {
   description = "Whether to enable IAM authentication for Redis. Used for passwordless authentication."
   default     = false
 }
+
+variable "redis_replication_group_id" {
+  type        = string
+  description = "The ID of the Redis replication group. Required when redis_enable_iam_auth is true."
+  default     = null
+}
+
+variable "redis_iam_user_name" {
+  type        = string
+  description = "The name of the custom IAM user for Redis authentication. Required when redis_enable_iam_auth is true."
+  default     = null
+}
