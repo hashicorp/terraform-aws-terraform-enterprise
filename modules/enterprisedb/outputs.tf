@@ -28,12 +28,12 @@ output "parameters" {
 }
 
 output "iam_user_setup_status" {
-  value = "EDB does not support IAM authentication - using standard authentication"
+  value       = "EDB does not support IAM authentication - using standard authentication"
   description = "Status of PostgreSQL IAM user setup"
 }
 
 output "postgres_iam_setup_ssm_document" {
-  value = null
+  value       = null
   description = "SSM Document information for PostgreSQL IAM user setup (manual execution required)"
 }
 # Type fix verification

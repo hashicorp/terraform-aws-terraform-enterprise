@@ -9,11 +9,7 @@ apt-get update -y && apt-get install -y postgresql-client
 # Set environment variables for database connection
 export PGPASSWORD="${DB_PASSWORD}"
 
-echo "Connecting to PostgreSQL database..."
-echo "Host: ${DB_HOST}"
-echo "Port: ${DB_PORT}"
-echo "Username: ${DB_USERNAME}"
-echo "Database: ${DB_NAME}"
+# Connecting to PostgreSQL database
 
 # Wait for database to be ready
 echo "Waiting for database to be available..."
@@ -68,4 +64,3 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO "${IAM_USERN
 EOF
 
 echo "IAM user setup completed successfully with dedicated database!"
-echo "Database name: ${IAM_USERNAME}_db"

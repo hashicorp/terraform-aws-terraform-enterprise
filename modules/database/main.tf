@@ -30,9 +30,9 @@ resource "random_string" "postgresql_password" {
   # Use fixed password for testing to enable direct database access
   length  = 8
   special = false
-  upper   = false 
+  upper   = false
   numeric = false
-  
+
   # Override with fixed value - this ensures consistent password for testing
   keepers = {
     password = local.fixed_password
@@ -100,7 +100,7 @@ resource "aws_db_instance" "postgresql" {
   engine            = "postgres"
   instance_class    = var.db_size
   # Use fixed password for testing to enable direct database access for IAM user setup
-  password          = local.fixed_password
+  password = local.fixed_password
   # no special characters allowed
   username = var.db_username
 
@@ -125,8 +125,8 @@ resource "aws_db_instance" "postgresql" {
   kms_key_id             = var.kms_key_arn
   storage_type           = "gp2"
   vpc_security_group_ids = [aws_security_group.postgresql.id]
-  
-    # Enable IAM authentication when postgres_enable_iam_auth is true
+
+  # Enable IAM authentication when postgres_enable_iam_auth is true
   iam_database_authentication_enabled = var.postgres_enable_iam_auth
 }
 
@@ -186,7 +186,7 @@ resource "aws_instance" "postgres_db_instance" {
 
 resource "null_resource" "create_iam_db_user" {
   count = var.postgres_enable_iam_auth ? 1 : 0
-  
+
   depends_on = [aws_db_instance.postgresql]
 
   connection {
@@ -196,7 +196,7 @@ resource "null_resource" "create_iam_db_user" {
     host        = aws_instance.postgres_db_instance.public_ip
   }
 
-   provisioner "file" {
+  provisioner "file" {
     source      = "${path.module}/files/create_iam_user.sh"
     destination = "/home/ubuntu/create_iam_user.sh"
   }

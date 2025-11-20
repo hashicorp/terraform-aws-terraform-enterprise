@@ -10,9 +10,7 @@ DB_PORT="5432"
 DB_NAME="hashicorp"
 DB_USER="hashicorp"
 
-echo "Attempting to connect to: ${DB_HOST}:${DB_PORT}"
-echo "Database: ${DB_NAME}"
-echo "User: ${DB_USER}"
+# Attempting database connection
 
 # Test basic connectivity
 echo "1. Testing network connectivity..."
