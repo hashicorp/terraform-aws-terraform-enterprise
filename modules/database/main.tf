@@ -1,9 +1,6 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
-# Get current AWS region
-data "aws_region" "current" {}
-
 # Get latest Ubuntu AMI
 data "aws_ami" "ubuntu" {
   most_recent = true
