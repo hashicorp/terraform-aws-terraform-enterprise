@@ -33,12 +33,6 @@ variable "ec2_launch_template_tag_specifications" {
   default = []
 }
 
-variable "existing_vm_security_group_id" {
-  type        = string
-  default     = null
-  description = "(Optional) Existing security group ID to use for TFE instances. If provided, no new security group will be created."
-}
-
 variable "asg_tags" {
   type        = map(string)
   description = "(Optional) Map of tags only used for the autoscaling group. If you are using the AWS provider's default_tags,please note that it tags every taggable resource except for the autoscaling group, therefore this variable may be used to duplicate the key/value pairs in the default_tags if you wish."
