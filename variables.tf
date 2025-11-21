@@ -647,7 +647,7 @@ variable "license_reporting_opt_out" {
 
 variable "node_count" {
   type        = number
-  default     = 1
+  default     = 2
   description = "The number of nodes you want in your autoscaling group"
 
   validation {
