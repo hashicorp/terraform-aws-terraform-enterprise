@@ -25,3 +25,5 @@ output "username" {
 output "parameters" {
   value       = var.db_parameters
   description = "PostgreSQL server parameters for the connection URI."
+}
+
