@@ -11,8 +11,8 @@ output "password" {
 }
 
 output "username" {
-  value       = local.redis_use_iam_auth ? "default" : null
-  description = "The username which is required to create connections with the Redis Elasticache replication group. Returns 'default' for IAM authentication (required by AWS ElastiCache)."
+  value       = local.redis_use_iam_auth ? aws_elasticache_user.iam_user[0].user_name : null
+  description = "The username which is required to create connections with the Redis Elasticache replication group. Returns IAM username for IAM authentication, null for password authentication."
 }
 
 output "redis_port" {
