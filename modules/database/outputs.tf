@@ -13,7 +13,7 @@ output "name" {
 
 output "password" {
   value       = aws_db_instance.postgresql.password
-  description = "The password of the PostgreSQL master user. Required for creating IAM-enabled database users."
+  description = "The password of the main PostgreSQL user."
   sensitive   = true
 }
 
