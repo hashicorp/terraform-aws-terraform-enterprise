@@ -25,15 +25,3 @@ output "username" {
 output "parameters" {
   value       = var.db_parameters
   description = "PostgreSQL server parameters for the connection URI."
-}
-
-output "identifier" {
-  value       = aws_rds_cluster.aurora_postgresql.cluster_identifier
-  description = "The database identifier of the PostgreSQL Aurora cluster."
-}
-
-output "dbi_resource_id" {
-  value       = aws_rds_cluster.aurora_postgresql.cluster_resource_id
-  description = "The DBI resource ID of the PostgreSQL Aurora cluster for IAM authentication."
-}
-

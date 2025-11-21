@@ -22,18 +22,6 @@ output "username" {
   description = "The name of the main PostgreSQL user."
 }
 
-
-
-output "identifier" {
-  value       = aws_db_instance.postgresql.identifier
-  description = "The database identifier of the PostgreSQL RDS instance."
-}
-
-output "dbi_resource_id" {
-  value       = aws_db_instance.postgresql.resource_id
-  description = "The DBI resource ID of the PostgreSQL RDS instance for IAM authentication."
-}
-
 output "parameters" {
   value       = var.db_parameters
   description = "PostgreSQL server parameters for the connection URI."
