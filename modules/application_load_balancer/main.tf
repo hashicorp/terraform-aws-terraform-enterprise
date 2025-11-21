@@ -111,13 +111,9 @@ resource "aws_lb_target_group" "tfe_tg_443" {
   vpc_id   = var.network_id
 
   health_check {
-    path                = "/_health_check"
-    protocol            = "HTTPS"
-    matcher             = "200-399"
-    timeout             = 15
-    interval            = 60
-    healthy_threshold   = 2
-    unhealthy_threshold = 10
+    path     = "/_health_check"
+    protocol = "HTTPS"
+    matcher  = "200-399"
   }
 }
 
@@ -144,13 +140,9 @@ resource "aws_lb_target_group" "tfe_tg_8800" {
   vpc_id   = var.network_id
 
   health_check {
-    path                = "/"
-    protocol            = "HTTPS"
-    matcher             = "200-399"
-    timeout             = 15
-    interval            = 60
-    healthy_threshold   = 2
-    unhealthy_threshold = 10
+    path     = "/"
+    protocol = "HTTPS"
+    matcher  = "200-399"
   }
 }
 
@@ -174,13 +166,9 @@ resource "aws_lb_target_group" "tfe_tg_admin_api" {
   vpc_id   = var.network_id
 
   health_check {
-    path                = "/api/v1/ping"
-    protocol            = "HTTPS"
-    matcher             = "200-399,400,401,403"
-    timeout             = 15
-    interval            = 60
-    healthy_threshold   = 2
-    unhealthy_threshold = 10
+    path     = "/api/v1/ping"
+    protocol = "HTTPS"
+    matcher  = "200-399,400,401,403"
   }
 }
 
