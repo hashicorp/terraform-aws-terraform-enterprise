@@ -546,6 +546,7 @@ module "vm" {
   network_private_subnet_cidrs             = local.network_private_subnet_cidrs
   node_count                               = var.node_count
   user_data_base64                         = var.is_replicated_deployment ? module.tfe_init_replicated[0].tfe_userdata_base64_encoded : module.tfe_init_fdo[0].tfe_userdata_base64_encoded
+  existing_security_group_id               = var.existing_vm_security_group_id
 }
 
 module "edb" {
