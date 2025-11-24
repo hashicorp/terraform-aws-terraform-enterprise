@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: MPL-2.0
 
 locals {
-  # Validation checks for Redis IAM authentication
-  _redis_auth_mutual_exclusion = var.redis_passwordless_aws_use_instance_profile && var.redis_use_password_auth ? error("Redis passwordless AWS IAM authentication and Redis password authentication cannot both be enabled simultaneously.") : null
-  _redis_auth_mode_restriction = var.redis_passwordless_aws_use_instance_profile && var.operational_mode != "active-active" ? error("Redis passwordless AWS IAM authentication can only be enabled when operational mode is 'active-active'.") : null
+  # Validation checks for Redis IAM authentication (these locals are used for validation only)
+  redis_auth_mutual_exclusion = var.redis_passwordless_aws_use_instance_profile && var.redis_use_password_auth ? error("Redis passwordless AWS IAM authentication and Redis password authentication cannot both be enabled simultaneously.") : null
+  redis_auth_mode_restriction = var.redis_passwordless_aws_use_instance_profile && var.operational_mode != "active-active" ? error("Redis passwordless AWS IAM authentication can only be enabled when operational mode is 'active-active'.") : null
 
   kms_key_arn                     = data.aws_kms_key.main.arn
   enable_airgap                   = var.airgap_url == null && var.tfe_license_bootstrap_airgap_package_path != null
