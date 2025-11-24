@@ -45,9 +45,6 @@ module "service_accounts" {
   postgres_client_key_secret_id         = var.postgres_client_key_secret_id
   postgres_ca_certificate_secret_id     = var.postgres_ca_certificate_secret_id
   vm_key_secret_id                      = var.vm_key_secret_id
-  redis_enable_iam_auth                 = var.redis_passwordless_aws_use_instance_profile
-  redis_replication_group_id            = var.redis_passwordless_aws_use_instance_profile ? local.redis.cluster_id : null
-  redis_iam_user_name                   = var.redis_passwordless_aws_use_instance_profile ? local.redis.iam_user : null
 }
 
 # -----------------------------------------------------------------------------
@@ -85,7 +82,7 @@ module "redis" {
   active_active           = var.operational_mode == "active-active"
   friendly_name_prefix    = var.friendly_name_prefix
   network_subnets_private = local.network_private_subnets
-  tfe_instance_sg         = var.existing_vm_security_group_id != null ? var.existing_vm_security_group_id : module.vm.tfe_instance_sg
+  tfe_instance_sg         = module.vm.tfe_instance_sg
 
   cache_size           = var.redis_cache_size
   engine_version       = var.redis_engine_version
@@ -331,9 +328,9 @@ module "runtime_container_engine_config" {
   redis_sentinel_password                     = local.redis.sentinel_password
   redis_use_mtls                              = var.enable_redis_mtls
   enable_sentinel_mtls                        = var.enable_sentinel_mtls
-  redis_ca_cert_path                          = var.enable_redis_mtls || var.enable_sentinel_mtls ? "/etc/ssl/private/terraform-enterprise/redis/cacert.pem" : null
-  redis_client_cert_path                      = var.enable_redis_mtls || var.enable_sentinel_mtls ? "/etc/ssl/private/terraform-enterprise/redis/cert.pem" : null
-  redis_client_key_path                       = var.enable_redis_mtls || var.enable_sentinel_mtls ? "/etc/ssl/private/terraform-enterprise/redis/key.pem" : null
+  redis_ca_cert_path                          = "/etc/ssl/private/terraform-enterprise/redis/cacert.pem"
+  redis_client_cert_path                      = "/etc/ssl/private/terraform-enterprise/redis/cert.pem"
+  redis_client_key_path                       = "/etc/ssl/private/terraform-enterprise/redis/key.pem"
 
 
   trusted_proxies = local.trusted_proxies

@@ -11,8 +11,8 @@ output "password" {
 }
 
 output "username" {
-  value       = local.redis_use_iam_auth ? aws_elasticache_user.iam_user[0].user_name : null
-  description = "The username which is required to create connections with the Redis Elasticache replication group. Returns IAM username for IAM authentication, null for password authentication."
+  value       = null
+  description = "The username which is required to create connections with the Redis Elasticache replication group. Defaults to null to maintain the output interface with the redis-sentinel module."
 }
 
 output "redis_port" {
@@ -61,16 +61,6 @@ output "aws_elasticache_subnet_group_name" {
 }
 
 output "aws_security_group_redis" {
-  value       = var.active_active ? var.tfe_instance_sg : ""
-  description = "The identity of the security group used by Redis Elasticache replication group (shared with TFE instances)."
-}
-
-output "cluster_id" {
-  value       = var.active_active ? aws_elasticache_replication_group.redis[0].replication_group_id : ""
-  description = "The Redis cluster ID for IAM authentication."
-}
-
-output "iam_user" {
-  value       = local.redis_use_iam_auth ? aws_elasticache_user.iam_user[0].user_name : null
-  description = "The custom IAM user for Redis IAM authentication."
+  value       = var.active_active ? aws_security_group.redis[0].id : ""
+  description = "The identity of the security group attached to the Redis Elasticache replication group."
 }
