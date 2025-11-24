@@ -3,7 +3,9 @@
 
 locals {
   # Validation checks for Redis IAM authentication (these locals are used for validation only)
+  # tflint-ignore: terraform_unused_declarations
   redis_auth_mutual_exclusion = var.redis_passwordless_aws_use_instance_profile && var.redis_use_password_auth ? error("Redis passwordless AWS IAM authentication and Redis password authentication cannot both be enabled simultaneously.") : null
+  # tflint-ignore: terraform_unused_declarations
   redis_auth_mode_restriction = var.redis_passwordless_aws_use_instance_profile && var.operational_mode != "active-active" ? error("Redis passwordless AWS IAM authentication can only be enabled when operational mode is 'active-active'.") : null
 
   kms_key_arn                     = data.aws_kms_key.main.arn
