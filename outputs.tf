@@ -90,3 +90,24 @@ output "s3_bucket" {
   value       = local.object_storage.s3_bucket
   description = "S3 bucket name"
 }
+
+# Redis outputs for passwordless authentication testing
+output "redis_hostname" {
+  value       = local.redis.hostname
+  description = "The Redis hostname for connections."
+}
+
+output "redis_port" {
+  value       = local.redis.redis_port
+  description = "The Redis port number."
+}
+
+output "redis_username" {
+  value       = local.redis.username
+  description = "The Redis username (for IAM authentication scenarios)."
+}
+
+output "redis_primary_endpoint" {
+  value       = local.redis.hostname
+  description = "The Redis primary endpoint address."
+}
