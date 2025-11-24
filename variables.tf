@@ -205,7 +205,7 @@ variable "redis_passwordless_aws_use_instance_profile" {
 
 
 variable "redis_authentication_mode" {
-  description = "The authentincation mode for redis server instances.  Must be one of [USER_AND_PASSWORD, PASSWORD, NONE]."
+  description = "The authentication mode for redis server instances.  Must be one of [USER_AND_PASSWORD, PASSWORD, NONE]."
   type        = string
   default     = "NONE"
   validation {
