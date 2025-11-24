@@ -36,7 +36,7 @@ variable "ec2_launch_template_tag_specifications" {
 variable "existing_vm_security_group_id" {
   type        = string
   default     = null
-  description = "(Optional) Existing security group ID to use for TFE instances. If provided, no new security group will be created. Required for Redis IAM authentication when using existing infrastructure."
+  description = "(Optional, but required when using Redis IAM authentication with existing infrastructure) Existing security group ID to use for TFE instances. If provided, no new security group will be created."
 }
 
 variable "asg_tags" {
