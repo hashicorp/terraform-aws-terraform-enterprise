@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MPL-2.0
 
 locals {
-  # Validation checks
+  # Validation checks for Redis IAM authentication
   _redis_auth_mutual_exclusion = var.redis_passwordless_aws_use_instance_profile && var.redis_use_password_auth ? error("Redis passwordless AWS IAM authentication and Redis password authentication cannot both be enabled simultaneously.") : null
   _redis_auth_mode_restriction = var.redis_passwordless_aws_use_instance_profile && var.operational_mode != "active-active" ? error("Redis passwordless AWS IAM authentication can only be enabled when operational mode is 'active-active'.") : null
   
