@@ -192,14 +192,6 @@ variable "redis_passwordless_aws_use_instance_profile" {
   default     = false
   type        = bool
   description = "Whether or not to use AWS IAM authentication to connect to Redis. Defaults to false."
-  validation {
-    condition     = !(var.redis_passwordless_aws_use_instance_profile && var.redis_use_password_auth)
-    error_message = "redis_passwordless_aws_use_instance_profile and redis_use_password_auth cannot both be enabled simultaneously."
-  }
-  validation {
-    condition     = !(var.redis_passwordless_aws_use_instance_profile && var.operational_mode != "active-active")
-    error_message = "redis_passwordless_aws_use_instance_profile can only be enabled when operational_mode is 'active-active'."
-  }
 }
 
 
