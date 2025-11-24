@@ -85,7 +85,7 @@ module "redis" {
   active_active           = var.operational_mode == "active-active"
   friendly_name_prefix    = var.friendly_name_prefix
   network_subnets_private = local.network_private_subnets
-  tfe_instance_sg         = module.vm.tfe_instance_sg
+  tfe_instance_sg         = var.existing_vm_security_group_id != null ? var.existing_vm_security_group_id : module.vm.tfe_instance_sg
 
   cache_size           = var.redis_cache_size
   engine_version       = var.redis_engine_version
