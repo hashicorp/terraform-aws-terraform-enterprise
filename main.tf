@@ -84,6 +84,8 @@ module "redis" {
 
   active_active           = var.operational_mode == "active-active"
   friendly_name_prefix    = var.friendly_name_prefix
+  network_id              = local.network_id
+  network_private_subnet_cidrs = var.network_private_subnet_cidrs
   network_subnets_private = local.network_private_subnets
   tfe_instance_sg         = module.vm.tfe_instance_sg
 
