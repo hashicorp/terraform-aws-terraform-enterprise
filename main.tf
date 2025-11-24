@@ -97,6 +97,7 @@ module "redis" {
   redis_use_password_auth     = var.redis_use_password_auth
   redis_enable_iam_auth       = var.redis_passwordless_aws_use_instance_profile
   redis_port                  = var.redis_encryption_in_transit ? "6380" : "6379"
+  redis_authentication_mode   = var.redis_authentication_mode
 }
 
 # -----------------------------------------------------------------------------
