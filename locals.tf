@@ -68,6 +68,8 @@ locals {
     sentinel_password                 = null
     aws_elasticache_subnet_group_name = null
     aws_security_group_redis          = null
+    cluster_id                        = null
+    iam_user                          = null
   }
   redis = var.enable_redis_sentinel || var.enable_sentinel_mtls ? module.redis_sentinel[0] : var.enable_redis_mtls ? module.redis_mtls[0] : try(module.redis[0], local.redis_default)
 
