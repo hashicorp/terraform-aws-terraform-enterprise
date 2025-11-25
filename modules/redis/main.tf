@@ -6,6 +6,11 @@ locals {
   redis_use_iam_auth      = var.redis_enable_iam_auth && !var.redis_use_password_auth
 }
 
+resource "random_id" "redis_password" {
+  count       = var.active_active && local.redis_use_password_auth ? 1 : 0
+  byte_length = 16
+}
+
 resource "aws_security_group" "redis" {
   count       = var.active_active ? 1 : 0
   description = "The security group of the Redis deployment for TFE."
@@ -23,9 +28,34 @@ resource "aws_security_group_rule" "redis_tfe_ingress" {
   source_security_group_id = var.tfe_instance_sg
 }
 
-resource "random_id" "redis_password" {
-  count       = var.active_active && local.redis_use_password_auth ? 1 : 0
-  byte_length = 16
+resource "aws_security_group_rule" "redis_tfe_egress" {
+  count                    = var.active_active ? 1 : 0
+  security_group_id        = aws_security_group.redis[0].id
+  type                     = "egress"
+  from_port                = 0
+  to_port                  = 0
+  protocol                 = "-1"
+  source_security_group_id = var.tfe_instance_sg
+}
+
+resource "aws_security_group_rule" "redis_ingress" {
+  count             = var.active_active ? 1 : 0
+  security_group_id = aws_security_group.redis[0].id
+  type              = "ingress"
+  from_port         = var.redis_port
+  to_port           = var.redis_port
+  protocol          = "tcp"
+  cidr_blocks       = var.network_private_subnet_cidrs
+}
+
+resource "aws_security_group_rule" "redis_egress" {
+  count             = var.active_active ? 1 : 0
+  security_group_id = aws_security_group.redis[0].id
+  type              = "egress"
+  from_port         = var.redis_port
+  to_port           = var.redis_port
+  protocol          = "tcp"
+  cidr_blocks       = var.network_private_subnet_cidrs
 }
 
 resource "aws_elasticache_subnet_group" "tfe" {
