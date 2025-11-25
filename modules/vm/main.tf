@@ -1,25 +1,16 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
-locals {
-  # Use existing security group if provided, otherwise create new one
-  use_existing_security_group = var.existing_security_group_id != null
-  security_group_id           = local.use_existing_security_group ? var.existing_security_group_id : aws_security_group.tfe_instance[0].id
-}
-
 ###############
 # TFE CLUSTER #
 ###############
 resource "aws_security_group" "tfe_instance" {
-  count  = local.use_existing_security_group ? 0 : 1
   name   = "${var.friendly_name_prefix}-tfe-ec2-sg"
   vpc_id = var.network_id
 }
 
 resource "aws_security_group_rule" "tfe_ui" {
-  count = local.use_existing_security_group ? 0 : 1 # Skip rules if using existing SG
-
-  security_group_id        = local.security_group_id
+  security_group_id        = aws_security_group.tfe_instance.id
   type                     = "ingress"
   from_port                = 443
   to_port                  = 443
@@ -29,9 +20,9 @@ resource "aws_security_group_rule" "tfe_ui" {
 }
 
 resource "aws_security_group_rule" "vault_cluster" {
-  count = var.active_active && !local.use_existing_security_group ? 1 : 0 # Skip if using existing SG
+  count = var.active_active ? 1 : 0
 
-  security_group_id        = local.security_group_id
+  security_group_id        = aws_security_group.tfe_instance.id
   type                     = "ingress"
   from_port                = 8201
   to_port                  = 8201
@@ -41,9 +32,9 @@ resource "aws_security_group_rule" "vault_cluster" {
 }
 
 resource "aws_security_group_rule" "ssh_inbound" {
-  count = var.enable_ssh && !local.use_existing_security_group ? 1 : 0 # Skip if using existing SG
+  count = var.enable_ssh ? 1 : 0
 
-  security_group_id        = local.security_group_id
+  security_group_id        = aws_security_group.tfe_instance.id
   type                     = "ingress"
   from_port                = 22
   to_port                  = 22
@@ -53,9 +44,7 @@ resource "aws_security_group_rule" "ssh_inbound" {
 }
 
 resource "aws_security_group_rule" "tfe_inbound" {
-  count = local.use_existing_security_group ? 0 : 1 # Skip if using existing SG
-
-  security_group_id = local.security_group_id
+  security_group_id = aws_security_group.tfe_instance.id
   type              = "ingress"
   from_port         = 0
   to_port           = 0
@@ -64,9 +53,7 @@ resource "aws_security_group_rule" "tfe_inbound" {
 }
 
 resource "aws_security_group_rule" "tfe_outbound" {
-  count = local.use_existing_security_group ? 0 : 1 # Skip if using existing SG
-
-  security_group_id = local.security_group_id
+  security_group_id = aws_security_group.tfe_instance.id
   type              = "egress"
   from_port         = 0
   to_port           = 0
@@ -75,9 +62,8 @@ resource "aws_security_group_rule" "tfe_outbound" {
 }
 
 resource "aws_security_group_rule" "tfe_dashboard" {
-  count = (!var.active_active || var.is_replicated_deployment) && !local.use_existing_security_group ? 1 : 0 # Skip if using existing SG
-
-  security_group_id        = local.security_group_id
+  count                    = !var.active_active || var.is_replicated_deployment ? 1 : 0
+  security_group_id        = aws_security_group.tfe_instance.id
   type                     = "ingress"
   from_port                = 8800
   to_port                  = 8800
@@ -87,9 +73,7 @@ resource "aws_security_group_rule" "tfe_dashboard" {
 }
 
 resource "aws_security_group_rule" "tfe_admin_api" {
-  count = local.use_existing_security_group ? 0 : 1 # Skip if using existing SG
-
-  security_group_id        = local.security_group_id
+  security_group_id        = aws_security_group.tfe_instance.id
   type                     = "ingress"
   from_port                = var.admin_api_https_port
   to_port                  = var.admin_api_https_port
@@ -104,7 +88,7 @@ resource "aws_launch_template" "tfe" {
   instance_type          = var.instance_type
   user_data              = var.user_data_base64
   key_name               = var.key_name
-  vpc_security_group_ids = [local.security_group_id]
+  vpc_security_group_ids = [aws_security_group.tfe_instance.id]
 
   dynamic "tag_specifications" {
     for_each = var.ec2_launch_template_tag_specifications
