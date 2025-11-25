@@ -16,11 +16,6 @@ variable "tfe_instance_sg" {
   type        = string
 }
 
-variable "network_id" {
-  description = "The identity of the VPC in which the security group attached to the Redis Elasticache replication group will be deployed."
-  type        = string
-}
-
 variable "network_subnets_private" {
   description = "A list of the identities of the private subnetworks in which the Redis Elasticache replication group will be deployed."
   type        = list(string)
@@ -29,11 +24,6 @@ variable "network_subnets_private" {
 variable "friendly_name_prefix" {
   type        = string
   description = "(Required) Friendly name prefix used for tagging and naming AWS resources."
-}
-
-variable "network_private_subnet_cidrs" {
-  type        = list(string)
-  description = "(Optional) List of private subnet CIDR ranges to create in VPC."
 }
 
 variable "redis_port" {
