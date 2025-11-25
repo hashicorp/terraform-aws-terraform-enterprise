@@ -82,10 +82,12 @@ module "redis" {
   source = "./modules/redis"
   count  = local.enable_redis_module && var.enable_redis_sentinel == false || local.enable_redis_module && local.redis_mtls_enabled == false ? 1 : 0
 
-  active_active           = var.operational_mode == "active-active"
-  friendly_name_prefix    = var.friendly_name_prefix
-  network_subnets_private = local.network_private_subnets
-  tfe_instance_sg         = module.vm.tfe_instance_sg
+  active_active                = var.operational_mode == "active-active"
+  friendly_name_prefix         = var.friendly_name_prefix
+  network_id                   = local.network_id
+  network_private_subnet_cidrs = var.network_private_subnet_cidrs
+  network_subnets_private      = local.network_private_subnets
+  tfe_instance_sg              = module.vm.tfe_instance_sg
 
   cache_size           = var.redis_cache_size
   engine_version       = var.redis_engine_version
@@ -331,6 +333,9 @@ module "runtime_container_engine_config" {
   redis_sentinel_password                     = local.redis.sentinel_password
   redis_use_mtls                              = var.enable_redis_mtls
   enable_sentinel_mtls                        = var.enable_sentinel_mtls
+  redis_ca_cert_path                          = "/etc/ssl/private/terraform-enterprise/redis/cacert.pem"
+  redis_client_cert_path                      = "/etc/ssl/private/terraform-enterprise/redis/cert.pem"
+  redis_client_key_path                       = "/etc/ssl/private/terraform-enterprise/redis/key.pem"
 
   trusted_proxies = local.trusted_proxies
 

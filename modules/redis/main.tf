@@ -6,6 +6,23 @@ locals {
   redis_use_iam_auth      = var.redis_enable_iam_auth && !var.redis_use_password_auth
 }
 
+resource "aws_security_group" "redis" {
+  count       = var.active_active ? 1 : 0
+  description = "The security group of the Redis deployment for TFE."
+  name        = "${var.friendly_name_prefix}-tfe-redis"
+  vpc_id      = var.network_id
+}
+
+resource "aws_security_group_rule" "redis_tfe_ingress" {
+  count                    = var.active_active ? 1 : 0
+  security_group_id        = aws_security_group.redis[0].id
+  type                     = "ingress"
+  from_port                = var.redis_port
+  to_port                  = var.redis_port
+  protocol                 = "tcp"
+  source_security_group_id = var.tfe_instance_sg
+}
+
 resource "random_id" "redis_password" {
   count       = var.active_active && local.redis_use_password_auth ? 1 : 0
   byte_length = 16
@@ -75,7 +92,7 @@ resource "aws_elasticache_replication_group" "redis" {
   engine_version             = var.engine_version
   parameter_group_name       = var.parameter_group_name
   port                       = var.redis_port
-  security_group_ids         = [var.tfe_instance_sg]
+  security_group_ids         = [aws_security_group.redis[0].id]
   snapshot_retention_limit   = 0
   subnet_group_name          = aws_elasticache_subnet_group.tfe[0].name
 

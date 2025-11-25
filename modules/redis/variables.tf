@@ -78,3 +78,13 @@ variable "redis_enable_iam_auth" {
   description = "Enable IAM authentication for Redis ElastiCache."
   default     = false
 }
+
+variable "network_private_subnet_cidrs" {
+  type        = list(string)
+  description = "(Optional) List of private subnet CIDR ranges to create in VPC."
+}
+
+variable "network_id" {
+  type        = string
+  description = "The identity of the VPC in which the security group attached to the Redis Elasticache replication group will be deployed."
+}
