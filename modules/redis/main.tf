@@ -1,7 +1,6 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
-# Redis module - simplified to reuse TFE security group instead of creating separate ones
 locals {
   redis_use_password_auth = var.redis_use_password_auth || var.redis_authentication_mode == "PASSWORD"
   redis_use_iam_auth      = var.redis_enable_iam_auth && !var.redis_use_password_auth
@@ -33,7 +32,6 @@ resource "aws_elasticache_user" "iam_user" {
   }
 
   # Access string for Redis commands - IAM auth compatible
-  # Use default access string for TFE with IAM authentication
   access_string = "on ~* &* +@all"
   engine        = "REDIS"
 
@@ -45,7 +43,6 @@ resource "aws_elasticache_user" "iam_user" {
 
 # ElastiCache User Group for IAM authentication
 # AWS requires the "default" user to be included in all user groups
-# We include both "default" (for IAM auth) and our custom IAM user
 resource "aws_elasticache_user_group" "iam_group" {
   count         = var.active_active && local.redis_use_iam_auth ? 1 : 0
   engine        = "REDIS"
@@ -78,25 +75,20 @@ resource "aws_elasticache_replication_group" "redis" {
   engine_version             = var.engine_version
   parameter_group_name       = var.parameter_group_name
   port                       = var.redis_port
-  security_group_ids         = [var.tfe_instance_sg] # Reuse TFE security group instead of creating separate one
+  security_group_ids         = [var.tfe_instance_sg]
   snapshot_retention_limit   = 0
   subnet_group_name          = aws_elasticache_subnet_group.tfe[0].name
 
-  # Password used to access a password protected server.
-  # Can be specified only if transit_encryption_enabled = true.
   # For IAM authentication, auth_token must be null to force IAM-only authentication
   auth_token = var.redis_encryption_in_transit && local.redis_use_password_auth ? random_id.redis_password[0].hex : null
 
-  # Transit encryption is required when using user groups (IAM authentication)
   transit_encryption_enabled = var.redis_encryption_in_transit
 
   at_rest_encryption_enabled = var.redis_encryption_at_rest
   kms_key_id                 = var.redis_encryption_at_rest ? var.kms_key_arn : null
 
-  # IAM authentication configuration
   user_group_ids = local.redis_use_iam_auth ? [aws_elasticache_user_group.iam_group[0].user_group_id] : null
 
-  # Ensure proper dependency ordering for IAM authentication
   depends_on = [
     aws_elasticache_user_group.iam_group,
     aws_elasticache_user.iam_user
