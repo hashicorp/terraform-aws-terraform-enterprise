@@ -331,6 +331,9 @@ module "runtime_container_engine_config" {
   redis_sentinel_password                     = local.redis.sentinel_password
   redis_use_mtls                              = var.enable_redis_mtls
   enable_sentinel_mtls                        = var.enable_sentinel_mtls
+  redis_ca_cert_path                          = "/etc/ssl/private/terraform-enterprise/redis/cacert.pem"
+  redis_client_cert_path                      = "/etc/ssl/private/terraform-enterprise/redis/cert.pem"
+  redis_client_key_path                       = "/etc/ssl/private/terraform-enterprise/redis/key.pem"
 
   trusted_proxies = local.trusted_proxies
 
