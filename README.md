@@ -1,5 +1,14 @@
 # Terraform Enterprise AWS Module
 
+## Deprecation Notice
+
+This module is deprecated. For authoritative guidance, see the official deployment documentation: https://developer.hashicorp.com/terraform/enterprise/deploy. Customers should only use the HashiCorp Validated Design (HVD) modules published in the Terraform Registry:
+
+- AWS EC2 reference: https://registry.terraform.io/modules/hashicorp/terraform-enterprise-hvd/aws/latest
+- AWS EKS reference: https://registry.terraform.io/modules/hashicorp/terraform-enterprise-eks-hvd/aws/latest
+
+No further updates will be made here. All new features, bug fixes, and security updates are delivered through the HVD modules.
+
 **IMPORTANT**: You are viewing a **beta version** of the official module to install Terraform Enterprise. This new version is **incompatible with earlier versions**, and it is not currently meant for production use. Please contact your Customer Success Manager for details before using.
 
 This is a Terraform module for provisioning a Terraform Enterprise Cluster on AWS. Terraform Enterprise is our self-hosted distribution of Terraform Cloud. It offers enterprises a private instance of the Terraform Cloud application, with no resource limits and with additional enterprise-grade architectural features like audit logging and SAML single sign-on.
